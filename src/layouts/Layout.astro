@@ -1,0 +1,61 @@
+---
+import React from 'react';
+import AnimatedTabs from '../components/Navbar';
+import '@fontsource-variable/inter-tight';
+// Supports weights 100-900
+import '@fontsource-variable/inter';
+import { Spotlight } from '../components/ui/Spotlight';
+import Header from '../components/Header';
+---
+<!doctype html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Mi Sitio Web</title>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <!-- Contenido Principal -->
+    <!-- <Header client:only="react"/> -->
+
+    <div id="main-content" class="flex-grow ">
+      <Spotlight/>
+      <slot />
+    </div>
+    
+    <!-- Menú de Navegación Persistente -->
+    <AnimatedTabs client:load />
+    
+  </body>
+</html>
+
+<style is:global>
+  html,
+  body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: #1c1c1c;
+  }
+
+  body {
+    font-family: 'Inter Variable', sans-serif;
+  
+  }
+
+  html:not(.dark),
+  html:not(.dark) body {
+    background: #ffffff; /* fondo claro */
+  }
+
+  html.dark,
+  html.dark body {
+    background: #1c1c1c; /* fondo oscuro */
+  }
+
+
+  @view-transition{
+  navigation: auto;
+  }
+</style>

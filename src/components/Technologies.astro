@@ -1,0 +1,118 @@
+---
+interface Props {
+  Title: string;
+  Description: string;
+  colors?: Array<{
+    color: string;
+    position?: string; // Ahora incluye top-center y bottom-center
+  }> | string;
+}
+
+const { Title, Description, colors = [] } = Astro.props;
+---
+
+<div class="tech-card rounded-xl flex gap-1 items-center py-4 px-4 justify-center bg-[#1a1a1a] overflow-hidden relative min-w-[180px]">
+  <div class="flex flex-col gap-1 items-center justify-center relative">
+    <div class="icon-container">
+      <div class="icon-wrapper">
+        <slot name="icon" />
+      </div>
+    </div>
+
+    <div class="blur-shadow">
+      <slot name="icon"/>
+    </div>
+    
+    <div class="relative z-30 text-center flex flex-col gap-0.5">
+      <h4 class="font-semibold text-secondary text-sm">{Title}</h4>
+      <p class="text-xs text-terteary font-medium">{Description}</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .tech-card {
+    container-type: inline-size;
+  }
+
+  .icon-container {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .icon-wrapper {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .blur-shadow {
+    position: absolute;
+    width: 10rem;
+    background: var(--shadow-color);
+    filter: blur(42px);
+    border-radius: 50%;
+    transform: var(--shadow-transform);
+    transition: all 0.3s ease;
+  }
+
+  /* Posicionamiento actualizado incluyendo posiciones centrales */
+  .blur-shadow.top-left {
+    top: 40%;
+    left: 40%;
+  }
+
+  .blur-shadow.top-center {
+    top: 40%;
+    left: 50%;
+  }
+
+  .blur-shadow.top-right {
+    top: 40%;
+    left: 60%;
+  }
+
+  .blur-shadow.bottom-left {
+    top: 60%;
+    left: 40%;
+  }
+
+  .blur-shadow.bottom-center {
+    top: 60%;
+    left: 50%;
+  }
+
+  .blur-shadow.bottom-right {
+    top: 60%;
+    left: 60%;
+  }
+
+  .blur-shadow.center {
+    top: 50%;
+    left: 50%;
+  }
+
+  /* Animación sutil */
+  @keyframes pulseGlow {
+    0%, 100% { transform: var(--shadow-transform) scale(1); }
+    50% { transform: var(--shadow-transform) scale(1.1); }
+  }
+
+  .blur-shadow {
+    animation: pulseGlow 4s ease-in-out infinite;
+    animation-delay: calc(var(--index, 0) * 0.5s);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blur-shadow {
+      animation: none;
+    }
+  }
+</style>
