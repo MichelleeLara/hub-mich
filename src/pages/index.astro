@@ -92,7 +92,7 @@ import Particles from '../components/ui/Particles'
       </div>
     </section>
 
-    <section class="pt-20 flex flex-col gap-6">
+    <section class="pt-20 flex flex-col gap-6 relative z-30">
       <div class="flex flex-col gap-1">
         <h2
           class="text-2xl text-gray-800 font-semibold dark:text-secondary mx-6"
@@ -103,13 +103,13 @@ import Particles from '../components/ui/Particles'
           Explora mis proyectos, donde explico el proceso, la metodología
           utilizada y los detalles clave de su ejecución.
         </p>
-      </div>
+      </div> 
       <div class="mx-6 flex flex-col gap-8">
         <main class="flex gap-4">
           <Jobs client:visible />
           <aside class="flex flex-col gap-1">
             <div
-              class="flex flex-col gap-1  top-[71px] bg-white w-full dark:bg-[#161616]"
+              class="flex flex-col gap-1  top-[71px] "
             >
               <h3 class="font-semibold">Tech lead - Rand abogados</h3>
               <p class="text-xs text-terteary">
@@ -123,7 +123,27 @@ import Particles from '../components/ui/Particles'
               out in a competitive market. The challenge was to modernize their
               brand identity without alienating their existing customers.
             </p>
-            <a href="" class="text-terteary">Leer más</a>
+            <div class="flex items-center gap-2 mt-2">
+              <a class="flex items-center gap-1.5 bg-[#111111ed] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <Figma client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Figma</p>
+              </a>
+              <a class="flex items-center gap-1.5 bg-[#111111ed] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <NextJS client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Next</p>
+              </a>
+              <a class="flex items-center gap-1.5 bg-[#111111ed] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <TailwindIcon client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Tailwind</p>
+              </a>
+
+            </div>
           </aside>
         </main>
       </div>
@@ -175,51 +195,46 @@ import Particles from '../components/ui/Particles'
           <Jobs client:visible />
           <aside class="flex flex-col gap-1">
             <div
-              class="flex flex-col gap-1  top-[71px] bg-white w-full dark:bg-[#161616]"
+              class="flex flex-col gap-1  top-[71px] "
             >
-              <h3 class="font-semibold">
-                Desarrollador front-end - Medibiologica
-              </h3>
+              <h3 class="font-semibold">Tech lead - Rand abogados</h3>
               <p class="text-xs text-terteary">
                 Septiembre 2024, Diciembre 2024
               </p>
             </div>
             <img src="/rand.png" alt="" class="mt-5 rounded-lg" />
-            <p class="text-terteary mt-3">
+            <p class="text-terteary mt-3 line-clamp-5 text-justify">
               ABC Cafe, a local coffee shop with a loyal customer base, wanted
               to undergo a rebranding to attract a younger demographic and stand
               out in a competitive market. The challenge was to modernize their
               brand identity without alienating their existing customers.
             </p>
-            <a href="" class="text-terteary">Leer más</a>
-          </aside>
-        </main>
-      </div>
-      <div class="mx-6 flex flex-col gap-8">
-        <main class="flex gap-4">
-          <Jobs client:visible />
-          <aside class="flex flex-col gap-1">
-            <div
-              class="flex flex-col gap-1  top-[71px] bg-white w-full dark:bg-[#161616]"
-            >
-              <h3 class="font-semibold">
-                DevOps fullStack Engineer - Nomad Technologies
-              </h3>
-              <p class="text-xs text-terteary">
-                Septiembre 2024, Diciembre 2024
-              </p>
+            <div class="flex items-center gap-2 mt-2">
+              <a class="flex items-center gap-1.5 bg-[#111111ed] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <Figma client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Figma</p>
+              </a>
+              <a class="flex items-center gap-1.5 bg-[#111111ed] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <NextJS client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Next</p>
+              </a>
+              <a class="flex items-center gap-1.5 bg-[#111111ed] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <TailwindIcon client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Tailwind</p>
+              </a>
+
             </div>
-            <img src="/rand.png" alt="" class="mt-5 rounded-lg" />
-            <p class="text-terteary mt-3">
-              ABC Cafe, a local coffee shop with a loyal customer base, wanted
-              to undergo a rebranding to attract a younger demographic and stand
-              out in a competitive market. The challenge was to modernize their
-              brand identity without alienating their existing customers.
-            </p>
-            <a href="" class="text-terteary">Leer más</a>
           </aside>
         </main>
       </div>
+      
+      
     </section>
   </main>
 </Layout>
