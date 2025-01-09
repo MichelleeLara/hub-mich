@@ -4,12 +4,14 @@ import Layout from "../layouts/Layout.astro";
 import { AnimateFragments } from "../components/Hero";
 import Jobs from "../components/Jobs";
 import Technologies from "../components/Technologies";
-import { AwsIcon, GoogleIcon, GitHubIcon, Postman, Notion, Figma, NextJS, TailwindIcon} from '../icons/Icons'
+import { AwsIcon, GoogleIcon, GitHubIcon, Postman, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT} from '../icons/Icons'
 import TechFront from '../sections/TechFront'
 import TechColaborate from '../sections/TechColaborate'
 import TechCloud from '../sections/TechCloud'
 import Header from "../components/Header";
 import Particles from '../components/ui/Particles'
+import React from "react";
+import { IconWhatsapp } from "../icons/Icons";
 
 ---
 
@@ -21,6 +23,7 @@ import Particles from '../components/ui/Particles'
   
     <Header client:only="react"/>
 
+    <!-- Hero Section -->
     <section class="pt-32">
       <div class="mx-6 flex flex-col gap-4 relative z-30">
         <div class="text-xs flex items-center gap-2">
@@ -37,7 +40,7 @@ import Particles from '../components/ui/Particles'
           Soy Desarrollador
           <AnimateFragments
             client:load
-            value={'<span class="font-medium bg-gradient-to-r from-gray-500 to-gray-800 bg-clip-text text-transparent dark:from-gray-300 dark:to-gray-700">frontend React.</span>'}
+            value={'<span class="font-medium bg-gradient-to-r from-gray-500 to-gray-800 bg-clip-text text-transparent dark:from-gray-300 dark:to-gray-900">Frontend React.</span>'}
           />
         </h1>
         <div
@@ -57,8 +60,11 @@ import Particles from '../components/ui/Particles'
           >
           <a
             href=""
-            class="border-2 rounded-lg bg-[#161616] border-[#eff3f4] dark:border-[#2c2c2c] text-xs py-2 px-1.5"
-            >Colaboremos !</a
+            class="border-2 flex items-center gap-2 rounded-lg bg-[#161616] border-[#eff3f4] dark:border-[#2c2c2c] text-xs py-2 px-1.5"
+            >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path opacity="0.4" d="M20.5 10.19H17.61C15.24 10.19 13.31 8.26 13.31 5.89V3C13.31 2.45 12.86 2 12.31 2H8.07C4.99 2 2.5 4 2.5 7.57V16.43C2.5 20 4.99 22 8.07 22H15.93C19.01 22 21.5 20 21.5 16.43V11.19C21.5 10.64 21.05 10.19 20.5 10.19Z" fill="currentColor"></path><path d="M15.7997 2.20999C15.3897 1.79999 14.6797 2.07999 14.6797 2.64999V6.13999C14.6797 7.59999 15.9197 8.80999 17.4297 8.80999C18.3797 8.81999 19.6997 8.81999 20.8297 8.81999C21.3997 8.81999 21.6997 8.14999 21.2997 7.74999C19.8597 6.29999 17.2797 3.68999 15.7997 2.20999Z" fill="currentColor"></path><path d="M13.5 13.75H7.5C7.09 13.75 6.75 13.41 6.75 13C6.75 12.59 7.09 12.25 7.5 12.25H13.5C13.91 12.25 14.25 12.59 14.25 13C14.25 13.41 13.91 13.75 13.5 13.75Z" fill="currentColor"></path><path d="M11.5 17.75H7.5C7.09 17.75 6.75 17.41 6.75 17C6.75 16.59 7.09 16.25 7.5 16.25H11.5C11.91 16.25 12.25 16.59 12.25 17C12.25 17.41 11.91 17.75 11.5 17.75Z" fill="currentColor"></path></svg>
+            CV !
+            </a
           >
           <div class="absolute right-[120px] bottom-[-2rem] -z-10 h-24 w-24">
             <Particles client:load/>
@@ -67,6 +73,7 @@ import Particles from '../components/ui/Particles'
       </div>
     </section>
 
+    <!-- Stack section -->
     <section class="pt-28">
       <div class="mx-6 flex flex-col gap-6">
         <div class="flex items-center justify-between">
@@ -92,6 +99,7 @@ import Particles from '../components/ui/Particles'
       </div>
     </section>
 
+    <!-- Projects section -->
     <section class="pt-20 flex flex-col gap-6 relative z-30">
       <div class="flex flex-col gap-1">
         <h2
@@ -236,6 +244,40 @@ import Particles from '../components/ui/Particles'
       
       
     </section>
+
+    <section class="py-28">
+      <div class="mx-6 flex flex-col gap-12">
+        <h2 class="flex flex-col text-4xl text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">Esto es lo que puedo ofrecer a tu negocio<span class='font-medium text-terteary text-3xl'>Veamos...</span></h2>
+        <div class="flex flex-col gap-3">
+          <!-- Title + techs -->
+          <div class="flex items-center gap-2">
+            <h3 class="text- text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">Desarrollo Front-End</h3>
+            <div class="flex items-center gap-2.5">
+              <div class="w-3.5">
+                <ReactIcon client:only />
+              </div>
+              <div class="w-3.5">
+                <TailwindIcon client:only />
+              </div>
+              <div class="w-3.5">
+                <NextJS client:only />
+              </div>
+              <div class="w-3.5 bg-[#f5ea16] h-3.5 rounded-full p-0.5">
+                <FramerIcon client:only />
+              </div>
+            </div>
+          </div>
+
+          <p class="text-sm text-terteary">Creación de sitios web y aplicaciones de calidad con un alto rendimiento en cualquier dispositivo.</p>
+
+          <div class="">
+            <a href="" class="text-xs font-semibold bg-primary rounded-2xl flex items-center py-1 px-2.5 gap-2 w-fit">Contactame por <span class="w-4"><IconWhatsappT client:only/></span></a>
+          </div>
+
+          <div class="w-[240px] h-[400px] bg-lights absolute rounded-full -rotate-45"></div>
+        </div>
+      </div>
+    </section>
   </main>
 </Layout>
 
@@ -247,6 +289,10 @@ import Particles from '../components/ui/Particles'
 
 .scroll_hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Edge */
+}
+
+.bg-lights{
+  background-image: radial-gradient(68.54% 68.72% at 55.02% 31.46%,hsla(0,0%,85%,.08) 0,hsla(0,0%,55%,.02) 50%,hsla(0,0%,45%,0) 80%);
 }
 
 </style>

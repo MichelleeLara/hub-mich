@@ -46,7 +46,7 @@ const variants = {
     width: "100%",
     y: 0,
     borderRadius: 0,
-    backgroundColor: "rgba(0,0,0,0)", // transparente
+    // transparente
     transition: {
       // Aquí definimos transiciones separadas
       backgroundColor: {
@@ -68,7 +68,7 @@ const variants = {
     y: 10,
     width: "50%",
     borderRadius: 60,
-    backgroundColor: "#1c1c1c",
+
     transition: {
       // Aquí definimos transiciones separadas
       backgroundColor: {
@@ -90,7 +90,7 @@ const variants = {
     y: "-80%", // se oculta por completo
     width: "50%",
     borderRadius: 60,
-    backgroundColor: "#1c1c1c",
+   
     transition: {
       // Aquí definimos transiciones separadas
       backgroundColor: {
@@ -116,7 +116,7 @@ const variants = {
     <AnimatePresence>
       <div className="fixed top-0 left-0 w-full z-50  will-change-auto flex items-center justify-center">
         <motion.header
-          className={`min-w-[310px] w-2/4   dark:shadow-none  py-3 ${currentVariant !== 'expanded' ? 'shadow-2xl border border-[#d2d2d2] dark:border-[#5c5c5c] ' : ''}`} // Para activar GPU
+          className={`min-w-[310px] w-2/4   dark:shadow-none py-3  ${currentVariant !== 'expanded' ? 'shadow-2xl border border-[#d2d2d2] dark:border-[#5c5c5c] bg-[#eff3f4] dark:bg-[#1c1c1c] ' : ''}`} // Para activar GPU
           // style={{ transformOrigin: "top center" }}
           variants={variants}
           initial="expanded"
@@ -159,7 +159,7 @@ const variants = {
             <div className="flex items-center justify-center gap-2 text-secondary">
               <AnimatePresence>
                 {/* Si está en modo hidden, NO mostramos el botón */}
-                {(currentVariant !== 'expanded' && !hidden) && (
+                {(currentVariant !== 'expanded') && (
                   <motion.div
                     key="island-btn"
                     className="flex justify-center items-center text-xs rounded-xl py-1 px-2 gap-2"
@@ -171,10 +171,7 @@ const variants = {
                     exit={{ opacity: 0, scale: 0.8}}
                     transition={{ duration: 0.8, stiffness: 800, type: "spring", damping: 40 }}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={18} height={18} color={"currentColor"} fill={"none"}>
-                      <path d="M4 7C4.58984 7.60684 6.15973 10 7 10C7.84027 10 9.41016 7.60684 10 7M7 9L7 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M4 13L4 14.5442C4 17.7892 4 19.4117 4.88607 20.5107C5.06508 20.7327 5.26731 20.9349 5.48933 21.1139C6.58831 22 8.21082 22 11.4558 22C12.1614 22 12.5141 22 12.8372 21.886C12.9044 21.8623 12.9702 21.835 13.0345 21.8043C13.3436 21.6564 13.593 21.407 14.0919 20.9081L18.8284 16.1716C19.4065 15.5935 19.6955 15.3045 19.8478 14.9369C20 14.5694 20 14.1606 20 13.3431V10C20 6.22876 20 4.34315 18.8284 3.17157C17.6569 2 15.7712 2 12 2M13 21.5V21C13 18.1716 13 16.7574 13.8787 15.8787C14.7574 15 16.1716 15 19 15H19.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path opacity="0.4" d="M20.5 10.19H17.61C15.24 10.19 13.31 8.26 13.31 5.89V3C13.31 2.45 12.86 2 12.31 2H8.07C4.99 2 2.5 4 2.5 7.57V16.43C2.5 20 4.99 22 8.07 22H15.93C19.01 22 21.5 20 21.5 16.43V11.19C21.5 10.64 21.05 10.19 20.5 10.19Z" fill="currentColor"></path><path d="M15.7997 2.20999C15.3897 1.79999 14.6797 2.07999 14.6797 2.64999V6.13999C14.6797 7.59999 15.9197 8.80999 17.4297 8.80999C18.3797 8.81999 19.6997 8.81999 20.8297 8.81999C21.3997 8.81999 21.6997 8.14999 21.2997 7.74999C19.8597 6.29999 17.2797 3.68999 15.7997 2.20999Z" fill="currentColor"></path><path d="M13.5 13.75H7.5C7.09 13.75 6.75 13.41 6.75 13C6.75 12.59 7.09 12.25 7.5 12.25H13.5C13.91 12.25 14.25 12.59 14.25 13C14.25 13.41 13.91 13.75 13.5 13.75Z" fill="currentColor"></path><path d="M11.5 17.75H7.5C7.09 17.75 6.75 17.41 6.75 17C6.75 16.59 7.09 16.25 7.5 16.25H11.5C11.91 16.25 12.25 16.59 12.25 17C12.25 17.41 11.91 17.75 11.5 17.75Z" fill="currentColor"></path></svg>
                     <p>CV</p>
                   </motion.div>
                 )}
