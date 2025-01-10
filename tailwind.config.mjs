@@ -6,6 +6,7 @@ export default {
 		extend: {
 			fontFamily: {
 				francy: ['Francy', 'Lucida Sans'],
+				ClashDisplay: ['ClashDisplay', 'serif'],
 				InterT: ["Inter Tight Variable", "serif"],
 			},
 			screens: {
