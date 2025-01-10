@@ -127,7 +127,7 @@ const variants = {
               <img src="/author.png" className="w-12 object-top" alt="Author" />
               <AnimatePresence>
                 <div className="flex flex-col gap-0">
-                  <p className="font-semibold text-sm dark:text-secondary">
+                  <p className="font-semibold  text-sm dark:text-secondary">
                     {(currentVariant !== 'expanded') ? <span>Mich R.</span> : <span>Mich </span>}
                     {(currentVariant === 'expanded') && (
                       <motion.span

@@ -4,6 +4,10 @@ export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
 		extend: {
+			fontFamily: {
+				francy: ['Francy', 'Lucida Sans'],
+				InterT: ["Inter Tight Variable", "serif"],
+			},
 			screens: {
 				// Agregando breakpoints personalizados
 				'xs': '410px',  // Dispositivos pequeños
