@@ -247,8 +247,11 @@ import { IconWhatsapp } from "../icons/Icons";
 
     <section class="py-28">
       <div class="mx-6 flex flex-col gap-12">
-        <h2 class="flex flex-col text- leading-8 text-4xl text-balance text-center font-francy tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary">Esto es lo que puedo ofrecer a tu negocio<span class='font-medium font-francy text-terteary text-3xl'>Veamos...</span></h2>
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col text-center gap-2 text-balance">
+          <h2 class="flex flex-col text- leading-7 text-4xl text-balance text-center font-francy tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary">Asi es como aporto valor a tu negocio</h2>
+          <p class="text-sm text-terteary">Transformo ideas en proyectos digitales que destacan por su alta calidad, rendimiento y experiencias inmersivas con animaciones dinámicas.</p>
+        </div>
+        <div class="flex flex-col gap-3 relative overflow-hidden h-60 border border-[#2d2d2d1b] rounded-xl p-2 px-3">
           <!-- Title + techs -->
           <div class="flex items-center gap-2">
             <h3 class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">Desarrollo Front-End</h3>
@@ -270,11 +273,13 @@ import { IconWhatsapp } from "../icons/Icons";
 
           <p class="text-sm text-terteary">Creación de sitios web y aplicaciones de calidad con un alto rendimiento en cualquier dispositivo.</p>
 
-          <div class="">
-            <a href="" class="text-xs font-semibold bg-primary rounded-2xl flex items-center py-1 px-2.5 gap-2 w-fit">Contactame por <span class="w-4"><IconWhatsappT client:only/></span></a>
+          <div class="flex items-end justify-between mt-1.5">
+            <a href="" class="text-sm font-semibold bg-primary rounded-2xl flex items-center py-3 px-6 gap-2 w-fit">Contactame por <span class="w-4"><IconWhatsappT client:only/></span></a>
+            <button class="text-xs underline">¿Que incluye?</button>
           </div>
+          <div class="w-[240px] h-[600px] bg-lights absolute top-[-6rem] left-4 rounded-full -rotate-45"></div>
 
-          <div class="w-[240px] h-[400px] bg-lights absolute rounded-full -rotate-45"></div>
+          <!-- <div class="w-[240px] h-[400px] bg-lights absolute top-[-3rem] left-0 rounded-full -rotate-45"></div> -->
         </div>
       </div>
     </section>
