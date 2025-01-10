@@ -7,6 +7,8 @@ export default {
 			fontFamily: {
 				francy: ['Francy', 'Lucida Sans'],
 				ClashDisplay: ['ClashDisplay', 'serif'],
+				ClashGroteskSemi: ['ClashGrotesk-Semibold', 'serif'],
+				ClashGroteskBold: ['ClashGrotesk-Bold', 'serif'],
 				InterT: ["Inter Tight Variable", "serif"],
 			},
 			screens: {
