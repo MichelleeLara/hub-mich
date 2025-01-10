@@ -11,7 +11,8 @@ export default {
 			},
 			screens: {
 				// Agregando breakpoints personalizados
-				'xs': '410px',  // Dispositivos pequeños
+				'xss': '300px',  // Dispositivos pequeños
+				'xs': '345px',  // Dispositivos pequeños
 				'sm': '640px',  // Sobreescribir el predeterminado si lo necesitas
 				'md': '768px',
 				'lg': '1024px',
