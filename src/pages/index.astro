@@ -4,7 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import { AnimateFragments } from "../components/Hero";
 import Jobs from "../components/Jobs";
 import Technologies from "../components/Technologies";
-import { AwsIcon, GoogleIcon, GeminiIcon, OpenAIIcon, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT} from '../icons/Icons'
+import { IconArrowRight, IconEyes, IconDownload, ConversationIcon, GeminiIcon, OpenAIIcon, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT} from '../icons/Icons'
 import TechFront from '../sections/TechFront'
 import TechColaborate from '../sections/TechColaborate'
 import TechCloud from '../sections/TechCloud'
@@ -24,7 +24,7 @@ import { IconWhatsapp } from "../icons/Icons";
     <Header client:only="react"/>
 
     <!-- Hero Section -->
-    <section class="pt-32">
+    <section class="py-32">
       <div class="mx-6 flex flex-col gap-4 relative z-30">
         <div class="text-xs flex items-center gap-2">
           <div class="w-3 h-3 bg-green-400 rounded-full bg-opacity-35 flex items-center justify-center animate-pulse">
@@ -73,12 +73,250 @@ import { IconWhatsapp } from "../icons/Icons";
       </div>
     </section>
 
+    <!-- Contact easy section -->
+     <section class="border-t border-[#2b2b2b] border-b">
+      <div class="mx-6 flex flex-col gap-8 my-6">
+        <!-- Contact mail -->
+        <div class="flex items-center gap-2">
+          <div class="w-7 text-[#d1d5db]">
+            <ConversationIcon client:only/>
+          </div>
+          <div class="flex w-full justify-between">
+            <p class="text-white">Enviarme un correo</p>
+            <div class="w-7 fill-white">
+              <IconArrowRight client:only />
+            </div>
+          </div>
+        </div>
+
+        <!-- Whatsapp -->
+        <div class="flex items-center gap-2">
+          <div class="w-7">
+            <IconWhatsappT client:only/>
+          </div>
+          <div class="flex w-full justify-between">
+            <p class="text-white">Contáctmae por WhatsApp</p>
+            <div class="w-7 fill-white">
+              <IconArrowRight client:only />
+            </div>
+          </div>
+        </div>
+
+        <!-- CV -->
+        <div class="flex items-center gap-2">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path opacity="0.4" d="M20.5 10.19H17.61C15.24 10.19 13.31 8.26 13.31 5.89V3C13.31 2.45 12.86 2 12.31 2H8.07C4.99 2 2.5 4 2.5 7.57V16.43C2.5 20 4.99 22 8.07 22H15.93C19.01 22 21.5 20 21.5 16.43V11.19C21.5 10.64 21.05 10.19 20.5 10.19Z" fill="currentColor"></path><path d="M15.7997 2.20999C15.3897 1.79999 14.6797 2.07999 14.6797 2.64999V6.13999C14.6797 7.59999 15.9197 8.80999 17.4297 8.80999C18.3797 8.81999 19.6997 8.81999 20.8297 8.81999C21.3997 8.81999 21.6997 8.14999 21.2997 7.74999C19.8597 6.29999 17.2797 3.68999 15.7997 2.20999Z" fill="currentColor"></path><path d="M13.5 13.75H7.5C7.09 13.75 6.75 13.41 6.75 13C6.75 12.59 7.09 12.25 7.5 12.25H13.5C13.91 12.25 14.25 12.59 14.25 13C14.25 13.41 13.91 13.75 13.5 13.75Z" fill="currentColor"></path><path d="M11.5 17.75H7.5C7.09 17.75 6.75 17.41 6.75 17C6.75 16.59 7.09 16.25 7.5 16.25H11.5C11.91 16.25 12.25 16.59 12.25 17C12.25 17.41 11.91 17.75 11.5 17.75Z" fill="currentColor"></path></svg>
+          <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-1.5">
+              <div class="">
+                <p class="text-white">CV</p>
+                <p class="text-[11px] text-terteary">2025</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="p-2 w7 rounded-xl bg-[#2c2c2c]">
+                <IconDownload client:only/>
+              </div>
+              <div class="p-2 w7 rounded-xl bg-[#2c2c2c]">
+                <IconEyes client:only/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+     </section>
+
+    <!-- About me section -->
+     <section class="py-28">
+      <div class="mx-6 flex flex-col gap-6">
+        <h2 class=" text- leading-8 text-3xl  uppercase font-ClashDisplay  text-gray-800 font-semibold min-h-fit dark:text-secondary">Me gusta <span class="uppercase text-primary ">crear "cosas"</span> que ayudan a las personas</h2>
+        <p class="text-sm text-terteary">
+          Soy <span class="text-white">Front-End Engineer</span> en Ciudad de México, especializado en crear sitios pixel-perfect con alto rendimiento, accesibilidad y experiencia de usuario.
+        </p>
+        
+        <p class="text-sm text-terteary">
+          Me apasiona trabajar en proyectos desafiantes que combinen diseño atractivo, facilidad de uso y solidez técnica.
+        </p>
+        
+
+        <a href="" class="uppercase font-semibold text-sm">Más sobre mi</a>
+      </div>
+     </section>
+
+    <!-- Contact easy section -->
+    <section class="border-t border-[#2b2b2b] border-b">
+    <div class="mx-6 flex flex-col gap-8 my-16">
+      <!-- Contact mail -->
+      <h2 class="text-3xl text-center font-ClashDisplay tracking-wide text-gray-800 font-semibold flex flex-col gap-0 dark:text-secondary">Idiomas que hablo <span class="text-xs text-terteary font-InterT">Además que lenguajes de programación</span></h2>
+      <div class="flex justify-center items-center flex-wrap gap-6">
+        <div class="flex items-center gap-2 text-white">
+          <img src="/USA.svg" alt="" class="w-[46px] rounded-lg">
+          <div class="flex flex-col -gap-0.5">
+            <h3 class="font-semibold">Inglés</h3>
+            <p class="text-sm text-terteary
+            ">Intermedio <span class="text-xs">(B1)</span></p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-white">
+          <img src="/Mexico_flag.svg" alt="" class="w-[46px] rounded-lg">
+          <div class="flex flex-col -gap-0.5">
+            <h3 class="font-semibold">Español</h3>
+            <p class="text-sm text-terteary
+            ">Nativo</span></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    </section>
+
+    <!-- Services section -->
+    <section class="py-28">
+      <div class="mx-6 flex flex-col gap-12">
+        <div class="flex flex-col text-center gap-2 text-balance">
+          <h2 class="flex flex-col text- leading-9 text-3xl text-balance text-center font-ClashDisplay tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary">Asi es como aporto valor a tu negocio</h2>
+          <p class="text-sm text-terteary">Transformo ideas en proyectos digitales que destacan por su alta calidad, rendimiento y experiencias inmersivas.</p>
+        </div>
+        <!-- Front service -->
+        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
+          <!-- Title + Techs -->
+          <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
+            <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
+              Desarrollo Front-End
+            </h3>
+            <div class="flex items-center gap-2.5" aria-label="Tecnologías usadas">
+              <div class="w-3.5" aria-hidden="true">
+                <ReactIcon client:only />
+              </div>
+              <div class="w-3.5" aria-hidden="true">
+                <TailwindIcon client:only />
+              </div>
+              <div class="w-3.5" aria-hidden="true">
+                <NextJS client:only />
+              </div>
+              <div class="w-3.5 bg-[#f5ea16] h-3.5 rounded-full p-0.5" aria-hidden="true">
+                <FramerIcon client:only />
+              </div>
+            </div>
+          </header>
+        
+          <!-- Description -->
+          <p class="text-sm text-terteary relative z-30">
+            Creación de sitios web y aplicaciones de calidad con un alto rendimiento en cualquier dispositivo.
+          </p>
+        
+          <!-- Image -->
+          <img src="/Screen.png" alt="Vista previa del desarrollo de una aplicación web" class="w-52 relative z-30">
+        
+          <!-- Actions -->
+          <footer class="flex items-end justify-between w-full relative z-30 mt-1.5">
+            <a href="" class="text-sm font-semibold bg-primary relative z-40 rounded-2xl flex items-center py-3 px-6 gap-2 w-fit" aria-label="Contáctame por WhatsApp">
+              Contáctame por 
+              <span class="w-4">
+                <IconWhatsappT client:only />
+              </span>
+            </a>
+            <button class="text-xs underline" aria-label="Ver información sobre lo que incluye">¿Qué incluye?</button>
+          </footer>
+        
+          <!-- Decorative Elements -->
+          <div class="w-[240px] h-[600px] bg-lights absolute top-[-6rem] left-4 rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
+          <div class="w-[50px] h-[50px] bg-[#d9d9d98a] blur-3xl absolute bottom-[-1rem] right-[-1rem] rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
+        </section>
+
+        <!-- Automatization service -->
+        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
+          <!-- Title + Techs -->
+          <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
+            <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
+              Automatizaciones para negocios
+            </h3>
+            <div class="flex items-center gap-2.5" aria-label="Tecnologías usadas">
+              <div class="w-4" aria-hidden="true">
+                <OpenAIIcon client:only />
+              </div>
+              <div class="w-3.5" aria-hidden="true">
+                <GeminiIcon client:only />
+              </div>
+          
+            </div>
+          </header>
+        
+          <!-- Description -->
+          <p class="text-sm text-terteary relative z-30">
+            Creación de sitios web y aplicaciones de calidad con un alto rendimiento en cualquier dispositivo.
+          </p>
+        
+          <!-- Image -->
+          <img src="/Server.png" alt="Vista previa del desarrollo de una aplicación web" class="w-52 relative z-30">
+        
+          <!-- Actions -->
+          <footer class="flex items-end justify-between w-full relative z-30 mt-1.5">
+            <a href="" class="text-sm font-semibold bg-primary relative z-40 rounded-2xl flex items-center py-3 px-6 gap-2 w-fit" aria-label="Contáctame por WhatsApp">
+              Contáctame por 
+              <span class="w-4">
+                <IconWhatsappT client:only />
+              </span>
+            </a>
+            <button class="text-xs underline" aria-label="Ver información sobre lo que incluye">¿Qué incluye?</button>
+          </footer>
+        
+          <!-- Decorative Elements -->
+          <div class="w-[240px] h-[600px] bg-lights absolute top-[-6rem] left-4 rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
+          <div class="w-[50px] h-[50px] bg-[#d9d9d98a] blur-3xl absolute bottom-[-1rem] right-[-1rem] rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
+        </section>
+
+        <!-- Design service -->
+        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
+          <!-- Title + Techs -->
+          <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
+            <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
+              Diseño UI/UX
+            </h3>
+            <div class="flex items-center gap-2.5" aria-label="Tecnologías usadas">
+              <div class="w-3.5" aria-hidden="true">
+                <Figma client:only />
+              </div>
+            </div>
+          </header>
+        
+          <!-- Description -->
+          <p class="text-sm text-terteary relative z-30">
+            Creación de sitios web y aplicaciones de calidad con un alto rendimiento en cualquier dispositivo.
+          </p>
+        
+          <!-- Image -->
+          <img src="/option2.png" alt="Vista previa del desarrollo de una aplicación web" class="w-52 relative z-30">
+        
+          <!-- Actions -->
+          <footer class="flex items-end justify-between w-full relative z-30 mt-1.5">
+            <a href="" class="text-sm font-semibold bg-primary relative z-40 rounded-2xl flex items-center py-3 px-6 gap-2 w-fit" aria-label="Contáctame por WhatsApp">
+              Contáctame por 
+              <span class="w-4">
+                <IconWhatsappT client:only />
+              </span>
+            </a>
+            <button class="text-xs underline" aria-label="Ver información sobre lo que incluye">¿Qué incluye?</button>
+          </footer>
+        
+          <!-- Decorative Elements -->
+          <div class="w-[240px] h-[600px] bg-lights absolute top-[-6rem] left-4 rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
+          <div class="w-[50px] h-[50px] bg-[#d9d9d98a] blur-3xl absolute bottom-[-1rem] right-[-1rem] rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
+        </section>
+
+        
+        
+      </div>
+    </section>
+
     <!-- Stack section -->
     <section class="pt-28">
       <div class="mx-6 flex flex-col gap-6">
         <div class="flex items-center justify-between">
           <div class="flex flex-col gap-1">
-            <h2 class="text-4xl text-balance font-ClashDisplay tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary">
+            <h2 class="text-3xl text-balance font-ClashDisplay tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary">
               Mi stack
             </h2>
             <p class="text-sm text-gray-800 dark:text-terteary max-w-[300px]">
@@ -90,12 +328,12 @@ import { IconWhatsapp } from "../icons/Icons";
         </div>
 
         <!-- Frontend -->
-         <TechFront client:only="react" />
+          <TechFront client:only="react" />
         <!-- Cloud -->
         <TechCloud client:only="react" />
         <!-- Frontend -->
-         <TechColaborate client:only="react" />
-     
+          <TechColaborate client:only="react" />
+      
       </div>
     </section>
 
@@ -251,143 +489,7 @@ import { IconWhatsapp } from "../icons/Icons";
       
     </section>
 
-    <section class="py-28">
-      <div class="mx-6 flex flex-col gap-12">
-        <div class="flex flex-col text-center gap-2 text-balance">
-          <h2 class="flex flex-col text- leading-7 text-4xl text-balance text-center font-ClashDisplay tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary">Asi es como aporto valor a tu negocio</h2>
-          <p class="text-sm text-terteary">Transformo ideas en proyectos digitales que destacan por su alta calidad, rendimiento y experiencias inmersivas.</p>
-        </div>
-        <!-- Front service -->
-        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
-          <!-- Title + Techs -->
-          <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
-            <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
-              Desarrollo Front-End
-            </h3>
-            <div class="flex items-center gap-2.5" aria-label="Tecnologías usadas">
-              <div class="w-3.5" aria-hidden="true">
-                <ReactIcon client:only />
-              </div>
-              <div class="w-3.5" aria-hidden="true">
-                <TailwindIcon client:only />
-              </div>
-              <div class="w-3.5" aria-hidden="true">
-                <NextJS client:only />
-              </div>
-              <div class="w-3.5 bg-[#f5ea16] h-3.5 rounded-full p-0.5" aria-hidden="true">
-                <FramerIcon client:only />
-              </div>
-            </div>
-          </header>
-        
-          <!-- Description -->
-          <p class="text-sm text-terteary relative z-30">
-            Creación de sitios web y aplicaciones de calidad con un alto rendimiento en cualquier dispositivo.
-          </p>
-        
-          <!-- Image -->
-          <img src="/Screen.png" alt="Vista previa del desarrollo de una aplicación web" class="w-52 relative z-30">
-        
-          <!-- Actions -->
-          <footer class="flex items-end justify-between w-full relative z-30 mt-1.5">
-            <a href="" class="text-sm font-semibold bg-primary relative z-40 rounded-2xl flex items-center py-3 px-6 gap-2 w-fit" aria-label="Contáctame por WhatsApp">
-              Contáctame por 
-              <span class="w-4">
-                <IconWhatsappT client:only />
-              </span>
-            </a>
-            <button class="text-xs underline" aria-label="Ver información sobre lo que incluye">¿Qué incluye?</button>
-          </footer>
-        
-          <!-- Decorative Elements -->
-          <div class="w-[240px] h-[600px] bg-lights absolute top-[-6rem] left-4 rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
-          <div class="w-[50px] h-[50px] bg-[#d9d9d98a] blur-3xl absolute bottom-[-1rem] right-[-1rem] rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
-        </section>
 
-        <!-- Automatization service -->
-        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
-          <!-- Title + Techs -->
-          <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
-            <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
-              Automatizaciones para negocios
-            </h3>
-            <div class="flex items-center gap-2.5" aria-label="Tecnologías usadas">
-              <div class="w-4" aria-hidden="true">
-                <OpenAIIcon client:only />
-              </div>
-              <div class="w-3.5" aria-hidden="true">
-                <GeminiIcon client:only />
-              </div>
-          
-            </div>
-          </header>
-        
-          <!-- Description -->
-          <p class="text-sm text-terteary relative z-30">
-            Creación de sitios web y aplicaciones de calidad con un alto rendimiento en cualquier dispositivo.
-          </p>
-        
-          <!-- Image -->
-          <img src="/Server.png" alt="Vista previa del desarrollo de una aplicación web" class="w-52 relative z-30">
-        
-          <!-- Actions -->
-          <footer class="flex items-end justify-between w-full relative z-30 mt-1.5">
-            <a href="" class="text-sm font-semibold bg-primary relative z-40 rounded-2xl flex items-center py-3 px-6 gap-2 w-fit" aria-label="Contáctame por WhatsApp">
-              Contáctame por 
-              <span class="w-4">
-                <IconWhatsappT client:only />
-              </span>
-            </a>
-            <button class="text-xs underline" aria-label="Ver información sobre lo que incluye">¿Qué incluye?</button>
-          </footer>
-        
-          <!-- Decorative Elements -->
-          <div class="w-[240px] h-[600px] bg-lights absolute top-[-6rem] left-4 rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
-          <div class="w-[50px] h-[50px] bg-[#d9d9d98a] blur-3xl absolute bottom-[-1rem] right-[-1rem] rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
-        </section>
-
-        <!-- Design service -->
-        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
-          <!-- Title + Techs -->
-          <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
-            <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
-              Diseño UI/UX
-            </h3>
-            <div class="flex items-center gap-2.5" aria-label="Tecnologías usadas">
-              <div class="w-3.5" aria-hidden="true">
-                <Figma client:only />
-              </div>
-            </div>
-          </header>
-        
-          <!-- Description -->
-          <p class="text-sm text-terteary relative z-30">
-            Creación de sitios web y aplicaciones de calidad con un alto rendimiento en cualquier dispositivo.
-          </p>
-        
-          <!-- Image -->
-          <img src="/option2.png" alt="Vista previa del desarrollo de una aplicación web" class="w-52 relative z-30">
-        
-          <!-- Actions -->
-          <footer class="flex items-end justify-between w-full relative z-30 mt-1.5">
-            <a href="" class="text-sm font-semibold bg-primary relative z-40 rounded-2xl flex items-center py-3 px-6 gap-2 w-fit" aria-label="Contáctame por WhatsApp">
-              Contáctame por 
-              <span class="w-4">
-                <IconWhatsappT client:only />
-              </span>
-            </a>
-            <button class="text-xs underline" aria-label="Ver información sobre lo que incluye">¿Qué incluye?</button>
-          </footer>
-        
-          <!-- Decorative Elements -->
-          <div class="w-[240px] h-[600px] bg-lights absolute top-[-6rem] left-4 rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
-          <div class="w-[50px] h-[50px] bg-[#d9d9d98a] blur-3xl absolute bottom-[-1rem] right-[-1rem] rounded-full z-[0] -rotate-45" aria-hidden="true"></div>
-        </section>
-
-        
-        
-      </div>
-    </section>
   </main>
 </Layout>
 
