@@ -4,7 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import { AnimateFragments } from "../components/Hero";
 import Jobs from "../components/Jobs";
 import Technologies from "../components/Technologies";
-import { IconArrowRight, IconEyes, IconDownload, ConversationIcon, GeminiIcon, OpenAIIcon, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT} from '../icons/Icons'
+import { IconArrowRight,IconIdea, IconArrowRightUp, IconEyes, IconDownload, ConversationIcon, GeminiIcon, OpenAIIcon, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT} from '../icons/Icons'
 import TechFront from '../sections/TechFront'
 import TechColaborate from '../sections/TechColaborate'
 import TechCloud from '../sections/TechCloud'
@@ -12,6 +12,7 @@ import Header from "../components/Header";
 import Particles from '../components/ui/Particles'
 import React from "react";
 import { IconWhatsapp } from "../icons/Icons";
+import { IconLinkedin } from "../icons/Icons";
 
 ---
 
@@ -52,7 +53,7 @@ import { IconWhatsapp } from "../icons/Icons";
           />
         </div>
 
-        <div class="flex gap-3 text-center mt-4 flex-wrap relative">
+        <div class="flex gap-3 w-fit text-center mt-4 flex-wrap relative">
           <a
             href=""
             class="border-2 rounded-lg bg-[#eff3f4] border-[#eff3f4] dark:bg-[#2c2c2c] dark:border-[#2c2c2c] text-xs py-2 px-1.5"
@@ -66,7 +67,7 @@ import { IconWhatsapp } from "../icons/Icons";
             CV
             </a
           >
-          <div class="absolute right-[120px] bottom-[-2rem] -z-10 h-24 w-24">
+          <div class="absolute right-0 -top-10 opacity-70 -z-40 h-24 w-24">
             <Particles client:load/>
           </div>
         </div>
@@ -140,7 +141,12 @@ import { IconWhatsapp } from "../icons/Icons";
         </p>
         
 
-        <a href="" class="uppercase font-semibold text-sm">Más sobre mi</a>
+        <a href="" class="uppercase font-semibold text-sm flex items-center gap-1">
+          Más sobre mi
+          <span class="w-5">
+            <IconArrowRightUp client:only />
+          </span>
+        </a>
       </div>
      </section>
 
@@ -488,6 +494,77 @@ import { IconWhatsapp } from "../icons/Icons";
       
       
     </section>
+
+    <!-- CTA section -->
+     <section class="pt-28">
+      <div class="mx-6 flex flex-col items-center justify-center gap-4">
+        
+        <h2 class="leading-8 text-3xl text-center uppercase font-ClashDisplay max-w-[320px] text-gray-800 font-semibold min-h-fit dark:text-secondary relative"> <span class="absolaute m-1 inline-block -top-5 left-7"><IconIdea client:only='react' /></span>¿Listo para <span class="uppercase text-primary ">construir</span> algo interesante?</h2>
+        
+        <div class="flex  gap-3 w-fit text-center mt-4 flex-wrap relative">
+          <a
+            href=""
+            class="border-2 font-bold text-sm flex items-center gap-2 rounded-lg relative z-10 bg-[#161616] border-[#eff3f4] dark:border-[#2c2c2c] py-2 px-4"
+            >
+            Dejar mensaje
+            </a
+          >
+          <div class="absolute right-5 -top-8  -z-0 h-24 w-24">
+            <Particles client:load/>
+          </div>
+        </div>
+
+        <div class="w-full mt-10 mb-2 flex flex-wrap justify-between gap-8">
+          <!-- General info -->
+          <header class="">
+            <h2 class="font-semibold">Michelle Rodriguez</h2>
+            <p class="text-terteary text-xs mt-1.5">Frontend Engineer React</p>
+            <p class="text-terteary text-xs">Abierto a nuevos proyectos y colaboraciones</p>
+          </header>
+          <div class="flex gap-10 w-fit flex-wrap justify-between">
+            <!-- Navigation -->
+            <div class="flex flex-col gap-4">
+              <p class="font-semibold">Navegación</p>
+              <ul class="flex flex-col gap-1">
+                <a href="" class="text-terteary text-sm">
+                  <li>Inicio</li>
+                </a>
+                <a href="" class="text-terteary text-sm">
+                  <li>Yo</li>
+                </a>
+                <a href="" class="text-terteary text-sm">
+                  <li>Servicios</li>
+                </a>
+                <a href="" class="text-terteary text-sm">
+                  <li>Stack</li>
+                </a>
+                <a href="" class="text-terteary text-sm">
+                  <li>Proyectos</li>
+                </a>
+              </ul>
+            </div>
+            <!-- Contact -->
+             <div class="flex flex-col gap-4">
+              <p class="font-semibold">Contacto</p>
+              <ul class="flex flex-col gap-1">
+                <a href="" class="text-[#0e76a8]  text-sm">
+                  <!-- <IconLinkedin client:only /> -->
+                  <li class="text-terteary">Linkln</li>
+
+                </a>
+                <a href="" class="text-[#25d366]  text-sm">
+                  <!-- <IconWhatsapp client:only /> -->
+                  <li class="text-terteary">Whastapp</li>
+                </a>
+              </ul>
+             </div>
+          </div>
+        </div>
+
+
+
+      </div>
+     </section>
 
 
   </main>

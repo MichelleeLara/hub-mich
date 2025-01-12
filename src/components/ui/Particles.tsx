@@ -10,7 +10,7 @@ interface ParticleProps {
 
 const ParticleSwarmLoader = () => {
   const [particles, setParticles] = useState<ParticleProps[]>([])
-  const particleCount = 50
+  const particleCount = 30
 
   useEffect(() => {
     setParticles(
@@ -32,7 +32,7 @@ const ParticleSwarmLoader = () => {
             cx={particle.x}
             cy={particle.y}
             r={particle.size}
-            fill="#2c2c2c"
+            fill="#d1d5db"
             initial={{ opacity: 0 }}
             animate={{
               opacity: [0, 1, 0],
