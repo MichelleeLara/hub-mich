@@ -186,7 +186,7 @@ import { IconLinkedin } from "../icons/Icons";
           <p class="text-sm text-terteary">Transformo ideas en proyectos digitales que destacan por su alta calidad, rendimiento y experiencias inmersivas.</p>
         </div>
         <!-- Front service -->
-        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
+        <section class="flex flex-col justify-center items-center gap-3 relative  border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
           <!-- Title + Techs -->
           <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
             <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
@@ -233,7 +233,7 @@ import { IconLinkedin } from "../icons/Icons";
         </section>
 
         <!-- Automatization service -->
-        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
+        <section class="flex flex-col justify-center items-center gap-3 relative  border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
           <!-- Title + Techs -->
           <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
             <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
@@ -275,7 +275,7 @@ import { IconLinkedin } from "../icons/Icons";
         </section>
 
         <!-- Design service -->
-        <section class="flex flex-col justify-center items-center gap-3 relative overflow-hidden border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
+        <section class="flex flex-col justify-center items-center gap-3 relative  border border-[#2d2d2d2a] rounded-xl p-2 px-3" role="region" aria-labelledby="frontend-title">
           <!-- Title + Techs -->
           <header class="flex items-center justify-start text-start w-full relative z-30 gap-2">
             <h3 id="frontend-title" class="text-lg text-balance text-center text-gray-800 font-semibold min-h-fit dark:text-secondary">
@@ -637,6 +637,75 @@ import { IconLinkedin } from "../icons/Icons";
   background-image: radial-gradient(68.54% 68.72% at 55.02% 31.46%,#d9d9d914 0,hsla(0, 0%, 11%, 0.02) 50%,hsla(0, 0%, 45%, 0) 80%);
 }
 
+.tech-cards1{
+  transform: 
+    translateZ(-180px) 
+    translateX(-6%) 
+    translateY(-20%) 
+    skewY(-10deg) 
+    rotateX(-14deg) 
+    rotateY(20deg);
+  transition: .32s var(--ease-out-quad);
+  width: 90%;
+  /* position:absolute; */
+  isolation: isolate;
+  /* position:absolute; */
+  background: rgba(40, 40, 40, 0.3); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Para Safari */
+  border: 1px solid hsla(0,0%,100%,.1);
+
+  /* background:red; */
+}
+.tech-cards2{
+  transform: 
+    translateZ(-180px) 
+    translateX(9%) 
+    translateY(-90%) 
+    skewY(-10deg) 
+    rotateX(-14deg) 
+    rotateY(20deg);
+  transition: .32s var(--ease-out-quad);
+  width: 90%;
+  /* position:absolute; */
+   isolation: isolate;
+  /* position:absolute; */
+  background: rgba(40, 40, 40, 0.3); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Para Safari */
+  border: 1px solid hsla(0,0%,100%,.1);
+
+  /* background:red; */
+}
+.tech-cards3{
+  transform: 
+    translateZ(-180px) 
+    translateX(24%) 
+    translateY(-160%) 
+    skewY(-10deg) 
+    rotateX(-14deg) 
+    rotateY(20deg);
+  transition: .32s ;
+  isolation: isolate;
+  width: 90%;
+  /* position:absolute; */
+  background: rgba(40, 40, 40, 0.3); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Para Safari */
+  border: 1px solid hsla(0,0%,100%,.1);
+
+
+  /* background:red; */
+}
+
+
+.container-techs{
+  perspective: 2000px;
+  perspective-origin: 50%;
+  position: relative; 
+  max-height: 0px;
+  margin: 6rem 0;     
+}
 /* .tech-cards{
   transform: skewY(-4deg) rotateX(-14deg) rotateY(20deg) translateZ(var(180)) translateX(var(calc(10% - 3%))) translateY(var(-15%));
   transform-style: preserve-3d;
