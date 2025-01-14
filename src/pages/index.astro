@@ -4,7 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import { AnimateFragments } from "../components/Hero";
 import Jobs from "../components/Jobs";
 import Technologies from "../components/Technologies";
-import { IconArrowRight,IconIdea, IconArrowRightUp, IconEyes, IconDownload, ConversationIcon, GeminiIcon, OpenAIIcon, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT, IconTech} from '../icons/Icons'
+import { IconArrowRight,IconIdea, IconGroup, IconArrowRightUp, IconEyes, IconDownload, ConversationIcon, GeminiIcon, OpenAIIcon, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT, IconTech, IconCloud} from '../icons/Icons'
 import TechFront from '../sections/TechFront'
 import TechColaborate from '../sections/TechColaborate'
 import TechCloud from '../sections/TechCloud'
@@ -330,13 +330,13 @@ import { IconLinkedin } from "../icons/Icons";
           <div class="container-techs ">
         
 
-          <!-- Technologies frontend -->
+          <!-- Colab frontend -->
           <div class="flex flex-col gap-4 items-start border border-[#2b2b2b]  rounded-xl p-5 tech-cards1">
             <header class="flex items-center gap-3">
               <div class="p-1 rounded-full bg-[#148bfa12] w-fit text-primary">
-                <IconTech client:only />
+                <IconGroup client:only />
               </div>
-              <h3 class="text-primary text-sm font-semibold">Frontend</h3>
+              <h3 class="text-primary text-sm font-semibold">Colaboración</h3>
             </header>
 
             <p>Estas son las tecnologías front que ..</p>
@@ -355,7 +355,7 @@ import { IconLinkedin } from "../icons/Icons";
           <div class="flex flex-col gap-4 items-start border border-[#2b2b2b]  rounded-xl p-5 tech-cards2">
             <header class="flex items-center gap-3">
               <div class="p-1 rounded-full bg-[#148bfa12] w-fit text-primary">
-                <IconTech client:only />
+                <IconCloud client:only />
               </div>
               <h3 class="text-primary text-sm font-semibold">Nube</h3>
             </header>
@@ -378,7 +378,7 @@ import { IconLinkedin } from "../icons/Icons";
               <div class="p-1 rounded-full bg-[#148bfa12] w-fit text-primary">
                 <IconTech client:only />
               </div>
-              <h3 class="text-primary text-sm font-semibold">Colaboración</h3>
+              <h3 class="text-primary text-sm font-semibold">Frontend</h3>
             </header>
 
             <p>Estas son las tecnologías front que ..</p>
@@ -657,8 +657,8 @@ import { IconLinkedin } from "../icons/Icons";
   isolation: isolate;
   /* position:absolute; */
   background: rgba(40, 40, 40, 0.3); 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Para Safari */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); /* Para Safari */
   border: 1px solid hsla(0,0%,100%,.1);
 
   /* background:red; */
@@ -677,8 +677,8 @@ import { IconLinkedin } from "../icons/Icons";
    isolation: isolate;
   /* position:absolute; */
   background: rgba(40, 40, 40, 0.3); 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Para Safari */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); /* Para Safari */
   border: 1px solid hsla(0,0%,100%,.1);
 
   /* background:red; */
@@ -696,8 +696,8 @@ import { IconLinkedin } from "../icons/Icons";
   width: 90%;
   /* position:absolute; */
   background: rgba(40, 40, 40, 0.3); 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Para Safari */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); /* Para Safari */
   border: 1px solid hsla(0,0%,100%,.1);
 
 
