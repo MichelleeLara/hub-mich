@@ -15,7 +15,7 @@ import { IconWhatsapp } from "../icons/Icons";
 import { IconLinkedin } from "../icons/Icons";
 import Hero from "../components/Hero.astro";
 import ContactBanner from "../components/ContactBanner.jsx";
-import AboutMe from "../components/AboutMe.astro";
+import AboutMe from "../components/AboutMe.jsx";
 import Stack from "../components/Stack.jsx";
 import Lenguage from "../components/Lenguague.astro";
 import Services from "../components/Services.astro";
@@ -42,7 +42,7 @@ import Footer from "../sections/Footer.astro";
      <ContactBanner client:load/>
 
     <!-- About me section -->
-    <AboutMe />
+    <AboutMe client:load/>
 
     <!-- Lenguage section -->
     <Lenguage />

@@ -47,7 +47,6 @@ const ContactSection = () => {
 
   return (
     <motion.section
-      ref={sectionRef}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       className="border-t border-[#d9d6d6c7] dark:border-[#2b2b2b] border-b"
@@ -60,14 +59,14 @@ const ContactSection = () => {
           href="mailto:mich.ia@hotmail.com?subject=Hola&body=Hola%20Michelle%20..."
           className="flex items-center justify-center cursor-pointer gap-2 group"
         >
-          <div className="w-7">
+          <div className="w-7"   >
             <ConversationIcon />
           </div>
           <div className="flex w-full justify-between">
             <p>
               <AnimatedText text="Enviarme un correo" />
             </p>
-            <div className="w-7 transition-all duration-100 group-hover:-rotate-45">
+            <div className="w-7 transition-all duration-100 group-hover:-rotate-45" ref={sectionRef}>
               <IconArrowRight />
             </div>
           </div>
