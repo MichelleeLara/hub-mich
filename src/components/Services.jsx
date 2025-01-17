@@ -1,9 +1,9 @@
+// Services.jsx
 import React, { useState, memo } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IconWhatsappT } from "../icons/Icons";
 import { servicesData } from "../data/servicesData";
 
-// Componente memoizado para evitar re-renderizados innecesarios
 const ServiceCard = memo(({ service, selectedId, setSelectedId }) => (
   <motion.div
     onClick={() => setSelectedId(service.id)}
@@ -14,23 +14,35 @@ const ServiceCard = memo(({ service, selectedId, setSelectedId }) => (
       className="absolute inset-0 bg-white dark:bg-[#222] rounded-xl"
       layoutId={`bg-${service.id}`}
     />
+
     {/* Contenido de la tarjeta */}
     <div className="relative z-10 p-6">
+      {/* Título sin layoutId para evitar animaciones conflictivas */}
       <h2 className="text-lg font-semibold dark:text-secondary">
         {service.title}
       </h2>
+
+      {/* Descripción sin layoutId */}
       <p className="text-sm text-terteary mt-2">
         {service.description}
       </p>
-      <img
+
+      {/* Imagen con layoutId para transiciones suaves */}
+      <motion.img
         src={service.imageSrc}
         alt={service.title}
         className="w-52 mx-auto my-4 rounded-xl"
+        layoutId={`image-${service.id}`}
         loading="lazy"
       />
+
       {/* Elementos interactivos que solo aparecen cuando la tarjeta no está seleccionada */}
       {selectedId !== service.id && (
-        <div className="flex justify-between items-center mt-4">
+        <motion.div
+          className="flex justify-between items-center mt-4"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
           <motion.a
             href="#"
             className="text-sm text-white font-semibold bg-primary
@@ -49,7 +61,7 @@ const ServiceCard = memo(({ service, selectedId, setSelectedId }) => (
           >
             ¿Qué incluye?
           </motion.button>
-        </div>
+        </motion.div>
       )}
     </div>
   </motion.div>
@@ -181,18 +193,22 @@ export default function Services() {
 
                     {/* Contenido principal del modal sin animaciones adicionales */}
                     <div className="space-y-4">
+                      {/* Título sin layoutId */}
                       <h2 className="text-xl font-semibold dark:text-secondary">
                         {servicesData.find((s) => s.id === selectedId)?.title}
                       </h2>
 
+                      {/* Descripción sin layoutId */}
                       <p className="text-sm text-terteary">
                         {servicesData.find((s) => s.id === selectedId)?.description}
                       </p>
 
-                      <img
+                      {/* Imagen con layoutId para transiciones suaves */}
+                      <motion.img
                         className="w-60 mx-auto my-4 rounded-xl"
                         src={servicesData.find((s) => s.id === selectedId)?.imageSrc}
                         alt={servicesData.find((s) => s.id === selectedId)?.title}
+                        layoutId={`image-${selectedId}`}
                         loading="lazy"
                       />
                     </div>
