@@ -64,3 +64,65 @@
     }
   }
   
+
+
+    /* Stack section */
+    .tech-cards1 {
+      transform:
+        translateZ(-180px) translateX(-8%) translateY(-20%) skewY(-4deg) rotateX(-14deg) rotateY(20deg);
+      transition: .32s var(--ease-out-quad);
+      width: 90%;
+      /* position:absolute; */
+      isolation: isolate;
+      /* position:absolute; */
+      background: rgba(40, 40, 40, 0.048);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      /* Para Safari */
+      /* border: 1px solid hsla(0,0%,100%,.1); */
+  
+      /* background:red; */
+    }
+  
+    .tech-cards2 {
+      transform:
+        translateZ(-180px) translateX(9%) translateY(-90%) skewY(-4deg) rotateX(-14deg) rotateY(20deg);
+      transition: .32s var(--ease-out-quad);
+      width: 90%;
+      /* position:absolute; */
+      isolation: isolate;
+      /* position:absolute; */
+      background: rgba(40, 40, 40, 0.048);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      /* Para Safari */
+      /* border: 1px solid hsla(0,0%,100%,.1); */
+  
+      /* background:red; */
+    }
+  
+    .tech-cards3 {
+      transform:
+        translateZ(-180px) translateX(26%) translateY(-160%) skewY(-4deg) rotateX(-14deg) rotateY(20deg);
+      transition: .32s;
+      isolation: isolate;
+      width: 90%;
+      /* position:absolute; */
+      background: rgba(40, 40, 40, 0.048);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      /* Para Safari */
+      /* border: 1px solid hsla(0,0%,100%,.1); */
+  
+  
+      /* background:red; */
+    }
+  
+  
+    .container-techs {
+      perspective: 2000px;
+      perspective-origin: 50%;
+      position: relative;
+      max-height: 0px;
+      margin: 6rem 0;
+    }
