@@ -32,7 +32,7 @@ const HeroSection = () => {
   return (
     <section  className="py-20 overflow-hidden">
       <motion.div
-        className="mx-6 flex flex-col gap-6"
+        className="mx-6 flex flex-col gap-6 will-change-transform"
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
@@ -40,13 +40,13 @@ const HeroSection = () => {
           className="text-3xl uppercase font-ClashDisplay text-gray-800 font-semibold min-h-fit dark:text-secondary xs:text-4xl xs:leading-8"
           initial={{ opacity: 0, x: 50 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.6, type: "spring" }}
+          transition={{ type: "spring", stiffness: 120, damping: 12 }}
         >
           Me gusta <motion.span
             className="uppercase text-primary"
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, type: "spring", delay: 0.2 }}
+            transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.2 }}
           >crear "cosas"</motion.span> que ayudan a las personas
         </motion.h2>
 
@@ -55,7 +55,7 @@ const HeroSection = () => {
           ref={sectionRef}
           initial={{ opacity: 0, x: 50 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.6, type: "spring", delay: 0.4 }}
+          transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.4 }}
         >
           Soy
           <motion.span
@@ -74,7 +74,7 @@ const HeroSection = () => {
           className="text-sm text-terteary"
           initial={{ opacity: 0, x: 50 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.6, type: "spring", delay: 0.6 }}
+          transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.6 }}
         >
           Me apasiona trabajar en proyectos desafiantes que combinen diseño
           atractivo, facilidad de uso y solidez técnica.
@@ -85,13 +85,13 @@ const HeroSection = () => {
           className="uppercase font-semibold text-sm flex items-center gap-1"
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, type: "spring", delay: 0.8 }}
+          transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.8 }}
         >
           Más sobre mí
           <motion.span
             className="w-5"
             whileHover={{ rotate: 45 }}
-            transition={{ type: "spring", stiffness: 300 }}
+            transition={{ type: "spring", stiffness: 20, damping: 12 }}
           >
             <IconArrowRightUp />
           </motion.span>
