@@ -30,7 +30,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section  className="py-20 overflow-hidden">
+    <section  className="py-20 ">
       <motion.div
         className="mx-6 flex flex-col gap-6"
         initial="hidden"
