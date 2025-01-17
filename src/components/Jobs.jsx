@@ -54,7 +54,7 @@ const TracingBeam = () => {
         </svg>
       </motion.div>
       {/* Línea con efecto de degradado y brillo */}
-      <div className="relative w-1 h-full ">
+      <div className="relative w-1 h-full overflow-hidden">
         {/* Línea principal */}
         <motion.div
           className="absolute top-0 left-0 w-full bg-gradient-to-t from-[#148cfa] to-transparent rounded-full"
