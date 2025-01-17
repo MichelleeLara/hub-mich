@@ -23,19 +23,28 @@ import Aws from "../icons/Aws.astro";
 import Projects from "../components/Projects.astro";
 import Cta from "../components/Cta.astro";
 import Footer from "../sections/Footer.astro";
+import { Spotlight } from "../components/ui/Spotlight";
 
 ---
 
 <Layout>
 
   <main
-    class="bg-white min-h-screen text-black dark:bg-[#161616] dark:text-gray-300 transition-colors duration-300 pb-14"
+    class="bg-white min-h-screen text-black dark:bg-[#161616] dark:text-gray-300 transition-colors duration-300 pb-14 overflow-hidden"
   >
   
     <Header client:only="react"/>
 
-    <!-- Hero Section -->
-     <Hero />
+    <div class="h-[40srem] w-full rounded-md flex md:items-center md:justify-center bg-black-[#161616] antialiased bg-grid-white/[0.02] relative overflow-hidden">
+      <Spotlight
+        className=""
+        fill="white"
+      />
+      <!-- Hero Section -->
+       <Hero />
+      
+    </div>
+
      
 
     <!-- Contact easy section -->

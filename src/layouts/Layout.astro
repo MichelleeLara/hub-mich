@@ -15,12 +15,12 @@ import Header from '../components/Header';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Mi Sitio Web</title>
   </head>
-  <body class="flex flex-col min-h-screen">
+  <body class="">
     <!-- Contenido Principal -->
     <!-- <Header client:only="react"/> -->
 
     <div id="main-content" class="flex-grow ">
-      <!-- <Spotlight client:visible/> -->
+      
       <slot />
     </div>
     
@@ -78,6 +78,7 @@ import Header from '../components/Header';
     background: #161616;
     font-family: 'Inter Tight Variable', sans-serif;
     scroll-behavior: smooth;
+    
   }
 
   html:not(.dark),
