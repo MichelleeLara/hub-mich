@@ -5,11 +5,35 @@ import { servicesData } from "../data/servicesData";
 
 function ServiceCard({ service, isSelected, onClick }) {
   return (
-    <div className="relative h-fit"> {/* Altura fija para la card */}
+    <div className="relative h-fit">
+      {/* Placeholder div that maintains the space when card is selected */}
+      {isSelected && (
+        <div className="invisible">
+          <div className="h-full w-full rounded-xl bg-white dark:bg-[#222]">
+            <div className="flex h-full flex-col p-6">
+              <h2 className="text-lg font-semibold">{service.title}</h2>
+              <p className="mt-2 text-sm">{service.description}</p>
+              <div className="my-4 flex flex-1 items-center justify-center">
+                <img src={service.imageSrc} alt={service.title} className="w-52 rounded-xl" />
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <a className="flex w-fit items-center gap-2 rounded-xl bg-primary py-3 px-6 text-sm font-semibold text-white">
+                  Contáctame por
+                  <span className="w-4">
+                    <IconWhatsappT />
+                  </span>
+                </a>
+                <button className="text-xs underline">¿Qué incluye?</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <motion.div
         className={`${
           isSelected
-            ? "fixed inset-0 z-50 m-auto h-fit w-[384px]" // Dimensiones fijas cuando está seleccionada
+            ? "fixed inset-0 z-50 m-auto h-fit w-[384px]"
             : "h-full w-full"
         }`}
       >
@@ -82,7 +106,6 @@ function ServiceCard({ service, isSelected, onClick }) {
 export default function Services() {
   const [selectedId, setSelectedId] = useState(null);
 
-  // Prevenir scroll cuando el modal está abierto
   React.useEffect(() => {
     if (selectedId) {
       document.body.style.overflow = "hidden";
@@ -132,7 +155,7 @@ export default function Services() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedId(null)}
-                className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+                className="fixed inset-0 z-40 "
               />
               
               <motion.button
