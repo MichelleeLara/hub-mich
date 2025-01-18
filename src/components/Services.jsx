@@ -3,47 +3,79 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IconWhatsappT } from "../icons/Icons";
 import { servicesData } from "../data/servicesData";
 
+// Card component for individual service items
+function ServiceCard({ service, isSelected, onClick }) {
+  return (
+    <motion.div
+      layoutId={`card-${service.id}`}
+      onClick={onClick}
+      className={`cursor-pointer overflow-hidden rounded-xl ${
+        isSelected ? "fixed inset-0 z-50 flex items-center justify-center p-4" : ""
+      }`}
+      initial={false}
+    >
+      <motion.div
+        className="relative h-fit w-full rounded-xl bg-white dark:bg-[#222]"
+        layoutId={`card-container-${service.id}`}
+      >
+        <motion.div className="p-6">
+          <motion.h2
+            layoutId={`title-${service.id}`}
+            className="text-lg font-semibold dark:text-secondary"
+          >
+            {service.title}
+          </motion.h2>
+
+          <motion.p
+            layoutId={`description-${service.id}`}
+            className="mt-2 text-sm text-terteary"
+          >
+            {service.description}
+          </motion.p>
+
+          <motion.div
+            layoutId={`image-container-${service.id}`}
+            className="my-4 flex justify-center"
+          >
+            <motion.img
+              src={service.imageSrc}
+              alt={service.title}
+              className="w-52 rounded-xl"
+            />
+          </motion.div>
+
+          <motion.div
+            layoutId={`actions-${service.id}`}
+            className="mt-4 flex justify-between items-center"
+          >
+            <motion.a
+              href="#"
+              className="text-sm text-white font-semibold bg-primary
+                         rounded-xl flex items-center py-3 px-6 gap-2 w-fit"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Contáctame por
+              <span className="w-4">
+                <IconWhatsappT />
+              </span>
+            </motion.a>
+
+            <motion.button
+              className="text-xs underline"
+              whileHover={{ scale: 1.1 }}
+            >
+              ¿Qué incluye?
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function Services() {
   const [selectedId, setSelectedId] = useState(null);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const overlayVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.2 },
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.2 },
-    },
-  };
-
-  const modalVariants = {
-    // Eliminadas las propiedades de animación para evitar conflictos
-    hidden: {},
-    visible: {
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      },
-    },
-    exit: {
-      transition: {
-        duration: 0.2,
-      },
-    },
-  };
 
   return (
     <section className="py-20">
@@ -63,167 +95,39 @@ export default function Services() {
           </p>
         </motion.div>
 
-        <motion.div
-          className="grid grid-cols-1 gap-6 md:grid-cols-3"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {servicesData.map((service) => (
-            <motion.div
+            <ServiceCard
               key={service.id}
+              service={service}
+              isSelected={selectedId === service.id}
               onClick={() => setSelectedId(service.id)}
-              className="overflow-hidden rounded-xl relative cursor-pointer"
-            >
-              {/* Fondo separado con rounded-xl añadido */}
-              <motion.div
-                className="absolute inset-0 bg-white dark:bg-[#222] rounded-xl"
-                layoutId={`bg-${service.id}`}
-              />
-
-              {/* Contenedor del contenido */}
-              <div className="relative z-10 p-6">
-                <motion.h2
-                  layoutId={`title-${service.id}`}
-                  className="text-lg font-semibold dark:text-secondary"
-                  // Eliminadas las animaciones conflictivas
-                >
-                  {service.title}
-                </motion.h2>
-
-                <motion.p
-                  layoutId={`description-${service.id}`}
-                  className="text-sm text-terteary mt-2"
-                  // Puedes eliminar o mantener animaciones aquí si no tienen layoutId
-                >
-                  {service.description}
-                </motion.p>
-
-                <motion.img
-                  layoutId={`image-${service.id}`}
-                  src={service.imageSrc}
-                  alt={service.title}
-                  className="w-52 mx-auto my-4 rounded-xl"
-                />
-
-                {/* Elementos interactivos que solo aparecen en la tarjeta */}
-                {selectedId !== service.id && (
-                  <motion.div
-                    className="flex justify-between items-center mt-4"
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <motion.a
-                      href="#"
-                      className="text-sm text-white font-semibold bg-primary
-                               rounded-xl flex items-center py-3 px-6 gap-2 w-fit"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Contáctame por
-                      <span className="w-4">
-                        <IconWhatsappT />
-                      </span>
-                    </motion.a>
-
-                    <motion.button
-                      className="text-xs underline"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      ¿Qué incluye?
-                    </motion.button>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
+            />
           ))}
-        </motion.div>
+        </div>
 
         <AnimatePresence>
           {selectedId && (
             <>
               <motion.div
                 key="overlay"
-                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-                variants={overlayVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 onClick={() => setSelectedId(null)}
+                className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
               />
-
-              <motion.div
-                key="modal"
-                // Eliminado layoutId del contenedor principal del modal
-                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              
+              <motion.button
+                onClick={() => setSelectedId(null)}
+                className="fixed top-48 right-4 z-50 w-10 h-10 rounded-full bg-white/80 
+                         flex items-center justify-center text-black hover:bg-white"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               >
-                <motion.div
-                  className="rounded-xl relative max-w-sm w-full overflow-hidden"
-                  variants={modalVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  {/* Fondo separado con rounded-xl añadido */}
-                  {/* <motion.div
-                    className="absolute inset-0 bg-white dark:bg-[#222] rounded-xl"
-                    layoutId={`bg-${selectedId}`}
-                  /> */}
-
-                  {/* Contenedor del contenido */}
-                  <div className="relative z-10 p-6">
-                    <motion.button
-                      className="absolute top-2 right-2 text-black dark:text-white
-                               w-8 h-8 flex items-center justify-center rounded-xl
-                               hover:bg-gray-100 dark:hover:bg-gray-800"
-                      onClick={() => setSelectedId(null)}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      ✕
-                    </motion.button>
-
-                    {/* Contenido que se mantiene durante la transición */}
-                    <div className="space-y-4">
-                      <motion.h2
-                        layoutId={`title-${selectedId}`}
-                        className="text-xl font-semibold dark:text-secondary"
-                        // Eliminadas las animaciones conflictivas
-                      >
-                        {servicesData.find((s) => s.id === selectedId)?.title}
-                      </motion.h2>
-
-                      <motion.p
-                        layoutId={`description-${selectedId}`}
-                        className="text-sm text-terteary"
-                        // Puedes eliminar o mantener animaciones aquí si no tienen layoutId
-                      >
-                        {servicesData.find((s) => s.id === selectedId)?.description}
-                      </motion.p>
-
-                      <motion.img
-                        layoutId={`image-${selectedId}`}
-                        className="w-60 mx-auto my-4 rounded-xl"
-                        src={servicesData.find((s) => s.id === selectedId)?.imageSrc}
-                        alt={servicesData.find((s) => s.id === selectedId)?.title}
-                      />
-                    </div>
-
-                    {/* Contenido adicional que aparece solo en el modal */}
-                    <AnimatePresence>
-                      <motion.div
-                        className="mt-4"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ delay: 0.3 }}
-                      >
-                        {/* Aquí puedes agregar contenido adicional que solo aparece en el modal */}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              </motion.div>
+                ✕
+              </motion.button>
             </>
           )}
         </AnimatePresence>
