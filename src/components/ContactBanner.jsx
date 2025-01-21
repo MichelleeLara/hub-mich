@@ -5,6 +5,7 @@ import {
   IconArrowRight,
   IconDownload,
   IconEyes,
+  IconLinkedin,
   IconWhatsappT,
 } from "../icons/Icons";
 
@@ -50,26 +51,30 @@ const ContactSection = () => {
     <motion.section
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
-      className="border-t border-[#d9d6d6c7] dark:border-[#2b2b2b] border-b"
+      className="border-t border-[#d9d6d6c7] dark:border-[#2b2b2b] border-b flex items-center justify-center"
     >
-      <div className="mx-6 flex flex-col gap-8 my-16">
+      <div className="mx-6 flex flex-col gap-16 my-16 max-w-screen-xl w-full md:flex-row md:justify-between">
         {/* Contact mail */}
         <motion.a
           custom={0}
           variants={wordVariants}
           href="mailto:mich.ia@hotmail.com?subject=Hola&body=Hola%20Michelle%20..."
-          className="flex items-center justify-center cursor-pointer gap-2 group"
+          className="flex items-center justify-between cursor-pointer gap-2 group"
         >
-          <div className="w-7"   >
-            <ConversationIcon />
-          </div>
-          <div className="flex w-full justify-between">
-            <p>
-              <AnimatedText text="Enviarme un correo" />
-            </p>
-            <div className="w-7 transition-all duration-100 group-hover:-rotate-45" ref={sectionRef}>
-              <IconArrowRight />
+          <div className="flex gap-2">
+            <div className="w-7 flex items-center gap-4"   >
+              <ConversationIcon />
             </div>
+            <div className="w-8 text-terteary flex items-center gap-4"   >
+              <IconLinkedin/>
+            </div>
+            <p>
+              <AnimatedText text="Contactame" />
+            </p>
+          </div>
+
+          <div className="w-7 transition-all duration-100 group-hover:-rotate-45">
+            <IconArrowRight />
           </div>
         </motion.a>
 
@@ -77,19 +82,15 @@ const ContactSection = () => {
         <motion.div
           custom={1}
           variants={wordVariants}
-          className="flex items-center gap-2 group"
+          className="flex items-center gap-4 group max-w-[580px]"
         >
-          <div className="w-7">
-            <IconWhatsappT />
+          <p className="text-white">
+            <AnimatedText text="Bienvenido al espacio donde muestro la experiencia y el datelle que me gusta proporcionar a los proyectos" />
+          </p>
+          <div className="w-7 transition-all duration-100 group-hover:-rotate-45 md:hidden">
+            <IconArrowRight />
           </div>
-          <div className="flex w-full justify-between">
-            <p>
-              <AnimatedText text="Contáctame por WhatsApp" />
-            </p>
-            <div className="w-7 transition-all duration-100 group-hover:-rotate-45">
-              <IconArrowRight />
-            </div>
-          </div>
+      
         </motion.div>
 
         {/* CV */}
@@ -97,6 +98,7 @@ const ContactSection = () => {
           custom={2}
           variants={wordVariants}
           className="flex items-center gap-2"
+          ref={sectionRef}
         >
           <svg
             width="28"
@@ -125,14 +127,14 @@ const ContactSection = () => {
           </svg>
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-1.5">
-              <div className="flex items-center gap-1">
+              <div className="">
                 <p>
-                  <AnimatedText text="CV 2025" />
+                  CV <span className="text-xs text-terteary">2025</span>
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 ml-4">
               <div className="p-2 w7 rounded-xl border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#2c2c2c] dark:border-[#4d4d4da0] transition-all duration-150 hover:-translate-y-2">
                 <IconDownload />
               </div>

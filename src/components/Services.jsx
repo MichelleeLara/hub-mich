@@ -78,8 +78,8 @@ export default function Services() {
   const [selectedId, setSelectedId] = useState(null);
 
   return (
-    <section className="py-20">
-      <div className="mx-6 flex flex-col gap-12 text-center">
+    <section className="py-20 flex items-center justify-center">
+      <div className="mx-6 flex flex-col gap-12 text-center max-w-screen-xl w-full">
         <motion.div
           className="flex flex-col gap-2 text-balance"
           initial={{ opacity: 0, y: 20 }}
@@ -95,7 +95,7 @@ export default function Services() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="flex gap-6 items-center justify-center flex-wrap">
           {servicesData.map((service) => (
             <ServiceCard
               key={service.id}

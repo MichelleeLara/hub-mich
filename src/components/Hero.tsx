@@ -92,7 +92,7 @@ export const AnimateFragments = ({
 
   return (
     <motion.div
-      className={`flex flex-wrap items-center gap-1 ${className || ""}`}
+      className={`flex flex-wrap items-center gap-1 md:items-center md:justify-center ${className || ""}`}
       variants={containerVariants(delayBetweenFragments)}
       initial="initial"
       animate="animate"

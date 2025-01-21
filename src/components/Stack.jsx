@@ -17,8 +17,8 @@ import {
 
 const Stack = () => {
   return (
-    <section id="Stack" className="py-12 pb-48">
-      <div className="mx-6 flex flex-col gap-2">
+    <section id="Stack" className="py-12 pb-48 flex items-center justify-center">
+      <div className="mx-6 flex flex-col gap-2 w-full max-w-screen-xl">
         <h2 className="text-3xl font-ClashDisplay tracking-wide text-gray-800 font-semibold flex flex-col gap-0 dark:text-secondary xs:text-4xl xs:leading-8">
           Mi stack
         </h2>

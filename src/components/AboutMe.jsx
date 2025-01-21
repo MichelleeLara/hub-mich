@@ -30,9 +30,9 @@ const HeroSection = () => {
   };
 
   return (
-    <section  className="py-20 overflow-hidden">
+    <section  className="py-20 overflow-hidden flex items-center justify-center md:py-32">
       <motion.div
-        className="mx-6 flex flex-col gap-6 will-change-transform"
+        className="mx-6 flex flex-col gap-6 will-change-transform max-w-screen-xl md:flex-row"
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
@@ -47,55 +47,57 @@ const HeroSection = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.2 }}
-          >crear "cosas"</motion.span> que ayudan a las personas
+          >crear &nbsp;"cosas"&nbsp;</motion.span> que ayudan a las personas
         </motion.h2>
 
-        <motion.p
-          className="text-sm text-terteary"
-          ref={sectionRef}
-          initial={{ opacity: 0, x: 50 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.4 }}
-        >
-          Soy
-          <motion.span
-            className="text-black dark:text-white font-bold ml-1"
-            variants={typingVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
+        <div className="">
+          <motion.p
+            className="text-sm text-terteary"
+            ref={sectionRef}
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.4 }}
           >
-            Front-End Engineer
-          </motion.span>
-          en Ciudad de México, especializado en crear sitios pixel-perfect con
-          alto rendimiento, accesibilidad y experiencia de usuario.
-        </motion.p>
+            Soy
+            <motion.span
+              className="text-black dark:text-white font-bold mx-1"
+              variants={typingVariants}
+              initial="hidden"
+              animate={isInView ? "visible" : "hidden"}
+            >
+              Front-End Engineer
+            </motion.span>
+            en Ciudad de México, especializado en crear sitios pixel-perfect con
+            alto rendimiento, accesibilidad y experiencia de usuario.
+          </motion.p>
 
-        <motion.p
-          className="text-sm text-terteary"
-          initial={{ opacity: 0, x: 50 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.6 }}
-        >
-          Me apasiona trabajar en proyectos desafiantes que combinen diseño
-          atractivo, facilidad de uso y solidez técnica.
-        </motion.p>
-
-        <motion.a
-          href="#"
-          className="uppercase font-semibold text-sm flex items-center gap-1"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.8 }}
-        >
-          Más sobre mí
-          <motion.span
-            className="w-5"
-            whileHover={{ rotate: 45 }}
-            transition={{ type: "spring", stiffness: 20, damping: 12 }}
+          <motion.p
+            className="text-sm text-terteary mt-2"
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.6 }}
           >
-            <IconArrowRightUp />
-          </motion.span>
-        </motion.a>
+            Me apasiona trabajar en proyectos desafiantes que combinen diseño
+            atractivo, facilidad de uso y solidez técnica.
+          </motion.p>
+
+          <motion.a
+            href="#"
+            className="uppercase font-semibold text-sm flex items-center gap-1"
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.8 }}
+          >
+            Más sobre mí
+            <motion.span
+              className="w-5 mt-8"
+              whileHover={{ rotate: 45 }}
+              transition={{ type: "spring", stiffness: 20, damping: 12 }}
+            >
+              <IconArrowRightUp />
+            </motion.span>
+          </motion.a>
+        </div>
       </motion.div>
     </section>
   );
