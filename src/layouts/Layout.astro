@@ -6,6 +6,7 @@ import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/inter';
 import { Spotlight } from '../components/ui/Spotlight';
 import Header from '../components/Header';
+const { title, description, image, url } = Astro.props;
 
 // Definir las propiedades que el layout aceptará
 export interface Props {
@@ -15,7 +16,6 @@ export interface Props {
   url: string;
 }
 
-const { title, description, image, url } = Astro.props;
 ---
 <!doctype html>
 <html lang="es" class="dark">
@@ -23,7 +23,7 @@ const { title, description, image, url } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Mi Sitio Web</title>
+    <title>{title}</title>
 
     <!-- Meta Open Graph -->
     <meta property="og:title" content={title} />
