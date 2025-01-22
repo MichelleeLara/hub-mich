@@ -12,7 +12,7 @@ export const { getStaticPaths, GET } = OGImageRoute({
     title: page.title,
     description: page.description,
     logo: {
-      path: './src/astro-docs-logo.png',
+      path: './src/OpenGraph.png',
     },
     // Puedes agregar más opciones aquí según tus necesidades
   }),
