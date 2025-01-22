@@ -116,14 +116,14 @@ const variants = {
     <AnimatePresence>
       <div className="fixed top-0 left-0 w-full z-[100]  will-change-auto flex items-center justify-center">
         <motion.header
-          className={`min-w-[310px] w-2/4   dark:shadow-none py-3 md:flex md:items-center md:justify-center md:w-full ${currentVariant !== 'expanded' ? 'shadow-2xl border border-[#d2d2d2] dark:border-[#5c5c5c] bg-[#fbfcfc] dark:bg-[#1c1c1c] ' : ''}`} // Para activar GPU
+          className={`min-w-[310px] w-2/4   dark:shadow-none py-3 md:flex md:items-center md:justify-center md:w-3/4 ${currentVariant !== 'expanded' ? 'shadow-2xl border border-[#d2d2d2] dark:border-[#5c5c5c] bg-[#fbfcfc] dark:bg-[#1c1c1c] ' : ''}`} // Para activar GPU
           // style={{ transformOrigin: "top center" }}
           variants={variants}
           initial="expanded"
           animate={currentVariant}
         >
           <div className="mx-6 flex gap-3 items-center justify-between md:w-full md:max-w-screen-xl">
-            <div className="flex gap-1.5 items-center text-nowrap ">
+            <a href="#" className="flex gap-1.5 items-center text-nowrap">
               <img src="/author.png" className="w-12 object-top" alt="Author" />
               <AnimatePresence>
                 <div className="flex flex-col gap-0">
@@ -155,14 +155,14 @@ const variants = {
                   </p>
                 </div>
               </AnimatePresence>
-            </div>
+            </a>
             <div className="flex items-center justify-center gap-2 ">
               <AnimatePresence>
                 {/* Si está en modo hidden, NO mostramos el botón */}
                 {(currentVariant !== 'expanded') && (
                   <motion.div
                     key="island-btn"
-                    className="flex justify-center items-center text-xs rounded-xl py-1 px-2 gap-2"
+                    className="flex justify-center items-center text-xs rounded-xl py-1 px-2 gap-2 md:hidden"
                     /*  
                       * Aquí es donde agregamos x: 50 → x: 0 para que “nazca” desde la derecha 
                     */
@@ -176,6 +176,15 @@ const variants = {
                   </motion.div>
                 )}
               </AnimatePresence>
+              <ul className="hidden md:flex items-center gap-4 uppercase text-xs font-semibold">
+                <li>
+                  <a href="#footer">Contáctme</a>
+                </li>
+                <li>
+                  <a href="/pdf/CV_michelle_lara.pdf" target="_blank" rel="noopener noreferrer" >Mi cv</a>
+                </li>
+             
+              </ul>
               <ThemeToggle />
             </div>
           </div>

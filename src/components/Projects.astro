@@ -1,11 +1,14 @@
 ---
 import { Figma, TailwindIcon, NextJS } from "../icons/Icons";
-import Jobs from '../components/Jobs'
+import Jobs from "../components/Jobs";
 ---
 
-<section class="pt-20 flex flex-col gap-6 relative z-30 items-center justify-center md:pb-32 md:pt-44">
-  <div class="w-full max-w-screen-xl">
-    <div class="flex flex-col gap-1 mx-6 md:mx-0">
+<section
+  id="proyectos"
+  class="pt-20 flex flex-col gap-6 relative z-30 items-center justify-center md:pb-32 md:pt-44"
+>
+  <div class="w-full max-w-screen-xl mx-6">
+    <div class="flex flex-col gap-1 mx-6">
       <h2
         class="text-3xl text-balance font-ClashDisplay tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary xs:text-4xl xs:leading-8"
       >
@@ -15,148 +18,448 @@ import Jobs from '../components/Jobs'
         Explora mis proyectos, donde explico el proceso, la metodología
         utilizada y los detalles clave de su ejecución.
       </p>
-    </div> 
-    <div class="flex items-center justify-center gap-8 flex-wrap xl:justify-between">
-      <div class="mx-6 flex flex-col gap-8 pt-4 md:mx-0">
-        <main class="flex gap-4 max-w-[340px] w-full max-h-[500px]">
-          <div class="hidden xs:flex md:hidden">
-            <Jobs client:only="react" />
-          </div>
-          <aside class="flex flex-col gap-1">
-            <div
-              class="flex flex-col gap-1  top-[71px] "
-            >
-              <h3 class="font-semibold">Tech lead - Rand abogados</h3>
-              <p class="text-xs text-terteary">
-                Septiembre 2024, Diciembre 2024
-              </p>
-            </div>
-            <img src="/rand.png" alt="" class="mt-5 rounded-lg" />
-            <p class="text-terteary mt-3 line-clamp-5 text-justify">
-              ABC Cafe, a local coffee shop with a loyal customer base, wanted
-              to undergo a rebranding to attract a younger demographic and stand
-              out in a competitive market. The challenge was to modernize their
-              brand identity without alienating their existing customers.
-            </p>
-            <div class="flex items-center gap-2 mt-2">
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <Figma client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Figma</p>
-              </a>
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <NextJS client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Next</p>
-              </a>
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <TailwindIcon client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Tailwind</p>
-              </a>
-  
-            </div>
-          </aside>
-        </main>
-      </div>
-    
-      <div class="mx-6 flex flex-col gap-8 pt-4 ">
-        <main class="flex gap-4 max-w-[340px] w-full max-h-[500px]">
-          <div class="hidden xs:flex md:hidden">
-            <Jobs client:only="react" />
-          </div>
-          <aside class="flex flex-col gap-1">
-            <div
-              class="flex flex-col gap-1  top-[71px] "
-            >
-              <h3 class="font-semibold">Tech lead - Rand abogados</h3>
-              <p class="text-xs text-terteary">
-                Septiembre 2024, Diciembre 2024
-              </p>
-            </div>
-            <img src="/rand.png" alt="" class="mt-5 rounded-lg" />
-            <p class="text-terteary mt-3 line-clamp-5 text-justify">
-              ABC Cafe, a local coffee shop with a loyal customer base, wanted
-              to undergo a rebranding to attract a younger demographic and stand
-              out in a competitive market. The challenge was to modernize their
-              brand identity without alienating their existing customers.
-            </p>
-            <div class="flex items-center gap-2 mt-2">
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <Figma client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Figma</p>
-              </a>
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <NextJS client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Next</p>
-              </a>
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <TailwindIcon client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Tailwind</p>
-              </a>
-  
-            </div>
-          </aside>
-        </main>
-      </div>
-    
-      <div class="mx-6 flex flex-col gap-8 pt-4 ">
-        <main class="flex gap-4 max-w-[340px] w-full max-h-[500px]">
-          <div class="hidden xs:flex md:hidden">
-            <Jobs client:only="react" />
-          </div>
-          <aside class="flex flex-col gap-1">
-            <div
-              class="flex flex-col gap-1  top-[71px] "
-            >
-              <h3 class="font-semibold">Tech lead - Rand abogados</h3>
-              <p class="text-xs text-terteary">
-                Septiembre 2024, Diciembre 2024
-              </p>
-            </div>
-            <img src="/rand.png" alt="" class="mt-5 rounded-lg" />
-            <p class="text-terteary mt-3 line-clamp-5 text-justify">
-              ABC Cafe, a local coffee shop with a loyal customer base, wanted
-              to undergo a rebranding to attract a younger demographic and stand
-              out in a competitive market. The challenge was to modernize their
-              brand identity without alienating their existing customers.
-            </p>
-            <div class="flex items-center gap-2 mt-2">
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <Figma client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Figma</p>
-              </a>
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <NextJS client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Next</p>
-              </a>
-              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
-                <div class="w-5">
-                  <TailwindIcon client:only="react" />
-                </div>
-                <p class="text-xs font-semibold">Tailwind</p>
-              </a>
-  
-            </div>
-          </aside>
-        </main>
-      </div>
-    
-      
     </div>
+    <div class="mt-8 grid gap-8 mx-6">
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <!-- Rand -->
+        <div class="flex flex-col gap-6 pt-4 md:mx-0 col-span-1">
+          <main
+            class="flex gap-4 max-w-[340px] w-full max-h-[500px] sx:max-w-full sx:max-h-fit"
+          >
+            <div class="hidden xs:flex sm:hidden">
+              <Jobs client:only="react" />
+            </div>
+            <aside class="flex flex-col gap-1">
+              <div class="flex items-center gap-0 flex-wrap top-[71px] x:gap-3">
+                <h3
+                  class="font-semibold font-ClashDisplay text-xl text-balance"
+                >
+                  Rand abogados
+                </h3>
+                <p class="text-xs text-terteary">(Sep 2024-Dic 2024)</p>
+              </div>
+              <p class="text-terteary text-justify">
+                Lideré el desarrollo de soluciones digitales con React, Tailwind
+                y Next.js, aplicando Scrum para mejorar la eficiencia del equipo
+                en un 30%. Optimicé procesos internos, reduciendo los tiempos de
+                desarrollo en un 25% y asegurando la entrega dentro del
+                presupuesto y los plazos establecidos.
+              </p>
+              <div class="flex items-center gap-2 mt-2">
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <Figma client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Figma</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <NextJS client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Next</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <TailwindIcon client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Tailwind</p>
+                </a>
+              </div>
+              <a href="https://1-rand.vercel.app/">
+                <img
+                  src="/thumbnail_rand.webp"
+                  alt=""
+                  class="mt-5 rounded-lg sx:w-[33rem] md:w-[38rem]"
+                />
+              </a>
+            </aside>
+          </main>
+        </div>
+        <!-- Nomad Technologies -->
+        <div class="flex flex-col gap-6 pt-4 md:mx-0 col-span-1">
+          <main
+            class="flex gap-4 max-w-[340px] w-full max-h-[500px] sx:max-w-full sx:max-h-fit"
+          >
+            <div class="hidden xs:flex sm:hidden">
+              <Jobs client:only="react" />
+            </div>
+            <aside class="flex flex-col gap-1">
+              <div class="flex items-center gap-0 flex-wrap top-[71px] x:gap-3">
+                <h3
+                  class="font-semibold font-ClashDisplay text-xl text-balance"
+                >
+                  Nomad Technologies
+                </h3>
+                <p class="text-xs text-terteary">(Sep 2024-Dic 2024)</p>
+              </div>
+              <p class="text-terteary text-justify">
+                Desarrollé una aplicación web para 500 usuarios utilizando
+                Node.js, React, TypeScript y Next.js, optimizando los tiempos de
+                respuesta del backend en un 20%. Mejoré la escalabilidad del
+                sistema en un 30% mediante el diseño eficiente de APIs y la
+                integración de webhooks de terceros.
+              </p>
+              <div class="flex items-center gap-2 mt-2">
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <Figma client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Figma</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <NextJS client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Next</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <TailwindIcon client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Tailwind</p>
+                </a>
+              </div>
+              <a href="https://app-energy.vercel.app/">
+                <img
+                  src="/thumbnail_nomad.webp"
+                  alt=""
+                  class="mt-5 rounded-lg sx:w-[33rem] md:w-[38rem]"
+                />
+              </a>
+            </aside>
+          </main>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Medibiologic -->
+        <div class="flex flex-col gap-6 pt-4 md:mx-0 col-span-1">
+          <main
+            class="flex gap-4 max-w-[340px] w-full max-h-[500px] sx:max-w-full sx:max-h-fit"
+          >
+            <div class="hidden xs:flex sm:hidden">
+              <Jobs client:only="react" />
+            </div>
+            <aside class="flex flex-col gap-1">
+              <div class="flex items-center gap-0 flex-wrap top-[71px] x:gap-3">
+                <h3
+                  class="font-semibold font-ClashDisplay text-xl text-balance"
+                >
+                  Medibiologica
+                </h3>
+                <p class="text-xs text-terteary">(Sep 2024-Dic 2024)</p>
+              </div>
+              <p class="text-terteary text-justify">
+                Optimicé el rendimiento del sitio en un 85% con React, Astro y
+                Tailwind, e implementé soporte multilingüe con i18n, mejorando
+                la experiencia de usuario en un 45% y aumentando la conversión
+                en un 20%.
+              </p>
+              <div class="flex items-center gap-2 mt-2">
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <Figma client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Figma</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <NextJS client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Next</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <TailwindIcon client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Tailwind</p>
+                </a>
+              </div>
+              <a href="https://medi-biologic.vercel.app/">
+                <img
+                  src="/thumbnail_medibiologic.webp"
+                  alt=""
+                  class="mt-5 rounded-lg sx:w-[33rem] sm:w-[50rem]"
+                />
+              </a>
+            </aside>
+          </main>
+        </div>
+        <!-- Tigrillas -->
+        <div class="flex flex-col gap-6 pt-4 md:mx-0 col-span-1">
+          <main
+            class="flex gap-4 max-w-[340px] w-full max-h-[500px] sx:max-w-full sx:max-h-fit"
+          >
+            <div class="hidden xs:flex sm:hidden">
+              <Jobs client:only="react" />
+            </div>
+            <aside class="flex flex-col gap-1">
+              <div class="flex items-center gap-0 flex-wrap top-[71px] x:gap-3">
+                <h3
+                  class="font-semibold font-ClashDisplay text-xl text-balance"
+                >
+                  Tigrillas
+                </h3>
+                <p class="text-xs text-terteary">(Sep 2024-Dic 2024)</p>
+              </div>
+              <p class="text-terteary line-clamp-5 text-justify">
+                Implementé estrategias de SEO técnico y optimización de
+                rendimiento con Astro, React y Tailwind, logrando posicionar el
+                sitio en los primeros 5 resultados de Google y mejorando la
+                velocidad en un 40%.
+              </p>
+              <div class="flex items-center gap-2 mt-2">
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <Figma client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Figma</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <NextJS client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Next</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <TailwindIcon client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Tailwind</p>
+                </a>
+              </div>
+              <a href="https://www.tigrillas.com.mx/">
+                <img
+                  src="/thumbnail_tigrillas.webp"
+                  alt=""
+                  class="mt-5 rounded-lg sx:w-[33rem] sm:w-[50rem]"
+                />
+              </a>
+            </aside>
+          </main>
+        </div>
+        <!-- Studio mkt -->
+        <div
+          class="flex flex-col gap-6 pt-4 md:mx-0 col-span-1 sm:col-span-2 lg:col-span-1"
+        >
+          <main
+            class="flex gap-4 max-w-[340px] w-full max-h-[500px] sx:max-w-full sx:max-h-fit"
+          >
+            <div class="hidden xs:flex sm:hidden">
+              <Jobs client:only="react" />
+            </div>
+            <aside class="flex flex-col gap-1">
+              <div class="flex items-center gap-0 flex-wrap top-[71px] x:gap-3">
+                <h3
+                  class="font-semibold font-ClashDisplay text-xl text-balance"
+                >
+                  Studio de mkt
+                </h3>
+                <p class="text-xs text-terteary">(Sep 2024-Dic 2024)</p>
+              </div>
+              <p class="text-terteary line-clamp-5 text-justify">
+                Desarrollé una landing page con un rendimiento superior a 99 en
+                Google, asegurando un diseño pixel perfect con un 95% de
+                fidelidad al diseño original.
+              </p>
+              <div class="flex items-center gap-2 mt-2">
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <Figma client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Figma</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <NextJS client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Next</p>
+                </a>
+                <a
+                  class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]"
+                >
+                  <div class="w-5">
+                    <TailwindIcon client:only="react" />
+                  </div>
+                  <p class="text-xs font-semibold">Tailwind</p>
+                </a>
+              </div>
+              <a href="https://c-studio-mkt.vercel.app/">
+                <img
+                  src="/thumbnail_studio.webp"
+                  alt=""
+                  class="mt-5 rounded-lg sx:w-[33rem] sm:w-full"
+                />
+              </a>
+            </aside>
+          </main>
+        </div>
+      </div>
+
+      <!-- <div class="mx-6 flex flex-col gap-8 pt-4 col-span-1">
+        <main class="flex gap-4 max-w-[340px] w-full max-h-[500px]">
+          <div class="hidden xs:flex md:hidden">
+            <Jobs client:only="react" />
+          </div>
+          <aside class="flex flex-col gap-1">
+            <div
+              class="flex flex-col gap-1  top-[71px] "
+            >
+              <h3 class="font-semibold">Tech lead - Rand abogados</h3>
+              <p class="text-xs text-terteary">
+                Septiembre 2024, Diciembre 2024
+              </p>
+            </div>
+            <p class="text-terteary mt-3 line-clamp-5 text-justify">
+              ABC Cafe, a local coffee shop with a loyal customer base, wanted
+              to undergo a rebranding to attract a younger demographic and stand
+              out in a competitive market. The challenge was to modernize their
+              brand identity without alienating their existing customers.
+            </p>
+            <div class="flex items-center gap-2 mt-2">
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <Figma client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Figma</p>
+              </a>
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <NextJS client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Next</p>
+              </a>
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <TailwindIcon client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Tailwind</p>
+              </a>
   
+            </div>
+            <img src="/thumbnail_nomad.webp" alt="" class="mt-5 rounded-lg" />
+
+          </aside>
+        </main>
+      </div>
+    
+      <div class="mx-6 flex flex-col gap-8 pt-4 ">
+        <main class="flex gap-4 max-w-[340px] w-full max-h-[500px]">
+          <div class="hidden xs:flex md:hidden">
+            <Jobs client:only="react" />
+          </div>
+          <aside class="flex flex-col gap-1">
+            <div
+              class="flex flex-col gap-1  top-[71px] "
+            >
+              <h3 class="font-semibold">Tech lead - Rand abogados</h3>
+              <p class="text-xs text-terteary">
+                Septiembre 2024, Diciembre 2024
+              </p>
+            </div>
+            <img src="/thumbnail_medibiologic.webp" alt="" class="mt-5 rounded-lg" />
+            <p class="text-terteary mt-3 line-clamp-5 text-justify">
+              ABC Cafe, a local coffee shop with a loyal customer base, wanted
+              to undergo a rebranding to attract a younger demographic and stand
+              out in a competitive market. The challenge was to modernize their
+              brand identity without alienating their existing customers.
+            </p>
+            <div class="flex items-center gap-2 mt-2">
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <Figma client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Figma</p>
+              </a>
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <NextJS client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Next</p>
+              </a>
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <TailwindIcon client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Tailwind</p>
+              </a>
+  
+            </div>
+          </aside>
+        </main>
+      </div>
+      <div class="mx-6 flex flex-col gap-8 pt-4 ">
+        <main class="flex gap-4 max-w-[340px] w-full max-h-[500px]">
+          <div class="hidden xs:flex md:hidden">
+            <Jobs client:only="react" />
+          </div>
+          <aside class="flex flex-col gap-1">
+            <div
+              class="flex flex-col gap-1  top-[71px] "
+            >
+              <h3 class="font-semibold">Tech lead - Rand abogados</h3>
+              <p class="text-xs text-terteary">
+                Septiembre 2024, Diciembre 2024
+              </p>
+            </div>
+            <img src="/thumbnail_tigrillas.webp" alt="" class="mt-5 rounded-lg" />
+            <p class="text-terteary mt-3 line-clamp-5 text-justify">
+              ABC Cafe, a local coffee shop with a loyal customer base, wanted
+              to undergo a rebranding to attract a younger demographic and stand
+              out in a competitive market. The challenge was to modernize their
+              brand identity without alienating their existing customers.
+            </p>
+            <div class="flex items-center gap-2 mt-2">
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <Figma client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Figma</p>
+              </a>
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <NextJS client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Next</p>
+              </a>
+              <a class="flex items-center gap-1.5 border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#111111ed] dark:border-[#2b2b2bb2] w-fit rounded-full py-1 px-2.5 min-h-[28px]">
+                <div class="w-5">
+                  <TailwindIcon client:only="react" />
+                </div>
+                <p class="text-xs font-semibold">Tailwind</p>
+              </a>
+  
+            </div>
+          </aside>
+        </main>
+      </div> -->
+    </div>
   </div>
-  </section>
+</section>

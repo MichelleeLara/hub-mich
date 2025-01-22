@@ -49,6 +49,7 @@ const ContactSection = () => {
 
   return (
     <motion.section
+    id="yo"
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       className="border-t border-[#d9d6d6c7] dark:border-[#2b2b2b] border-b flex items-center justify-center"
@@ -81,7 +82,7 @@ const ContactSection = () => {
           variants={wordVariants}
           className="flex items-center gap-4 group max-w-[580px]"
         >
-          <p className="text-white">
+          <p className="">
             <AnimatedText text="Bienvenido al espacio donde mi experiencia y dedicación a los detalles elevan la calidad de cada proyecto." />
           </p>
           <div className="w-7 transition-all duration-100 group-hover:-rotate-45 md:hidden">
@@ -132,12 +133,12 @@ const ContactSection = () => {
             </div>
 
             <div className="flex items-center gap-2 ml-4">
-              <div className="p-2 w7 rounded-xl border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#2c2c2c] dark:border-[#4d4d4da0] transition-all duration-150 hover:-translate-y-2">
+              <a href="/pdf/CV_michelle_lara.pdf" target="_self" download="CV_Michelle_Lara.pdf" className="p-2 w7 rounded-xl border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#2c2c2c] dark:border-[#4d4d4da0] transition-all duration-150 hover:-translate-y-2">
                 <IconDownload />
-              </div>
-              <div className="p-2 w7 rounded-xl border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#2c2c2c] dark:border-[#4d4d4da0] transition-all duration-150 hover:-translate-y-2">
+              </a>
+              <a href="/pdf/CV_michelle_lara.pdf" target="_blank" className="p-2 w7 rounded-xl border border-[#eff3f4] bg-[#eff3f43c] dark:bg-[#2c2c2c] dark:border-[#4d4d4da0] transition-all duration-150 hover:-translate-y-2">
                 <IconEyes />
-              </div>
+              </a>
             </div>
           </div>
         </motion.div>
