@@ -1,12 +1,9 @@
 ---
-import React from 'react';
 import AnimatedTabs from '../components/Navbar';
 import '@fontsource-variable/inter-tight';
-// Supports weights 100-900
 import '@fontsource-variable/inter';
-import { Spotlight } from '../components/ui/Spotlight';
-import Header from '../components/Header';
 const { title, description, image, url } = Astro.props;
+
 
 // Definir las propiedades que el layout aceptará
 export interface Props {
@@ -37,14 +34,10 @@ export interface Props {
     <meta property="og:image:height" content="630" />
   </head>
   <body class="flex flex-col min-h-screen">
-    <!-- Contenido Principal -->
-    <!-- <Header client:only="react"/> -->
-
     <div id="main-content" class="flex-grow">
-    
+  
       <slot />
     </div>
-    
     <!-- Menú de Navegación Persistente -->
     <AnimatedTabs client:load />
     
