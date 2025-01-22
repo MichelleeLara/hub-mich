@@ -78,7 +78,7 @@ export default function Services() {
   const [selectedId, setSelectedId] = useState(null);
 
   return (
-    <section className="py-20 flex items-center justify-center">
+    <section className="py-20 flex items-center justify-center md:py-32">
       <div className="mx-6 flex flex-col gap-12 text-center max-w-screen-xl w-full">
         <motion.div
           className="flex flex-col gap-2 text-balance"

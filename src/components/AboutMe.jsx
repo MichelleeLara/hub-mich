@@ -30,7 +30,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section  className="py-20 overflow-hidden flex items-center justify-center md:py-32">
+    <section  className="py-20 overflow-hidden flex items-center justify-center md:py-40">
       <motion.div
         className="mx-6 flex flex-col gap-6 will-change-transform max-w-screen-xl md:flex-row"
         initial="hidden"
@@ -83,14 +83,14 @@ const HeroSection = () => {
 
           <motion.a
             href="#"
-            className="uppercase font-semibold text-sm flex items-center gap-1"
+            className="uppercase font-semibold text-sm flex items-center gap-1 mt-8"
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.8 }}
           >
             Más sobre mí
             <motion.span
-              className="w-5 mt-8"
+              className="w-5"
               whileHover={{ rotate: 45 }}
               transition={{ type: "spring", stiffness: 20, damping: 12 }}
             >

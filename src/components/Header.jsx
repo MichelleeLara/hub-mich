@@ -116,13 +116,13 @@ const variants = {
     <AnimatePresence>
       <div className="fixed top-0 left-0 w-full z-[100]  will-change-auto flex items-center justify-center">
         <motion.header
-          className={`min-w-[310px] w-2/4   dark:shadow-none py-3  ${currentVariant !== 'expanded' ? 'shadow-2xl border border-[#d2d2d2] dark:border-[#5c5c5c] bg-[#fbfcfc] dark:bg-[#1c1c1c] ' : ''}`} // Para activar GPU
+          className={`min-w-[310px] w-2/4   dark:shadow-none py-3 md:flex md:items-center md:justify-center md:w-full ${currentVariant !== 'expanded' ? 'shadow-2xl border border-[#d2d2d2] dark:border-[#5c5c5c] bg-[#fbfcfc] dark:bg-[#1c1c1c] ' : ''}`} // Para activar GPU
           // style={{ transformOrigin: "top center" }}
           variants={variants}
           initial="expanded"
           animate={currentVariant}
         >
-          <div className="mx-6 flex gap-3 items-center justify-between">
+          <div className="mx-6 flex gap-3 items-center justify-between md:w-full md:max-w-screen-xl">
             <div className="flex gap-1.5 items-center text-nowrap ">
               <img src="/author.png" className="w-12 object-top" alt="Author" />
               <AnimatePresence>

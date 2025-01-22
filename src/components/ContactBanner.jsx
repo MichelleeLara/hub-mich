@@ -53,7 +53,7 @@ const ContactSection = () => {
       animate={isInView ? "visible" : "hidden"}
       className="border-t border-[#d9d6d6c7] dark:border-[#2b2b2b] border-b flex items-center justify-center"
     >
-      <div className="mx-6 flex flex-col gap-16 my-16 max-w-screen-xl w-full md:flex-row md:justify-between">
+      <div className="mx-6 flex flex-col gap-16 my-16 max-w-screen-xl w-full md:flex-row md:justify-between md:my-20">
         {/* Contact mail */}
         <motion.a
           custom={0}
@@ -61,15 +61,12 @@ const ContactSection = () => {
           href="mailto:mich.ia@hotmail.com?subject=Hola&body=Hola%20Michelle%20..."
           className="flex items-center justify-between cursor-pointer gap-2 group"
         >
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <div className="w-7 flex items-center gap-4"   >
               <ConversationIcon />
             </div>
-            <div className="w-8 text-terteary flex items-center gap-4"   >
-              <IconLinkedin/>
-            </div>
             <p>
-              <AnimatedText text="Contactame" />
+              <AnimatedText text="Contactame por mail" />
             </p>
           </div>
 
@@ -85,7 +82,7 @@ const ContactSection = () => {
           className="flex items-center gap-4 group max-w-[580px]"
         >
           <p className="text-white">
-            <AnimatedText text="Bienvenido al espacio donde muestro la experiencia y el datelle que me gusta proporcionar a los proyectos" />
+            <AnimatedText text="Bienvenido al espacio donde mi experiencia y dedicación a los detalles elevan la calidad de cada proyecto." />
           </p>
           <div className="w-7 transition-all duration-100 group-hover:-rotate-45 md:hidden">
             <IconArrowRight />
