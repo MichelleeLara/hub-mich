@@ -1,19 +1,22 @@
-import { OGImageRoute } from 'astro-og-canvas';
+import { OGImageRoute } from "astro-og-canvas";
 
 export const { getStaticPaths, GET } = OGImageRoute({
-  param: 'route',
-  pages: {
-    'example': {
-      title: 'Página de Ejemplo',
-      description: 'Descripción de esta página mostrada en texto más pequeño',
-    },
+  param: "route",
+  pages,
+  getImageOptions: async (_, { data, slug }) => {
+    return {
+      title: data.title,
+      description: data.description,
+      dir: data.isArabic ? "rtl" : "ltr",
+      border: { color: [114, 221, 64], width: 20, side: "inline-start" },
+      bgGradient: [
+        [6, 38, 45],
+        [8, 3, 2],
+      ],
+      logo: {
+        path: "./src/logo.png",
+        size: [500],
+      },
+    };
   },
-  getImageOptions: (path, page) => ({
-    title: page.title,
-    description: page.description,
-    logo: {
-      path: './public/OpenGraph.png',
-    },
-    // Puedes agregar más opciones aquí según tus necesidades
-  }),
 });
