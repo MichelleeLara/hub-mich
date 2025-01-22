@@ -25,9 +25,16 @@ import Cta from "../components/Cta.astro";
 import Footer from "../sections/Footer.astro";
 import { Spotlight } from "../components/ui/Spotlight";
 
+const meta = {
+  title: 'Inicio - Mi Sitio Web',
+  description: 'Bienvenido a mi sitio web donde comparto mis proyectos y blogs.',
+  image: 'https://hub-mich.vercel.app/OpenGraph.png',
+  url: 'https://hub-mich.vercel.app/',
+};
+
 ---
 
-<Layout>
+<Layout {...meta}>
 
   <main
     class="bg-white min-h-screen text-black dark:bg-[#161616] dark:text-gray-300 transition-colors duration-300 pb-14 "
