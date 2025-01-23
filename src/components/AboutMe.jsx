@@ -37,7 +37,7 @@ const HeroSection = () => {
         animate={isInView ? "visible" : "hidden"}
       >
         <motion.h2
-          className="text-3xl uppercase font-ClashDisplay text-gray-800 font-semibold min-h-fit dark:text-secondary xs:text-4xl xs:leading-8"
+          className="text-3xl uppercase font-ClashDisplay text-gray-800 font-semibold min-h-fit dark:text-secondary xs:text-4xl xs:leading-8 md:text-4xl"
           initial={{ opacity: 0, x: 50 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
           transition={{ type: "spring", stiffness: 120, damping: 12 }}

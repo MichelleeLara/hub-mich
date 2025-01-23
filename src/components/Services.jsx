@@ -86,7 +86,7 @@ export default function Services() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl font-semibold dark:text-secondary">
+          <h2 className="text-3xl font-ClashDisplay font-semibold dark:text-secondary md:text-4xl">
             Así es como aporto valor a tu negocio
           </h2>
           <p className="text-sm text-terteary">
