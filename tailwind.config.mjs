@@ -17,7 +17,7 @@ export default {
 				'xs': '345px',  // Dispositivos pequeños
 				'sx': '420px',  // Dispositivos pequeños
 				'x': '500px',  // Dispositivos pequeños
-				'x-s': '500px',  // Dispositivos pequeños
+				'xs-s': '500px',  // Dispositivos pequeños
 				'sm': '640px',  // Sobreescribir el predeterminado si lo necesitas
 				'md': '768px',
 				'lg': '1024px',
