@@ -41,7 +41,7 @@ const TracingBeam = () => {
     <div ref={containerRef} className="relative  flex flex-col items-center">
       {/* Icono Sticky */}
       <motion.div
-        className="p-3 rounded-full bg-[#eff3f4] dark:bg-[#2c2c2c] sticky top-[72px] z-10"
+        className="p-3 rounded-full bg-[#e3e3e3] border-[#8f8f8f30] border sticky top-[72px] z-10 dark:bg-[#2c2c2c] dark:border-[#272626]"
         style={{
           color: iconColor, // Aplica el color interpolado al ícono
         }}
