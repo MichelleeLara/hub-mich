@@ -1,15 +1,5 @@
 ---
-import ThemeToggle from '../components/Themetoggle';
-import Layout from '../layouts/Layout.astro';
+// Redirección temporal a la sección "yo" del inicio.
+// Cuando exista la página completa "Sobre mí", reemplazar este redirect.
+return Astro.redirect("/#yo");
 ---
-
-<Layout>
-	<main class="bg-white min-h-screen text-black dark:bg-[#161616] dark:text-gray-300 transition-colors duration-300">
-		<ThemeToggle client:load/>
-		<p>This page <strong>yo</strong></p>
-	</main>
-
-
-</Layout>
-
-

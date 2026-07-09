@@ -13,7 +13,6 @@ const ContactSection = () => {
   // Ref for the section to monitor when it comes into view
   const sectionRef = React.useRef(null);
   const isInView = useInView(sectionRef, { once: true });
-  console.log(isInView)
 
   const wordVariants = {
     hidden: { opacity: 0, y: 50 },

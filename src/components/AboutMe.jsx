@@ -82,7 +82,9 @@ const HeroSection = () => {
           </motion.p>
 
           <motion.a
-            href="#"
+            href="https://www.linkedin.com/in/michelle-rodriguez-lara/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="uppercase font-semibold text-sm flex items-center gap-1 mt-8"
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}

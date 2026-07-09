@@ -110,8 +110,6 @@ const variants = {
   },
 };
 
-  console.log(currentVariant)
-
   return (
     <AnimatePresence>
       <div className="fixed top-0 left-0 w-full z-[100]  will-change-auto flex items-center justify-center">
@@ -122,39 +120,14 @@ const variants = {
           initial="expanded"
           animate={currentVariant}
         >
-          <div className="mx-6 flex gap-3 items-center justify-between md:w-full md:max-w-screen-xl">
-            <a href="#" className="flex gap-1.5 items-center text-nowrap">
-              <img src="/author.png" className="w-12 object-top" alt="Author" />
-              <AnimatePresence>
-                <div className="flex flex-col gap-0">
-                  <p className="font-semibold  text-sm dark:text-secondary">
-                    {(currentVariant !== 'expanded') ? <span>Mich R.</span> : <span>Mich </span>}
-                    {(currentVariant === 'expanded') && (
-                      <motion.span
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        Rodriguez
-                      </motion.span>
-                    )}
-                  </p>
-                  <p className="text-xs font-medium text-terteary">
-                    Frontend{" "}
-                    {(currentVariant === 'expanded') && (
-                      <motion.span
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        Engineer
-                      </motion.span>
-                    )}
-                  </p>
-                </div>
-              </AnimatePresence>
+          <div className="relative mx-6 flex gap-3 items-center justify-between md:w-full md:max-w-screen-xl">
+            {/* Logo único a la izquierda */}
+            <a
+              href="/"
+              aria-label="Mich — inicio"
+              className="font-ClashDisplay font-semibold text-lg text-gray-800 dark:text-secondary"
+            >
+              ./mich
             </a>
             <div className="flex items-center justify-center gap-2 ">
               <AnimatePresence>
@@ -179,7 +152,7 @@ const variants = {
               </AnimatePresence>
               <ul className="hidden md:flex items-center gap-4 uppercase text-xs font-semibold">
                 <li>
-                  <a href="#footer">Contáctme</a>
+                  <a href="#footer">Contáctame</a>
                 </li>
                 <li>
                   <a href="/pdf/CV_michelle_lara.pdf" target="_blank" rel="noopener noreferrer" >Mi cv</a>

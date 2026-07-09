@@ -49,7 +49,9 @@ function ServiceCard({ service, isSelected, onClick }) {
             className="mt-4 flex justify-between items-center"
           >
             <motion.a
-              href="#"
+              href={`https://wa.me/5578934420?text=Hola%20Mich!%20Me%20interesa%20${encodeURIComponent(service.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm text-white font-semibold bg-primary
                          rounded-xl flex items-center py-3 px-6 gap-2 w-fit"
               whileHover={{ scale: 1.05 }}
