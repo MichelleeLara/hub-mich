@@ -1,175 +1,126 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { IconExplore, IconsMe, IconProjects, IconStack, IconServices, IconWhatsapp, IconLinkedin } from "../icons/Icons";
-import '../style.css';
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
-const tabs = [
-  { id: "inicio", label: "Inicio", path: "/" },
-  { id: "yo", label: "Yo", path: "/yo" },
-  { id: "proyectos", label: "Proyectos", path: "/proyectos" },
-  { id: "stack", label: "Stack", path: "/stack" },
-  { id: "servicios", label: "Servicios", path: "/servicios" },
-  { id: "linkedin", label: "Linkedin", path: "/linkedin" },
-  { id: "whatsapp", label: "Whatsapp", path: "/whatsapp" },
-];
-
-const iconMap = {
-  inicio: IconExplore,
-  yo: IconsMe,
-  proyectos: IconProjects,
-  stack: IconStack,
-  servicios: IconServices,
-  whatsapp: IconWhatsapp,
-  linkedin: IconLinkedin,
+/* -------------------------------------------------------------------------- */
+/*  Iconos de línea (coherentes con el header)                                */
+/* -------------------------------------------------------------------------- */
+const base = {
+  width: 20,
+  height: 20,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.6,
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
 };
 
+const HomeIcon = (p) => (
+  <svg {...base} {...p}>
+    <path d="M3 10.5 12 3l9 7.5" />
+    <path d="M5 9.5V21h14V9.5" />
+  </svg>
+);
+const WorkIcon = (p) => (
+  <svg {...base} {...p}>
+    <rect x="3" y="7" width="18" height="13" rx="2" />
+    <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </svg>
+);
+const UserIcon = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" />
+  </svg>
+);
+const MailIcon = (p) => (
+  <svg {...base} {...p}>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="m3 7 9 6 9-6" />
+  </svg>
+);
+
+/* -------------------------------------------------------------------------- */
+/*  Tabs (máx. 4 para respetar el área táctil)                                */
+/* -------------------------------------------------------------------------- */
+const TABS = [
+  { id: "inicio", label: "Inicio", path: "/", Icon: HomeIcon },
+  { id: "proyectos", label: "Proyectos", path: "/#proyectos", Icon: WorkIcon },
+  { id: "yo", label: "Sobre mí", path: "/#yo", Icon: UserIcon },
+  { id: "contacto", label: "Contacto", path: "/#footer", Icon: MailIcon },
+];
+
+const SPRING = { type: "spring", stiffness: 420, damping: 34 };
+
 export default function AnimatedTabs() {
-  const [activeTab, setActiveTab] = useState(tabs[0].id); // SSR estable
-  const [isMounted, setIsMounted] = useState(false);
-  
-  // Referencia al contenedor principal del contenido.
-  // Asegúrate de que en tu layout Astro el contenido principal esté dentro de un <main id="main-content"> o similar.
-  const mainContentRef = useRef(null);
+  const [active, setActive] = useState("inicio");
 
   useEffect(() => {
-    setIsMounted(true);
-
-    // Al montar, actualizamos la pestaña activa según localStorage o URL
-    const savedTab = typeof window !== 'undefined' ? localStorage.getItem('activeTab') : null;
-    const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-    const currentTab = tabs.find(tab => tab.path === currentPath);
-
-    if (savedTab && tabs.some(tab => tab.id === savedTab)) {
-      setActiveTab(savedTab);
-    } else if (currentTab) {
-      setActiveTab(currentTab.id);
-    }
+    const hash = window.location.hash;
+    const match = TABS.find((t) => t.path === `/${hash}`);
+    if (match) setActive(match.id);
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && activeTab) {
-      localStorage.setItem("activeTab", activeTab);
-    }
-  }, [activeTab]);
-
-  const handleTabClick = async (e, tab) => {
-    e.preventDefault(); // Evitamos la navegación completa
-    setActiveTab(tab.id);
-
-    // Actualizamos la URL sin recargar la página
-    window.history.pushState(null, '', tab.path);
-
-    // Obtenemos el nuevo contenido vía fetch
-    const response = await fetch(tab.path, {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    });
-    const htmlText = await response.text();
-
-    // Parseamos el HTML obtenido para extraer el contenido principal
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlText, 'text/html');
-
-    // Suponiendo que tu contenido principal está dentro de <main id="main-content">
-    const newMainContent = doc.querySelector('#main-content');
-    const currentMainContent = document.querySelector('#main-content');
-
-    if (newMainContent && currentMainContent) {
-      // Reemplazamos el contenido actual por el nuevo
-      currentMainContent.innerHTML = newMainContent.innerHTML;
-    }
-  };
-
-  // Si aún no se ha montado, renderiza el estado SSR inicial (primera pestaña activa)
-  // if (!isMounted) {
-  //   return (
-  //     <nav className="fixed bottom-0 left-0 right-0 border-t text-xs font-semibold text-[#616161] overflow-x-auto overflow-hidden flex gap-8 items-center no-scrollbar py-4 first:pl-5 last:pr-5 [&>li]:flex [&>li]:flex-col [&>li]:items-center [&>li]:gap-1 [&>li>svg]:text-[#8a8a8a] [&>li]:p-1.5 [&>li]:px-2.5 dark:bg-[#1c1c1c] dark:border-none">
-  //       <ul className="no-scrollbar flex items-center justify-center text-center gap-8">
-  //         {tabs.map((tab, index) => {
-  //           const IconComponent = iconMap[tab.id.toLowerCase()];
-  //           const isActive = (index === 0);
-  //           return (
-  //             <li
-  //               key={tab.id}
-  //               className={`relative rounded-full px-3 py-1.5 font-medium text-xs text-[#8a8a8a] gap-1 transition focus-visible:outline-2 ${
-  //                 isActive ? "text-[#4a4a4a] dark:text-white" : ""
-  //               }`}
-  //               style={{ WebkitTapHighlightColor: "transparent" }}
-  //             >
-  //               <div className="flex flex-col items-center gap-1">
-  //                 {isActive && (
-  //                   <motion.span
-  //                     layoutId="blend"
-  //                     className="absolute inset-0 z-10 mix-blend-darken bg-[#eff3f4] rounded-lg border border-[#e1e1e3] dark:border-[#393939] dark:bg-[#2c2c2c] dark:mix-blend-lighten"
-  //                   />
-  //                 )}
-  //                 <div className={`${isActive ? "text-white" : ""}`}>
-  //                   <IconComponent />
-  //                 </div>
-  //                 {tab.label}
-  //               </div>
-  //             </li>
-  //           );
-  //         })}
-  //       </ul>
-  //     </nav>
-  //   );
-  // }
-
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t text-xs font-semibold text-[#616161] overflow-x-auto overflow-hidden flex gap-8 items-center no-scrollbar py-6 pb-8 first:pl-6 last:pr-6 [&>li]:flex [&>li]:flex-col [&>li]:items-center [&>li]:gap-1 [&>li>svg]:text-[#8a8a8a] [&>li]:p-1.5 [&>li]:px-2.5 dark:bg-[#1c1c1c] dark:border-none md:hidden">
-      <ul className="no-scrollbar flex items-center justify-center text-center gap-8">
-        {tabs.map((tab) => {
-          const IconComponent = iconMap[tab.id.toLowerCase()];
-          const isActive = activeTab === tab.id;
+    <motion.nav
+      className="fixed bottom-6 inset-x-0 z-[100] flex md:hidden justify-center pointer-events-none"
+      initial={{ opacity: 0, y: 44, scale: 0.92 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.15 }}
+    >
+      <ul
+        className="pointer-events-auto flex items-center gap-1 p-2 rounded-full
+                   backdrop-blur-md bg-white/75 dark:bg-[#1c1c1c]/85
+                   border border-black/5 dark:border-white/10
+                   shadow-2xl shadow-black/10 dark:shadow-black/50
+                   transition-colors duration-500"
+      >
+        {TABS.map((tab) => {
+          const isActive = active === tab.id;
+          const { Icon } = tab;
+          const onClick = () => setActive(tab.id);
           return (
-            <li
-              key={tab.id}
-              onClick={(e) => handleTabClick(e, tab)}
-              className={`relative rounded-full px-2 py-1.5 font-medium text-xs text-[#8a8a8a] gap-1 transition focus-visible:outline-2 ${
-                isActive ? "text-[#000000] dark:text-white" : ""
-              }dark:text-[#616161]`}
-              style={{ WebkitTapHighlightColor: "transparent" }}
-            >
-              <a href={tab.path} className="flex flex-col items-center gap-1">
-                <AnimatePresence mode="popLayout">
-                  {isActive && (
-                    <motion.span
-                      key="active-bg"
-                      layoutId="blend"
-                      initial={{ opacity: 0 }}
-                      animate={{ 
-                        opacity: 1, 
-                        // scale: 1,
-                        transition: { 
-                          duration: .2,
-                          ease: "easeInOut"
-                        }
-                      }}
-                      exit={{ 
-                        opacity: 0, 
-                        // scale: 1,
-                        transition: { 
-                          duration: .2,
-                          ease: "easeInOut"
-                        }
-                      }}
-                      className="absolute inset-0 z-10 mix-blend-darken bg-[#eff3f4] rounded-lg border  border-[#e1e1e3] dark:border-[#393939] dark:bg-[#2c2c2c] dark:mix-blend-lighten"
-                    />
-                  )}
-                </AnimatePresence>
-                <div className={`flex flex-col gap-1 items-center justify-center${isActive ? "text-[#000000] dark:text-white" : "text-[#616161] dark:text-[#616161]"}`}>
-                  <IconComponent />
-                  <p className="">
-                    {tab.label}
-                  </p>
-                </div>
+            <li key={tab.id}>
+              <a
+                href={tab.path}
+                onClick={onClick}
+                aria-label={tab.label}
+                aria-current={isActive ? "page" : undefined}
+                className={`relative flex items-center h-11 rounded-full px-4 transition-colors duration-300 ${
+                  isActive
+                    ? "text-gray-900 dark:text-white"
+                    : "text-gray-500 dark:text-terteary"
+                }`}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="tab-pill"
+                    className="absolute inset-0 rounded-full bg-black/[0.06] dark:bg-white/10"
+                    transition={SPRING}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-2">
+                  <Icon />
+                  <AnimatePresence initial={false}>
+                    {isActive && (
+                      <motion.span
+                        key="label"
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: "auto", opacity: 1 }}
+                        exit={{ width: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="text-sm font-medium whitespace-nowrap overflow-hidden"
+                      >
+                        {tab.label}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </span>
               </a>
             </li>
           );
         })}
       </ul>
-    </nav>
+    </motion.nav>
   );
 }

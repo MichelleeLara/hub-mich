@@ -1,5 +1,6 @@
 ---
 import AnimatedTabs from '../components/Navbar';
+import Header from '../components/Header';
 import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/inter';
 const { title, description, image, url } = Astro.props;
@@ -42,11 +43,13 @@ export interface Props {
 
   </head>
   <body class="flex flex-col min-h-screen">
+    <!-- Navegación superior (islas desktop + barra mínima mobile) -->
+    <Header client:load />
     <div id="main-content" class="flex-grow">
-  
+
       <slot />
     </div>
-    <!-- Menú de Navegación Persistente -->
+    <!-- Menú de Navegación Persistente (bottom bar mobile) -->
     <AnimatedTabs client:load />
     
   </body>

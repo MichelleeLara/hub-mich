@@ -20,12 +20,22 @@ export default function ThemeToggle() {
     }
   };
 
-  // Cambiar entre temas
+  // Cambiar entre temas con transición de blur en la foto del hero.
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme); // Actualiza el estado
-    localStorage.setItem("theme", newTheme); // Guarda el tema en localStorage
-    updateThemeClass(newTheme); // Actualiza la clase en el DOM
+    const root = document.documentElement;
+
+    setTheme(newTheme); // actualiza el ícono al instante
+    localStorage.setItem("theme", newTheme);
+
+    // Blur leve durante el cruce; el cambio de tema (crossfade) ocurre ya
+    // y el CSS disuelve una foto en la otra.
+    root.classList.add("theme-swapping");
+    updateThemeClass(newTheme);
+
+    window.setTimeout(() => {
+      root.classList.remove("theme-swapping");
+    }, 260);
   };
 
   return (
@@ -35,12 +45,13 @@ export default function ThemeToggle() {
     >
       <motion.button
         onClick={toggleTheme}
-        className="relative flex items- w-10 h-10 rounded-full  transition-colors duration-500"
+        aria-label="Cambiar tema"
+        className="relative flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-300"
         whileTap={{ scale: 0.9 }}
       >
         {/* Ícono del toggle */}
         <motion.div
-          className="absolute flex items-center justify-center w-10 h-10"
+          className="absolute flex items-center justify-center w-8 h-8"
           transition={{
             type: "spring",
             stiffness: 500,
