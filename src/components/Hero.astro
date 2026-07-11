@@ -11,7 +11,7 @@
     <div
       class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest"
     >
-      <span class="text-gray-800 dark:text-secondary">Frontend Engineer</span>
+      <span class="text-gray-800 dark:text-secondary">Ingeniero de software</span>
       <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
       <span class="flex items-center gap-2 text-green-500">
         <span class="relative flex w-2 h-2">
@@ -28,7 +28,7 @@
     <!-- Nombre gigante con la foto integrada al centro -->
     <div class="relative w-full flex items-center justify-center">
       <h1
-        class="font-ClashDisplay font-semibold uppercase tracking-tight leading-[0.98] sm:leading-[0.9] md:leading-[0.85] text-gray-800 dark:text-secondary text-center text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] select-none"
+        class="font-ClashDisplay font-semibold uppercase tracking-tight leading-[1.08] sm:leading-[1.02] md:leading-[0.98] text-gray-800 dark:text-secondary text-center text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] select-none origin-center [transform:scaleY(1.14)]"
       >
         <span class="block">Michelle</span>
         <span class="block">Rodriguez</span>
@@ -44,13 +44,13 @@
         <img
           src="/hero_mich_black.png"
           alt="Foto de Michelle Rodriguez Lara"
-          class="hero-float absolute inset-0 w-full h-full object-cover object-top rounded-[42%] bg-[#e0e0e0] border border-[#8f8f8f30] shadow-2xl opacity-100 dark:opacity-0"
+          class="hero-float absolute inset-0 w-[110%] h-[120%] object-cover object-top rounded-[6rem] bg-[#e0e0e0] border border-[#8f8f8f30] shadow-2xl opacity-100 dark:opacity-0"
         />
         <!-- Modo oscuro: versión original -->
         <img
           src="/hero_mich.png"
           alt="Foto de Michelle Rodriguez Lara"
-          class="hero-float absolute inset-0 w-full h-full object-cover object-top rounded-[42%] dark:bg-[#1c1c1c] border border-transparent dark:border-[#272626] shadow-2xl opacity-0 dark:opacity-100"
+          class="hero-float absolute inset-0 w-[110%] h-[120%] object-cover object-top rounded-[6rem] dark:bg-[#1c1c1c] border border-transparent dark:border-[#272626] shadow-2xl opacity-0 dark:opacity-100"
         />
       </div>
     </div>
@@ -147,10 +147,10 @@
   @keyframes hero-float {
     0%,
     100% {
-      transform: translateY(0) rotate(-1deg);
+      transform: translateY(0);
     }
     50% {
-      transform: translateY(-6px) rotate(1deg);
+      transform: translateY(-6px);
     }
   }
 
@@ -174,15 +174,17 @@
     let targetY = 0;
     let x = 0;
     let y = 0;
-    const RANGE_X = 10;
-    const RANGE_Y = 8;
-    const DAMP = 0.06;
+    const RANGE_X = 30; // más recorrido horizontal
+    const RANGE_Y = 24; // más recorrido vertical
+    const DAMP = 0.16; // seguimiento más rápido/reactivo al mouse
 
     window.addEventListener(
       "mousemove",
       (e) => {
-        targetX = (e.clientX / window.innerWidth - 0.5) * 2 * RANGE_X;
-        targetY = (e.clientY / window.innerHeight - 0.5) * 2 * RANGE_Y;
+        const nx = e.clientX / window.innerWidth - 0.5;
+        const ny = e.clientY / window.innerHeight - 0.5;
+        targetX = nx * 2 * RANGE_X;
+        targetY = ny * 2 * RANGE_Y;
       },
       { passive: true }
     );

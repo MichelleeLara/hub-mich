@@ -1,6 +1,7 @@
 ---
 import AnimatedTabs from '../components/Navbar';
 import Header from '../components/Header';
+import ParticlesBackground from '../components/ParticlesBackground.astro';
 import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/inter';
 const { title, description, image, url } = Astro.props;
@@ -43,6 +44,8 @@ export interface Props {
 
   </head>
   <body class="flex flex-col min-h-screen">
+    <!-- Fondo de partículas (detrás de todo el contenido) -->
+    <ParticlesBackground />
     <!-- Navegación superior (islas desktop + barra mínima mobile) -->
     <Header client:load />
     <div id="main-content" class="flex-grow">
@@ -100,19 +103,27 @@ export interface Props {
     margin: 0;
     width: 100%;
     height: 100%;
-    background: #161616;
     font-family: 'Inter Tight Variable', sans-serif;
     scroll-behavior: smooth;
-    
   }
 
-  html:not(.dark),
-  html:not(.dark) body {
+  /* El color de fondo vive SOLO en html: el canvas de partículas usa
+     z-index -1 y debe quedar entre el fondo y el contenido. Un fondo
+     opaco en body lo taparía. */
+  html {
+    background: #161616;
+    transition: background-color 0.3s;
+  }
+
+  body {
+    background: transparent;
+  }
+
+  html:not(.dark) {
     background: #ffffff; /* fondo claro */
   }
 
-  html.dark,
-  html.dark body {
+  html.dark {
     background: #161616; /* fondo oscuro */
   }
 

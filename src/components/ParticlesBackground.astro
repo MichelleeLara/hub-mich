@@ -1,0 +1,437 @@
+---
+// Fondo de "polvo estelar": miles de partículas diminutas agrupadas en una
+// corriente orgánica (estilo nebulosa) que el cursor dispersa a su paso.
+// Fase 2: al llegar a la sección #face-anchor (Sobre mí), TODAS las
+// partículas se reclutan hacia puntos muestreados del retrato y forman el
+// rostro; el scroll dirige la formación (scrubbing) y al salir se dispersan.
+// Canvas 2D vanilla, sin dependencias.
+---
+
+<canvas id="particles-bg" aria-hidden="true"></canvas>
+
+<style>
+  #particles-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById('particles-bg') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // --- Configuración -------------------------------------------------------
+  const AREA_PER_PARTICLE = 170; // px² por partícula (menor = más denso)
+  const MIN_COUNT = 900;
+  const MAX_COUNT = 6000;
+  const AMBIENT_RATIO = 0.14; // fracción de polvo suelto por todo el viewport
+  const SPRING = 0.012; // fuerza de regreso al hogar
+  const DAMPING = 0.9;
+  const MOUSE_RADIUS = 130; // radio de dispersión del cursor
+  const MOUSE_FORCE = 2.4;
+  const SCROLL_PARALLAX = 0.14;
+  // Atenuación global fuera de la sección del rostro: el polvo queda como
+  // textura casi imperceptible y recupera opacidad plena al formarse el rostro.
+  const BASE_DIM = 0.35;
+  // Partículas de reserva: invisibles y sin física fuera del rostro; se
+  // materializan durante la formación para duplicar la resolución del retrato.
+  const RESERVE_AREA = 220; // px² por partícula de reserva
+  const RESERVE_MAX = 6000;
+
+  // --- Rostro (fase 2) -------------------------------------------------------
+  // Fuente y recorte de cabeza (fracciones del tamaño original de la foto).
+  // Preparado para varios ángulos: agregar más entradas a FACE_ANGLES y
+  // mezclar según la posición del mouse para que el rostro "gire".
+  const FACE_ANGLES = [
+    { src: '/hero_mich.png', crop: { x: 0.25, y: 0.11, w: 0.59, h: 0.59 } },
+  ];
+  const FACE_DARK_MIN = 0.42; // oscuridad mínima para considerar un píxel
+  const FACE_SAMPLE_W = 340; // resolución interna de muestreo
+
+  interface Particle {
+    hx: number; // hogar base (corriente/ambiental)
+    hy: number;
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    size: number;
+    alpha: number;
+    depth: number; // 0..1 — parallax
+    phase: number; // fase del parpadeo
+    tw: number; // velocidad del parpadeo
+    amp: number; // amplitud de la deriva continua alrededor del hogar
+    ambient: boolean; // polvo suelto (envuelve el viewport al hacer scroll)
+    reserve: boolean; // refuerzo del retrato: solo existe mientras se forma
+    fx: number; // punto asignado del rostro (normalizado 0..1; -1 = sin asignar)
+    fy: number;
+    fa: number; // alpha objetivo dentro del rostro
+  }
+
+  let particles: Particle[] = [];
+  let w = 0;
+  let h = 0;
+  let rafId = 0;
+  let lastTime = 0;
+
+  // Progreso de formación del rostro (0 = polvo libre, 1 = rostro formado).
+  // Se suaviza cada frame; el objetivo lo dicta la posición de #face-anchor.
+  let faceEase = 0;
+  let facePointsReady = false;
+  let faceAspect = 1;
+  let pickFacePoint: (() => { x: number; y: number; a: number }) | null = null;
+
+  const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, active: false };
+
+  // --- Tema ----------------------------------------------------------------
+  let rgb = '235, 235, 240';
+  const syncTheme = () => {
+    rgb = document.documentElement.classList.contains('dark') ? '235, 235, 240' : '25, 25, 30';
+  };
+  syncTheme();
+  new MutationObserver(syncTheme).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+
+  // --- Muestreo de la corriente --------------------------------------------
+  // Gaussiana (Box-Muller) para acumular densidad hacia el núcleo del flujo
+  const gauss = () => {
+    let u = 0;
+    let v = 0;
+    while (!u) u = Math.random();
+    while (!v) v = Math.random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  };
+
+  // Curva bézier cuadrática que define el eje de la corriente de polvo:
+  // entra por arriba a la derecha y fluye en diagonal hacia abajo al centro.
+  const streamPoint = (t: number) => {
+    const p0 = { x: 0.68 * w, y: -0.08 * h };
+    const p1 = { x: 0.74 * w, y: 0.55 * h };
+    const p2 = { x: 0.42 * w, y: 1.15 * h };
+    const a = (1 - t) * (1 - t);
+    const b = 2 * (1 - t) * t;
+    const c = t * t;
+    return { x: a * p0.x + b * p1.x + c * p2.x, y: a * p0.y + b * p1.y + c * p2.y };
+  };
+
+  const spawn = (ambient: boolean, reserve = false): Particle => {
+    let hx: number;
+    let hy: number;
+    let alpha: number;
+    if (ambient || reserve) {
+      hx = Math.random() * w;
+      hy = Math.random() * h;
+      alpha = 0.05 + Math.random() * 0.15;
+    } else {
+      const t = Math.random();
+      const p = streamPoint(t);
+      // La corriente se ensancha conforme baja, como polvo que se abre
+      const width = w * 0.05 * (0.55 + t * 1.4);
+      hx = p.x + gauss() * width;
+      hy = p.y + gauss() * width * 0.6;
+      // Sesgada: muchas tenues, pocas brillantes
+      alpha = 0.12 + Math.random() ** 1.5 * 0.7;
+    }
+    const star = !ambient && Math.random() < 0.02; // destellos ocasionales
+    return {
+      hx,
+      hy,
+      x: hx,
+      y: hy,
+      vx: 0,
+      vy: 0,
+      size: star ? 1.8 + Math.random() * 0.8 : 0.5 + Math.random() * 1.3,
+      alpha: star ? 0.5 + Math.random() * 0.3 : alpha,
+      depth: 0.2 + Math.random() * 0.8,
+      phase: Math.random() * Math.PI * 2,
+      tw: 1 + Math.random() * 1.5,
+      amp: 200 + Math.random() * 28,
+      ambient,
+      reserve,
+      fx: -1,
+      fy: -1,
+      fa: 0,
+    };
+  };
+
+  const assignFaceTargets = () => {
+    if (!pickFacePoint) return;
+    for (const p of particles) {
+      const c = pickFacePoint();
+      // Jitter mínimo para que los duplicados no se encimen exactos
+      p.fx = c.x + (Math.random() - 0.5) * 0.008;
+      p.fy = c.y + (Math.random() - 0.5) * 0.008;
+      p.fa = c.a;
+    }
+  };
+
+  // Muestrea la foto: píxeles oscuros (cabello, rasgos, sombras) se vuelven
+  // candidatos, ponderados por su oscuridad → el retrato queda tipo boceto.
+  const sampleFace = () => {
+    const angle = FACE_ANGLES[0];
+    const img = new Image();
+    img.onload = () => {
+      const sx = angle.crop.x * img.naturalWidth;
+      const sy = angle.crop.y * img.naturalHeight;
+      const sw = angle.crop.w * img.naturalWidth;
+      const sh = angle.crop.h * img.naturalHeight;
+      const cw = FACE_SAMPLE_W;
+      const ch = Math.round((sh / sw) * cw);
+      faceAspect = ch / cw;
+
+      const oc = document.createElement('canvas');
+      oc.width = cw;
+      oc.height = ch;
+      const octx = oc.getContext('2d')!;
+      octx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+      const data = octx.getImageData(0, 0, cw, ch).data;
+
+      const cand: { x: number; y: number; a: number }[] = [];
+      const cum: number[] = [];
+      let total = 0;
+      for (let y = 0; y < ch; y++) {
+        for (let x = 0; x < cw; x++) {
+          const i = (y * cw + x) * 4;
+          const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
+          const dark = 1 - lum;
+          if (dark > FACE_DARK_MIN) {
+            cand.push({ x: x / cw, y: y / ch, a: 0.25 + dark * 0.75 });
+            total += (dark - FACE_DARK_MIN) ** 2;
+            cum.push(total);
+          }
+        }
+      }
+      if (!cand.length) return;
+
+      // Muestreo ponderado por búsqueda binaria en la acumulada
+      pickFacePoint = () => {
+        const r = Math.random() * total;
+        let lo = 0;
+        let hi = cum.length - 1;
+        while (lo < hi) {
+          const m = (lo + hi) >> 1;
+          if (cum[m] < r) lo = m + 1;
+          else hi = m;
+        }
+        return cand[lo];
+      };
+      assignFaceTargets();
+      facePointsReady = true;
+    };
+    img.src = angle.src;
+  };
+
+  const rebuild = () => {
+    const count = Math.round(
+      Math.min(MAX_COUNT, Math.max(MIN_COUNT, (w * h) / AREA_PER_PARTICLE)),
+    );
+    const ambientCount = Math.round(count * AMBIENT_RATIO);
+    const reserveCount = Math.round(Math.min(RESERVE_MAX, (w * h) / RESERVE_AREA));
+    particles = [];
+    for (let i = 0; i < count - ambientCount; i++) particles.push(spawn(false));
+    for (let i = 0; i < ambientCount; i++) particles.push(spawn(true));
+    for (let i = 0; i < reserveCount; i++) particles.push(spawn(false, true));
+    assignFaceTargets();
+  };
+
+  const resize = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    rebuild();
+  };
+
+  // --- Progreso y caja del rostro (por frame) --------------------------------
+  const anchor = () => document.getElementById('face-anchor');
+
+  const smooth = (e0: number, e1: number, x: number) => {
+    const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
+    return t * t * (3 - 2 * t);
+  };
+
+  // Caja destino del rostro en coordenadas de pantalla, ajustada al anchor
+  const faceBox = { x: 0, y: 0, w: 0, h: 0 };
+
+  const updateFace = (dt: number) => {
+    const el = anchor();
+    let target = 0;
+    if (el && facePointsReady) {
+      const r = el.getBoundingClientRect();
+      const mid = r.top + r.height / 2;
+      // Se forma cuando el centro del anchor sube hacia el centro del viewport
+      // y se disuelve cuando sigue de largo hacia arriba.
+      target = smooth(1.15 * h, 0.55 * h, mid) * smooth(-0.25 * h, 0.3 * h, mid);
+
+      const maxW = r.width * 0.85;
+      const maxH = r.height * 0.92;
+      let fw = maxW;
+      let fh = fw * faceAspect;
+      if (fh > maxH) {
+        fh = maxH;
+        fw = fh / faceAspect;
+      }
+      faceBox.x = r.left + (r.width - fw) / 2;
+      faceBox.y = r.top + (r.height - fh) / 2;
+      faceBox.w = fw;
+      faceBox.h = fh;
+    }
+    faceEase += (target - faceEase) * 0.08 * dt;
+    if (faceEase < 0.001) faceEase = 0;
+  };
+
+  // --- Render --------------------------------------------------------------
+  const draw = (time: number) => {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = `rgb(${rgb})`;
+
+    const scrollY = window.scrollY;
+    const ef = faceEase;
+    // Fuera del rostro el polvo queda atenuado; al formarse recupera fuerza
+    const dim = BASE_DIM + (1 - BASE_DIM) * ef;
+
+    for (const p of particles) {
+      // Las reservas solo existen mientras el rostro se está formando
+      if (p.reserve && (ef < 0.02 || p.fx < 0)) continue;
+
+      // Parallax: la corriente se queda anclada al hero y se desplaza lento;
+      // el polvo ambiental envuelve el viewport para dar textura al resto.
+      let py = p.y - scrollY * SCROLL_PARALLAX * p.depth;
+      if (ef < 0.02) {
+        if (p.ambient) {
+          py = ((py % h) + h) % h;
+        } else if (py < -20 || py > h + 20) {
+          continue;
+        }
+      }
+
+      const twinkle = 0.75 + 0.25 * Math.sin(time * 0.001 * p.tw + p.phase);
+      // Al formarse el rostro, el alpha de cada partícula transiciona al del
+      // punto del retrato que le tocó (rasgos oscuros = más brillantes).
+      let a: number;
+      if (p.reserve) {
+        a = p.fa * ef; // se materializan junto con la formación
+      } else {
+        const base = p.alpha * dim;
+        a = base + (p.fa - base) * (p.fx >= 0 ? ef : 0);
+      }
+      ctx.globalAlpha = a * twinkle;
+      ctx.fillRect(p.x, py, p.size, p.size);
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  const step = (time: number) => {
+    const dt = Math.min((time - lastTime) / 16.67, 3);
+    lastTime = time;
+
+    mouse.x += (mouse.tx - mouse.x) * 0.2 * dt;
+    mouse.y += (mouse.ty - mouse.y) * 0.2 * dt;
+
+    updateFace(dt);
+
+    const scrollY = window.scrollY;
+    const r2 = MOUSE_RADIUS * MOUSE_RADIUS;
+    const ef = faceEase;
+
+    for (const p of particles) {
+      // Sin rostro en formación, las reservas duermen: cero física
+      if (p.reserve && ef < 0.02) continue;
+
+      // Dispersión por cursor (sobre la posición proyectada en pantalla)
+      if (mouse.active) {
+        let py = p.y - scrollY * SCROLL_PARALLAX * p.depth;
+        if (p.ambient && ef < 0.02) py = ((py % h) + h) % h;
+        const dx = p.x - mouse.x;
+        const dy = py - mouse.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < r2 && d2 > 0.01) {
+          const d = Math.sqrt(d2);
+          const f = ((MOUSE_RADIUS - d) / MOUSE_RADIUS) ** 2 * MOUSE_FORCE * dt;
+          p.vx += (dx / d) * f;
+          p.vy += (dy / d) * f;
+        }
+      }
+
+      // Deriva continua: el punto que la partícula persigue orbita lentamente
+      // alrededor del hogar (frecuencias distintas en x/y → trayectorias
+      // orgánicas, nunca estáticas). El resorte la mantiene siguiéndolo.
+      // Conforme el rostro se forma la deriva se aquieta (el retrato "respira"
+      // pero no se desarma).
+      const t1 = time * 0.0002 * p.tw + p.phase;
+      const drift = p.amp * (1 - 0.96 * ef);
+      let tx = p.hx + Math.sin(t1) * drift;
+      let ty = p.hy + Math.cos(t1 * 0.77 + p.phase * 1.7) * drift * 0.8;
+
+      // Reclutamiento hacia el rostro: interpola el objetivo hacia el punto
+      // del retrato (convertido a coordenadas de mundo según el parallax).
+      if (ef > 0 && p.fx >= 0) {
+        const sx = faceBox.x + p.fx * faceBox.w;
+        const sy = faceBox.y + p.fy * faceBox.h + scrollY * SCROLL_PARALLAX * p.depth;
+        tx += (sx - tx) * ef;
+        ty += (sy - ty) * ef;
+      }
+
+      // Resorte más firme conforme se recluta, para que el retrato cuaje
+      const k = SPRING * (1 + 2 * ef);
+      p.vx += (tx - p.x) * k * dt;
+      p.vy += (ty - p.y) * k * dt;
+
+      p.vx *= DAMPING;
+      p.vy *= DAMPING;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+    }
+
+    draw(time);
+    rafId = requestAnimationFrame(step);
+  };
+
+  // --- Listeners -----------------------------------------------------------
+  resize();
+  sampleFace();
+  window.addEventListener('resize', resize);
+
+  if (reduceMotion) {
+    draw(0); // un solo frame estático, sin animación ni mouse
+  } else {
+    window.addEventListener('pointermove', (e) => {
+      mouse.tx = e.clientX;
+      mouse.ty = e.clientY;
+      if (!mouse.active) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        mouse.active = true;
+      }
+    });
+    window.addEventListener('pointerleave', () => {
+      mouse.active = false;
+      mouse.tx = -9999;
+      mouse.ty = -9999;
+      mouse.x = -9999;
+      mouse.y = -9999;
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafId);
+      } else {
+        lastTime = performance.now();
+        rafId = requestAnimationFrame(step);
+      }
+    });
+
+    lastTime = performance.now();
+    rafId = requestAnimationFrame(step);
+  }
+</script>

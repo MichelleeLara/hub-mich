@@ -13,6 +13,7 @@ import React from "react";
 import { IconWhatsapp } from "../icons/Icons";
 import { IconLinkedin } from "../icons/Icons";
 import Hero from "../components/Hero.astro";
+import AboutStats from "../components/AboutStats.astro";
 import ContactBanner from "../components/ContactBanner.jsx";
 import AboutMe from "../components/AboutMe.jsx";
 import Stack from "../components/Stack.jsx";
@@ -36,7 +37,7 @@ const meta = {
 <Layout {...meta}>
 
   <main
-    class="bg-white min-h-screen text-black dark:bg-[#161616] dark:text-gray-300 transition-colors duration-300 pb-14 "
+    class="min-h-screen text-black dark:text-gray-300 transition-colors duration-300 pb-14 "
   >
 
     <div class="w-full rounded-md flex md:items-center md:justify-center bg-black-[#161616] antialiased bg-grid-white/[0.02] relative overflow-hidden">
@@ -46,10 +47,11 @@ const meta = {
       />
       <!-- Hero Section -->
        <Hero />
-      
+
     </div>
 
-     
+    <!-- Sobre mí: stats + rostro de partículas -->
+    <AboutStats />
 
     <!-- Contact easy section -->
      <ContactBanner client:load/>
