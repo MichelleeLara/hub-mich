@@ -44,6 +44,17 @@
   const RESERVE_AREA = 220; // px² por partícula de reserva
   const RESERVE_MAX = 6000;
 
+  // --- Tarjetas magnéticas (sección Proyectos) -------------------------------
+  // Al hacer hover sobre un elemento [data-magnetic-card], el polvo cercano
+  // al cursor es atraído hacia el borde de esa tarjeta y se acumula ahí
+  // (glow de borde). Solo con cursor real: en táctiles queda desactivado.
+  const MAGNET_RADIUS = 260; // radio de influencia alrededor del cursor
+  const MAGNET_PULL = 0.05; // rigidez del resorte hacia el borde
+  const MAGNET_GLOW = 2.4; // refuerzo de alpha de las partículas atraídas
+  const hoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let magnetCard: Element | null = null;
+  const magnetRect = { x: 0, y: 0, w: 0, h: 0, active: false };
+
   // --- Rostro (fase 2) -------------------------------------------------------
   // Fuente y recorte de cabeza (fracciones del tamaño original de la foto).
   // Preparado para varios ángulos: agregar más entradas a FACE_ANGLES y
@@ -68,6 +79,7 @@
     tw: number; // velocidad del parpadeo
     amp: number; // amplitud de la deriva continua alrededor del hogar
     ambient: boolean; // polvo suelto (envuelve el viewport al hacer scroll)
+    mg: number; // 0..1 — influencia magnética actual (glow de borde)
     reserve: boolean; // refuerzo del retrato: solo existe mientras se forma
     fx: number; // punto asignado del rostro (normalizado 0..1; -1 = sin asignar)
     fy: number;
@@ -156,6 +168,7 @@
       amp: 200 + Math.random() * 28,
       ambient,
       reserve,
+      mg: 0,
       fx: -1,
       fy: -1,
       fa: 0,
@@ -301,8 +314,8 @@
     const dim = BASE_DIM + (1 - BASE_DIM) * ef;
 
     for (const p of particles) {
-      // Las reservas solo existen mientras el rostro se está formando
-      if (p.reserve && (ef < 0.02 || p.fx < 0)) continue;
+      // Las reservas solo existen durante el rostro o el glow magnético
+      if (p.reserve && (ef < 0.02 || p.fx < 0) && p.mg < 0.01) continue;
 
       // Parallax: la corriente se queda anclada al hero y se desplaza lento;
       // el polvo ambiental envuelve el viewport para dar textura al resto.
@@ -320,11 +333,14 @@
       // punto del retrato que le tocó (rasgos oscuros = más brillantes).
       let a: number;
       if (p.reserve) {
-        a = p.fa * ef; // se materializan junto con la formación
+        // Se materializan con la formación del rostro o con el imán de borde
+        a = ef >= 0.02 && p.fx >= 0 ? p.fa * ef : 0.55 * p.mg;
       } else {
         const base = p.alpha * dim;
         a = base + (p.fa - base) * (p.fx >= 0 ? ef : 0);
       }
+      // Glow magnético: las partículas atraídas al borde brillan más
+      if (p.mg > 0.01) a = Math.min(0.9, Math.max(a * (1 + MAGNET_GLOW * p.mg), 0.5 * p.mg));
       ctx.globalAlpha = a * twinkle;
       ctx.fillRect(p.x, py, p.size, p.size);
     }
@@ -344,12 +360,63 @@
     const r2 = MOUSE_RADIUS * MOUSE_RADIUS;
     const ef = faceEase;
 
-    for (const p of particles) {
-      // Sin rostro en formación, las reservas duermen: cero física
-      if (p.reserve && ef < 0.02) continue;
+    // Tarjeta magnética activa (solo con cursor real y sin rostro formado)
+    magnetRect.active = false;
+    if (hoverCapable && magnetCard && mouse.active && ef < 0.3) {
+      const mr = magnetCard.getBoundingClientRect();
+      magnetRect.x = mr.left;
+      magnetRect.y = mr.top;
+      magnetRect.w = mr.width;
+      magnetRect.h = mr.height;
+      magnetRect.active = true;
+    }
+    const mr2 = MAGNET_RADIUS * MAGNET_RADIUS;
 
-      // Dispersión por cursor (sobre la posición proyectada en pantalla)
-      if (mouse.active) {
+    for (const p of particles) {
+      // Sin rostro NI imán activos, las reservas duermen: cero física
+      if (p.reserve && ef < 0.02 && !magnetRect.active && p.mg < 0.001) continue;
+
+      // Decaimiento del glow magnético (se suelta al salir de la tarjeta)
+      if (p.mg > 0.001) p.mg *= 1 - Math.min(1, 0.1 * dt);
+
+      if (magnetRect.active) {
+        // Gravedad magnética: el polvo cercano al cursor es atraído hacia el
+        // punto más cercano del borde de la tarjeta y se acumula ahí.
+        let py = p.y - scrollY * SCROLL_PARALLAX * p.depth;
+        if (p.ambient && ef < 0.02) py = ((py % h) + h) % h;
+        const dxm = p.x - mouse.x;
+        const dym = py - mouse.y;
+        const dm2 = dxm * dxm + dym * dym;
+        if (dm2 < mr2) {
+          const infl = 1 - Math.sqrt(dm2) / MAGNET_RADIUS; // 0..1
+          // Punto más cercano del perímetro de la tarjeta
+          let bx = Math.min(Math.max(p.x, magnetRect.x), magnetRect.x + magnetRect.w);
+          let by = Math.min(Math.max(py, magnetRect.y), magnetRect.y + magnetRect.h);
+          if (bx === p.x && by === py) {
+            // Dentro de la tarjeta: empujar a la arista más próxima
+            const dL = p.x - magnetRect.x;
+            const dR = magnetRect.x + magnetRect.w - p.x;
+            const dT = py - magnetRect.y;
+            const dB = magnetRect.y + magnetRect.h - py;
+            const m = Math.min(dL, dR, dT, dB);
+            if (m === dL) bx = magnetRect.x;
+            else if (m === dR) bx = magnetRect.x + magnetRect.w;
+            else if (m === dT) by = magnetRect.y;
+            else by = magnetRect.y + magnetRect.h;
+          }
+          // Acumular unos px FUERA del borde: la tarjeta es opaca y taparía
+          // el polvo que quede exactamente sobre la línea
+          if (bx === magnetRect.x) bx -= 4;
+          else if (bx === magnetRect.x + magnetRect.w) bx += 4;
+          if (by === magnetRect.y) by -= 4;
+          else if (by === magnetRect.y + magnetRect.h) by += 4;
+          const k = MAGNET_PULL * infl * dt;
+          p.vx += (bx - p.x) * k;
+          p.vy += (by - py) * k;
+          if (infl > p.mg) p.mg = infl;
+        }
+      } else if (mouse.active) {
+        // Dispersión por cursor (sobre la posición proyectada en pantalla)
         let py = p.y - scrollY * SCROLL_PARALLAX * p.depth;
         if (p.ambient && ef < 0.02) py = ((py % h) + h) % h;
         const dx = p.x - mouse.x;
@@ -421,6 +488,14 @@
       mouse.x = -9999;
       mouse.y = -9999;
     });
+
+    // Tarjetas magnéticas: delegación — funciona con cualquier
+    // [data-magnetic-card] presente o futuro. Solo con cursor real.
+    if (hoverCapable) {
+      document.addEventListener('pointerover', (e) => {
+        magnetCard = (e.target as Element | null)?.closest?.('[data-magnetic-card]') ?? null;
+      });
+    }
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
