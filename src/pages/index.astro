@@ -15,15 +15,9 @@ import { IconLinkedin } from "../icons/Icons";
 import Hero from "../components/Hero.astro";
 import AboutStats from "../components/AboutStats.astro";
 import ProjectsBento from "../components/ProjectsBento.astro";
-import ContactBanner from "../components/ContactBanner.jsx";
-import AboutMe from "../components/AboutMe.jsx";
-import Stack from "../components/Stack.jsx";
-import Lenguage from "../components/Lenguague.astro";
-import Services from "../components/Services.jsx";
-import Aws from "../icons/Aws.astro";
-import Projects from "../components/Projects.astro";
-import Cta from "../components/Cta.astro";
-import Footer from "../sections/Footer.astro";
+import Trayectoria from "../components/Trayectoria.astro";
+import SkillsStack from "../components/SkillsStack.astro";
+import MegaFooter from "../components/MegaFooter.astro";
 import { Spotlight } from "../components/ui/Spotlight";
 
 const meta = {
@@ -57,34 +51,16 @@ const meta = {
     <!-- Proyectos: bento grid con glow magnético de partículas -->
     <ProjectsBento />
 
-    <!-- Contact easy section -->
-     <ContactBanner client:load/>
+    <!-- Habilidades y Stack Técnico: tipografía gigante + marquee + bento -->
+    <SkillsStack />
 
-    <!-- About me section -->
-    <AboutMe client:load/>
-
-    <!-- Lenguage section -->
-    <Lenguage />
-
-    <!-- Services section -->
-    <Services client:only="react" />
-
-    <!-- Stack section -->
-    <Stack client:visible/>
-
-    <!-- Projects section -->
-   <Projects />
-
-    <!-- CTA section -->
-    <Cta />
+    <!-- Trayectoria: experiencia laboral (fondo claro, contrasta con el grid) -->
+    <Trayectoria />
 
   </main>
-  <div class="relative overflow-hidden h-fit">
-    <Footer />
-    <!-- <div
-    class="w-52 h-52 -bottom-28 blur-[260px] left-0 right-0 z-30 bg-opacity-85 bg-primary absolute md:-bottom-[10rem]"
-  ></div> -->
-  </div>
+
+  <!-- Mega Footer (mismo que las páginas de detalle) -->
+  <MegaFooter />
 </Layout>
 
 <style>

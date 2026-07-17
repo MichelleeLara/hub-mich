@@ -1,48 +1,25 @@
 ---
-// Sección "Proyectos" — Bento Grid asimétrico (60/40 · 40/60).
-// Cada tarjeta lleva `data-magnetic-card`: el sistema de partículas global
-// (ParticlesBackground) detecta el hover y atrae el polvo hacia el borde de
-// la tarjeta activa (glow magnético). Aquí NO hay canvas propio.
+// Sección "Proyectos" — Bento Grid asimétrico que enlaza a los casos de estudio.
+// Fuente de datos: src/data/projectsData.js (misma que las páginas de detalle
+// /proyectos/[slug]). Cada tarjeta lleva `data-magnetic-card`: el sistema de
+// partículas global (ParticlesBackground) detecta el hover y atrae el polvo
+// hacia el borde de la tarjeta activa (glow magnético). Aquí NO hay canvas propio.
 
-// TODO(mich): ajustar oraciones de impacto y tags reales de cada proyecto
-const projects = [
-  {
-    title: 'Rand Abogados',
-    impact: 'Lideré el desarrollo end-to-end y recorté los tiempos de entrega un 25%.',
-    tags: ['Next.js', 'Tailwind', 'Figma'],
-    img: '/thumbnail_rand.webp',
-    alt: 'Vista del sitio web de Rand Abogados',
-    url: 'https://1-rand.vercel.app/',
-    wide: true,
-  },
-  {
-    title: 'Nomad Technologies',
-    impact: 'Convertí datos técnicos de energía en decisiones simples de leer.',
-    tags: ['React', 'Data viz'],
-    img: '/thumbnail_nomad.webp',
-    alt: 'Vista de la plataforma Nomad Technologies',
-    url: 'https://app-energy.vercel.app/',
-    wide: false,
-  },
-  {
-    title: 'Medibiologica',
-    impact: 'Rediseñé el flujo de agenda para reservar estudios en menos de un minuto.',
-    tags: ['Astro', 'UX'],
-    img: '/thumbnail_medibiologic.webp',
-    alt: 'Vista del sitio de Medibiologica',
-    url: 'https://medi-biologic.vercel.app/',
-    wide: false,
-  },
-  {
-    title: 'Tigrillas',
-    impact: 'Una marca deportiva con presencia digital tan viva como su equipo.',
-    tags: ['Next.js', 'Branding'],
-    img: '/thumbnail_tigrillas.webp',
-    alt: 'Vista del sitio de Tigrillas',
-    url: 'https://www.tigrillas.com.mx/',
-    wide: true,
-  },
+import { projects } from '../data/projectsData.js';
+
+// Layout del bento: orden + tamaño por slug (grid de 6 columnas en desktop).
+// Fila 1 → 4/2 · Fila 2 → 2/2/2. Móvil apila.
+const layout = [
+  { slug: 'anamseals-firmware', span: 'md:col-span-4', featured: true },
+  { slug: 'monitoreo-white-label', span: 'md:col-span-2', featured: false },
+  { slug: 'inteligencia-logistica', span: 'md:col-span-2', featured: false },
+  { slug: 'tracking-aduanal', span: 'md:col-span-2', featured: false },
+  { slug: 'luzia-agentes-ia', span: 'md:col-span-2', featured: false },
 ];
+
+const cards = layout
+  .map((l) => ({ ...l, ...projects.find((p) => p.slug === l.slug) }))
+  .filter((c) => c.title);
 ---
 
 <section id="proyectos-destacados" class="relative mx-auto max-w-6xl px-6 pt-[max(12vh,100px)] pb-24">
@@ -52,7 +29,7 @@ const projects = [
   >
     <span class="text-gray-800 dark:text-secondary">Proyectos</span>
     <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
-    <span class="text-terteary">Trabajo seleccionado</span>
+    <span class="text-terteary">Casos de estudio</span>
   </h2>
 
   <!-- Titular editorial a dos tonos, estilo referencia -->
@@ -60,44 +37,72 @@ const projects = [
     class="mx-auto mt-8 max-w-3xl text-center font-ClashDisplay text-4xl font-semibold leading-tight tracking-wide md:text-5xl"
   >
     <span class="text-gray-900 dark:text-secondary">Lo que he construido.</span>
-    <span class="text-gray-400 dark:text-[#5a5a5a]"> Proyectos que hablan por mí.</span>
+    <span class="text-gray-400 dark:text-[#5a5a5a]"> Del problema al impacto medible.</span>
   </p>
 
-  <!-- Bento Grid: fila 1 → 60/40, fila 2 → 40/60; móvil apila -->
-  <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-5">
+  <!-- Bento Grid: fila 1 → 4/2, fila 2 → 2/2/2; móvil apila -->
+  <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-6">
     {
-      projects.map((p) => (
+      cards.map((p) => (
         <a
-          href={p.url}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={`/proyectos/${p.slug}`}
           data-magnetic-card
-          class={`group relative flex min-h-[380px] flex-col overflow-hidden rounded-3xl border border-black/10 bg-[#f2f2f0] p-6 transition-colors duration-300 hover:border-black/20 dark:border-white/10 dark:bg-[#1d1d1d] dark:hover:border-white/20 ${
-            p.wide ? 'md:col-span-3' : 'md:col-span-2'
-          }`}
+          class={`group relative flex min-h-[380px] flex-col justify-end overflow-hidden rounded-3xl border border-black/10 bg-zinc-950 transition-colors duration-300 hover:border-black/20 dark:border-white/10 dark:hover:border-white/20 ${p.span}`}
         >
-          <div class="flex flex-wrap justify-end gap-2">
-            {p.tags.map((t) => (
-              <span class="rounded-full border border-black/10 bg-black/5 px-3.5 py-1.5 text-xs font-semibold text-gray-700 backdrop-blur-sm dark:border-white/10 dark:bg-white/10 dark:text-gray-300">
-                {t}
-              </span>
-            ))}
+          <!-- Visual editorial (glow ámbar + grid) que llena toda la card -->
+          <div
+            class="pointer-events-none absolute inset-0 opacity-80 transition-transform duration-700 ease-out group-hover:scale-110"
+            style="background: radial-gradient(120% 100% at 50% 0%, rgba(251,191,36,0.22) 0%, rgba(249,115,22,0.08) 35%, transparent 65%);"
+          />
+          <div
+            class="pointer-events-none absolute inset-0 opacity-[0.05]"
+            style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 32px 32px;"
+          />
+
+          <!-- Producto flotante: imagen del proyecto si existe, si no los
+               avatares del stack como fallback. -->
+          <div class="absolute inset-0 flex items-center justify-center p-8">
+            {p.thumbnail ? (
+              <img
+                src={p.thumbnail}
+                alt={p.title}
+                loading="lazy"
+                class="max-h-[70%] w-auto object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+            ) : (
+              <div class="flex -space-x-3">
+                {p.stack.slice(0, p.featured ? 5 : 4).map((tech) => (
+                  <div
+                    class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-900 bg-zinc-800 text-[11px] font-semibold text-zinc-300 shadow-lg"
+                    title={tech.label}
+                  >
+                    {tech.initials}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div class="flex flex-1 items-center justify-center overflow-hidden py-6">
-            <img
-              src={p.img}
-              alt={p.alt}
-              loading="lazy"
-              class="max-h-[240px] w-auto rounded-xl shadow-lg transition-transform duration-500 ease-out group-hover:scale-105"
-            />
-          </div>
+          <!-- Scrim inferior para legibilidad del título overlaid -->
+          <div class="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-          <div>
-            <h3 class="font-ClashDisplay text-2xl font-semibold tracking-wide text-gray-900 dark:text-secondary">
+          <!-- Tags flotantes arriba-derecha -->
+          {p.brief?.tipo && (
+            <div class="absolute right-5 top-5 z-10 flex max-w-[75%] flex-wrap justify-end gap-2">
+              {p.brief.tipo.map((tag) => (
+                <span class="rounded-full border border-white/10 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-zinc-200 backdrop-blur-md">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <!-- Título + categoría overlaid abajo-izquierda (estilo Kiwe) -->
+          <div class="relative z-10 p-6">
+            <h3 class="font-ClashDisplay text-2xl font-semibold tracking-wide text-white md:text-3xl">
               {p.title}
             </h3>
-            <p class="mt-1 text-sm text-terteary">{p.impact}</p>
+            <p class="mt-1 text-sm text-zinc-400">{p.meta}</p>
           </div>
         </a>
       ))
