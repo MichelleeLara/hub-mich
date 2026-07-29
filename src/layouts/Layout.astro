@@ -1,5 +1,7 @@
 ---
 import AnimatedTabs from '../components/Navbar';
+import Header from '../components/Header';
+import ParticlesBackground from '../components/ParticlesBackground.astro';
 import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/inter';
 const { title, description, image, url } = Astro.props;
@@ -28,26 +30,29 @@ export interface Props {
     <meta property="og:url" content={url} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content={image} />
-    <meta property="og:image:alt" content="Descripción de la imagen" />
+    <meta property="og:image:alt" content="itsmich — Mich, Product Engineer" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
     <!-- Meta para Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@TuCuentaDeTwitter" />
-    <meta name="twitter:title" content="Título de la página" />
-    <meta name="twitter:description" content="Descripción de la página" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
 
 
   </head>
   <body class="flex flex-col min-h-screen">
+    <!-- Fondo de partículas (detrás de todo el contenido) -->
+    <ParticlesBackground />
+    <!-- Navegación superior (islas desktop + barra mínima mobile) -->
+    <Header client:load />
     <div id="main-content" class="flex-grow">
-  
+
       <slot />
     </div>
-    <!-- Menú de Navegación Persistente -->
+    <!-- Menú de Navegación Persistente (bottom bar mobile) -->
     <AnimatedTabs client:load />
     
   </body>
@@ -98,19 +103,27 @@ export interface Props {
     margin: 0;
     width: 100%;
     height: 100%;
-    background: #161616;
     font-family: 'Inter Tight Variable', sans-serif;
     scroll-behavior: smooth;
-    
   }
 
-  html:not(.dark),
-  html:not(.dark) body {
+  /* El color de fondo vive SOLO en html: el canvas de partículas usa
+     z-index -1 y debe quedar entre el fondo y el contenido. Un fondo
+     opaco en body lo taparía. */
+  html {
+    background: #161616;
+    transition: background-color 0.3s;
+  }
+
+  body {
+    background: transparent;
+  }
+
+  html:not(.dark) {
     background: #ffffff; /* fondo claro */
   }
 
-  html.dark,
-  html.dark body {
+  html.dark {
     background: #161616; /* fondo oscuro */
   }
 

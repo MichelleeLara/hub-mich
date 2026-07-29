@@ -4,8 +4,8 @@ import { IconProjects } from "../icons/Icons";
 
 const TracingBeam = () => {
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: false, amount: 0.4 }); // Detecta si el elemento está 40% en el viewport
-  const scrollYProgress = useSpring(0, { stiffness: 100, damping: 20 }); // Suaviza la animación
+  const isInView = useInView(containerRef, { once: false, amount: 0.08 }); // Detecta si el elemento está 40% en el viewport
+  const scrollYProgress = useSpring(0, { stiffness: 12000, damping: 30 }); // Suaviza la animación
 
   // Actualizamos el progreso del scroll solo si el elemento está en el viewport
   const updateProgress = () => {
@@ -13,7 +13,7 @@ const TracingBeam = () => {
       const { top, bottom, height } = containerRef.current.getBoundingClientRect();
 
       // Calculamos el progreso RELATIVO desde el momento que entra
-      const visibleHeight = window.innerHeight * 0.4; // La altura visible (40%)
+      const visibleHeight = window.innerHeight * 0.05; // La altura visible (40%)
       const progress = Math.max(0, Math.min(1, (visibleHeight - top) / (height - visibleHeight)));
 
       scrollYProgress.set(progress);

@@ -1,0 +1,147 @@
+---
+import ExpertiseCard from './ExpertiseCard.astro';
+// Sección "Habilidades y Stack Técnico" del Home. Estilo editorial limpio:
+// tipografía gigante partida por un marquee de iconos a todo lo ancho, seguido
+// de tarjetas de expertise estilo Bento. Fondo claro; theme-aware para respetar
+// el toggle del header (mismo patrón que Trayectoria).
+
+// Tecnologías del marquee. `initials` es el texto que se muestra dentro del
+// cuadrado redondeado (logotipo tipográfico).
+const techs = [
+  'C', 'STM32', 'Next.js', 'Angular',
+  'FreeRTOS', 'Tailwind', 'Supabase', 'Mapbox',
+];
+// Duplicamos la lista para un loop infinito sin costuras.
+const marquee = [...techs, ...techs];
+
+// Tarjetas de áreas de expertise, estilo midu.design: título grande,
+// divisor, label "Info", descripción y botón circular de flecha.
+// Se reparten en dos columnas escalonadas (la derecha arranca más abajo).
+const cards = [
+  {
+    tag: 'UI/UX & Web',
+    title: 'Frontend Engineering',
+    description:
+      'Construyo interfaces responsivas y de alto rendimiento. De wireframes a componentes reutilizables con arquitecturas como FSD.',
+  },
+  {
+    tag: 'C embebido & RTOS',
+    title: 'Firmware & IoT',
+    description:
+      'Programación a bajo nivel para microcontroladores. Gestión de memoria, optimización de energía y concurrencia segura.',
+  },
+  {
+    tag: 'Full-Stack & Cloud',
+    title: 'Arquitectura',
+    description:
+      'Sincronización en tiempo real, bases de datos con Supabase y orquestación de sistemas distribuidos.',
+  },
+];
+
+// Columnas escalonadas: izquierda (índices pares) y derecha (impares).
+const leftCards = cards.filter((_, i) => i % 2 === 0);
+const rightCards = cards.filter((_, i) => i % 2 === 1);
+---
+
+<!-- Sin fondo sólido: transparente como AboutStats/ProjectsBento/Trayectoria
+     para dejar ver el canvas de partículas global. -->
+<section class="relative overflow-hidden py-32">
+  <!-- Encabezado híbrido estilo midu.design: línea 1 desplazada a la
+       izquierda del centro, marquee a todo lo ancho, línea 2 a la derecha. -->
+  <div class="mx-auto max-w-6xl px-8">
+    <!-- Línea 1 -->
+    <h2
+      class="text-center text-6xl font-black leading-none tracking-tighter text-zinc-900 dark:text-zinc-100 md:-translate-x-[6%] md:text-[8vw]"
+    >
+      Mi stack &amp;
+    </h2>
+  </div>
+
+  <!-- Marquee: banda a todo el ancho entre línea 1 y línea 2 -->
+  <div class="marquee flex w-full overflow-hidden py-4" aria-hidden="true">
+    <div class="marquee__track flex shrink-0 items-center gap-6 pr-6">
+      {
+        marquee.map((tech) => (
+          <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white text-center text-2xl font-bold text-zinc-900 shadow-lg dark:bg-zinc-800 dark:text-zinc-100">
+            <span class={tech.length > 3 ? 'text-[11px] leading-tight' : ''}>{tech}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-6xl px-8">
+    <!-- Línea 2: desplazada hacia la derecha, como "your brand." -->
+    <h2
+      class="text-center text-6xl font-black leading-none tracking-tighter text-zinc-900 dark:text-zinc-100 md:-translate-x-[4%] md:text-right md:text-[8vw]"
+    >
+      tu producto.
+    </h2>
+
+    <!-- Descripción + CTA, alineadas a la izquierda como en la referencia -->
+    <div class="mt-16 max-w-md md:ml-[8%]">
+      <p class="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
+        Desde el desarrollo de firmware con C embebido hasta la creación de
+        interfaces pixel-perfect. Diseño arquitecturas escalables que viven en
+        el mundo físico y digital.
+      </p>
+
+      <a
+        href="/proyectos"
+        class="mt-8 inline-flex items-center gap-2 rounded-xl bg-zinc-200/80 px-6 py-4 text-base font-medium text-zinc-900 transition-colors hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+      >
+        <svg
+          class="h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M7 7h10v10" />
+          <path d="M7 17 17 7" />
+        </svg>
+        Mira cómo trabajo
+      </a>
+    </div>
+  </div>
+
+  <!-- Tarjetas de expertise estilo midu.design: dos columnas escalonadas,
+       la derecha arranca más arriba que la izquierda. -->
+  <div class="mx-auto mt-24 grid max-w-6xl grid-cols-1 gap-8 px-8 md:grid-cols-2">
+    <div class="flex flex-col gap-8 md:mt-28">
+      {leftCards.map((card) => <ExpertiseCard {...card} />)}
+    </div>
+    <div class="flex flex-col gap-8">
+      {rightCards.map((card) => <ExpertiseCard {...card} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Marquee infinito: el track se duplica (techs x2) y se desplaza -50%,
+     creando un loop sin costuras. */
+  .marquee__track {
+    animation: marquee-scroll 28s linear infinite;
+  }
+
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+    }
+  }
+</style>

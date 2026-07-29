@@ -1,0 +1,409 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import MegaFooter from '../../components/MegaFooter.astro';
+import { projects, getProject } from '../../data/projectsData.js';
+
+export function getStaticPaths() {
+	return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+const p = project ?? getProject(Astro.params.slug);
+
+// Ficha técnica del brief: reutiliza el patrón "INTRO + pills agrupados".
+// HERRAMIENTAS se recicla del stack para no duplicar datos.
+const facts = p.brief
+	? [
+			{ label: 'Rol', tags: p.brief.rol },
+			{ label: 'Estado', tags: p.brief.estado },
+			{ label: 'Tipo', tags: p.brief.tipo },
+			{ label: 'Herramientas', tags: p.stack.map((t) => t.label) },
+		]
+	: [];
+
+// Siguiente proyecto (cicla al primero al llegar al final) para el banner-portal.
+const idx = projects.findIndex((x) => x.slug === p.slug);
+const next = projects[(idx + 1) % projects.length];
+
+// Pills resumidas del siguiente caso: rol · tipo · año (desde su brief).
+const nextTags = next.brief
+	? [
+			next.brief.rol?.[0],
+			next.brief.tipo?.[0],
+			next.brief.estado?.[next.brief.estado.length - 1],
+		].filter(Boolean)
+	: [];
+---
+
+<Layout
+	title={`${p.title} · Caso de estudio — Mich`}
+	description={p.intro.left}
+	image="/author.png"
+	url={`https://itsmich.com.mx/proyectos/${p.slug}`}
+>
+	<!-- Fondo transparente: el color claro/oscuro lo maneja <html> (toggle del
+	     header) y las partículas del Layout se ven a través de toda la página. -->
+	<article class="font-InterT text-gray-900 dark:text-secondary">
+		<!-- ============================================================= -->
+		<!-- 1 · HERO — Editorial, theme-aware sobre partículas            -->
+		<!-- ============================================================= -->
+		<section class="relative min-h-screen overflow-hidden">
+			<!-- Glow ámbar difuminado, sutil sobre las partículas -->
+			<div
+				class="pointer-events-none absolute -top-40 left-1/2 h-[42rem] w-[42rem] -translate-x-1/2 rounded-full opacity-40 blur-[120px]"
+				style="background: radial-gradient(circle, rgba(251,191,36,0.24) 0%, rgba(249,115,22,0.10) 40%, transparent 70%);"
+			>
+			</div>
+
+			<div class="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center px-6 pb-16 pt-32 md:pt-40">
+				<!-- Breadcrumb -->
+				<a
+					href="/#proyectos"
+					class="group mb-10 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-terteary transition-colors hover:text-gray-900 dark:hover:text-secondary"
+				>
+					<svg class="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+					Casos de estudio
+				</a>
+
+				<!-- Título gigante -->
+				<h1 class="text-center text-6xl font-bold leading-[0.95] tracking-tighter text-gray-900 dark:text-secondary md:text-7xl lg:text-8xl">
+					{p.title}
+				</h1>
+
+				<!-- Metadatos -->
+				<p class="mt-6 text-center text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-zinc-400 md:text-sm">
+					{p.meta}
+				</p>
+
+				<!-- Intro a dos columnas que flanquean el centro -->
+				<div class="mt-14 grid w-full max-w-4xl grid-cols-1 gap-8 text-sm leading-relaxed text-gray-600 dark:text-zinc-300 md:grid-cols-2 md:gap-24 md:text-base">
+					<p class="md:text-right">{p.intro.left}</p>
+					<p>{p.intro.right}</p>
+				</div>
+
+				<!-- Mockup que emerge desde abajo (pantalla oscura decorativa) -->
+				<div class="relative mt-16 w-full max-w-5xl">
+					<!-- glow bajo el mockup -->
+					<div
+						class="pointer-events-none absolute -inset-x-10 bottom-0 top-10 rounded-[2rem] opacity-70 blur-3xl"
+						style="background: radial-gradient(ellipse at center, rgba(251,191,36,0.16), transparent 70%);"
+					>
+					</div>
+					<div class="relative aspect-video overflow-hidden rounded-3xl border border-black/10 bg-zinc-900 shadow-2xl shadow-black/30 dark:border-white/10">
+						<!-- barra superior tipo ventana -->
+						<div class="flex items-center gap-2 border-b border-white/5 bg-zinc-900/80 px-5 py-3.5">
+							<span class="h-3 w-3 rounded-full bg-zinc-700"></span>
+							<span class="h-3 w-3 rounded-full bg-zinc-700"></span>
+							<span class="h-3 w-3 rounded-full bg-zinc-700"></span>
+							<span class="ml-4 text-[11px] tracking-widest text-zinc-600">{p.slug}.app</span>
+						</div>
+						<!-- superficie del mockup -->
+						<div class="relative h-full w-full bg-gradient-to-br from-zinc-900 via-zinc-950 to-black">
+							<div
+								class="absolute inset-0 opacity-40"
+								style="background: radial-gradient(600px circle at 30% 20%, rgba(251,191,36,0.15), transparent 45%), radial-gradient(500px circle at 80% 80%, rgba(249,115,22,0.12), transparent 45%);"
+							>
+							</div>
+							<div class="absolute inset-0 flex items-center justify-center">
+								<svg class="h-16 w-16 text-zinc-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- ===================================================== -->
+				<!-- 2 · STACK TÉCNICO — Overlapping Avatars               -->
+				<!-- ===================================================== -->
+				<div class="mt-20 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+					<div class="flex -space-x-4">
+						{p.stack.map((tech) => (
+							<div
+								class="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-zinc-800 text-[11px] font-semibold text-zinc-300 shadow-lg transition-transform hover:z-10 hover:-translate-y-1 hover:bg-zinc-700 dark:border-[#161616]"
+								title={tech.label}
+							>
+								{tech.initials}
+							</div>
+						))}
+					</div>
+					<div class="text-center sm:text-left">
+						<p class="text-sm font-medium text-gray-900 dark:text-zinc-200">Stack Técnico</p>
+						<p class="text-xs text-terteary">{p.stack.map((t) => t.label).join(' · ')}</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================================================= -->
+		<!-- 2b · BRIEF — Narrativa editorial + ficha en pills             -->
+		<!-- ============================================================= -->
+		{p.brief && (
+			<section class="relative px-6 pb-28">
+				<div class="mx-auto max-w-5xl">
+					<div class="relative overflow-hidden rounded-3xl border border-black/10 bg-[#f4f4f5] p-8 dark:border-white/10 dark:bg-[#1d1d1d] md:p-12">
+						<div class="grid grid-cols-1 gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-16">
+							<!-- Narrativa -->
+							<div>
+								<p class="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Intro</p>
+								<div class="space-y-5 text-[15px] leading-relaxed text-gray-600 dark:text-zinc-300 md:text-base [&_em]:italic [&_em]:text-gray-500 dark:[&_em]:text-zinc-400 [&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-zinc-100">
+									{p.brief.intro.map((para) => (
+										<p set:html={para} />
+									))}
+								</div>
+								{p.brief.note && (
+									<div class="mt-8 inline-flex items-center gap-2.5 rounded-xl border border-black/10 bg-black/5 px-4 py-3 text-xs italic text-gray-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
+										<svg class="h-4 w-4 flex-shrink-0 text-gray-400 dark:text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+										{p.brief.note}
+									</div>
+								)}
+							</div>
+
+							<!-- Ficha · pills agrupados (Herramientas reutiliza el stack) -->
+							<div class="space-y-7 lg:border-l lg:border-black/10 lg:pl-14 dark:lg:border-white/10">
+								{facts.map((group) => (
+									<div>
+										<p class="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-500">{group.label}</p>
+										<div class="flex flex-wrap gap-2">
+											{group.tags.map((tag) => (
+												<span class="rounded-full border border-black/10 bg-black/5 px-3.5 py-1.5 text-[13px] font-medium text-gray-700 dark:border-white/10 dark:bg-white/10 dark:text-gray-300">
+													{tag}
+												</span>
+											))}
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		)}
+
+		<!-- ============================================================= -->
+		<!-- 3 · LA AUTOPSIA — Staggered Cards + SVG connector             -->
+		<!-- ============================================================= -->
+		<section class="relative py-28 md:py-40">
+			<div class="mx-auto max-w-3xl px-6 text-center">
+				<span class="text-xs font-semibold uppercase tracking-[0.25em] text-orange-500">La autopsia del proyecto</span>
+				<h2 class="mt-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-secondary md:text-5xl">Problema · Solución · Resultado</h2>
+				<p class="mt-4 text-base text-gray-500 dark:text-terteary">La anatomía de la decisión técnica, de la fricción al impacto medible.</p>
+			</div>
+
+			<div class="relative mx-auto mt-20 max-w-6xl px-6">
+				<!-- Conectores punteados (solo desktop). Dos SVGs pequeños con
+				     viewBox = tamaño de caja → escala uniforme, puntos siempre
+				     redondos y curva sin deformar. Uno por gap entre tarjetas. -->
+				<!-- Gap 1 → 2 (tarjeta 2 va más arriba: la curva sube a la derecha).
+				     Los cp comparten la Y de cada extremo → salida/entrada horizontal
+				     y un swoosh ease-in-out suave, como la referencia. -->
+				<svg
+					class="pointer-events-none absolute left-[33.5%] top-[205px] z-0 hidden h-[170px] w-[110px] -translate-x-1/2 lg:block"
+					viewBox="0 0 110 170"
+					fill="none"
+					aria-hidden="true"
+				>
+					<path d="M 12 126 C 46 126, 60 50, 98 50" stroke="#f97316" stroke-width="2.5" stroke-dasharray="5 7" stroke-linecap="round" />
+					<circle cx="12" cy="126" r="4" fill="#f97316" />
+					<circle cx="98" cy="50" r="4" fill="#f97316" />
+				</svg>
+				<!-- Gap 2 → 3 (tarjeta 3 va más abajo: la curva baja a la derecha) -->
+				<svg
+					class="pointer-events-none absolute left-[66.5%] top-[205px] z-0 hidden h-[170px] w-[110px] -translate-x-1/2 lg:block"
+					viewBox="0 0 110 170"
+					fill="none"
+					aria-hidden="true"
+				>
+					<path d="M 12 50 C 46 50, 60 126, 98 126" stroke="#f97316" stroke-width="2.5" stroke-dasharray="5 7" stroke-linecap="round" />
+					<circle cx="12" cy="50" r="4" fill="#f97316" />
+					<circle cx="98" cy="126" r="4" fill="#f97316" />
+				</svg>
+
+				<!-- Tarjetas: layout asimétrico en desktop, apiladas en móvil -->
+				<div class="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-start lg:gap-6">
+					<!-- 1 · PROBLEMA (viñetas) -->
+					<div class="rounded-2xl bg-[#f4f4f5] p-8 shadow-xl shadow-zinc-900/5 ring-1 ring-black/5 dark:bg-[#1d1d1d] dark:ring-white/10 lg:mt-8 lg:-rotate-1">
+						<div class="mb-5 flex items-center gap-3">
+							<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-500 dark:bg-red-500/10 dark:text-red-400">
+								<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+							</div>
+							<div>
+								<p class="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">01 · El síntoma</p>
+								<h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-secondary">Problema</h3>
+							</div>
+						</div>
+						<ul class="space-y-3.5 text-sm leading-relaxed text-gray-600 dark:text-zinc-300">
+							{p.problema.map((item) => (
+								<li class="flex gap-3">
+									<span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-red-400"></span>
+									<span>{item}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+
+					<!-- 2 · SOLUCIÓN (párrafos) — centro, elevada y rotada -->
+					<div class="rounded-2xl bg-[#f4f4f5] p-8 shadow-2xl shadow-zinc-900/10 ring-1 ring-black/5 dark:bg-[#1d1d1d] dark:ring-white/10 lg:-mt-4 lg:rotate-2">
+						<div class="mb-5 flex items-center gap-3">
+							<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500 dark:bg-orange-500/10 dark:text-orange-400">
+								<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+							</div>
+							<div>
+								<p class="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">02 · La decisión</p>
+								<h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-secondary">Solución</h3>
+							</div>
+						</div>
+						<div class="space-y-4 text-sm leading-relaxed text-gray-600 dark:text-zinc-300">
+							{p.solucion.map((para) => (<p>{para}</p>))}
+						</div>
+					</div>
+
+					<!-- 3 · RESULTADO (métricas grandes en acento) -->
+					<div class="rounded-2xl bg-[#f4f4f5] p-8 shadow-xl shadow-zinc-900/5 ring-1 ring-black/5 dark:bg-[#1d1d1d] dark:ring-white/10 lg:mt-12 lg:rotate-1">
+						<div class="mb-5 flex items-center gap-3">
+							<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+								<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
+							</div>
+							<div>
+								<p class="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">03 · El impacto</p>
+								<h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-secondary">Resultado</h3>
+							</div>
+						</div>
+						<div class="space-y-6">
+							{p.resultado.map((metric) => (
+								<div>
+									<p class="bg-gradient-to-br from-orange-500 to-amber-500 bg-clip-text text-4xl font-bold tracking-tighter text-transparent">
+										{metric.value}
+									</p>
+									<p class="mt-1 text-sm leading-snug text-gray-500 dark:text-zinc-400">{metric.label}</p>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ===================================================== -->
+			<!-- 4 · GRID DE IMPACTO — Bento Box                       -->
+			<!-- ===================================================== -->
+			{p.impact && (
+				<div class="mx-auto mt-24 max-w-5xl px-6">
+					<span class="text-sm uppercase tracking-widest text-gray-500 dark:text-zinc-400">El Impacto Profundo</span>
+
+					<div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3 md:grid-rows-2">
+						<!-- Tarjeta 1 · Destacada: métrica de negocio (siempre oscura, acento) -->
+						<div class="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950 p-8 text-white md:col-span-2 md:row-span-2 md:p-10">
+							<!-- glow ámbar de acento -->
+							<div
+								class="pointer-events-none absolute -left-20 -top-24 h-72 w-72 rounded-full opacity-70 blur-[90px]"
+								style="background: radial-gradient(circle, rgba(251,191,36,0.30), transparent 70%);"
+							>
+							</div>
+							<div class="relative">
+								<p class="text-6xl font-bold tracking-tighter md:text-7xl">{p.impact.featured.metric}</p>
+								<p class="mt-4 text-sm font-semibold uppercase tracking-widest text-orange-400">{p.impact.featured.label}</p>
+							</div>
+							<p class="relative mt-10 max-w-xl text-base leading-relaxed text-zinc-400">{p.impact.featured.desc}</p>
+						</div>
+
+						<!-- Tarjetas 2 y 3 · Hardware / arquitectura (con icono técnico) -->
+						{p.impact.items.map((item) => (
+							<div class="flex flex-col justify-between rounded-3xl border border-zinc-200 bg-zinc-100 p-8 text-zinc-900 dark:border-white/10 dark:bg-[#1d1d1d] dark:text-secondary md:col-span-1">
+								<div>
+									{item.icon && (
+										<span class="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
+											{item.icon === 'cpu' && (
+												<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+											)}
+											{item.icon === 'server' && (
+												<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>
+											)}
+										</span>
+									)}
+									<p class="text-2xl font-bold tracking-tight md:text-3xl">{item.metric}</p>
+									<p class="mt-2 text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">{item.label}</p>
+								</div>
+								<p class="mt-6 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{item.desc}</p>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+
+		</section>
+
+		<!-- ===================================================== -->
+		<!-- 4b · NEXT CASE — Cierre + card del siguiente proyecto   -->
+		<!-- ===================================================== -->
+		<!-- Marcador de cierre -->
+		<div class="border-t border-black/10 py-8 text-center dark:border-white/10">
+			<span class="font-mono text-xs uppercase tracking-[0.3em] text-gray-400 dark:text-zinc-500">
+				· Fin del caso de estudio ·
+			</span>
+		</div>
+
+		<!-- Card del siguiente caso (todo el bloque es cliqueable) -->
+		<section class="px-6 pb-24 pt-6">
+			<a
+				href={`/proyectos/${next.slug}`}
+				data-magnetic-card
+				class="group mx-auto block max-w-6xl rounded-3xl border border-black/10 bg-[#f4f4f5] p-8 transition-colors duration-300 hover:border-black/20 dark:border-white/10 dark:bg-[#1d1d1d] dark:hover:border-white/20 md:p-12"
+			>
+				<div class="grid grid-cols-1 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
+					<!-- Izquierda · texto -->
+					<div>
+						<span class="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Siguiente Caso</span>
+						<h2 class="mt-4 font-ClashDisplay text-5xl font-bold uppercase leading-[0.92] tracking-tight text-gray-900 dark:text-secondary md:text-6xl">
+							{next.title}
+						</h2>
+						<p class="mt-5 max-w-md text-sm leading-relaxed text-gray-600 dark:text-zinc-400 md:text-base">
+							{next.intro.left}
+						</p>
+
+						{nextTags.length > 0 && (
+							<div class="mt-6 flex flex-wrap gap-2">
+								{nextTags.map((tag) => (
+									<span class="rounded-full border border-black/10 bg-black/5 px-3.5 py-1.5 text-xs font-medium text-gray-700 dark:border-white/10 dark:bg-white/10 dark:text-gray-300">
+										{tag}
+									</span>
+								))}
+							</div>
+						)}
+
+						<span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-secondary">
+							Ver caso completo
+							<svg class="h-4 w-4 text-orange-500 transition-transform duration-300 group-hover:translate-x-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+						</span>
+					</div>
+
+					<!-- Derecha · thumbnail (reusa el panel visual del bento) -->
+					<div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-white/5 bg-zinc-950">
+						<div
+							class="pointer-events-none absolute inset-0 opacity-80 transition-transform duration-700 ease-out group-hover:scale-110"
+							style="background: radial-gradient(120% 100% at 50% 0%, rgba(251,191,36,0.22) 0%, rgba(249,115,22,0.08) 35%, transparent 65%);"
+						>
+						</div>
+						<div
+							class="pointer-events-none absolute inset-0 opacity-[0.05]"
+							style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 32px 32px;"
+						>
+						</div>
+						<div class="relative flex -space-x-3">
+							{next.stack.slice(0, 5).map((tech) => (
+								<div
+									class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-900 bg-zinc-800 text-[11px] font-semibold text-zinc-300 shadow-lg"
+									title={tech.label}
+								>
+									{tech.initials}
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</a>
+		</section>
+
+		<!-- ===================================================== -->
+		<!-- 5 · MEGA FOOTER (componente reutilizable)              -->
+		<!-- ===================================================== -->
+		<MegaFooter />
+	</article>
+</Layout>

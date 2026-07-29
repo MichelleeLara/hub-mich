@@ -1,0 +1,45 @@
+---
+// Tarjeta de expertise estilo midu.design: título grande, divisor,
+// label "Info", descripción y botón circular de flecha abajo a la derecha.
+// Theme-aware (mismo patrón que SkillsStack, donde se usa).
+const { tag, title, description } = Astro.props;
+---
+
+<div
+  class="group relative flex flex-col rounded-[2rem] bg-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:bg-zinc-900 dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] md:p-10"
+>
+  <h3
+    class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-4xl"
+  >
+    {title}
+  </h3>
+
+  <hr class="mb-8 mt-6 border-zinc-200 dark:border-zinc-800" />
+
+  <span class="mb-3 text-sm text-zinc-400 dark:text-zinc-500">Info</span>
+
+  <p class="text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+    {description}
+  </p>
+
+  <span class="sr-only">{tag}</span>
+
+  <div class="mt-10 self-end">
+    <span
+      class="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 transition-colors group-hover:bg-zinc-900 group-hover:text-white dark:bg-zinc-800 dark:text-zinc-400 dark:group-hover:bg-white dark:group-hover:text-zinc-900"
+    >
+      <svg
+        class="h-4 w-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M7 7h10v10" />
+        <path d="M7 17 17 7" />
+      </svg>
+    </span>
+  </div>
+</div>

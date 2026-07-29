@@ -1,0 +1,96 @@
+---
+// Mega Footer — invertido respecto al tema (tema claro → footer oscuro ·
+// tema oscuro → footer claro). Cierra el Home y las páginas de detalle.
+---
+
+<footer class="relative overflow-hidden bg-zinc-950 pb-0 pt-24 text-white dark:bg-zinc-100 dark:text-zinc-900 rounded-tl-[4rem] rounded-tr-[4rem]">
+	<!-- Grid superior · navegación -->
+	<div class="mx-auto max-w-7xl px-8">
+		<div class="grid grid-cols-1 gap-12 md:grid-cols-2">
+			<!-- Izquierda · CTA -->
+			<div>
+				<p class="mb-8 max-w-sm text-3xl font-medium tracking-tight md:text-4xl">
+					Product Engineer. Construyo software que resuelve y escala.
+				</p>
+				<a
+					href="/#contacto"
+					class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-zinc-900 transition-transform hover:scale-105 dark:bg-zinc-900 dark:text-white"
+				>
+					<span class="text-orange-500">✦</span> Hablemos
+				</a>
+			</div>
+
+			<!-- Derecha · links (grid interno de 2 columnas) -->
+			<div class="grid grid-cols-2 gap-8">
+				<div>
+					<p class="mb-4 text-sm text-zinc-500">Explora</p>
+					<nav class="flex flex-col gap-2 text-zinc-300 dark:text-zinc-600">
+						<a href="/" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">Inicio</a>
+						<a href="/#proyectos" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">Proyectos</a>
+						<a href="/yo" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">Sobre mí</a>
+					</nav>
+				</div>
+				<div>
+					<p class="mb-4 text-sm text-zinc-500">Socials</p>
+					<nav class="flex flex-col gap-2 text-zinc-300 dark:text-zinc-600">
+						<a href="https://www.linkedin.com/in/michelle-rodriguez-lara/" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">LinkedIn</a>
+						<a href="https://github.com/MichelleeLara" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">GitHub</a>
+						<a href="/pdf/CV_michelle_lara.pdf" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">CV</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Metadatos -->
+		<div class="mb-4 mt-24 flex flex-col gap-3 font-mono text-xs uppercase tracking-widest text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+			<span>© 2026 Mich Rodriguez</span>
+			<span class="inline-flex items-center gap-2">
+				<span class="relative flex h-2 w-2">
+					<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
+					<span class="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+				</span>
+				Available for work
+			</span>
+		</div>
+	</div>
+
+	<!-- Impacto final · "MICH." a todo el ancho, pegado al borde inferior.
+	     El degradado va HACIA ARRIBA: el suelo de las letras queda visible
+	     y el techo se funde con el fondo del footer. La baseline coincide
+	     con el borde del viewBox → sin padding abajo. -->
+	<svg
+		class="mich-fill block w-full select-none"
+		viewBox="0 0 1000 250"
+		preserveAspectRatio="xMidYMax meet"
+		aria-hidden="true"
+	>
+		<defs>
+			<linearGradient id="michGrad" x1="0" y1="0" x2="0" y2="1">
+				<stop offset="0" stop-color="var(--mich-top)" />
+				<stop offset="1" stop-color="var(--mich-bottom)" />
+			</linearGradient>
+		</defs>
+		<text
+			x="500"
+			y="250"
+			text-anchor="middle"
+			textLength="1000"
+			lengthAdjust="spacingAndGlyphs"
+			fill="url(#michGrad)"
+			style="font-family:'Inter Tight Variable',sans-serif;font-weight:900;font-size:340px;"
+		>MICH.</text>
+	</svg>
+</footer>
+
+<style>
+	/* Degradado del "MICH." gigante — hacia arriba: techo = color del fondo del
+	   footer (se funde) · suelo = visible. Se invierte con el tema. */
+	.mich-fill {
+		--mich-top: #00000000;
+		--mich-bottom: #ededf04d;
+	}
+	:global(html.dark) .mich-fill {
+		--mich-top: #ffffff00;
+		--mich-bottom: #202024bd;
+	}
+</style>

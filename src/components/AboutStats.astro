@@ -1,0 +1,79 @@
+---
+// Sección "Sobre mí": stats alrededor y un hueco central (#face-anchor)
+// donde el polvo estelar del fondo se recluta para formar el rostro.
+// El canvas global (ParticlesBackground) lee la posición de #face-anchor
+// para saber dónde y a qué escala condensar las partículas.
+
+// Cifras reales, cada una respaldada por un caso de estudio (ver projectsData.js).
+// Regla de marca: prueba, no promesa — nada de "clientes felices" genéricos.
+const statsLeft = [
+  { value: '$1M', label: 'USD de ahorro anual proyectado (AnamSeals)' },
+  { value: '6', label: 'Ingenieros liderados como Frontend Lead' },
+  { value: '~1M', label: 'Unidades/mes hacia producción masiva' },
+];
+
+const statsRight = [
+  { value: '+65%', label: 'Rendimiento ganado en el mapa logístico' },
+  { value: '3', label: 'Empresas · Bego, Bego AI, Row Quintero' },
+  { value: '2', label: 'Idiomas · ES / EN' },
+];
+---
+
+<section id="sobre-mi" class="relative mx-auto max-w-6xl px-6 pt-[max(15vh,120px)] pb-24">
+  <!-- Eyebrow: mismo lenguaje que el del Hero; discreto para no competir
+       con el rostro de partículas ni con los números -->
+  <h2
+    class="flex items-center justify-center gap-3 text-xs font-semibold uppercase tracking-[0.1em]"
+  >
+    <span class="text-gray-800 dark:text-secondary">Sobre mí</span>
+    <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
+    <span class="text-terteary">El impacto en números</span>
+  </h2>
+
+  <!-- Aire generoso bajo el eyebrow: en el punto de reposo (rostro centrado)
+       el eyebrow ya salió del viewport en lugar de quedar tras el header -->
+  <div class="mt-12 md:mt-36 grid gap-8 md:grid-cols-[1fr_1.5fr_1fr] md:gap-6 items-stretch">
+    <!-- Stats izquierda -->
+    <div class="grid grid-cols-2 gap-6 md:flex md:flex-col md:justify-between md:gap-0">
+      {
+        statsLeft.map((s) => (
+          <div class="border-t border-black/10 pt-5 pb-8 dark:border-white/10 flex flex-col items-start">
+            <p class="font-ClashDisplay text-4xl md:text-5xl font-semibold text-gray-900 dark:text-secondary">
+              {s.value}
+            </p>
+            <p class="mt-2 text-sm text-terteary">{s.label}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Hueco central: aquí se condensa el rostro de partículas.
+         Debe permanecer visualmente vacío — el dibujo lo hace el canvas
+         de fondo, no este elemento. -->
+    <div
+      id="face-anchor"
+      class="relative order-first h-[55vh] md:order-none md:h-auto md:min-h-[70vh]"
+      aria-label="Retrato de Michelle formado por partículas"
+    >
+      <span
+        class="absolute left-1/2 top-0 -translate-x-1/2 whitespace-nowrap rounded-full border border-black/10 bg-white/70 px-4 py-1.5 text-xs text-gray-700 backdrop-blur-sm dark:border-white/10 dark:bg-white/5 dark:text-gray-300"
+      >
+        Hola, soy Mich 👋
+      </span>
+    </div>
+
+    <!-- Stats derecha -->
+    <div class="grid grid-cols-2 gap-6 md:flex md:flex-col md:justify-between md:gap-0">
+      {
+        statsRight.map((s) => (
+          <div class="border-t border-black/10 pt-5 pb-8 dark:border-white/10 flex flex-col items-end">
+            <p class="font-ClashDisplay text-4xl md:text-5xl font-semibold text-gray-900 dark:text-secondary">
+              {s.value}
+            </p>
+            <p class="mt-2 text-sm text-terteary">{s.label}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

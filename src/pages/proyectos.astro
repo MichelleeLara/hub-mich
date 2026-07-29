@@ -1,13 +1,5 @@
 ---
-import ThemeToggle from '../components/Themetoggle';
-import Layout from '../layouts/Layout.astro';
+// Redirección temporal a la sección de proyectos del inicio.
+// Cuando existan los casos de estudio, reemplazar este redirect.
+return Astro.redirect("/#proyectos");
 ---
-
-<Layout>
-	<main class="bg-white min-h-screen text-black dark:bg-[#161616] dark:text-gray-300 transition-colors duration-300">
-		<ThemeToggle client:load/>
-		<p style="color: aqua;" class="text-red-500 py-60 bg-red-500ultimet dark:text-yellow-500">This is an example of dark mode in Astro.</p>
-	</main>
-</Layout>
-
-
