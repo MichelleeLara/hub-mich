@@ -1,67 +1,184 @@
 ---
-// Sección "Trayectoria" (experiencia laboral) del Home. Lista editorial de
-// filas rol/empresa/fechas. Va sobre fondo claro para contrastar con el grid
-// oscuro de proyectos. Theme-aware para respetar el toggle del header.
+// Sección "Trayectoria" — timeline vertical con revelado por scroll.
+// Mismo lenguaje que Sobre mí y Proyectos: eyebrow de tres partes +
+// titular editorial a dos tonos en ClashDisplay.
 const jobs = [
-	{
-		role: 'Frontend UI Engineer',
-		company: 'Row Quintero Studio',
-		dates: '2026 — Presente',
-	},
-	{
-		role: 'Firmware & Frontend Lead',
-		company: 'Bego AI',
-		dates: '2025 — 2026',
-	},
-	{
-		role: 'Frontend Developer',
-		company: 'Bego',
-		dates: '2024 — 2025',
-	},
+  {
+    role: 'Frontend Engineer · Firmware',
+    company: 'Bego',
+    dates: 'Feb 2025 — Presente',
+    current: true,
+    summary:
+      'Entré para el proyecto de candados IoT y terminé tocando el producto completo: del navegador al firmware. Lideré a 6 ingenieros y mi propuesta de arquitectura quedó como convención corporativa.',
+    tags: ['Angular', 'TypeScript', 'WebSockets', 'FSD', 'C embebido', 'FreeRTOS'],
+  },
+  {
+    role: 'Tech Lead',
+    company: 'Rand Abogados',
+    dates: 'Sep — Dic 2024',
+    summary:
+      'Primer rol de liderazgo. Elegí el stack, implementé Scrum y traduje requerimientos de un cliente no técnico en decisiones de producto.',
+    tags: ['React', 'Next.js', 'TypeScript', 'Scrum'],
+  },
+  {
+    role: 'Fullstack Engineer',
+    company: 'Nomad Technologies',
+    dates: 'Ago 2022 — Sep 2024',
+    summary:
+      'Empecé en frontend y fui ampliando alcance hasta backend e infraestructura: APIs, pagos, seguridad y despliegue en AWS para una app con 500 usuarios.',
+    tags: ['React', 'Node.js', 'AWS', 'Stripe', 'JWT'],
+  },
+  {
+    role: 'Fullstack Developer',
+    company: 'Hospital MediBiologica',
+    dates: 'Dic 2022 — Mar 2023',
+    summary:
+      'Proyecto en paralelo. Sitio multilingüe optimizado para velocidad y SEO técnico, hasta el top 10 de Google.',
+    tags: ['Astro', 'React', 'i18n', 'SEO'],
+  },
 ];
 ---
 
-<section class="mx-auto max-w-5xl px-8 py-32 text-zinc-900 dark:text-secondary">
-	<!-- Encabezado sutil -->
-	<h2 class="mb-16 font-mono text-sm uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-		Trayectoria
-	</h2>
+<section
+  id="trayectoria"
+  class="relative mx-auto max-w-6xl scroll-mt-24 px-6 pt-[max(12vh,100px)] pb-24"
+>
+  <!-- Eyebrow: mismo lenguaje que Hero, Sobre mí y Proyectos -->
+  <h2
+    class="flex items-center justify-center gap-3 text-xs font-semibold uppercase tracking-[0.1em]"
+  >
+    <span class="text-gray-800 dark:text-secondary">Trayectoria</span>
+    <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
+    <span class="text-terteary">Cómo llegué aquí</span>
+  </h2>
 
-	<!-- Tabla de experiencia -->
-	<div class="flex flex-col">
-		{
-			jobs.map((job, i) => (
-				<div
-					class={`group flex flex-col justify-between border-t border-zinc-200 py-8 transition-colors hover:bg-zinc-50/50 dark:border-white/10 dark:hover:bg-white/[0.03] md:flex-row md:items-baseline ${i === jobs.length - 1 ? 'border-b' : ''}`}
-				>
-					<!-- Izquierda · rol y empresa -->
-					<div class="flex flex-col gap-1">
-						<h3 class="text-2xl font-bold tracking-tight text-zinc-900 transition-colors group-hover:text-zinc-600 dark:text-secondary dark:group-hover:text-zinc-400 md:text-3xl">
-							{job.role}
-						</h3>
-						<p class="inline-flex items-center gap-1.5 text-lg font-medium text-zinc-500 dark:text-zinc-400">
-							{job.company}
-							<svg
-								class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							>
-								<path d="M7 7h10v10" />
-								<path d="M7 17 17 7" />
-							</svg>
-						</p>
-					</div>
+  <!-- Titular editorial a dos tonos -->
+  <p
+    class="mx-auto mt-8 max-w-3xl text-center font-ClashDisplay text-4xl font-semibold leading-tight tracking-wide md:text-5xl"
+  >
+    <span class="text-gray-900 dark:text-secondary">Cuatro años de recorrido.</span>
+    <span class="text-gray-400 dark:text-[#5a5a5a]"> De la interfaz al firmware.</span>
+  </p>
 
-					<!-- Derecha · fechas -->
-					<span class="mt-4 font-mono text-sm text-zinc-400 dark:text-zinc-500 md:mt-0 md:text-right">
-						{job.dates}
-					</span>
-				</div>
-			))
-		}
-	</div>
+  <!-- Recorrido -->
+  <ol id="trail" class="relative mx-auto mt-24 flex max-w-5xl flex-col">
+    <!-- Riel: izquierdo en móvil, central en desktop -->
+    <span
+      class="pointer-events-none absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-transparent via-black/10 to-transparent dark:via-white/10 md:left-1/2 md:-translate-x-1/2"
+      aria-hidden="true"
+    ></span>
+
+    {
+      jobs.map((job, i) => {
+        // Alternancia estricta: pares a la izquierda, impares a la derecha.
+        const right = i % 2 === 1;
+        return (
+          <li
+            data-side={right ? 'right' : 'left'}
+            class="trail-stop relative pb-24 pl-10 last:pb-0 md:pl-0"
+          >
+            {/* Nodo sobre el riel */}
+            <span
+              class={`absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 md:left-1/2 md:-translate-x-1/2 ${
+                job.current
+                  ? 'border-green-500/60 bg-green-500/20'
+                  : 'border-black/15 bg-transparent dark:border-white/15'
+              }`}
+              aria-hidden="true"
+            />
+
+            {/* Media caja, alineada al lado que toca */}
+            <div
+              class={
+                right
+                  ? 'md:ml-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)]'
+                  : 'md:mr-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)] md:text-right'
+              }
+            >
+              {/* Fechas */}
+              <span class="text-xs font-semibold uppercase tracking-[0.1em] text-terteary">
+                {job.dates}
+              </span>
+
+              {/* Rol y empresa */}
+              <h3 class="mt-3 text-balance font-ClashDisplay text-3xl font-semibold tracking-wide text-gray-900 dark:text-secondary md:text-4xl">
+                {job.role}
+              </h3>
+              <p class="mt-1 text-lg text-terteary">{job.company}</p>
+
+              {/* Descripción */}
+              <p class="mt-5 text-gray-700 dark:text-gray-400">{job.summary}</p>
+
+              {/* Tags */}
+              <ul
+                class={`mt-7 flex flex-wrap gap-2 ${right ? '' : 'md:justify-end'}`}
+              >
+                {job.tags.map((tag) => (
+                  <li class="rounded-full border border-black/10 px-3.5 py-1.5 text-xs font-medium text-terteary dark:border-white/10">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ol>
 </section>
+
+<style>
+  /* Cada parada entra desde el lado del riel que le toca. En móvil la
+     timeline es lineal, así que todas suben en vertical. */
+  .trail-stop {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.7s ease,
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .trail-stop.is-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (min-width: 768px) {
+    .trail-stop[data-side='left']:not(.is-active) {
+      transform: translateX(-32px);
+    }
+
+    .trail-stop[data-side='right']:not(.is-active) {
+      transform: translateX(32px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trail-stop,
+    .trail-stop[data-side='left'],
+    .trail-stop[data-side='right'] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Revelado por scroll de cada parada.
+  const stops = document.querySelectorAll<HTMLElement>('.trail-stop');
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    stops.forEach((s) => s.classList.add('is-active'));
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add('is-active');
+        });
+      },
+      { rootMargin: '-20% 0px -30% 0px' },
+    );
+    stops.forEach((s) => io.observe(s));
+  }
+</script>

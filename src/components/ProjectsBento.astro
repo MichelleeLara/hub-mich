@@ -7,15 +7,32 @@
 
 import { projects } from '../data/projectsData.js';
 
-// Layout del bento: orden + tamaño por slug (grid de 6 columnas en desktop).
-// Fila 1 → 4/2 · Fila 2 → 2/2/2. Móvil apila.
+// Layout: grid de 2 columnas con cards grandes (referencia midu.design).
+// Fila 1 → AnamSeals a todo el ancho · Filas 2-3 → los otros cuatro en pares.
+// Con 5 proyectos esto llena la retícula sin huecos. Móvil apila.
+// `aspect` manda la altura (no `min-h`): en móvil todas van 4/3, y en desktop la
+// destacada se abre a 16/9 mientras las de par van verticales como en la ref.
+// `cover` → la foto va de fondo, a sangre, llenando la card.
+// `pos` = background-position del recorte: 'center top' cuando el sujeto está
+// arriba y centrar lo decapitaría.
+const PAIR = 'aspect-[4/3] md:aspect-[5/4]';
 const layout = [
-  { slug: 'anamseals-firmware', span: 'md:col-span-4', featured: true },
-  { slug: 'monitoreo-white-label', span: 'md:col-span-2', featured: false },
-  { slug: 'inteligencia-logistica', span: 'md:col-span-2', featured: false },
-  { slug: 'tracking-aduanal', span: 'md:col-span-2', featured: false },
-  { slug: 'luzia-agentes-ia', span: 'md:col-span-2', featured: false },
+  { slug: 'anamseals-firmware', span: 'md:col-span-2', aspect: 'aspect-[4/3] md:aspect-[2/1]', featured: true, cover: true, pos: 'center top' },
+  { slug: 'monitoreo-white-label', span: '', aspect: PAIR, featured: false, cover: true, pos: 'center center' },
+  { slug: 'inteligencia-logistica', span: '', aspect: PAIR, featured: false, cover: true, pos: 'center center' },
+  { slug: 'tracking-aduanal', span: '', aspect: PAIR, featured: false, cover: true, pos: 'center top' },
+  { slug: 'luzia-agentes-ia', span: '', aspect: PAIR, featured: false, cover: true, pos: 'center center' },
 ];
+
+// El velo que asienta el título va como PRIMERA capa de background, con la foto
+// como segunda, sobre el mismo elemento que lleva el `rounded-3xl`.
+// Motivo (medido): con la foto en un `<img>` y el velo en un div aparte, Chrome
+// rasteriza el recorte redondeado de cada capa con cobertura distinta, y la foto
+// se filtra como una hairline de 1px sobre el arco (brillo 103 contra 33 del
+// interior). Probé viñeta, sangrado del velo, `isolation`, `translateZ` y una capa
+// interna: todas siguen en +67. Un solo elemento con dos backgrounds da +0.
+const VEIL =
+  'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.74) 16%, rgba(0,0,0,0.38) 36%, transparent 58%)';
 
 const cards = layout
   .map((l) => ({ ...l, ...projects.find((p) => p.slug === l.slug) }))
@@ -40,69 +57,33 @@ const cards = layout
     <span class="text-gray-400 dark:text-[#5a5a5a]"> Del problema al impacto medible.</span>
   </p>
 
-  <!-- Bento Grid: fila 1 → 4/2, fila 2 → 2/2/2; móvil apila -->
-  <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-6">
+  <!-- Grid de 2 columnas con cards grandes; móvil apila -->
+  <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
     {
       cards.map((p) => (
         <a
           href={`/proyectos/${p.slug}`}
           data-magnetic-card
-          class={`group relative flex min-h-[380px] flex-col justify-end overflow-hidden rounded-3xl border border-black/10 bg-zinc-950 transition-colors duration-300 hover:border-black/20 dark:border-white/10 dark:hover:border-white/20 ${p.span}`}
+          class={`group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-zinc-950 transition-transform duration-500 ease-out hover:scale-[1.015] ${p.aspect} ${p.span}`}
+          style={`background-image: ${VEIL}, url('${p.thumbnail}'); background-size: auto, cover; background-position: center; background-repeat: no-repeat;`}
         >
-          <!-- Visual editorial (glow ámbar + grid) que llena toda la card -->
-          <div
-            class="pointer-events-none absolute inset-0 opacity-80 transition-transform duration-700 ease-out group-hover:scale-110"
-            style="background: radial-gradient(120% 100% at 50% 0%, rgba(251,191,36,0.22) 0%, rgba(249,115,22,0.08) 35%, transparent 65%);"
-          />
-          <div
-            class="pointer-events-none absolute inset-0 opacity-[0.05]"
-            style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 32px 32px;"
-          />
-
-          <!-- Producto flotante: imagen del proyecto si existe, si no los
-               avatares del stack como fallback. -->
-          <div class="absolute inset-0 flex items-center justify-center p-8">
-            {p.thumbnail ? (
-              <img
-                src={p.thumbnail}
-                alt={p.title}
-                loading="lazy"
-                class="max-h-[70%] w-auto object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover:scale-105"
-              />
-            ) : (
-              <div class="flex -space-x-3">
-                {p.stack.slice(0, p.featured ? 5 : 4).map((tech) => (
-                  <div
-                    class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-900 bg-zinc-800 text-[11px] font-semibold text-zinc-300 shadow-lg"
-                    title={tech.label}
-                  >
-                    {tech.initials}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <!-- Scrim inferior para legibilidad del título overlaid -->
-          <div class="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-
           <!-- Tags flotantes arriba-derecha -->
           {p.brief?.tipo && (
-            <div class="absolute right-5 top-5 z-10 flex max-w-[75%] flex-wrap justify-end gap-2">
+            <div class="absolute right-6 top-6 z-10 flex max-w-[80%] flex-wrap justify-end gap-2 md:right-7 md:top-7">
               {p.brief.tipo.map((tag) => (
-                <span class="rounded-full border border-white/10 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-zinc-200 backdrop-blur-md">
+                <span class="rounded-full border border-white/15 bg-black/60 px-4 py-2 text-xs font-medium text-white backdrop-blur-md md:text-sm">
                   {tag}
                 </span>
               ))}
             </div>
           )}
 
-          <!-- Título + categoría overlaid abajo-izquierda (estilo Kiwe) -->
-          <div class="relative z-10 p-6">
-            <h3 class="font-ClashDisplay text-2xl font-semibold tracking-wide text-white md:text-3xl">
+          <!-- Título + categoría overlaid abajo-izquierda -->
+          <div class="relative z-10 px-7 pb-8 pt-16 md:px-9 md:pb-9">
+            <h3 class="font-ClashDisplay text-3xl font-semibold tracking-wide text-white md:text-[2.5rem] md:leading-[1.1]">
               {p.title}
             </h3>
-            <p class="mt-1 text-sm text-zinc-400">{p.meta}</p>
+            <p class="mt-2 text-sm text-zinc-300 md:text-base">{p.meta}</p>
           </div>
         </a>
       ))

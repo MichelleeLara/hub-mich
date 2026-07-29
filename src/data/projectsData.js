@@ -5,8 +5,8 @@ export const projects = [
 	{
 		slug: 'inteligencia-logistica',
 		title: 'Inteligencia Logística',
-		meta: 'Frontend · Bego — 2026',
-		thumbnail: '/Screen.webp',
+		meta: 'Frontend · Bego — 2025',
+		thumbnail: '/inteligenciaDashboard-pad.webp',
 		intro: {
 			left: 'Un mapa logístico nacional que colapsaba bajo el peso de sus propios datos: loaders invasivos y renderizados que asfixiaban al navegador.',
 			right: 'Reconstruí la carga asíncrona y migré el motor de mapas para rastrear transportes sin una sola fricción visual.',
@@ -18,7 +18,7 @@ export const projects = [
 				'Lideré una auditoría técnica y <strong>migré el motor a Mapbox</strong>, refactorizando la carga asíncrona para rastrear transportes sin una sola fricción visual.',
 			],
 			rol: ['Frontend Developer'],
-			estado: ['Shipped', '2026'],
+			estado: ['Shipped', '2024–25'],
 			tipo: ['Logística', 'Mapas en vivo'],
 		},
 		stack: [
@@ -56,7 +56,8 @@ export const projects = [
 	{
 		slug: 'tracking-aduanal',
 		title: 'Tracking Aduanal',
-		meta: 'Frontend · Bego — 2026',
+		meta: 'Frontend · Bego — 2025',
+		thumbnail: '/trackingAduanal-pad.webp',
 		intro: {
 			left: 'Monitoreo en vivo de transportes hacia múltiples aduanas, con jerarquías de permisos y flujos de datos espaciales concurrentes.',
 			right: 'Sincronicé varios canales de WebSockets y estandaricé la data geográfica para pintar coordenadas en tiempo real, sin fricción.',
@@ -68,7 +69,7 @@ export const projects = [
 				'Sincronicé varios canales de <strong>WebSockets</strong>, estandaricé la data espacial con GeoJSON y construí una <strong>UI basada en roles (RBAC)</strong> que se adapta según el usuario.',
 			],
 			rol: ['Frontend Developer'],
-			estado: ['Shipped', '2026'],
+			estado: ['Shipped', '2024–25'],
 			tipo: ['Real-time', 'Monitoreo', 'RBAC'],
 		},
 		stack: [
@@ -107,7 +108,8 @@ export const projects = [
 	{
 		slug: 'monitoreo-white-label',
 		title: 'Monitoreo White-Label',
-		meta: 'Frontend Lead · Bego — 2026',
+		meta: 'Frontend Lead · Bego — 2025',
+		thumbnail: '/whiteLabelBrand.webp',
 		intro: {
 			left: 'Una sola plataforma de monitoreo que debía replicarse para múltiples empresas cliente, cada una con su branding y sus módulos.',
 			right: 'Lideré a 6 ingenieros e introduje Feature-Sliced Design como convención corporativa para escalar sin caos.',
@@ -120,7 +122,7 @@ export const projects = [
 				'Como Frontend Lead introduje <strong>Feature-Sliced Design</strong> y una arquitectura White-Label que despliega por cliente inyectando color y módulos, <strong>sin tocar el código base</strong>.',
 			],
 			rol: ['Frontend Lead'],
-			estado: ['Shipped', '2026'],
+			estado: ['Shipped', '2024–25'],
 			tipo: ['White-Label', 'Multi-tenant', 'Design System'],
 		},
 		stack: [
@@ -142,7 +144,7 @@ export const projects = [
 		resultado: [
 			{ value: '6', label: 'Ingenieros liderados con un flujo de trabajo sincronizado.' },
 			{ value: 'FSD', label: 'Arquitectura adoptada como convención a nivel corporativo.' },
-			{ value: 'Nueva división', label: 'El éxito abrió la puerta a liderar Firmware y hardware.' },
+			{ value: 'Firmware', label: 'El éxito abrió la puerta al proyecto de candados IoT.' },
 		],
 		impact: {
 			featured: {
@@ -159,8 +161,8 @@ export const projects = [
 	{
 		slug: 'anamseals-firmware',
 		title: 'AnamSeals',
-		meta: 'Firmware & Frontend · Bego AI — 2026',
-		thumbnail: '/Server.webp',
+		meta: 'Firmware · Bego — 2025–26',
+		thumbnail: '/anamsealsHand.webp',
 		intro: {
 			left: 'Un candado IoT que debía saltar de prueba de concepto a producción en masa: ~1 millón de unidades al mes, con fallos de hardware y criptografía.',
 			right: 'Consolidé y depuré el firmware sobre STM32 con TrustZone, blindando la identidad criptográfica y la trazabilidad ante cortes de energía.',
@@ -171,8 +173,8 @@ export const projects = [
 				'Las placas fallaban por contaminación del bus I2C, los <strong>tokens JWT se truncaban</strong> en el enrolamiento y cada reinicio mezclaba historiales de rastreo.',
 				'Consolidé el firmware sobre <strong>STM32 con TrustZone</strong>: la firma ECDSA ocurre en el dominio seguro, con trazabilidad a prueba de cortes de energía.',
 			],
-			rol: ['Firmware & Frontend Lead'],
-			estado: ['Pre-EVT → EVT', '2026'],
+			rol: ['Firmware Engineer'],
+			estado: ['Pre-EVT → EVT', '2025–26'],
 			tipo: ['IoT', 'Firmware', 'Hardware'],
 		},
 		stack: [
@@ -224,8 +226,8 @@ export const projects = [
 	{
 		slug: 'luzia-agentes-ia',
 		title: 'Luz.ia',
-		meta: 'Frontend UI Engineer · Row Quintero — 2026',
-		thumbnail: '/design.webp',
+		meta: 'Proyecto propio · Luz.ia — 2026',
+		thumbnail: '/luziaOmmia-pad.webp',
 		intro: {
 			left: 'Un ecosistema de agentes de IA para el bienestar, cuya complejidad debía presentarse a terapeutas no técnicos con una interfaz impecable.',
 			right: 'Diseño desde cero la arquitectura UI/UX y el design system, priorizando una estética editorial y una experiencia sin fricción.',
@@ -236,7 +238,7 @@ export const projects = [
 				'Se descartaron los CRMs de terceros para no depender de plataformas externas: eso exigía un <strong>dashboard propio</strong> con control total de UX y branding.',
 				'Diseño desde cero el <strong>design system</strong> con Next.js y shadcn/ui; el panel interno y el del cliente comparten <strong>60–70% del código</strong>.',
 			],
-			rol: ['UI Engineer'],
+			rol: ['Product Engineer · Proyecto propio'],
 			estado: ['MVP · Pre-validación', '2026'],
 			tipo: ['B2B SaaS', 'Agentes IA', 'Design System'],
 		},
