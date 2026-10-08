@@ -125,3 +125,7 @@ Prueba real IAB: construcción100%/recorrido.808 del tramo, reposo observado, sc
 
 ## Objeto ligeramente mayor — petición directa
 Escala de estructura isométrica aumentada15% alrededor del centro, en proyección compartida por puntos, conexiones y recorrido granular. Anchor, tipografía y duración de scroll conservados; tamaño de cada grano igual. SVG permite overflow visible para preservar extremos durante pausa/sinJS (exceso vertical menor al margen20px existente). Builds Astro5/7 aprobados.
+
+
+## Segundo aumento del objeto — petición directa
+Otro15% sobre tamaño vigente: escala acumulada1.3225 (+32.25% respecto al original). Proyección compartida preserva recorrido y sellado. Margen vertical del anchor aumentado a48px escritorio/40px móvil para que los extremos ampliados no invadan encabezado ni etiquetas. SVG conserva overflow visible. Builds finales Astro5/7 aprobados.
