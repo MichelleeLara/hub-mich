@@ -1,4 +1,4 @@
-export type IdeaPoint = { x: number; y: number; birth: number; outer: boolean };
+export type IdeaPoint = { x: number; y: number; birth: number; outer: boolean; baseY: number };
 export const ideaAspect = 1.1;
 export const ideaPoints: IdeaPoint[] = [];
 // The approved isometric proposal, normalized to its own illustration area.
@@ -9,7 +9,7 @@ function edge(a: number[], b: number[], count: number, birth: number, outer=true
   for(let j=0;j<count;j++) {
     const t=j/(count-1);
     const p=project(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t);
-    ideaPoints.push({...p,birth:birth+j/count*.05,outer});
+    ideaPoints.push({...p,baseY:project(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,0).y,birth:birth+j/count*.05,outer});
   }
 }
 for(let z=0;z<=3;z++) {

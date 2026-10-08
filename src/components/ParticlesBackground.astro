@@ -160,7 +160,7 @@ import { PARTICLES_ENABLED } from '../config';
     let faceEase = 0;
     let facePointsReady = false;
     let faceAspect = 1;
-    let pickFacePoint: (() => { x: number; y: number; a: number; birth: number }) | null = null;
+    let pickFacePoint: (() => { x: number; y: number; a: number; birth: number; baseY: number }) | null = null;
 
     const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, speed: 0, active: false };
 
@@ -231,16 +231,18 @@ import { PARTICLES_ENABLED } from '../config';
       kind[i] = k;
     };
 
+    let baseFY = new Float32Array(0);
     const assignFaceTargets = () => {
       if (!pickFacePoint) return;
-      const stride = Math.max(1, Math.floor(cap / 1000));
+      const count = Math.min(960, cap);
+      let next = 0;
       for (let i = 0; i < cap; i++) {
-        if (i % stride !== 0) { fx[i] = fy[i] = -1; fa[i] = 0; continue; }
-        const c = pickFacePoint();
-        fx[i] = c.x + (Math.random() - .5) * .006;
-        fy[i] = c.y + (Math.random() - .5) * .010;
-        fa[i] = c.a;
-        delay[i] = c.birth;
+        if (i !== Math.floor(next * cap / count) || next >= count) { fx[i] = fy[i] = -1; fa[i] = 0; continue; }
+        const point = ideaPoints[Math.floor(next * ideaPoints.length / count)];
+        fx[i] = point.x; fy[i] = point.y; baseFY[i] = point.baseY;
+        fa[i] = point.outer ? .76 : .44;
+        delay[i] = point.birth;
+        next++;
       }
     };
 
@@ -266,6 +268,7 @@ import { PARTICLES_ENABLED } from '../config';
       mg = new Float32Array(n);
       fx = new Float32Array(n); fy = new Float32Array(n); fa = new Float32Array(n);
       delay = new Float32Array(n);
+      baseFY = new Float32Array(n);
       kind = new Uint8Array(n);
       sy = new Float32Array(n); drawA = new Float32Array(n); formWeight = new Float32Array(n);
       bucketOf = new Uint8Array(n); order = new Uint32Array(n);
@@ -292,7 +295,7 @@ import { PARTICLES_ENABLED } from '../config';
     let lastH = -1;
     const resize = () => {
       // Cap de DPR: en pantallas 3x se pintarían 9 píxeles por píxel CSS.
-      const dpr = Math.min(window.devicePixelRatio || 1, TIER.dpr);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const nw = window.innerWidth;
       const nh = window.innerHeight;
       canvas.width = Math.round(nw * dpr);
@@ -319,6 +322,7 @@ import { PARTICLES_ENABLED } from '../config';
     // Caja destino del composición en coordenadas de pantalla, ajustada al anchor
     const faceBox = { x: 0, y: 0, w: 0, h: 0 };
     let faceDX = 0, faceDY = 0, previousScroll = window.scrollY;
+    const quintic = (t: number) => t*t*t*(t*(t*6-15)+10);
 
     let buildStage = -1, buildPercent = -1;
     const updateBuildState = (progress: number) => {
@@ -374,7 +378,7 @@ import { PARTICLES_ENABLED } from '../config';
         faceBox.h = fh;
       }
       document.documentElement.classList.toggle('particles-portrait', facePointsReady && !reduceMotion);
-      faceEase += (target - faceEase) * Math.min(1, 0.20 * dt);
+      faceEase += (target - faceEase) * (1 - Math.exp(-dt * 16.67 / 55));
       if (faceEase < 0.001) faceEase = 0;
       updateBuildState(faceEase);
     };
@@ -415,7 +419,7 @@ import { PARTICLES_ENABLED } from '../config';
         if (i === activeMain && i < mainCount) i = mainCount; // saltar recortadas
         const k = kind[i];
         const par = scrollY * SCROLL_PARALLAX * depth[i];
-        const e = faceOn && fx[i] >= 0 ? smooth(delay[i], Math.min(1, delay[i] + .24), ef) : 0;
+        const e = faceOn && fx[i] >= 0 ? quintic(Math.max(0, Math.min(1, (ef-delay[i])/.24))) : 0;
         formWeight[i] = e;
         // Move formed particles with their anchor directly: no spring drag on scroll.
         px[i] += faceDX * e;
@@ -500,17 +504,24 @@ import { PARTICLES_ENABLED } from '../config';
 
         if (e > 0) {
           const fxs = faceBox.x + fx[i] * faceBox.w;
-          const fys = faceBox.y + fy[i] * faceBox.h + par;
+          const lift = quintic(Math.max(0, Math.min(1, (ef-.18)/.72)));
+          const assembledY = baseFY[i] + (fy[i]-baseFY[i]) * lift;
+          const fys = faceBox.y + assembledY * faceBox.h + par;
           tx += (fxs - tx) * e;
           ty += (fys - ty) * e;
         }
 
-        // Resorte más firme conforme se recluta, para que el ilustración cuaje
-        const ks = SPRING * (1 + 3 * e) * dt;
-        vx[i] = (vx[i] + (tx - x) * ks) * damp;
-        vy[i] = (vy[i] + (ty - py[i]) * ks) * damp;
-        px[i] = x + vx[i] * dt;
-        py[i] += vy[i] * dt;
+        if (e > 0) {
+          // Same 55ms response as the process: no oscillating spring on the shape.
+          const follow = 1 - Math.exp(-dt * 16.67 / 55);
+          vx[i] = (tx-x) * follow; vy[i] = (ty-py[i]) * follow;
+          px[i] = x + vx[i]; py[i] += vy[i];
+        } else {
+          const ks = SPRING * dt;
+          vx[i] = (vx[i] + (tx-x)*ks) * damp;
+          vy[i] = (vy[i] + (ty-py[i])*ks) * damp;
+          px[i] = x + vx[i]*dt; py[i] += vy[i]*dt;
+        }
         s = py[i] - par;
         sy[i] = s;
 
@@ -530,7 +541,7 @@ import { PARTICLES_ENABLED } from '../config';
         }
         if (mg[i] > 0.01) a = Math.min(0.9, Math.max(a * (1 + MAGNET_GLOW * mg[i]), 0.5 * mg[i]));
         const signal = .72 + .28 * (.5 + .5 * Math.cos(tSec * 1.7 - fy[i] * 9 + fx[i] * 4)) ** 8;
-        a *= twinkle * (1-e) + signal * e;
+        a *= twinkle * (1-e) + (.9 + .1 * signal) * e;
         if (a < 0.008) {
           bucketOf[i] = 255;
           continue;
@@ -615,7 +626,9 @@ import { PARTICLES_ENABLED } from '../config';
           for (let j = start; j < start+n; j++) {
             const i = order[j];
             if (Number(formWeight[i] > .3) !== pass) continue;
-            ctx.fillRect(px[i], sy[i], size[i], size[i]);
+            if (pass === 1) {
+              ctx.beginPath(); ctx.arc(px[i], sy[i], i % 11 === 0 ? 1.7 : 1.1, 0, Math.PI*2); ctx.fill();
+            } else ctx.fillRect(px[i], sy[i], size[i], size[i]);
           }
         }
       }
@@ -654,7 +667,7 @@ import { PARTICLES_ENABLED } from '../config';
       if (reduceMotion || document.hidden || document.documentElement.classList.contains('motion-paused')) { rafId = 0; document.documentElement.classList.remove('particles-portrait'); return; }
       rafId = requestAnimationFrame(step);
       // Límite de FPS (con tolerancia para no perder cuadros por jitter)
-      if (time - lastFrame < frameBudget - 2) return;
+      if (time - lastFrame < (faceEase > 0 ? 1000/60 : frameBudget) - 2) return;
       lastFrame = time;
 
       const dt = Math.min((time - lastTime) / 16.67, 3);

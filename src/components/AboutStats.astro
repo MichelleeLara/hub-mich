@@ -20,7 +20,7 @@ const proof = [
       <div class="portrait-top"><span>Diseño + ingeniería + IA</span><span aria-hidden="true">↗</span></div>
       <div id="face-anchor">
         <svg class="face-fallback" viewBox="0 0 600 660" role="img" aria-label="Estructura isométrica construida por capas: una base, conexiones y un producto ensamblado">
-          {ideaPoints.map(point => <circle cx={point.x * 600} cy={point.y * 660} r=".9" fill="currentColor" opacity={point.outer ? .8 : .25} />)}
+          {ideaPoints.map((point, i) => <circle cx={point.x * 600} cy={point.y * 660} r={i % 11 === 0 ? 2.6 : 1.8} fill="currentColor" opacity={point.outer ? .76 : .44} />)}
         </svg>
         <span class="portrait-cross cross-one" aria-hidden="true">+</span><span class="portrait-cross cross-two" aria-hidden="true">+</span>
       </div>
