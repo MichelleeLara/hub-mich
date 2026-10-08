@@ -10,13 +10,13 @@
 			<!-- Izquierda · CTA -->
 			<div>
 				<p class="footer-intro-copy mb-8 max-w-sm text-3xl font-medium tracking-tight md:text-4xl">
-					Software Engineer. Construyo producto de punta a punta y lidero a quienes lo entregan.
+					<span>Software Engineer.</span> <span class="footer-title-muted">Construyo producto de punta a punta y lidero a quienes lo entregan.</span>
 				</p>
 				<a
 					href="mailto:mich.ia@hotmail.com?subject=Tengo%20una%20idea%20para%20un%20proyecto&amp;body=Hola%20Mich%2C%0A%0AQuiero%20contarte%20una%20idea%3A%0A%0AEl%20problema%20que%20me%20gustar%C3%ADa%20resolver%20es%E2%80%A6%0A%0ALo%20que%20tengo%20en%20mente%20es%E2%80%A6%0A%0A%C2%BFPodemos%20conversar%3F"
-					class="footer-contact-copy inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-zinc-900 transition-transform hover:scale-105 dark:bg-zinc-900 dark:text-white"
+					class="footer-contact-copy"
 				>
-					<span aria-hidden="true" class="text-orange-500">✦</span> Cuéntame tu idea
+					<span>Cuéntame tu idea</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 19 19 5M5 5h14v14" /></svg>
 				</a>
 			</div>
 
@@ -83,7 +83,15 @@
 </footer>
 
 <style>
-  .footer-contact-copy { font-family: ClashDisplay, 'Inter Tight Variable', sans-serif; font-weight: 600; letter-spacing: -.025em; }
+  .footer-title-muted { color: #b0b0b8; }
+  :global(html.dark) .footer-title-muted { color: #63636b; }
+  .footer-contact-copy { display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; min-height: 60px; width: min(100%, 320px); padding: 12px 0; border-bottom: 1px solid currentColor; font-family: ClashDisplay, 'Inter Tight Variable', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -.025em; color: inherit; }
+  .footer-contact-copy svg { flex-shrink: 0; width: 26px; height: 26px; }
+  .footer-contact-copy:focus-visible { outline-color: currentColor; }
+  @media (hover: hover) { .footer-contact-copy:hover { color: #efaa85; } :global(html.dark) .footer-contact-copy:hover { color: #a74316; } }
+  @media (prefers-reduced-motion: no-preference) { .footer-contact-copy { transition: color 150ms; } .footer-contact-copy svg { transition: transform 150ms ease-out; } .footer-contact-copy:active svg { transform: scale(.96); } }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) { .footer-contact-copy:hover svg { transform: translate(2px, -2px); } }
   .footer-intro-copy { font-family: ClashDisplay, 'Inter Tight Variable', sans-serif; font-weight: 600; line-height: 1.08; letter-spacing: -.035em; }
 
 	/* Degradado del "MICH." gigante — hacia arriba: techo = color del fondo del
