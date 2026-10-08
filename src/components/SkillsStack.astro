@@ -20,7 +20,7 @@ const tools = [
   <div class="method-layout">
     <div class="method-lab" id="particle-lab">
       <div class="lab-heading"><span>De las piezas al sistema</span><span class="lab-tag">Sigue el scroll</span></div>
-      <div class="lab-stage"><canvas id="process-particles" aria-hidden="true"></canvas><span class="lab-stage-label" aria-hidden="true">01 / Entender · La pregunta</span><span class="lab-axis axis-x" aria-hidden="true">+</span><span class="lab-axis axis-y" aria-hidden="true">+</span></div>
+      <div class="lab-stage"><canvas id="process-particles" aria-hidden="true"></canvas><span class="lab-stage-label" aria-hidden="true">01 / Entender · Dar claridad</span><span class="lab-axis axis-x" aria-hidden="true">+</span><span class="lab-axis axis-y" aria-hidden="true">+</span></div>
       <div class="process-buttons requires-js" role="group" aria-label="Etapas de mi proceso">
         {steps.map((step, i) => <button type="button" data-process-stage={i} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`process-step-${i}`}><span>0{i + 1}</span>{step.name}</button>)}
       </div>
@@ -113,15 +113,22 @@ const tools = [
     };
     const box = (out: Point[], x: number, y: number, w: number, h: number, count: number) => path(out, [[x,y],[x+w,y],[x+w,y+h],[x,y+h]], count, true);
     const forms: Point[][] = [[], [], []];
-    // Entender: noisy inputs become a single, well-defined question.
-    for (const y of [.24, .45, .66]) {
-      path(forms[0], [[.10,y+.02],[.14,y-.03],[.18,y+.025],[.22,y-.01],[.28,y]], 50);
-      path(forms[0], [[.28,y],[.40,y],[.50,.45],[.58,.45]], 50);
+    // Entender: quiet strands of context converge into one clear direction.
+    const contextThread = (lane: number, t: number): Point => {
+      if (t >= .8) return { x: .70 + (t - .8) / .2 * .18, y: .43 };
+      const u = t / .8, v = 1 - u;
+      return {
+        x: v*v*v*.12 + 3*v*v*u*.34 + 3*v*u*u*.43 + u*u*u*.70,
+        y: .43 + lane * .20 * (v*v*v + 3*v*v*u) + Math.sin(Math.PI*u) ** 2 * .012,
+      };
+    };
+    for (let lane = -1; lane <= 1; lane++) {
+      for (let i = 0; i < 180; i++) {
+        const t = i / 179, p = contextThread(lane, t);
+        const feather = Math.sin(i * 2.39996 + lane) * .004 * (1 - t);
+        forms[0].push({ x: p.x, y: p.y + feather });
+      }
     }
-    path(forms[0], [[.58,.19],[.78,.19],[.86,.27],[.86,.71],[.58,.71]], 120, true);
-    path(forms[0], [[.78,.19],[.78,.27],[.86,.27]], 20);
-    path(forms[0], [[.66,.34],[.66,.30],[.70,.27],[.75,.27],[.78,.31],[.78,.35],[.74,.40],[.72,.43],[.72,.48]], 80);
-    ring(forms[0], .72, .57, .009, .0144, 20);
     // Diseñar: one starting point, a decision and two possible routes.
     ring(forms[1], .16, .43, .045, .072, 60);
     path(forms[1], [[.43,.27],[.53,.43],[.43,.59],[.33,.43]], 100, true);
@@ -144,8 +151,7 @@ const tools = [
     const routes: Point[][][] = [[], [], []];
     for (let signal = 0; signal < 3; signal++) {
       const focus: Point[] = [], decision: Point[] = [], product: Point[] = [];
-      const inputY = [.24, .45, .66][signal];
-      path(focus, [[.10,inputY+.02],[.14,inputY-.03],[.18,inputY+.025],[.22,inputY-.01],[.28,inputY],[.40,inputY],[.50,.45],[.58,.45],[.72,.45]], 120);
+      for (let i = 0; i < 120; i++) focus.push(contextThread(signal - 1, i / 119));
       const branchY = signal === 1 ? .68 : .24;
       path(decision, [[.16,.43],[.43,.43],[.63,.43],[.63,branchY],[.805,branchY]], 120);
       path(product, [[.31,.72],[.41,.65],[.51,.68],[.63,.54],[.73,.59],[.84,.50]], 120);
@@ -171,7 +177,7 @@ const tools = [
       stage = next;
       lab.querySelectorAll('[data-process-stage]').forEach((node, i) => node.setAttribute('aria-pressed', String(i === stage)));
       lab.querySelectorAll<HTMLElement>('[data-process-result]').forEach((node, i) => { node.hidden = i !== stage; });
-      lab.querySelector('.lab-stage-label')!.textContent = ['01 / Entender · La pregunta', '02 / Diseñar · Recorrido', '03 / Construir · Producto'][stage];
+      lab.querySelector('.lab-stage-label')!.textContent = ['01 / Entender · Dar claridad', '02 / Diseñar · Recorrido', '03 / Construir · Producto'][stage];
     };
     const setTargets = (snap = false) => {
       const { from, blend } = morph(progress);
