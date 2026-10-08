@@ -1,0 +1,62 @@
+[
+  {
+    "run": "lighthouse-before",
+    "url": "http://127.0.0.1:4322/",
+    "at": "2026-10-08T05:13:54.696Z",
+    "categories": {
+      "performance": 74,
+      "accessibility": 96,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "LCP": 24530.745600000002,
+    "CLS": 0.00236479903565242,
+    "TBT": 68,
+    "payloadBytes": 7112173
+  },
+  {
+    "run": "lighthouse-final-mobile",
+    "url": "http://127.0.0.1:4322/",
+    "at": "2026-10-08T05:25:35.451Z",
+    "categories": {
+      "performance": 95,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "LCP": 2593.0607999999997,
+    "CLS": 0.001195974801406903,
+    "TBT": 0,
+    "payloadBytes": 482609
+  },
+  {
+    "run": "lighthouse-astro7",
+    "url": "http://127.0.0.1:4323/",
+    "at": "2026-10-08T05:33:04.980Z",
+    "categories": {
+      "performance": 96,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "LCP": 2408.1412499999997,
+    "CLS": 0.001195974801406903,
+    "TBT": 0,
+    "payloadBytes": 473010
+  },
+  {
+    "run": "lighthouse-case-final",
+    "url": "http://127.0.0.1:4322/proyectos/luzia-agentes-ia/",
+    "at": "2026-10-08T05:33:57.483Z",
+    "categories": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "LCP": 2033.4088499999998,
+    "CLS": 0.0009162254943541893,
+    "TBT": 0,
+    "payloadBytes": 335120
+  }
+]

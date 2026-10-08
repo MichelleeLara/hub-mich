@@ -10,10 +10,10 @@ await mkdir('public/media', { recursive: true });
 const report = [];
 for (const [name, source] of Object.entries(images)) {
   const widths = name === 'hero-profile' ? [240, 480] : name.startsWith('portrait') ? [720] : [720, 1440];
-  const original = await stat(`public/${source}`);
+  const original = await stat(`assets/source-images/${source}`);
   for (const width of widths) {
     const path = `public/media/${name}-${width}.webp`;
-    const info = await sharp(`public/${source}`).rotate().resize({ width, withoutEnlargement: true }).webp({ quality: 82, effort: 5 }).toFile(path);
+    const info = await sharp(`assets/source-images/${source}`).rotate().resize({ width, withoutEnlargement: true }).webp({ quality: 82, effort: 5 }).toFile(path);
     report.push({ source, path, originalBytes: original.size, bytes: info.size, width: info.width, height: info.height });
   }
 }

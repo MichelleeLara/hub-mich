@@ -111,7 +111,7 @@ import { PARTICLES_ENABLED } from '../config';
     // --- Rostro (fase 2) -------------------------------------------------------
     // Fuente y recorte de cabeza (fracciones del tamaño original de la foto).
     const FACE_ANGLES = [
-      { src: '/media/portrait-fallback-720.webp', crop: { x: 0.10, y: 0.10, w: 0.80, h: 0.65 } },
+      { src: '/media/portrait-fallback-720.webp', crop: { x: 0.24, y: 0.17, w: 0.50, h: 0.42 } },
     ];
     const FACE_DARK_MIN = 0.32; // oscuridad mínima para considerar un píxel
     const FACE_SAMPLE_W = 340; // resolución interna de muestreo
@@ -246,8 +246,8 @@ import { PARTICLES_ENABLED } from '../config';
       }
     };
 
-    // Muestrea la foto: píxeles oscuros (cabello, rasgos, sombras) se vuelven
-    // candidatos, ponderados por su oscuridad → el retrato queda tipo boceto.
+    // Muestrea la foto: la luz del rostro define los puntos; los ojos y sombras
+    // conservan espacios para mantener reconocible la expresión.
     const sampleFace = () => {
       const angle = FACE_ANGLES[0];
       const img = new Image();
@@ -276,12 +276,12 @@ import { PARTICLES_ENABLED } from '../config';
           for (let x = 0; x < cw; x++) {
             const i = (y * cw + x) * 4;
             const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
-            const dark = 1 - lum;
+            const dark = lum;
             const nx = (x / cw - .5) / .48, ny = (y / ch - .52) / .50;
             if (dark > FACE_DARK_MIN && nx * nx + ny * ny < 1) {
               cx.push(x / cw);
               cy.push(y / ch);
-              ca.push(0.25 + dark * 0.75);
+              ca.push(0.16 + dark * 0.84);
               total += (dark - FACE_DARK_MIN) ** 1.3;
               cum.push(total);
             }
@@ -700,14 +700,16 @@ import { PARTICLES_ENABLED } from '../config';
     if (reduceMotion) {
       // Sin animación: corriente estática y la foto fallback queda visible
       draw(0);
-    } else {
-      sampleFace();
+    }
+    {
+      if (!reduceMotion) sampleFace();
 
       const release = () => {
         mouse.active = false;
         mouse.tx = mouse.ty = mouse.x = mouse.y = -9999;
       };
       window.addEventListener('pointermove', (e) => {
+        if (reduceMotion || document.documentElement.classList.contains('motion-paused')) return;
         mouse.tx = e.clientX;
         mouse.ty = e.clientY;
         if (!mouse.active) {
@@ -740,8 +742,6 @@ import { PARTICLES_ENABLED } from '../config';
         resumeMotion();
       });
 
-      lastTime = performance.now();
-      rafId = requestAnimationFrame(step);
     }
     resumeMotion();
   }

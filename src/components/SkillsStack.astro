@@ -22,7 +22,7 @@ const tools = [
     <div class="method-lab" id="particle-lab">
       <div class="lab-heading"><span>De las piezas al sistema</span><span class="lab-tag">Explora el proceso</span></div>
       <div class="lab-stage"><canvas id="process-particles" aria-hidden="true"></canvas><span class="lab-stage-label" aria-hidden="true">01 / Entender</span><span class="lab-axis axis-x" aria-hidden="true">+</span><span class="lab-axis axis-y" aria-hidden="true">+</span></div>
-      <div class="process-buttons" role="group" aria-label="Etapas de mi proceso">
+      <div class="process-buttons requires-js" role="group" aria-label="Etapas de mi proceso">
         {steps.map((step, i) => <button type="button" data-process-stage={i} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls="process-description"><span>0{i + 1}</span>{step.name}</button>)}
       </div>
       <div id="process-description" class="process-description" aria-live="polite" aria-atomic="true">

@@ -23,3 +23,7 @@ html.motion-paused .hero-float, html.motion-paused .animate-ping { animation-pla
   .hero-float { animation: none !important; }
 }
 @media (max-width: 767px) { .section-shell { padding: 72px 24px; } }
+
+html:not(.has-js) .requires-js { display: none; }
+:where(a,button,input,textarea,select,summary,[tabindex]) { scroll-margin-block: 104px; }
+#brief-result { scroll-margin-block: 100px; }

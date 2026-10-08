@@ -9,26 +9,27 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^5.0.7",
+    "@astrojs/react": "^7.0.1",
     "@astrojs/ts-plugin": "^1.10.4",
     "@fontsource-variable/inter": "^5.1.0",
     "@fontsource-variable/inter-tight": "^5.1.0",
-    "astro": "^6.4.8",
-    "astro-og-canvas": "^0.5.6",
+    "astro": "^7.3.7",
     "clsx": "^2.1.1",
-    "clx": "^1.0.0",
     "framer-motion": "^11.15.0",
     "html-react-parser": "^5.2.1",
+    "oxc-transform-react": "^0.145.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-intersection-observer": "^9.14.0",
-    "react-router-dom": "^7.0.2",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.16"
   },
   "devDependencies": {
     "autoprefixer": "^10.6.1",
     "postcss": "^8.5.29"
+  },
+  "overrides": {
+    "@vitejs/plugin-react": "6.1.1"
   }
 }

@@ -85,11 +85,11 @@ export default function AnimatedTabs() {
           if (!node) return null;
           return {
             id: tab.id,
-            top: Math.abs(node.getBoundingClientRect().top - 120),
+            top: node.getBoundingClientRect().top,
           };
         })
-        .filter(Boolean)
-        .sort((a, b) => a.top - b.top)[0];
+        .filter((item) => item && item.top <= 120)
+        .sort((a, b) => b.top - a.top)[0];
 
       if (current) setActive(current.id);
     };

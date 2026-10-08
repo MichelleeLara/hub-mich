@@ -1,6 +1,7 @@
 <section class="section-shell brief-section" aria-labelledby="brief-title">
   <div class="brief-heading"><div><p class="section-kicker">04 / Tu siguiente producto</p><h2 id="brief-title" class="section-title">Démosle forma<br /><span class="quiet">a tu idea.</span></h2></div><p>Una buena conversación empieza por un problema claro. Prepara un brief corto y llévatelo, o úsalo para escribirme.</p></div>
-  <details class="brief-builder">
+  <noscript><p class="text-link">Puedes contarme tu idea en <a href="mailto:mich.ia@hotmail.com">mich.ia@hotmail.com</a>.</p></noscript>
+  <details class="brief-builder requires-js">
     <summary><span>Preparar mi brief <span class="quiet">· 3 preguntas</span></span><span class="brief-plus" aria-hidden="true">+</span></summary>
     <form id="project-brief-form">
       <div class="brief-fields"><div><label for="brief-problem">¿Qué quieres resolver?</label><textarea id="brief-problem" name="problem" rows="3" maxlength="1200" required placeholder="Por ejemplo: mi equipo dedica horas a responder las mismas preguntas."></textarea><p id="brief-privacy">Se prepara aquí, en tu navegador. Tú decides si lo compartes.</p></div><div><label for="brief-users">¿Quién lo va a usar?</label><input id="brief-users" name="users" maxlength="200" required placeholder="Tu equipo, tus clientes, una comunidad…" /><label for="brief-goal">¿Qué debería mejorar?</label><select id="brief-goal" name="goal"><option>Ahorrar tiempo en una operación</option><option>Lanzar un producto con IA</option><option>Hacer más fácil un producto existente</option><option>Conectar datos, sistemas o dispositivos</option></select></div></div>
@@ -41,6 +42,7 @@
       const result = document.getElementById('brief-result')!;
       result.hidden = false;
       result.setAttribute('tabindex', '-1'); result.focus({ preventScroll: true });
+      result.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
       (document.getElementById('email-brief') as HTMLAnchorElement).href = `mailto:mich.ia@hotmail.com?subject=${encodeURIComponent('Una idea de producto — itsmich')}&body=${encodeURIComponent(brief)}`;
       status.textContent = 'Brief listo. Puedes editar tus respuestas y volver a crearlo.';
     });

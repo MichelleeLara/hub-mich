@@ -17,14 +17,14 @@ export default function MotionToggle() {
     document.dispatchEvent(new Event('motionchange'));
     setPaused(next);
   };
-  return <motion.button type="button" onClick={toggle} aria-label={paused ? 'Activar animaciones' : 'Pausar animaciones'} aria-pressed={!paused} disabled={!!reduced}
+  return <motion.button type="button" onClick={toggle} aria-label={reduced ? 'Movimiento reducido por tu sistema' : paused ? 'Activar animaciones' : 'Pausar animaciones'} aria-pressed={!paused && !reduced} disabled={!!reduced}
     title={reduced ? 'Movimiento reducido por tu sistema' : paused ? 'Activar animaciones' : 'Pausar animaciones'}
     className="relative flex items-center justify-center w-11 h-11 rounded-full text-gray-800 dark:text-secondary disabled:opacity-50"
     whileTap={reduced ? undefined : { scale: .96 }}>
     <AnimatePresence initial={false}><motion.span key={paused ? 'play' : 'pause'} className="absolute flex items-center justify-center"
       initial={reduced ? { opacity: 0 } : { opacity: 0, scale: .25, filter: 'blur(4px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} exit={reduced ? { opacity: 0 } : { opacity: 0, scale: .25, filter: 'blur(4px)' }} transition={{ type: 'spring', duration: .3, bounce: 0 }}>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        {paused ? <path d="m9 5 11 7-11 7Z"/> : <><path d="M9 5v14M15 5v14"/><circle cx="12" cy="12" r="10"/></>}
+        {paused ? <path d="m9 5 11 7-11 7Z"/> : <><path d="M9 5v14M15 5v14"/></>}
       </svg>
     </motion.span></AnimatePresence>
   </motion.button>;

@@ -53,6 +53,7 @@ export interface Props {
          gana hasta que React hidrata y quien eligió claro ve un flash oscuro
          en cada carga. Preferencia guardada > preferencia del sistema. -->
     <script is:inline>
+      document.documentElement.classList.add('has-js');
       let saved = null, motion = null;
       try { saved = localStorage.getItem('theme'); motion = localStorage.getItem('motion'); } catch {}
       const dark = saved ? saved === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches;
