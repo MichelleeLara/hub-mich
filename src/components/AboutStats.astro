@@ -1,4 +1,5 @@
 ---
+import { ideaPoints } from '../data/ideasGeometry';
 const proof = [
   { value: '< 2 min', label: 'Reportes con IA en Luz.ia', slug: 'luzia-agentes-ia' },
   { value: '+65%', label: 'Rendimiento en logística', slug: 'inteligencia-logistica' },
@@ -17,10 +18,12 @@ const proof = [
     <figure class="portrait-study">
       <div class="portrait-top"><span>Diseño + ingeniería + IA</span><span aria-hidden="true">↗</span></div>
       <div id="face-anchor">
-        <img src="/media/portrait-fallback-720.webp" alt="Retrato de Mich Rodriguez" class="face-fallback" width="446" height="720" loading="lazy" decoding="async" />
+        <svg class="face-fallback" viewBox="0 0 600 360" role="img" aria-label="Ideas entrelazadas que convergen en una interfaz simple">
+          {ideaPoints.map(point => <circle cx={point.x * 600} cy={point.y * 360} r=".9" fill="currentColor" opacity=".65" />)}
+        </svg>
         <span class="portrait-cross cross-one" aria-hidden="true">+</span><span class="portrait-cross cross-two" aria-hidden="true">+</span>
       </div>
-      <figcaption><span>Las piezas encuentran su lugar.</span><span class="portrait-note">Un retrato hecho de partículas</span></figcaption>
+      <figcaption><span>Las piezas encuentran su lugar.</span><span class="portrait-note">De la complejidad a la claridad</span></figcaption>
     </figure>
   </div>
   <div class="proof-strip">
@@ -35,8 +38,8 @@ const proof = [
   .about-detail { margin: 16px 0 20px; max-width: 455px; color: var(--muted); font-size: 15px; line-height: 1.75; }
   .portrait-study { position: relative; min-width: 0; }
   .portrait-top { display: flex; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
-  #face-anchor { position: relative; width: min(100%, 330px); aspect-ratio: 3/4; margin: 20px auto; }
-  .face-fallback { width: 100%; height: 100%; object-fit: cover; object-position: top; mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent), linear-gradient(to bottom, transparent, #000 12%, #000 75%, transparent); mask-composite: intersect; transition: opacity 600ms ease; }
+  #face-anchor { position: relative; width: min(100%, 440px); aspect-ratio: 6/5; margin: 20px auto; }
+  .face-fallback { width: 100%; height: 100%; color: var(--accent); transition: opacity 300ms ease; }
   .portrait-cross { position: absolute; font-family: monospace; color: var(--muted); }
   .cross-one { left: 0; top: 20px; } .cross-two { right: 0; bottom: 20px; }
   figcaption { display: flex; flex-direction: column; gap: 7px; text-align: center; font-size: 14px; }
@@ -47,7 +50,7 @@ const proof = [
   .proof-item strong { font-family: ClashDisplay, sans-serif; font-size: 40px; font-weight: 600; letter-spacing: -.03em; }
   .proof-item > span:not(.proof-arrow) { font-size: 13px; color: var(--muted); }
   .proof-arrow { position: absolute; top: 32px; right: 24px; color: var(--muted); }
-  @media (max-width: 767px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } .portrait-study { max-width: 380px; width: 100%; margin: auto; } #face-anchor { width: 260px; } .proof-strip { grid-template-columns: 1fr; margin-top: 48px; } .proof-item + .proof-item { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } .proof-item { padding: 22px 0; } .proof-item strong { font-size: 36px; } }
+  @media (max-width: 767px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } .portrait-study { max-width: 380px; width: 100%; margin: auto; } #face-anchor { width: 100%; } .proof-strip { grid-template-columns: 1fr; margin-top: 48px; } .proof-item + .proof-item { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } .proof-item { padding: 22px 0; } .proof-item strong { font-size: 36px; } }
 </style>
 <style is:global>
   html.particles-portrait .face-fallback { opacity: 0; }

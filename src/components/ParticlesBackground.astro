@@ -2,14 +2,14 @@
 // Fondo de "polvo estelar": miles de partículas diminutas agrupadas en una
 // corriente orgánica (estilo nebulosa) que el cursor dispersa a su paso.
 // Fase 2: al llegar a la sección #face-anchor (Sobre mí), las partículas se
-// reclutan en cascada hacia puntos muestreados del retrato y forman el
-// rostro; el scroll dirige la formación (scrubbing) y al salir se dispersan.
+// reclutan en cascada hacia puntos muestreados del ilustración y forman el
+// composición; el scroll dirige la formación (scrubbing) y al salir se dispersan.
 // Canvas 2D vanilla, sin dependencias.
 //
 // ⚠️ El interruptor vive en src/config.ts (PARTICLES_ENABLED). AboutStats
-// siempre pinta la foto fallback; este script la oculta (clase
-// `particles-live` en <html>) solo cuando el rostro de partículas está listo.
-// Sin JS, con reduced-motion o si algo falla, la foto queda visible.
+// siempre pinta la figura estática; este script la oculta (clase
+// `particles-live` en <html>) solo cuando el composición de partículas está listo.
+// Sin JS, con reduced-motion o si algo falla, la figura queda visible.
 import { PARTICLES_ENABLED } from '../config';
 ---
 
@@ -30,6 +30,7 @@ import { PARTICLES_ENABLED } from '../config';
      no lo procesa (llegaría TypeScript crudo al navegador). Si el canvas no
      se renderizó, no hace nada. -->
 <script>
+  import { ideaPoints, ideaAspect } from '../data/ideasGeometry';
   const el = document.getElementById('particles-bg') as HTMLCanvasElement | null;
   if (el) start(el);
 
@@ -82,15 +83,15 @@ import { PARTICLES_ENABLED } from '../config';
     const MOUSE_REST = 0.3;
     const MOUSE_SPEED_FULL = 18; // px/frame para empuje completo
     const SCROLL_PARALLAX = 0.14;
-    // Atenuación global fuera de la sección del rostro: el polvo queda como
-    // textura casi imperceptible y recupera opacidad plena al formarse el rostro.
+    // Atenuación global fuera de la sección del composición: el polvo queda como
+    // textura casi imperceptible y recupera opacidad plena al formarse el composición.
     const BASE_DIM = 0.35;
-    // Partículas de reserva: invisibles y sin física fuera del rostro; se
-    // materializan durante la formación para duplicar la resolución del retrato.
+    // Partículas de reserva: invisibles y sin física fuera del composición; se
+    // materializan durante la formación para duplicar la resolución del ilustración.
     const RESERVE_AREA = 220; // px² por partícula de reserva
     const RESERVE_MAX = 6000;
     // Formación en cascada: cada partícula arranca con un retraso propio dentro
-    // de este rango del progreso global, así el rostro "se teje" y no salta.
+    // de este rango del progreso global, así el composición "se teje" y no salta.
     const FACE_STAGGER = 0.45;
     // Margen fuera de pantalla en el que la corriente sigue simulándose
     const CULL_MARGIN = 420;
@@ -107,14 +108,6 @@ import { PARTICLES_ENABLED } from '../config';
     const hoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     let magnetCard: Element | null = null;
     const magnetRect = { x: 0, y: 0, w: 0, h: 0, active: false };
-
-    // --- Rostro (fase 2) -------------------------------------------------------
-    // Fuente y recorte de cabeza (fracciones del tamaño original de la foto).
-    const FACE_ANGLES = [
-      { src: '/media/portrait-fallback-720.webp', crop: { x: 0.24, y: 0.17, w: 0.50, h: 0.42 } },
-    ];
-    const FACE_DARK_MIN = 0.32; // oscuridad mínima para considerar un píxel
-    const FACE_SAMPLE_W = 340; // resolución interna de muestreo
 
     // --- Estado (structure-of-arrays) -----------------------------------------
     // Miles de partículas como objetos generan basura y fallos de caché; en
@@ -142,14 +135,15 @@ import { PARTICLES_ENABLED } from '../config';
     let tw = new Float32Array(0);
     let amp = new Float32Array(0);
     let mg = new Float32Array(0); // 0..1 — influencia magnética (glow de borde)
-    let fx = new Float32Array(0); // punto del rostro normalizado (-1 = sin asignar)
+    let fx = new Float32Array(0); // punto del composición normalizado (-1 = sin asignar)
     let fy = new Float32Array(0);
-    let fa = new Float32Array(0); // alpha objetivo dentro del rostro
+    let fa = new Float32Array(0); // alpha objetivo dentro del composición
     let delay = new Float32Array(0); // retraso de formación (cascada)
     let kind = new Uint8Array(0);
     // Buffers de pintado por frame
     let sy = new Float32Array(0); // y en pantalla
     let drawA = new Float32Array(0);
+    let formWeight = new Float32Array(0);
     let bucketOf = new Uint8Array(0);
     let order = new Uint32Array(0);
     const bucketCount = new Uint32Array(ALPHA_BUCKETS + 1);
@@ -160,7 +154,7 @@ import { PARTICLES_ENABLED } from '../config';
     let rafId = 0;
     let lastTime = 0;
 
-    // Progreso de formación del rostro (0 = polvo libre, 1 = rostro formado).
+    // Progreso de formación del composición (0 = polvo libre, 1 = composición formado).
     const leased = new Set<number>();
     let particleEpoch = 0;
     let faceEase = 0;
@@ -239,87 +233,24 @@ import { PARTICLES_ENABLED } from '../config';
 
     const assignFaceTargets = () => {
       if (!pickFacePoint) return;
+      const stride = Math.max(1, Math.floor(cap / 1000));
       for (let i = 0; i < cap; i++) {
+        if (i % stride !== 0) { fx[i] = fy[i] = -1; fa[i] = 0; continue; }
         const c = pickFacePoint();
-        // Keep the features crisp; release edge particles into a diffuse fringe.
-        const edge = Math.min(c.x, 1 - c.x, c.y, 1 - c.y);
-        const fringe = 1 - Math.min(1, Math.max(0, edge / .22));
-        const jitter = .008 + .14 * fringe * fringe;
-        fx[i] = c.x + (Math.random() - .5) * jitter;
-        fy[i] = c.y + (Math.random() - .5) * jitter;
+        fx[i] = c.x + (Math.random() - .5) * .006;
+        fy[i] = c.y + (Math.random() - .5) * .010;
         fa[i] = c.a;
       }
     };
 
-    // Muestrea la foto: la luz del rostro define los puntos; los ojos y sombras
-    // conservan espacios para mantener reconocible la expresión.
+    // Native geometry shares its static fallback; no portrait or image sampling.
     const sampleFace = () => {
-      const angle = FACE_ANGLES[0];
-      const img = new Image();
-      img.onload = () => {
-        const sx0 = angle.crop.x * img.naturalWidth;
-        const sy0 = angle.crop.y * img.naturalHeight;
-        const sw = angle.crop.w * img.naturalWidth;
-        const sh = angle.crop.h * img.naturalHeight;
-        const cw = FACE_SAMPLE_W;
-        const ch = Math.round((sh / sw) * cw);
-        faceAspect = ch / cw;
-
-        const oc = document.createElement('canvas');
-        oc.width = cw;
-        oc.height = ch;
-        const octx = oc.getContext('2d', { willReadFrequently: true })!;
-        octx.drawImage(img, sx0, sy0, sw, sh, 0, 0, cw, ch);
-        const data = octx.getImageData(0, 0, cw, ch).data;
-
-        const cx: number[] = [];
-        const cy: number[] = [];
-        const ca: number[] = [];
-        const cum: number[] = [];
-        let total = 0;
-        for (let y = 0; y < ch; y++) {
-          for (let x = 0; x < cw; x++) {
-            const i = (y * cw + x) * 4;
-            const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
-            const dark = lum;
-            // Feather the crop with an irregular edge, rather than an oval silhouette.
-            const u = x / cw, v = y / ch;
-            const edge = Math.min(u, 1 - u, v, 1 - v);
-            const feather = Math.max(0, Math.min(1, edge / (.18 + .035 * Math.sin(u * 23 + v * 17))));
-            const weight = feather * feather * (3 - 2 * feather);
-            if (dark > FACE_DARK_MIN && weight > .01) {
-              cx.push(x / cw);
-              cy.push(y / ch);
-              ca.push((0.16 + dark * 0.84) * (.25 + .75 * weight));
-              total += (dark - FACE_DARK_MIN) ** 1.3 * weight;
-              cum.push(total);
-            }
-          }
-        }
-        if (!cum.length) return;
-
-        // Muestreo ponderado por búsqueda binaria en la acumulada
-        const out = { x: 0, y: 0, a: 0 };
-        pickFacePoint = () => {
-          const r = Math.random() * total;
-          let lo = 0;
-          let hi = cum.length - 1;
-          while (lo < hi) {
-            const m = (lo + hi) >> 1;
-            if (cum[m] < r) lo = m + 1;
-            else hi = m;
-          }
-          out.x = cx[lo];
-          out.y = cy[lo];
-          out.a = ca[lo];
-          return out;
-        };
-        assignFaceTargets();
-        facePointsReady = true;
-        // A partir de aquí el canvas se encarga del retrato: se oculta la foto
-
+      faceAspect = ideaAspect;
+      pickFacePoint = () => {
+        const point = ideaPoints[Math.floor(Math.random() * ideaPoints.length)];
+        return { x: point.x, y: point.y, a: .35 + Math.random() * .45 };
       };
-      img.src = angle.src;
+      assignFaceTargets(); facePointsReady = true;
     };
 
     const alloc = (n: number) => {
@@ -334,7 +265,7 @@ import { PARTICLES_ENABLED } from '../config';
       fx = new Float32Array(n); fy = new Float32Array(n); fa = new Float32Array(n);
       delay = new Float32Array(n);
       kind = new Uint8Array(n);
-      sy = new Float32Array(n); drawA = new Float32Array(n);
+      sy = new Float32Array(n); drawA = new Float32Array(n); formWeight = new Float32Array(n);
       bucketOf = new Uint8Array(n); order = new Uint32Array(n);
     };
 
@@ -375,7 +306,7 @@ import { PARTICLES_ENABLED } from '../config';
       lastH = nh;
     };
 
-    // --- Progreso y caja del rostro (por frame) --------------------------------
+    // --- Progreso y caja del composición (por frame) --------------------------------
     let anchorEl: HTMLElement | null = null;
 
     const smooth = (e0: number, e1: number, x: number) => {
@@ -383,7 +314,7 @@ import { PARTICLES_ENABLED } from '../config';
       return t * t * (3 - 2 * t);
     };
 
-    // Caja destino del rostro en coordenadas de pantalla, ajustada al anchor
+    // Caja destino del composición en coordenadas de pantalla, ajustada al anchor
     const faceBox = { x: 0, y: 0, w: 0, h: 0 };
     let faceDX = 0, faceDY = 0, previousScroll = window.scrollY;
 
@@ -397,7 +328,7 @@ import { PARTICLES_ENABLED } from '../config';
         // y se disuelve cuando sigue de largo hacia arriba.
         target = smooth(1.15 * h, 0.55 * h, mid) * smooth(-0.25 * h, 0.3 * h, mid);
 
-        // Encaje "contain" del retrato dentro del anchor
+        // Encaje "contain" del ilustración dentro del anchor
         let fw = r.width;
         let fh = fw * faceAspect;
         if (fh > r.height) {
@@ -428,14 +359,14 @@ import { PARTICLES_ENABLED } from '../config';
       const r2 = MOUSE_RADIUS * MOUSE_RADIUS;
       const mr2 = MAGNET_RADIUS * MAGNET_RADIUS;
       const damp = Math.pow(DAMPING, dt);
-      const dim = BASE_DIM + (1 - BASE_DIM) * ef;
+      const dim = BASE_DIM;
       const tSec = time * 0.001;
       const tDrift = time * 0.0002;
       const wrapSpan = h + 80;
       const mouseOn = mouse.active;
       const mForce = MOUSE_FORCE * (MOUSE_REST + (1 - MOUSE_REST) * Math.min(1, mouse.speed / MOUSE_SPEED_FULL));
 
-      // Tarjeta magnética activa (solo con cursor real y sin rostro formado)
+      // Tarjeta magnética activa (solo con cursor real y sin composición formado)
       magnetRect.active = false;
       if (hoverCapable && magnetCard && mouseOn && ef < 0.3) {
         const r = magnetCard.getBoundingClientRect();
@@ -455,19 +386,20 @@ import { PARTICLES_ENABLED } from '../config';
         const k = kind[i];
         const par = scrollY * SCROLL_PARALLAX * depth[i];
         const e = faceOn && fx[i] >= 0 ? smooth(delay[i], delay[i] + 1 - FACE_STAGGER, ef) : 0;
+        formWeight[i] = e;
         // Move formed particles with their anchor directly: no spring drag on scroll.
         px[i] += faceDX * e;
         py[i] += (faceDY + scrollDelta * SCROLL_PARALLAX * depth[i]) * e;
         let s = py[i] - par; // y en pantalla
 
-        // Las reservas duermen sin rostro ni imán: cero física, cero pintado
+        // Las reservas duermen sin composición ni imán: cero física, cero pintado
         if (k === KIND_RESERVE && !faceOn && !magOn && mg[i] < 0.001) {
           bucketOf[i] = 255;
           continue;
         }
 
         // Polvo ambiental: envuelve el viewport moviendo su hogar en el mundo
-        // (no con un módulo al pintar), así nunca salta al formarse el rostro.
+        // (no con un módulo al pintar), así nunca salta al formarse el composición.
         if (k === KIND_AMBIENT && !faceOn) {
           if (s < -40) {
             hy[i] += wrapSpan; py[i] += wrapSpan; s += wrapSpan;
@@ -530,7 +462,7 @@ import { PARTICLES_ENABLED } from '../config';
 
 
         // Deriva continua: el punto que la partícula persigue orbita lentamente
-        // alrededor del hogar. Conforme el rostro se forma la deriva se aquieta.
+        // alrededor del hogar. Conforme el composición se forma la deriva se aquieta.
         const t1 = tDrift * tw[i] + phase[i];
         const drift = amp[i] * (1 - e);
         let tx = hx[i] + Math.sin(t1) * drift;
@@ -543,7 +475,7 @@ import { PARTICLES_ENABLED } from '../config';
           ty += (fys - ty) * e;
         }
 
-        // Resorte más firme conforme se recluta, para que el retrato cuaje
+        // Resorte más firme conforme se recluta, para que el ilustración cuaje
         const ks = SPRING * (1 + 3 * e) * dt;
         vx[i] = (vx[i] + (tx - x) * ks) * damp;
         vy[i] = (vy[i] + (ty - py[i]) * ks) * damp;
@@ -560,14 +492,15 @@ import { PARTICLES_ENABLED } from '../config';
         const twinkle = 0.75 + 0.25 * Math.sin(tSec * tw[i] + phase[i]);
         let a: number;
         if (k === KIND_RESERVE) {
-          // Se materializan con la formación del rostro o con el imán de borde
+          // Se materializan con la formación del composición o con el imán de borde
           a = e > 0 ? fa[i] * e : 0.55 * mg[i];
         } else {
           const base = alpha[i] * dim;
           a = base + (fa[i] - base) * e;
         }
         if (mg[i] > 0.01) a = Math.min(0.9, Math.max(a * (1 + MAGNET_GLOW * mg[i]), 0.5 * mg[i]));
-        a *= twinkle;
+        const signal = .72 + .28 * (.5 + .5 * Math.cos(tSec * 2.4 - fx[i] * 16)) ** 8;
+        a *= twinkle * (1-e) + signal * e;
         if (a < 0.008) {
           bucketOf[i] = 255;
           continue;
@@ -640,14 +573,20 @@ import { PARTICLES_ENABLED } from '../config';
         const b = leased.has(i) ? 255 : bucketOf[i];
         if (b !== 255) order[bucketStart[b] + bucketCount[b]++] = i;
       }
-      for (let b = 0; b < ALPHA_BUCKETS; b++) {
-        const n = bucketCount[b];
-        if (!n) continue;
-        ctx.globalAlpha = (b + 0.5) / ALPHA_BUCKETS;
-        const s0 = bucketStart[b];
-        for (let j = s0; j < s0 + n; j++) {
-          const i = order[j];
-          ctx.fillRect(px[i], sy[i], size[i], size[i]);
+      const shapeColor = document.documentElement.classList.contains('dark') ? '#edb191' : '#95421d';
+      // Separate passes preserve batched paint while the illustration turns orange.
+      for (let pass = 0; pass < 2; pass++) {
+        ctx.fillStyle = pass === 0 ? `rgb(${rgb})` : shapeColor;
+        for (let b = 0; b < ALPHA_BUCKETS; b++) {
+          const n = bucketCount[b];
+          if (!n) continue;
+          ctx.globalAlpha = (b + .5) / ALPHA_BUCKETS;
+          const start = bucketStart[b];
+          for (let j = start; j < start+n; j++) {
+            const i = order[j];
+            if (Number(formWeight[i] > .3) !== pass) continue;
+            ctx.fillRect(px[i], sy[i], size[i], size[i]);
+          }
         }
       }
       ctx.globalAlpha = 1;
@@ -660,8 +599,8 @@ import { PARTICLES_ENABLED } from '../config';
     // presupuesto, se recorta el rango activo; si sobra holgura, se recupera.
     const frameBudget = 1000 / TIER.fps;
     const COST_BUDGET = 6; // ms por frame que el fondo puede gastar
-    // Piso: por debajo de esto el retrato pierde legibilidad; preferible
-    // bajar FPS a tener un rostro ralo.
+    // Piso: por debajo de esto el ilustración pierde legibilidad; preferible
+    // bajar FPS a tener un composición ralo.
     const MIN_PERF_SCALE = 0.5;
     let perfScale = 1;
     let lastFrame = 0;
@@ -744,7 +683,7 @@ import { PARTICLES_ENABLED } from '../config';
     document.addEventListener('motionchange', resumeMotion);
     motionMedia.addEventListener('change', resumeMotion);
     if (reduceMotion) {
-      // Sin animación: corriente estática y la foto fallback queda visible
+      // Sin animación: corriente estática y la figura estática queda visible
       draw(0);
     }
     {
