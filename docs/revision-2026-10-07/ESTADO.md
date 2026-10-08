@@ -23,7 +23,7 @@ Dirección: demostrar diseño + ingeniería + IA para productos de impacto, bien
 - No fusionar ni desplegar. Si sincronizas diseño a la rama, preservar package/lock/config/PostCSS/import global.css.
 
 ## Cierre del alcance — 8 de octubre, 00:30 CDMX
-Validación nocturna completada. Desactivar la continuación; no seguir haciendo cambios por iniciativa propia después del cierre.
+Validación nocturna completada. Continuación mejoras-nocturnas-de-itsmich desactivada (PAUSED confirmado por la app). No seguir haciendo cambios por iniciativa propia después del cierre.
 
 - Otros cuatro casos revisados en 320px oscuro, 390px claro y 1440px en ambos temas; 16 vistas. Desbordamiento de White-Label a 320px corregido en métricas y siguiente caso. Screenshots y night-browser.json guardados.
 - Trayectoria mantiene diseño; se contuvo el desplazamiento de entrada que producía 8px de desborde en el ancho natural de 954px. Contenido visible sin JS y al pausar; revelado progresivo no oculta contenido de base.
