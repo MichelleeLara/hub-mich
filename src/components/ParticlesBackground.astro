@@ -252,6 +252,7 @@ import { PARTICLES_ENABLED } from '../config';
         return { x: point.x, y: point.y, a: point.outer ? .70 + Math.random() * .12 : .20 + Math.random() * .12, birth: point.birth };
       };
       assignFaceTargets(); facePointsReady = true;
+      document.documentElement.classList.add('particles-build-ready');
     };
 
     const alloc = (n: number) => {
@@ -319,8 +320,15 @@ import { PARTICLES_ENABLED } from '../config';
     const faceBox = { x: 0, y: 0, w: 0, h: 0 };
     let faceDX = 0, faceDY = 0, previousScroll = window.scrollY;
 
-    let buildStage = -1;
+    let buildStage = -1, buildPercent = -1;
     const updateBuildState = (progress: number) => {
+      const percent = Math.round(progress * 100);
+      document.querySelector<HTMLElement>('[data-build-progress]')?.style.setProperty('--build-progress', String(progress));
+      if (percent !== buildPercent) {
+        buildPercent = percent;
+        const label = document.querySelector('[data-build-percent]');
+        if (label) label.textContent = `${percent}%`;
+      }
       const next = progress < .30 ? 0 : progress < .72 ? 1 : 2;
       if (next === buildStage) return;
       buildStage = next;
@@ -333,10 +341,21 @@ import { PARTICLES_ENABLED } from '../config';
       let target = 0;
       if (anchorEl && facePointsReady) {
         const r = anchorEl.getBoundingClientRect();
-        const mid = r.top + r.height / 2;
-        // Se forma cuando el centro del anchor sube hacia el centro del viewport
-        // y se disuelve cuando sigue de largo hacia arriba.
-        target = smooth(1.15 * h, 0.55 * h, mid) * smooth(-0.25 * h, 0.3 * h, mid);
+        const runway = document.getElementById('about-build-scroll');
+        const grid = runway?.querySelector<HTMLElement>('.about-grid');
+        const figure = runway?.querySelector<HTMLElement>('.portrait-study');
+        const copy = runway?.querySelector<HTMLElement>('.about-copy');
+        if (runway && grid && figure && copy) {
+          const mobile = window.matchMedia('(max-width: 767px)').matches;
+          const pinned = mobile ? figure : grid;
+          const pinTop = parseFloat(getComputedStyle(pinned).top) || 0;
+          const startOffset = mobile ? copy.getBoundingClientRect().height + 48 : 0;
+          const box = runway.getBoundingClientRect();
+          const travel = box.height - startOffset - pinned.getBoundingClientRect().height;
+          // Last 10% of native scroll holds the finished construction before release.
+          target = Math.max(0, Math.min(1, (pinTop - box.top - startOffset) / Math.max(1, travel * .90)));
+          if (r.bottom <= 0 || r.top >= h) target = 0;
+        }
 
         // Encaje "contain" del ilustración dentro del anchor
         let fw = r.width;
@@ -354,8 +373,8 @@ import { PARTICLES_ENABLED } from '../config';
         faceBox.w = fw;
         faceBox.h = fh;
       }
-      document.documentElement.classList.toggle('particles-portrait', faceEase > .94 && !reduceMotion);
-      faceEase += (target - faceEase) * Math.min(1, 0.08 * dt);
+      document.documentElement.classList.toggle('particles-portrait', facePointsReady && !reduceMotion);
+      faceEase += (target - faceEase) * Math.min(1, 0.20 * dt);
       if (faceEase < 0.001) faceEase = 0;
       updateBuildState(faceEase);
     };

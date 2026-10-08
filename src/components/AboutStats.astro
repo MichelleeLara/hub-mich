@@ -7,6 +7,7 @@ const proof = [
 ];
 ---
 <section id="yo" class="section-shell about-section">
+  <div id="about-build-scroll" class="about-build-scroll">
   <div class="about-grid">
     <div class="about-copy">
       <p class="section-kicker">01 / Una forma de construir</p>
@@ -24,8 +25,10 @@ const proof = [
         <span class="portrait-cross cross-one" aria-hidden="true">+</span><span class="portrait-cross cross-two" aria-hidden="true">+</span>
       </div>
       <div class="build-stages" aria-label="Etapas de construcción"><span data-build-stage="0">01 / Entender</span><span data-build-stage="1">02 / Diseñar</span><span data-build-stage="2" aria-current="step">03 / Construir</span></div>
+      <div class="build-progress" aria-hidden="true"><span class="build-progress-track"><span data-build-progress></span></span><span data-build-percent>0%</span></div>
       <figcaption><span>Las piezas encuentran su lugar.</span><span class="portrait-note">De las piezas al producto</span></figcaption>
     </figure>
+  </div>
   </div>
   <div class="proof-strip">
     {proof.map(item => <a href={`/proyectos/${item.slug}`} class="proof-item"><strong>{item.value}</strong><span>{item.label}</span><span class="proof-arrow" aria-hidden="true">↗</span></a>)}
@@ -40,10 +43,14 @@ const proof = [
   .portrait-study { position: relative; min-width: 0; }
   .portrait-top { display: flex; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
   #face-anchor { position: relative; width: min(100%, 440px); aspect-ratio: 10/11; margin: 20px auto; }
-  .face-fallback { width: 100%; height: 100%; color: var(--accent); transition: opacity 300ms ease; }
+  .face-fallback { width: 100%; height: 100%; color: var(--accent); }
   .portrait-cross { position: absolute; font-family: monospace; color: var(--muted); }
   .cross-one { left: 0; top: 20px; } .cross-two { right: 0; bottom: 20px; }
   .build-stages { display: flex; justify-content: space-between; gap: 10px; margin: 0 0 24px; font-family: monospace; font-size: 11px; color: var(--muted); }
+  .build-progress { display: none; align-items: center; gap: 12px; margin-bottom: 18px; color: var(--muted); font: 10px monospace; }
+  .build-progress-track { height: 1px; flex: 1; background: var(--line); overflow: hidden; }
+  [data-build-progress] { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--build-progress, 0)); transform-origin: left; }
+  [data-build-percent] { min-width: 4ch; text-align: right; }
   .build-stages [aria-current="step"] { color: var(--accent); }
   figcaption { display: flex; flex-direction: column; gap: 7px; text-align: center; font-size: 14px; }
   .portrait-note { color: var(--muted); font-size: 12px; }
@@ -56,6 +63,24 @@ const proof = [
   @media (max-width: 767px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } .portrait-study { max-width: 380px; width: 100%; margin: auto; } #face-anchor { width: 100%; } .proof-strip { grid-template-columns: 1fr; margin-top: 48px; } .proof-item + .proof-item { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } .proof-item { padding: 22px 0; } .proof-item strong { font-size: 36px; } }
 </style>
 <style is:global>
+  @media (prefers-reduced-motion: no-preference) {
+    html.particles-build-ready:not(.motion-paused) .about-build-scroll { height: 280svh; }
+    html.particles-build-ready:not(.motion-paused) .about-grid { position: sticky; top: 120px; min-height: calc(100svh - 144px); }
+    html.particles-build-ready:not(.motion-paused) #face-anchor { width: min(100%, 440px, 43svh); }
+    html.particles-build-ready:not(.motion-paused) .build-progress { display: flex; }
+    @media (min-width: 768px) and (max-height: 760px) {
+      html.particles-build-ready:not(.motion-paused) .about-copy h2 { font-size: clamp(32px, 4vw, 52px); margin-top: 20px; }
+      html.particles-build-ready:not(.motion-paused) .about-description { margin-top: 20px; font-size: 16px; }
+      html.particles-build-ready:not(.motion-paused) .about-detail { font-size: 14px; line-height: 1.6; }
+    }
+    @media (max-width: 767px) {
+      html.particles-build-ready:not(.motion-paused) .about-build-scroll { height: calc(280svh + 420px); }
+      html.particles-build-ready:not(.motion-paused) .about-grid { display: block; position: static; height: 100%; min-height: 0; }
+      html.particles-build-ready:not(.motion-paused) .portrait-study { position: sticky; top: 92px; margin: 48px auto 0; }
+      html.particles-build-ready:not(.motion-paused) #face-anchor { width: min(100%, 42svh); margin: 12px auto; }
+      html.particles-build-ready:not(.motion-paused) .build-stages { margin-bottom: 16px; }
+    }
+  }
   html.particles-portrait .face-fallback { opacity: 0; }
   html.motion-paused .portrait-note::after { content: ' · en pausa'; }
   @media (prefers-reduced-motion: reduce) { html.particles-portrait .face-fallback { opacity: 1; } }
