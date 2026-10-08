@@ -161,6 +161,8 @@ import { PARTICLES_ENABLED } from '../config';
     let lastTime = 0;
 
     // Progreso de formación del rostro (0 = polvo libre, 1 = rostro formado).
+    const leased = new Set<number>();
+    let particleEpoch = 0;
     let faceEase = 0;
     let facePointsReady = false;
     let faceAspect = 1;
@@ -337,6 +339,7 @@ import { PARTICLES_ENABLED } from '../config';
     };
 
     const rebuild = () => {
+      leased.clear(); particleEpoch++;
       const budget = TIER.scale;
       mainCount = Math.round(
         Math.min(MAX_COUNT * budget, Math.max(MIN_COUNT * budget, ((w * h) / AREA_PER_PARTICLE) * budget)),
@@ -574,6 +577,33 @@ import { PARTICLES_ENABLED } from '../config';
       }
     };
 
+    // Temporarily hand real background particles to the process illustration.
+    document.addEventListener('process-particle-request', event => {
+      const detail = (event as CustomEvent<{
+        amount: number; rect: { left: number; top: number; right: number; bottom: number };
+        receive: (seeds: { x: number; y: number; alpha: number; radius: number; color: string }[], release: () => void) => void;
+      }>).detail;
+      if (!detail || reduceMotion || faceEase > .15 || document.documentElement.classList.contains('motion-paused')) return;
+      const rect = detail.rect;
+      const candidates: { id: number; x: number; y: number; distance: number }[] = [];
+      for (let i = 0; i < activeMain; i++) {
+        const x = px[i], y = py[i] - window.scrollY * SCROLL_PARALLAX * depth[i];
+        if (leased.has(i) || x < 0 || x > w || y < 0 || y > h) continue;
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) continue;
+        const dx = Math.max(rect.left - x, 0, x - rect.right);
+        const dy = Math.max(rect.top - y, 0, y - rect.bottom);
+        candidates.push({ id: i, x, y, distance: Math.hypot(dx, dy) });
+      }
+      candidates.sort((a,b) => a.distance - b.distance);
+      const selected = candidates.slice(0, Math.min(detail.amount, 540));
+      if (!selected.length) return;
+      const epoch = particleEpoch;
+      selected.forEach(p => leased.add(p.id));
+      detail.receive(selected.map(p => ({ x: p.x, y: p.y, alpha: drawA[p.id] || alpha[p.id] * BASE_DIM, radius: size[p.id] / 2, color: `rgb(${rgb})` })), () => {
+        if (epoch === particleEpoch) selected.forEach(p => leased.delete(p.id));
+      });
+    });
+
     // --- Render por lotes ------------------------------------------------------
     // Cambiar globalAlpha miles de veces por frame es lo que más cuesta en
     // Canvas 2D. Se agrupan las partículas por nivel de alpha (counting sort) y
@@ -596,7 +626,7 @@ import { PARTICLES_ENABLED } from '../config';
       bucketCount.fill(0);
       for (let i = 0; i < end; i++) {
         if (i === activeMain && i < mainCount) i = mainCount;
-        const b = bucketOf[i];
+        const b = leased.has(i) ? 255 : bucketOf[i];
         if (b !== 255) bucketCount[b]++;
       }
       let acc = 0;
@@ -607,7 +637,7 @@ import { PARTICLES_ENABLED } from '../config';
       bucketCount.fill(0);
       for (let i = 0; i < end; i++) {
         if (i === activeMain && i < mainCount) i = mainCount;
-        const b = bucketOf[i];
+        const b = leased.has(i) ? 255 : bucketOf[i];
         if (b !== 255) order[bucketStart[b] + bucketCount[b]++] = i;
       }
       for (let b = 0; b < ALPHA_BUCKETS; b++) {

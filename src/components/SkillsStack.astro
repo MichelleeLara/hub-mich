@@ -172,6 +172,63 @@ const tools = [
       const a = sample(routes[from][signal]), b = sample(routes[from+1][signal]);
       return { x: a.x + (b.x-a.x) * blend, y: a.y + (b.y-a.y) * blend };
     };
+    // Keep the exact approved animation available for side-by-side comparison.
+    const fillExperiment = new URLSearchParams(location.search).get('particle-fill') !== 'off';
+    type Seed = { x: number; y: number; alpha: number; radius: number; color: string };
+    let fillSeeds: Seed[] = [], fillStart = 0, filling = false, entered = false;
+    let releaseParticles: (() => void) | null = null;
+    const flight = document.createElement('canvas');
+    flight.setAttribute('aria-hidden', 'true');
+    flight.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;display:none';
+    const flightCtx = flight.getContext('2d')!;
+    if (fillExperiment) document.body.append(flight);
+    const sizeFlight = () => {
+      const dpr = Math.min(devicePixelRatio, 2);
+      flight.width = Math.round(innerWidth * dpr); flight.height = Math.round(innerHeight * dpr);
+      flightCtx.setTransform(dpr,0,0,dpr,0,0);
+    };
+    const stopFill = () => {
+      filling = false; flight.style.display = 'none';
+      releaseParticles?.(); releaseParticles = null; fillSeeds = [];
+    };
+    const beginFill = () => {
+      if (!fillExperiment || paused() || entered) return;
+      entered = true;
+      const rect = lab.getBoundingClientRect();
+      document.dispatchEvent(new CustomEvent('process-particle-request', { detail: {
+        amount: points.length, rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom },
+        receive: (seeds: Seed[], release: () => void) => {
+          fillSeeds = seeds; releaseParticles = release;
+          filling = true; fillStart = performance.now(); sizeFlight(); flight.style.display = 'block';
+        },
+      } }));
+    };
+    const drawFill = (time: number) => {
+      flightCtx.clearRect(0,0,innerWidth,innerHeight);
+      const rect = canvas.getBoundingClientRect(), elapsed = time - fillStart;
+      const color = document.documentElement.classList.contains('dark') ? '#edb191' : '#95421d';
+      let complete = true;
+      points.forEach((p,i) => {
+        const seed = fillSeeds[i % fillSeeds.length];
+        const delay = (i * 37 % 541) / 541 * 280;
+        const t = Math.max(0, Math.min(1, (elapsed - delay) / 850));
+        if (t < 1) complete = false;
+        const ease = t*t*t*(t*(t*6-15)+10);
+        const endX = rect.left + p.x * rect.width, endY = rect.top + p.y * rect.height;
+        const dx = endX - seed.x, dy = endY - seed.y;
+        const bend = Math.sin(Math.PI * ease) * Math.sin(p.seed) * Math.min(45, Math.hypot(dx,dy) * .12);
+        const x = seed.x + dx * ease + bend, y = seed.y + dy * ease - bend * .4;
+        // Extra detail appears only after the borrowed particles reach the panel.
+        const density = i < fillSeeds.length ? 1 : ease;
+        const alpha = (seed.alpha + (.4 + (i%5)*.12 - seed.alpha) * ease) * density;
+        flightCtx.fillStyle = seed.color; flightCtx.globalAlpha = alpha * (1-ease);
+        flightCtx.beginPath(); flightCtx.arc(x,y,seed.radius + (1.1-seed.radius)*ease,0,Math.PI*2); flightCtx.fill();
+        flightCtx.fillStyle = color; flightCtx.globalAlpha = alpha * ease;
+        flightCtx.beginPath(); flightCtx.arc(x,y,i%11===0?1.7:1.1,0,Math.PI*2); flightCtx.fill();
+      });
+      flightCtx.globalAlpha = 1;
+      if (complete) { filling = false; flight.style.display = 'none'; }
+    };
     const target = (i: number, state: number) => forms[state][i];
     const select = (next: number) => {
       stage = next;
@@ -197,6 +254,7 @@ const tools = [
     };
     const render = (time: number) => {
       ctx.clearRect(0, 0, width, height);
+      if (filling && !paused()) { drawFill(time); if (filling) return; }
       const color = document.documentElement.classList.contains('dark') ? '#edb191' : '#95421d';
       ctx.fillStyle = ctx.strokeStyle = color;
       ctx.lineCap = 'round'; ctx.lineWidth = .8;
@@ -282,10 +340,12 @@ const tools = [
     let scrollFrame = 0;
     window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(() => { scrollFrame = 0; updateScroll(); }); }, { passive: true });
     new ResizeObserver(() => { const box = canvas.getBoundingClientRect(); width = box.width; height = box.height; const dpr = Math.min(devicePixelRatio, 2); canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); updateScroll(); render(0); }).observe(canvas);
-    new IntersectionObserver(entries => { visible = entries[0].isIntersecting; updateScroll(); resume(); }).observe(canvas);
-    const preferenceChanged = () => { if (paused()) { progress = stage; setTargets(true); } else updateScroll(); resume(); };
+    new IntersectionObserver(entries => { const entry = entries[0]; visible = entry.isIntersecting; if (entry.intersectionRatio >= .25) beginFill(); if (!visible) { stopFill(); entered = false; } updateScroll(); resume(); }, { threshold: [0,.25] }).observe(canvas);
+    const preferenceChanged = () => { if (paused()) { stopFill(); progress = stage; setTargets(true); } else updateScroll(); resume(); };
     new MutationObserver(preferenceChanged).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     media.addEventListener('change', preferenceChanged);
+    window.addEventListener('resize', stopFill, { passive: true });
+    window.addEventListener('pagehide', stopFill);
     document.addEventListener('visibilitychange', resume);
     lab.querySelectorAll<HTMLButtonElement>('[data-process-stage]').forEach(button => button.addEventListener('click', () => {
       const next = Number(button.dataset.processStage);
