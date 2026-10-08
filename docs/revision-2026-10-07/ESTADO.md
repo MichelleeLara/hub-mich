@@ -57,3 +57,8 @@ Build Astro5 y Astro7 aprobados; HTML de home/cinco casos verificado con siete e
 
 ## Preferencia final del footer — 8 de octubre, 06:55 CDMX
 Michelle prefiere la composición anterior y la tipografía nueva. Recuperado el footer anterior completo (texto, CTA tipo píldora, columnas, metadatos y firma), conservando ClashDisplay en el texto principal y CTA con el peso/espaciado de la propuesta nueva. Esta elección sustituye el rediseño descrito arriba. Sincronizada a Astro7.
+
+## Ajustes finales — 8 de octubre, 07:01 CDMX
+Footer: composición original, título Inter Tight semibold (600) en dos tonos; contacto como enlace subrayado con flecha diagonal, sin píldora/estrella. Esta es la preferencia vigente de Michelle.
+
+Partículas del proceso: ventana de morph más breve, easing quintic con aceleración suave en extremos, trayectorias arqueadas reversibles, respuesta temporal de 55ms (antes 90ms), render limitado a 60fps promedio (antes 30fps). Estelas direccionales de velocidad limitadas a 18px y alpha .24, sin desenfoque acumulativo. Reposo más sutil. Pausa/reduce eliminan estelas, deriva y velocidades; se mantienen estado/resultado visibles. Builds Astro5 y Astro7 aprobados y fuentes sincronizadas. No se afirma rendimiento medido ni validación visual nueva: navegador local continúa sin comprobar por el rechazo anterior. Respaldo previo en /tmp/hub-mich-followup/SkillsStack-before-speed.astro.

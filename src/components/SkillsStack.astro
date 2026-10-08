@@ -91,9 +91,9 @@ const tools = [
   if (lab && canvas && story) {
     const ctx = canvas.getContext('2d')!;
     const media = matchMedia('(prefers-reduced-motion: reduce)');
-    let stage = 0, progress = 0, width = 0, height = 0, raf = 0, visible = false, last = 0;
+    let stage = 0, progress = 0, width = 0, height = 0, raf = 0, visible = false, last = 0, previousFrame = 0, frameBudget = 0;
     const steps = Array.from(story.querySelectorAll<HTMLElement>('[data-process-step]'));
-    const points = Array.from({ length: 540 }, (_, i) => ({ x: .5, y: .5, seed: i * 2.39996, tx: 0, ty: 0 }));
+    const points = Array.from({ length: 540 }, (_, i) => ({ x: .5, y: .5, seed: i * 2.39996, tx: 0, ty: 0, vx: 0, vy: 0 }));
     const paused = () => media.matches || document.documentElement.classList.contains('motion-paused');
     const target = (i: number, state: number) => {
       const p = points[i];
@@ -111,24 +111,65 @@ const tools = [
     const setTargets = (snap = false) => {
       const from = Math.min(1, Math.floor(progress));
       const fraction = progress - from;
-      // Hold each composition, then smoothly morph between the same particles.
-      const t = Math.max(0, Math.min(1, (fraction - .2) / .6));
-      const blend = t * t * (3 - 2 * t);
-      points.forEach((p, i) => { const a = target(i, from), b = target(i, from + 1); p.tx = a.x + (b.x - a.x) * blend; p.ty = a.y + (b.y - a.y) * blend; if (snap || paused()) { p.x = p.tx; p.y = p.ty; } });
+      // A shorter scroll window gives the morph a quick, soft acceleration.
+      // Quintic easing also removes acceleration jumps at both endpoints.
+      const t = Math.max(0, Math.min(1, (fraction - .28) / .44));
+      const blend = t * t * t * (t * (t * 6 - 15) + 10);
+      points.forEach((p, i) => {
+        const a = target(i, from), b = target(i, from + 1);
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const distance = Math.hypot(dx, dy);
+        // A small reversible arc replaces the rigid straight-line trajectory.
+        const bend = Math.sin(Math.PI * blend) * Math.sin(p.seed) * .045;
+        p.tx = a.x + dx * blend - (distance ? dy / distance : 0) * bend;
+        p.ty = a.y + dy * blend + (distance ? dx / distance : 0) * bend;
+        if (snap || paused()) { p.x = p.tx; p.y = p.ty; p.vx = p.vy = 0; }
+      });
       lab.style.setProperty('--process-progress', String(progress / 2));
     };
     const render = (time: number) => {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#edb191' : '#95421d';
-      points.forEach((p, i) => { const drift = paused() ? 0 : Math.sin(time * .0006 + p.seed) * .003; ctx.globalAlpha = .4 + (i % 5) * .12; ctx.beginPath(); ctx.arc((p.x + drift) * width, (p.y + drift * .7) * height, i % 11 === 0 ? 1.7 : 1.1, 0, Math.PI * 2); ctx.fill(); });
+      const color = document.documentElement.classList.contains('dark') ? '#edb191' : '#95421d';
+      ctx.fillStyle = ctx.strokeStyle = color;
+      ctx.lineCap = 'round'; ctx.lineWidth = .8;
+      const still = paused();
+      points.forEach((p, i) => {
+        const drift = still ? 0 : Math.sin(time * .0008 + p.seed) * .0015;
+        const x = (p.x + drift) * width, y = (p.y + drift * .7) * height;
+        const vx = p.vx * width, vy = p.vy * height;
+        const speed = Math.hypot(vx, vy);
+        // A single, bounded trail follows current velocity: no blur accumulation.
+        if (!still && speed > 12) {
+          const length = Math.min(18, speed * .024);
+          ctx.globalAlpha = Math.min(.24, speed / 1100);
+          ctx.beginPath(); ctx.moveTo(x - vx / speed * length, y - vy / speed * length); ctx.lineTo(x, y); ctx.stroke();
+        }
+        ctx.globalAlpha = .4 + (i % 5) * .12;
+        ctx.beginPath(); ctx.arc(x, y, i % 11 === 0 ? 1.7 : 1.1, 0, Math.PI * 2); ctx.fill();
+      });
       ctx.globalAlpha = 1;
     };
     const tick = (time: number) => {
       if (!visible || document.hidden || paused()) { raf = 0; return; }
-      if (time - last > 32) { const ease = Math.min(1, 1 - Math.exp(-(time - last) / 90)); points.forEach(p => { p.x += (p.tx - p.x) * ease; p.y += (p.ty - p.y) * ease; }); last = time; render(time); }
+      frameBudget += Math.min(64, time - previousFrame);
+      previousFrame = time;
+      // Up to 60 fps; time-based response remains consistent across refresh rates.
+      if (frameBudget >= 1000 / 60) {
+        frameBudget %= 1000 / 60;
+        const dt = Math.max(1, Math.min(64, time - last));
+        const ease = 1 - Math.exp(-dt / 55);
+        const velocityEase = 1 - Math.exp(-dt / 45);
+        points.forEach(p => {
+          const dx = (p.tx - p.x) * ease, dy = (p.ty - p.y) * ease;
+          p.x += dx; p.y += dy;
+          p.vx += (dx * 1000 / dt - p.vx) * velocityEase;
+          p.vy += (dy * 1000 / dt - p.vy) * velocityEase;
+        });
+        last = time; render(time);
+      }
       raf = requestAnimationFrame(tick);
     };
-    const resume = () => { if (paused()) { setTargets(true); render(0); } else if (!raf && visible && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+    const resume = () => { if (paused()) { setTargets(true); render(0); } else if (!raf && visible && !document.hidden) { last = previousFrame = performance.now(); frameBudget = 0; raf = requestAnimationFrame(tick); } };
     const updateScroll = () => {
       if (paused()) return;
       const marker = innerWidth < 768 && innerHeight > 620 ? lab.getBoundingClientRect().bottom + 80 : innerHeight * .54;
