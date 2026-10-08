@@ -20,7 +20,7 @@ const tools = [
   <div class="method-layout">
     <div class="method-lab" id="particle-lab">
       <div class="lab-heading"><span>De las piezas al sistema</span><span class="lab-tag">Sigue el scroll</span></div>
-      <div class="lab-stage"><canvas id="process-particles" aria-hidden="true"></canvas><span class="lab-stage-label" aria-hidden="true">01 / Entender · Foco</span><span class="lab-axis axis-x" aria-hidden="true">+</span><span class="lab-axis axis-y" aria-hidden="true">+</span></div>
+      <div class="lab-stage"><canvas id="process-particles" aria-hidden="true"></canvas><span class="lab-stage-label" aria-hidden="true">01 / Entender · La pregunta</span><span class="lab-axis axis-x" aria-hidden="true">+</span><span class="lab-axis axis-y" aria-hidden="true">+</span></div>
       <div class="process-buttons requires-js" role="group" aria-label="Etapas de mi proceso">
         {steps.map((step, i) => <button type="button" data-process-stage={i} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`process-step-${i}`}><span>0{i + 1}</span>{step.name}</button>)}
       </div>
@@ -35,12 +35,12 @@ const tools = [
   <div class="method-tools">{tools.map(tool => <div><span>{tool.label}</span><p>{tool.items}</p></div>)}</div>
 </section>
 <style>
-  .method-intro { max-width: 780px; margin-bottom: 48px; }
+  .method-intro { max-width: 780px; margin-bottom: 56px; }
   h2 { margin: 28px 0; }
   .method-intro > p:not(.section-kicker) { max-width: 510px; color: var(--muted); font-size: 17px; line-height: 1.7; }
   .method-layout { display: grid; grid-template-columns: 1fr 1.1fr; gap: 72px; align-items: start; }
   .process-story { grid-column: 1; grid-row: 1; }
-  .process-step { min-height: 65vh; display: flex; flex-direction: column; justify-content: center; padding: 48px 0; scroll-margin-top: 180px; }
+  .process-step { min-height: 65vh; display: flex; flex-direction: column; justify-content: flex-start; padding: 24px 0 48px; scroll-margin-top: 180px; }
   .step-index { font-family: monospace; font-size: 12px; color: var(--accent); margin-bottom: 24px; }
   .process-step h3 { font-family: ClashDisplay, sans-serif; font-size: clamp(28px, 3.4vw, 42px); font-weight: 500; line-height: 1.12; letter-spacing: -.025em; max-width: 400px; }
   .process-step > p:last-child { margin-top: 24px; max-width: 390px; font-size: 16px; line-height: 1.8; color: var(--muted); }
@@ -113,13 +113,15 @@ const tools = [
     };
     const box = (out: Point[], x: number, y: number, w: number, h: number, count: number) => path(out, [[x,y],[x+w,y],[x+w,y+h],[x,y+h]], count, true);
     const forms: Point[][] = [[], [], []];
-    // Entender: a lens with a dense center and signals converging toward it.
-    for (const radius of [.07, .125, .18]) ring(forms[0], .5, .43, radius, radius * 1.6, 100);
-    for (let i = 0; i < 60; i++) { const angle = i * 2.39996, radius = Math.sqrt(i / 60) * .038; forms[0].push({ x: .5 + Math.cos(angle) * radius, y: .43 + Math.sin(angle) * radius * 1.6 }); }
-    for (let i = 0; i < 12; i++) {
-      const angle = i / 12 * Math.PI * 2;
-      path(forms[0], [[.5 + Math.cos(angle) * .205, .43 + Math.sin(angle) * .328], [.5 + Math.cos(angle) * .25, .43 + Math.sin(angle) * .40]], 15);
+    // Entender: noisy inputs become a single, well-defined question.
+    for (const y of [.24, .45, .66]) {
+      path(forms[0], [[.10,y+.02],[.14,y-.03],[.18,y+.025],[.22,y-.01],[.28,y]], 50);
+      path(forms[0], [[.28,y],[.40,y],[.50,.45],[.58,.45]], 50);
     }
+    path(forms[0], [[.58,.19],[.78,.19],[.86,.27],[.86,.71],[.58,.71]], 120, true);
+    path(forms[0], [[.78,.19],[.78,.27],[.86,.27]], 20);
+    path(forms[0], [[.66,.34],[.66,.30],[.70,.27],[.75,.27],[.78,.31],[.78,.35],[.74,.40],[.72,.43],[.72,.48]], 80);
+    ring(forms[0], .72, .57, .009, .0144, 20);
     // Diseñar: one starting point, a decision and two possible routes.
     ring(forms[1], .16, .43, .045, .072, 60);
     path(forms[1], [[.43,.27],[.53,.43],[.43,.59],[.33,.43]], 100, true);
@@ -142,8 +144,8 @@ const tools = [
     const routes: Point[][][] = [[], [], []];
     for (let signal = 0; signal < 3; signal++) {
       const focus: Point[] = [], decision: Point[] = [], product: Point[] = [];
-      const angle = signal / 3 * Math.PI * 2;
-      path(focus, [[.5 + Math.cos(angle) * .25, .43 + Math.sin(angle) * .40], [.5,.43]], 120);
+      const inputY = [.24, .45, .66][signal];
+      path(focus, [[.10,inputY+.02],[.14,inputY-.03],[.18,inputY+.025],[.22,inputY-.01],[.28,inputY],[.40,inputY],[.50,.45],[.58,.45],[.72,.45]], 120);
       const branchY = signal === 1 ? .68 : .24;
       path(decision, [[.16,.43],[.43,.43],[.63,.43],[.63,branchY],[.805,branchY]], 120);
       path(product, [[.31,.72],[.41,.65],[.51,.68],[.63,.54],[.73,.59],[.84,.50]], 120);
@@ -169,7 +171,7 @@ const tools = [
       stage = next;
       lab.querySelectorAll('[data-process-stage]').forEach((node, i) => node.setAttribute('aria-pressed', String(i === stage)));
       lab.querySelectorAll<HTMLElement>('[data-process-result]').forEach((node, i) => { node.hidden = i !== stage; });
-      lab.querySelector('.lab-stage-label')!.textContent = ['01 / Entender · Foco', '02 / Diseñar · Recorrido', '03 / Construir · Producto'][stage];
+      lab.querySelector('.lab-stage-label')!.textContent = ['01 / Entender · La pregunta', '02 / Diseñar · Recorrido', '03 / Construir · Producto'][stage];
     };
     const setTargets = (snap = false) => {
       const { from, blend } = morph(progress);
