@@ -10,7 +10,7 @@ const visual = projectPresentation[p.slug];
     <div><p class="section-kicker">{visual.category}</p><h1>{p.title}</h1><p class="case-headline">{visual.headline}</p></div>
     <div class="case-lead"><p>{visual.summary}</p><div class="case-key-result"><strong>{visual.result}</strong><span>{visual.resultLabel}</span></div><a href="#decisiones" class="text-link">Leer las decisiones <span aria-hidden="true">↓</span></a></div>
   </div>
-  <figure class="case-visual"><ProjectImage name={visual.image} alt={visual.alt} eager sizes="(min-width: 1152px) 1104px, 100vw" /><figcaption>Visual del proyecto <span>{p.meta}</span></figcaption></figure>
+  <figure class="case-visual"><ProjectImage name={visual.image} alt={visual.alt} eager sizes="(min-width: 1152px) 1104px, calc(100vw - 48px)" /><figcaption>Visual del proyecto <span>{p.meta}</span></figcaption></figure>
   <dl class="case-facts">
     <div><dt>Mi rol</dt><dd>{p.brief?.rol.join(' · ')}</dd></div>
     <div><dt>Estado</dt><dd>{p.brief?.estado.join(' · ')}</dd></div>

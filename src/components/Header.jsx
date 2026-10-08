@@ -1,5 +1,6 @@
+import { useReducedMotionPreference } from '../hooks/useReducedMotionPreference';
 import React, { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 import ThemeToggle from "./Themetoggle";
 import MotionToggle from "./MotionToggle";
 
@@ -38,7 +39,7 @@ const SECTIONS = [
   { id: "contacto", sectionId: "contacto" },
 ];
 
-const SPRING = { type: "spring", stiffness: 380, damping: 30 };
+const SPRING = { type: "spring", duration: .3, bounce: 0 };
 
 // Base compartida de cada "isla".
 const ISLAND =
@@ -48,11 +49,11 @@ const ISLAND =
   "transition-colors duration-500";
 
 // Píldora gris de seguimiento (única, compartida entre islas via layoutId).
-const Pill = () => (
+const Pill = ({ reduced }) => (
   <motion.span
     layoutId="nav-pill"
     className="absolute inset-0 rounded-full bg-black/[0.06] dark:bg-white/10"
-    transition={SPRING}
+    transition={reduced ? { duration: 0 } : SPRING}
   />
 );
 
@@ -72,12 +73,12 @@ const islandVariants = {
     x: 0,
     scale: 1,
     filter: "blur(0px)",
-    transition: { type: "spring", stiffness: 240, damping: 20 },
+    transition: { type: "spring", duration: .5, bounce: 0 },
   },
 };
 
 export default function Header() {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionPreference();
   const [active, setActive] = useState("inicio");
   const [hover, setHover] = useState(null);
 
@@ -146,13 +147,13 @@ export default function Header() {
   const highlighted = hover ?? active;
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       {/* ------------------------------ DESKTOP ------------------------------ */}
       <div className="fixed top-8 inset-x-0 z-[100] hidden md:flex justify-center pointer-events-none px-6">
         <motion.nav
           aria-label="Navegación principal"
           className="flex items-center gap-2.5 pointer-events-auto"
-          variants={groupVariants}
+          variants={reduced ? { hidden: {}, show: { transition: { duration: 0 } } } : groupVariants}
           initial={reduced ? false : "hidden"}
           animate="show"
           onMouseLeave={() => setHover(null)}
@@ -162,13 +163,13 @@ export default function Header() {
             href="/"
             aria-label="Mich — inicio"
             custom={-1}
-            variants={islandVariants}
+            variants={reduced ? { hidden: { opacity: 0 }, show: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0 } } } : islandVariants}
             onMouseEnter={() => setHover("logo")}
             onClick={reloadHome}
             className={`${ISLAND} h-11 px-2 flex items-center`}
           >
             <span className="relative flex items-center h-8 px-3 rounded-full">
-              {highlighted === "logo" && <Pill />}
+              {highlighted === "logo" && <Pill reduced={reduced} />}
               <span className="relative z-10 font-ClashDisplay font-semibold text-base text-gray-800 dark:text-secondary">
                 ./mich
               </span>
@@ -178,7 +179,7 @@ export default function Header() {
           {/* Isla central: links */}
           <motion.div
             custom={0}
-            variants={islandVariants}
+            variants={reduced ? { hidden: { opacity: 0 }, show: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0 } } } : islandVariants}
             className={`${ISLAND} h-11 px-1.5 flex items-center gap-0.5`}
           >
             {LINKS.map((link) => {
@@ -196,7 +197,7 @@ export default function Header() {
                       : "text-gray-500 dark:text-terteary hover:text-gray-800 dark:hover:text-secondary"
                   }`}
                 >
-                  {isOn && <Pill />}
+                  {isOn && <Pill reduced={reduced} />}
                   <span className="relative z-10">{link.label}</span>
                 </a>
               );
@@ -206,7 +207,7 @@ export default function Header() {
           {/* Isla derecha: CTA contacto + toggle de tema */}
           <motion.div
             custom={1}
-            variants={islandVariants}
+            variants={reduced ? { hidden: { opacity: 0 }, show: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0 } } } : islandVariants}
             className={`${ISLAND} h-11 pl-2 pr-1.5 flex items-center gap-1`}
           >
             <a
@@ -219,7 +220,7 @@ export default function Header() {
                   : "text-gray-700 dark:text-secondary hover:text-gray-900 dark:hover:text-white"
               }`}
             >
-              {highlighted === "contacto" && <Pill />}
+              {highlighted === "contacto" && <Pill reduced={reduced} />}
               <span className="relative z-10 flex items-center gap-2">
                 <MailIcon />
                 Contáctame
@@ -231,7 +232,7 @@ export default function Header() {
               onMouseEnter={() => setHover("toggle")}
               className="relative flex items-center justify-center h-11 w-11 rounded-full"
             >
-              {highlighted === "toggle" && <Pill />}
+              {highlighted === "toggle" && <Pill reduced={reduced} />}
               <div className="relative z-10">
                 <ThemeToggle />
               </div>
@@ -245,7 +246,7 @@ export default function Header() {
         className="fixed top-4 inset-x-0 z-[100] flex md:hidden items-center justify-between px-6"
         initial={reduced ? false : { opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 24, delay: 0.1 }}
+        transition={{ type: "spring", duration: reduced ? 0 : .3, bounce: 0, delay: reduced ? 0 : .1 }}
       >
         <a
           href="/"
@@ -257,6 +258,6 @@ export default function Header() {
         </a>
         <div className="flex items-center rounded-full bg-white/80 dark:bg-[#1c1c1c]/80 backdrop-blur-md"><MotionToggle /><ThemeToggle /></div>
       </motion.div>
-    </>
+    </MotionConfig>
   );
 }

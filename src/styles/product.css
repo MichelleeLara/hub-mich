@@ -19,7 +19,7 @@ html.motion-paused .hero-float, html.motion-paused .animate-ping { animation-pla
   :where(button,.pressable):not(:disabled):active { transform: scale(.96); }
 }
 @media (prefers-reduced-motion: reduce) {
-  *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  *,*::before,*::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
   .hero-float { animation: none !important; }
 }
 @media (max-width: 767px) { .section-shell { padding: 72px 24px; } }

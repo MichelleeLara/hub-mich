@@ -60,13 +60,13 @@ const nextTags = next.brief
 							<!-- Narrativa -->
 							<div>
 								<p class="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-orange-700 dark:text-orange-400">Intro</p>
-								<div class="space-y-5 text-[15px] leading-relaxed text-gray-600 dark:text-zinc-300 md:text-base [&_em]:italic [&_em]:text-gray-500 dark:[&_em]:text-zinc-400 [&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-zinc-100">
+								<div class="space-y-5 text-[15px] leading-relaxed text-gray-600 dark:text-zinc-300 md:text-base [&_em]:italic [&_em]:text-gray-600 dark:[&_em]:text-zinc-400 [&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-zinc-100">
 									{p.brief.intro.map((para) => (
 										<p set:html={para} />
 									))}
 								</div>
 								{p.brief.note && (
-									<div class="mt-8 inline-flex items-center gap-2.5 rounded-xl border border-black/10 bg-black/5 px-4 py-3 text-xs italic text-gray-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
+									<div class="mt-8 inline-flex items-center gap-2.5 rounded-xl border border-black/10 bg-black/5 px-4 py-3 text-xs italic text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
 										<svg class="h-4 w-4 flex-shrink-0 text-gray-600 dark:text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
 										{p.brief.note}
 									</div>
@@ -101,7 +101,7 @@ const nextTags = next.brief
 			<div class="mx-auto max-w-3xl px-6 text-center">
 				<span class="text-xs font-semibold uppercase tracking-[0.25em] text-orange-700 dark:text-orange-400">Detrás del producto</span>
 				<h2 class="mt-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-secondary md:text-5xl">Problema · Solución · Resultado</h2>
-				<p class="mt-4 text-base text-gray-500 dark:text-terteary">Qué necesitaba cambiar, qué decidí y qué resultado tuvo.</p>
+				<p class="mt-4 text-base text-gray-600 dark:text-terteary">Qué necesitaba cambiar, qué decidí y qué resultado tuvo.</p>
 			</div>
 
 			<div class="relative mx-auto mt-20 max-w-6xl px-6">
@@ -186,10 +186,10 @@ const nextTags = next.brief
 						<div class="space-y-6">
 							{p.resultado.map((metric) => (
 								<div>
-									<p class="bg-gradient-to-br from-orange-500 to-amber-500 bg-clip-text text-4xl font-bold tracking-tighter text-transparent">
+									<p class="text-4xl font-bold tracking-tighter text-[var(--accent)]">
 										{metric.value}
 									</p>
-									<p class="mt-1 text-sm leading-snug text-gray-500 dark:text-zinc-400">{metric.label}</p>
+									<p class="mt-1 text-sm leading-snug text-gray-600 dark:text-zinc-400">{metric.label}</p>
 								</div>
 							))}
 						</div>
@@ -202,7 +202,7 @@ const nextTags = next.brief
 			<!-- ===================================================== -->
 			{p.impact && (
 				<div class="mx-auto mt-24 max-w-5xl px-6">
-					<span class="text-sm uppercase tracking-widest text-gray-500 dark:text-zinc-400">Lo que cambió</span>
+					<span class="text-sm uppercase tracking-widest text-gray-600 dark:text-zinc-400">Lo que cambió</span>
 
 					<div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3 md:grid-rows-2">
 						<!-- Tarjeta 1 · Destacada: métrica de negocio (siempre oscura, acento) -->
@@ -214,7 +214,7 @@ const nextTags = next.brief
 							>
 							</div>
 							<div class="relative">
-								<p class="text-6xl font-bold tracking-tighter md:text-7xl">{p.impact.featured.metric}</p>
+								<p class="text-4xl font-bold tracking-tighter sm:text-6xl md:text-7xl">{p.impact.featured.metric}</p>
 								<p class="mt-4 text-sm font-semibold uppercase tracking-widest text-orange-400">{p.impact.featured.label}</p>
 							</div>
 							<p class="relative mt-10 max-w-xl text-base leading-relaxed text-zinc-400">{p.impact.featured.desc}</p>
@@ -225,7 +225,7 @@ const nextTags = next.brief
 							<div class="flex flex-col justify-between rounded-3xl border border-zinc-200 bg-zinc-100 p-8 text-zinc-900 dark:border-white/10 dark:bg-[#1d1d1d] dark:text-secondary md:col-span-1">
 								<div>
 									{item.icon && (
-										<span class="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
+										<span class="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
 											{item.icon === 'cpu' && (
 												<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
 											)}
@@ -235,7 +235,7 @@ const nextTags = next.brief
 										</span>
 									)}
 									<p class="text-2xl font-bold tracking-tight md:text-3xl">{item.metric}</p>
-									<p class="mt-2 text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">{item.label}</p>
+									<p class="mt-2 text-xs font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">{item.label}</p>
 								</div>
 								<p class="mt-6 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{item.desc}</p>
 							</div>
@@ -267,7 +267,7 @@ const nextTags = next.brief
 					<!-- Izquierda · texto -->
 					<div>
 						<span class="text-xs font-semibold uppercase tracking-[0.2em] text-orange-700 dark:text-orange-400">Siguiente Caso</span>
-						<h2 class="mt-4 font-ClashDisplay text-5xl font-bold uppercase leading-[0.92] tracking-tight text-gray-900 dark:text-secondary md:text-6xl">
+						<h2 class="mt-4 font-ClashDisplay text-3xl font-bold uppercase leading-[1.05] tracking-tight break-words sm:text-5xl text-gray-900 dark:text-secondary md:text-6xl">
 							{next.title}
 						</h2>
 						<p class="mt-5 max-w-md text-sm leading-relaxed text-gray-600 dark:text-zinc-400 md:text-base">

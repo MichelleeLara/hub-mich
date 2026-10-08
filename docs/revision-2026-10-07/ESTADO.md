@@ -22,13 +22,18 @@ Dirección: demostrar diseño + ingeniería + IA para productos de impacto, bien
 - Quitados astro-og-canvas, react-router-dom y clx no utilizados. npm audit fix sin force: quedan 7 avisos (5 high/2 moderate) de cadena Tailwind3/herramientas de compilación. No aplicar upgrade forzado Tailwind4 sin evaluación y QA.
 - No fusionar ni desplegar. Si sincronizas diseño a la rama, preservar package/lock/config/PostCSS/import global.css.
 
-## Pendientes concretos del loop nocturno
-1. QA visual de los otros cuatro casos en 320/390px y escritorio, claro/oscuro. Corregir recortes, desbordes o fallos reales; no remodelar partes aprobadas.
-2. Comprobar navegación con teclado, skip link, focus del brief, controles de proceso; preferencia de movimiento reducido al cargar y cambiar durante uso. Pausa debe detener los efectos y conservar foto fallback.
-3. Lighthouse representativo de otros casos, contraste en tema claro, y endpoints SEO servidos. No repetir mediciones exitosas sin cambios o incertidumbre.
-4. Revisar hover con puntero fino y touch, formación/disolución del rostro al entrar/salir, imágenes responsive por cada caso.
-5. Actualizar INFORME.md y evidencias; registrar cada hallazgo real y resolverlo antes de cerrar. No afirmar cobertura no verificada.
+## Cierre del alcance — 8 de octubre, 00:30 CDMX
+Validación nocturna completada. Desactivar la continuación; no seguir haciendo cambios por iniciativa propia después del cierre.
 
-Continuación automática mejoras-nocturnas-de-itsmich activa cada hora hasta 08:00 del 8 de octubre, America/Mexico_City. Requiere equipo encendido/Codex abierto. Mantener silencio sin cambios útiles; avisar al completar o ante bloqueo. Desactivar al finalizar el alcance, y no prolongar después del límite. No enviar mensajes, correos, publicar ni inventar métricas.
+- Otros cuatro casos revisados en 320px oscuro, 390px claro y 1440px en ambos temas; 16 vistas. Desbordamiento de White-Label a 320px corregido en métricas y siguiente caso. Screenshots y night-browser.json guardados.
+- Trayectoria mantiene diseño; se contuvo el desplazamiento de entrada que producía 8px de desborde en el ancho natural de 954px. Contenido visible sin JS y al pausar; revelado progresivo no oculta contenido de base.
+- Contraste claro: etiquetas de casos, métricas sin degradado insuficiente, fechas/tags de trayectoria y estado Disponible ajustados. Comprobación DOM de contraste del home después: sin fallos de texto (se excluyen separadores decorativos aria-hidden).
+- Movimiento reducido emulado en Chrome invitado: activar durante sesión deshabilita el control y detiene efectos; cargar con reduce conserva foto fallback; desactivar restaura el control. Cambiar la preferencia no requiere recargar. Emulación restaurada y sesión de invitado cerrada.
+- Hook propio para preferencia viva porque Framer11 solo la captura al montar. Parallax ya no mantiene RAF al estar quieto, fuera de pantalla, pausado u oculto. Springs sin rebote corrigen avisos de blur negativo en Chrome; tras recargar no reaparecieron.
+- Teclado: Tab muestra skip link con foco visible; Enter enfoca main-content. Space activa Diseñar/Construir con estado y texto correctos. Enter abre summary del brief; formulario vacío lleva al campo requerido; formulario válido enfoca brief-result.
+- Manifest de imágenes declara anchos/altos reales y sizes ajustados a la columna; no se declaran 1440w para imágenes que eran 1122/1312/1396/1405px.
+- Lighthouse: los cinco casos con 100 accesibilidad/SEO. Luz.ia 99 rendimiento; Tracking 98 con movimiento reducido; home Astro7 final 96/100/100/100. Builds definitivos de ambas ramas y smoke de 12 páginas aprobados. Robots/sitemap servidos y preview noindex confirmados.
+
+Límites de cobertura: pruebas de laboratorio en Chromium, no dispositivos físicos ni Safari/Firefox. No se reprodujeron animaciones al 10% en panel Animations. Los 7 avisos de cadena Tailwind3 siguen documentados como mantenimiento separado, sin upgrade forzado ni publicación. No hay bloqueo para la revisión visual del usuario.
 
 Servidores: dev 4321, producción Astro5 4322, producción Astro7 4323 (Astro7 preview arranca en background). Confirmar disponibilidad al retomar.

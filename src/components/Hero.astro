@@ -14,7 +14,7 @@
     >
       <span class="text-gray-800 dark:text-secondary">Software Engineer</span>
       <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
-      <span class="flex items-center gap-2 text-green-500">
+      <span class="flex items-center gap-2 text-green-700 dark:text-green-500">
         <span class="relative flex w-2 h-2">
           <span
             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60"
@@ -139,39 +139,38 @@
 </style>
 
 <script>
-  // Parallax sutil: el avatar acompaña al mouse con inercia.
-  const avatar = document.getElementById("hero-avatar");
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  if (avatar && !reduceMotion && window.matchMedia("(pointer: fine)").matches) {
-    let targetX = 0;
-    let targetY = 0;
-    let x = 0;
-    let y = 0;
-    const RANGE_X = 30; // más recorrido horizontal
-    const RANGE_Y = 24; // más recorrido vertical
-    const DAMP = 0.16; // seguimiento más rápido/reactivo al mouse
-
-    window.addEventListener(
-      "mousemove",
-      (e) => {
-        const nx = e.clientX / window.innerWidth - 0.5;
-        const ny = e.clientY / window.innerHeight - 0.5;
-        targetX = nx * 2 * RANGE_X;
-        targetY = ny * 2 * RANGE_Y;
-      },
-      { passive: true }
-    );
-
+  // Parallax con trabajo solo durante la interacción visible.
+  const avatar = document.getElementById('hero-avatar');
+  const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = matchMedia('(pointer: fine)');
+  if (avatar) {
+    let targetX = 0, targetY = 0, x = 0, y = 0, raf = 0, visible = false;
+    const canAnimate = () => visible && !document.hidden && !motionPreference.matches && finePointer.matches && !document.documentElement.classList.contains('motion-paused');
     const loop = () => {
-      if (document.documentElement.classList.contains('motion-paused') || document.hidden) { requestAnimationFrame(loop); return; }
-      x += (targetX - x) * DAMP;
-      y += (targetY - y) * DAMP;
+      raf = 0;
+      if (!canAnimate()) return;
+      x += (targetX - x) * .16; y += (targetY - y) * .16;
       avatar.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
-      requestAnimationFrame(loop);
+      if (Math.abs(targetX - x) + Math.abs(targetY - y) > .02) raf = requestAnimationFrame(loop);
     };
-    loop();
+    const sync = () => {
+      if (!canAnimate()) { cancelAnimationFrame(raf); raf = 0; }
+      if (motionPreference.matches || !finePointer.matches) {
+        targetX = targetY = x = y = 0;
+        avatar.style.transform = 'translate(-50%, -50%)';
+      }
+      if (canAnimate() && !raf) raf = requestAnimationFrame(loop);
+    };
+    window.addEventListener('mousemove', e => {
+      if (!canAnimate()) return;
+      targetX = (e.clientX / innerWidth - .5) * 60;
+      targetY = (e.clientY / innerHeight - .5) * 48;
+      if (!raf) raf = requestAnimationFrame(loop);
+    }, { passive: true });
+    new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }).observe(avatar);
+    motionPreference.addEventListener('change', sync);
+    finePointer.addEventListener('change', sync);
+    document.addEventListener('motionchange', sync);
+    document.addEventListener('visibilitychange', sync);
   }
 </script>

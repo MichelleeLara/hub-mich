@@ -1,9 +1,10 @@
+import { useReducedMotionPreference } from '../hooks/useReducedMotionPreference';
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function MotionToggle() {
   const [paused, setPaused] = useState(false);
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionPreference();
   useEffect(() => {
     const sync = () => setPaused(document.documentElement.classList.contains('motion-paused'));
     sync(); const observer = new MutationObserver(sync);

@@ -1,9 +1,10 @@
+import { useReducedMotionPreference } from '../hooks/useReducedMotionPreference';
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState('dark');
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionPreference();
   useEffect(() => {
     const sync = () => setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
     sync();

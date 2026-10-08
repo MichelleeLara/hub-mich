@@ -1,5 +1,6 @@
+import { useReducedMotionPreference } from '../hooks/useReducedMotionPreference';
 import React, { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 
 /* -------------------------------------------------------------------------- */
 /*  Iconos de línea (coherentes con el header)                                */
@@ -50,10 +51,10 @@ const TABS = [
   { id: "contacto", label: "Contacto", path: "/#contacto", sectionId: "contacto", Icon: MailIcon },
 ];
 
-const SPRING = { type: "spring", stiffness: 420, damping: 34 };
+const SPRING = { type: "spring", duration: .3, bounce: 0 };
 
 export default function AnimatedTabs() {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionPreference();
   const [active, setActive] = useState("inicio");
 
   useEffect(() => {
@@ -107,12 +108,12 @@ export default function AnimatedTabs() {
   }, []);
 
   return (
-    <motion.nav
+    <MotionConfig reducedMotion="user"><motion.nav
       aria-label="Navegación móvil"
       className="fixed bottom-[calc(env(safe-area-inset-bottom)+1rem)] inset-x-0 z-[100] flex md:hidden justify-center px-4 pointer-events-none"
       initial={reduced ? false : { opacity: 0, y: 44, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.15 }}
+      transition={{ type: "spring", duration: reduced ? 0 : .3, bounce: 0, delay: reduced ? 0 : .15 }}
     >
       <ul
         className="pointer-events-auto flex max-w-full items-center gap-1 overflow-hidden p-2 rounded-full
@@ -142,7 +143,7 @@ export default function AnimatedTabs() {
                   <motion.span
                     layoutId="tab-pill"
                     className="absolute inset-0 rounded-full bg-black/[0.06] dark:bg-white/10"
-                    transition={SPRING}
+                    transition={reduced ? { duration: 0 } : SPRING}
                   />
                 )}
                 <span className="relative z-10 flex items-center gap-2">
@@ -167,6 +168,6 @@ export default function AnimatedTabs() {
           );
         })}
       </ul>
-    </motion.nav>
+    </motion.nav></MotionConfig>
   );
 }
