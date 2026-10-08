@@ -89,13 +89,13 @@ export const projects = [
 			'Construí una arquitectura de UI basada en roles (RBAC) que adapta la vista de forma segura según supervisores u operativos.',
 		],
 		resultado: [
-			{ value: '0 ms', label: 'Latencia visual: monitoreo en tiempo real sin recargar.' },
+			{ value: 'En vivo', label: 'Monitoreo en tiempo real sin recargar la página.' },
 			{ value: '100%', label: 'Alineación entre reglas de acceso del negocio y la UX.' },
 			{ value: 'Premium', label: 'UI/UX que domesticó la complejidad de los datos en vivo.' },
 		],
 		impact: {
 			featured: {
-				metric: '0 ms',
+				metric: 'En vivo',
 				label: 'Latencia Visual',
 				desc: 'Monitoreo en tiempo real de coordenadas y rutas sin recargar la página, sobre múltiples canales concurrentes.',
 			},

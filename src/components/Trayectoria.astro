@@ -41,7 +41,7 @@ const jobs = [
 
 <section
   id="trayectoria"
-  class="relative mx-auto max-w-6xl scroll-mt-24 px-6 pt-[max(12vh,100px)] pb-24"
+  class="relative mx-auto max-w-6xl scroll-mt-24 px-6 pt-32 pb-24"
 >
   <!-- Eyebrow: mismo lenguaje que Hero, Sobre mí y Proyectos -->
   <h2
@@ -57,7 +57,7 @@ const jobs = [
     class="mx-auto mt-8 max-w-3xl text-center font-ClashDisplay text-4xl font-semibold leading-tight tracking-wide md:text-5xl"
   >
     <span class="text-gray-900 dark:text-secondary">Cuatro años de recorrido.</span>
-    <span class="text-gray-400 dark:text-[#5a5a5a]"> De la interfaz al firmware.</span>
+    <span class="text-gray-600 dark:text-[#949494]"> De la interfaz al firmware.</span>
   </p>
 
   <!-- Recorrido -->
@@ -92,7 +92,7 @@ const jobs = [
               class={
                 right
                   ? 'md:ml-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)]'
-                  : 'md:mr-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)] md:text-right'
+                  : 'md:mr-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)]'
               }
             >
               {/* Fechas */}
@@ -110,9 +110,7 @@ const jobs = [
               <p class="mt-5 text-gray-700 dark:text-gray-400">{job.summary}</p>
 
               {/* Tags */}
-              <ul
-                class={`mt-7 flex flex-wrap gap-2 ${right ? '' : 'md:justify-end'}`}
-              >
+              <ul class="mt-7 flex flex-wrap gap-2">
                 {job.tags.map((tag) => (
                   <li class="rounded-full border border-black/10 px-3.5 py-1.5 text-xs font-medium text-terteary dark:border-white/10">
                     {tag}

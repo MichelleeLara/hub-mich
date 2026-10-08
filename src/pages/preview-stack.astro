@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SkillsStack from '../components/SkillsStack.astro';
+
+const meta = {
+  title: 'Preview Stack · Mich',
+  description: 'Vista temporal de la sección Stack del portafolio de Mich.',
+  image: 'https://itsmich.com.mx/OpenGraphl.png',
+  url: 'https://itsmich.com.mx/preview-stack',
+};
+---
+
+<Layout noindex {...meta}>
+  <main class="min-h-screen pb-24 text-black transition-colors duration-300 dark:text-gray-300">
+    <SkillsStack />
+  </main>
+</Layout>
