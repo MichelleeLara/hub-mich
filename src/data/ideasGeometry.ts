@@ -27,3 +27,23 @@ for(let z=0;z<=3;z++) {
 for(const [u,v] of [[0,0],[2,0],[2,2],[0,2],[1,0],[2,1],[1,2],[0,1]]) {
   for(let z=0;z<3;z++) edge([u,v,z],[u,v,z+1],22,.14+z*.19,u%2===0&&v%2===0);
 }
+
+// A closed path through every floor and its connecting posts.
+export const ideaFlowRoute = [] as { x: number; y: number }[];
+for (let z=0; z<=3; z++) {
+  for (const [u,v] of [[0,0],[2,0],[2,2],[0,2],[0,0]]) ideaFlowRoute.push(project(u,v,z));
+}
+ideaFlowRoute.push(project(0,0,0));
+const lengths=ideaFlowRoute.slice(1).map((p,i)=>Math.hypot(p.x-ideaFlowRoute[i].x,p.y-ideaFlowRoute[i].y));
+const routeLength=lengths.reduce((a,b)=>a+b,0);
+export function ideaFlowPoint(progress: number) {
+  let remaining=((progress%1)+1)%1*routeLength;
+  for(let i=0;i<lengths.length;i++) {
+    if(remaining<=lengths[i]) {
+      const a=ideaFlowRoute[i],b=ideaFlowRoute[i+1],t=remaining/lengths[i];
+      return {x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};
+    }
+    remaining-=lengths[i];
+  }
+  return ideaFlowRoute[0];
+}
