@@ -1,0 +1,17 @@
+[
+  {
+    "project": "/Users/michelle/workspace/hub-mich",
+    "compiled_steps": 3,
+    "valid_button_targets": true,
+    "all_narrative_visible_without_js": true
+  },
+  {
+    "project": "/Users/michelle/.codex/worktrees/astro-7/hub-mich",
+    "compiled_steps": 3,
+    "valid_button_targets": true,
+    "all_narrative_visible_without_js": true
+  },
+  {
+    "local_status": 200
+  }
+]

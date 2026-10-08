@@ -37,3 +37,15 @@ Validación nocturna completada. Continuación mejoras-nocturnas-de-itsmich desa
 Límites de cobertura: pruebas de laboratorio en Chromium, no dispositivos físicos ni Safari/Firefox. No se reprodujeron animaciones al 10% en panel Animations. Los 7 avisos de cadena Tailwind3 siguen documentados como mantenimiento separado, sin upgrade forzado ni publicación. No hay bloqueo para la revisión visual del usuario.
 
 Servidores: dev 4321, producción Astro5 4322, producción Astro7 4323 (Astro7 preview arranca en background). Confirmar disponibilidad al retomar.
+
+## Ajuste solicitado por Michelle — 8 de octubre, 06:41 CDMX
+Nueva autorización después del cierre nocturno: retrato sin forma circular, menos arrastre al hacer scroll y sección 3 con cambios por desplazamiento como la sección Producto de Ommia.
+
+- Retrato: eliminado recorte elíptico. Muestreo con bordes difusos irregulares y dispersión adicional solo en la periferia, conservando definición en el centro. Fallback fotográfico con bordes difuminados, sin border-radius ovalado. Partículas formadas compensan directamente el cambio de posición del anchor y parallax; fuerza de cursor reducida al 6% en el rostro completo.
+- Proceso: relato de tres pasos visible en el documento, visual sticky y transformación continua de las mismas partículas al avanzar o retroceder. Composiciones: piezas sueltas → tres grupos → interfaz. Botones mantienen selección manual y teclado; resultados, etiqueta y barra de avance acompañan el estado visual. Scroll nativo sin interceptar rueda ni gestos.
+- Preferencias: pausa/movimiento reducido quitan sticky y grandes espacios de scroll, mantienen los textos y selección estática. Pantallas de poca altura también usan visual sin sticky. Sin aria-live que anuncie cada cambio del scroll.
+- Fuente visual: Ommia observada en navegador; imagen fija con texto que recorre estados. No se copió código ni se integraron servicios externos.
+- Sincronizados solo AboutStats, ParticlesBackground y SkillsStack a codex/astro-7. Builds finales Astro5 y Astro7 aprobados. HTML compilado verificado: tres pasos visibles sin JS, tres controles con destinos existentes; archivos iguales entre ramas. Evidencia: retrato-scroll-checks.json.
+- Dev estaba apagado: levantado nuevamente en http://127.0.0.1:4321/, HTTP200 confirmado.
+- Límite material: el navegador automático rechazó vincular la vista local por su política de URL. No se intentó sortear el bloqueo. Esta nueva iteración NO tiene prueba visual local, móvil ni captura nueva; las capturas y Lighthouse anteriores no validan estos ajustes. Pendiente comprobar reconocimiento/difuminado del rostro, estabilidad durante scroll y sticky/transición de los tres pasos en móvil/escritorio, ambos temas y con pausa/reduce.
+- Continuación nocturna permanece desactivada; no se publicó ni fusionó Astro7. Respaldo de los tres componentes antes de esta iteración: /tmp/hub-mich-followup/.

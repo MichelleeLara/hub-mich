@@ -239,9 +239,12 @@ import { PARTICLES_ENABLED } from '../config';
       if (!pickFacePoint) return;
       for (let i = 0; i < cap; i++) {
         const c = pickFacePoint();
-        // Jitter mínimo para que los duplicados no se encimen exactos
-        fx[i] = c.x + (Math.random() - 0.5) * 0.008;
-        fy[i] = c.y + (Math.random() - 0.5) * 0.008;
+        // Keep the features crisp; release edge particles into a diffuse fringe.
+        const edge = Math.min(c.x, 1 - c.x, c.y, 1 - c.y);
+        const fringe = 1 - Math.min(1, Math.max(0, edge / .22));
+        const jitter = .008 + .14 * fringe * fringe;
+        fx[i] = c.x + (Math.random() - .5) * jitter;
+        fy[i] = c.y + (Math.random() - .5) * jitter;
         fa[i] = c.a;
       }
     };
@@ -277,12 +280,16 @@ import { PARTICLES_ENABLED } from '../config';
             const i = (y * cw + x) * 4;
             const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
             const dark = lum;
-            const nx = (x / cw - .5) / .48, ny = (y / ch - .52) / .50;
-            if (dark > FACE_DARK_MIN && nx * nx + ny * ny < 1) {
+            // Feather the crop with an irregular edge, rather than an oval silhouette.
+            const u = x / cw, v = y / ch;
+            const edge = Math.min(u, 1 - u, v, 1 - v);
+            const feather = Math.max(0, Math.min(1, edge / (.18 + .035 * Math.sin(u * 23 + v * 17))));
+            const weight = feather * feather * (3 - 2 * feather);
+            if (dark > FACE_DARK_MIN && weight > .01) {
               cx.push(x / cw);
               cy.push(y / ch);
-              ca.push(0.16 + dark * 0.84);
-              total += (dark - FACE_DARK_MIN) ** 1.3;
+              ca.push((0.16 + dark * 0.84) * (.25 + .75 * weight));
+              total += (dark - FACE_DARK_MIN) ** 1.3 * weight;
               cum.push(total);
             }
           }
@@ -375,6 +382,7 @@ import { PARTICLES_ENABLED } from '../config';
 
     // Caja destino del rostro en coordenadas de pantalla, ajustada al anchor
     const faceBox = { x: 0, y: 0, w: 0, h: 0 };
+    let faceDX = 0, faceDY = 0, previousScroll = window.scrollY;
 
     const updateFace = (dt: number) => {
       if (!anchorEl || !anchorEl.isConnected) anchorEl = document.getElementById('face-anchor');
@@ -393,8 +401,12 @@ import { PARTICLES_ENABLED } from '../config';
           fh = r.height;
           fw = fh / faceAspect;
         }
-        faceBox.x = r.left + (r.width - fw) / 2;
-        faceBox.y = r.top + (r.height - fh) / 2;
+        const nextX = r.left + (r.width - fw) / 2;
+        const nextY = r.top + (r.height - fh) / 2;
+        faceDX = faceBox.w ? nextX - faceBox.x : 0;
+        faceDY = faceBox.h ? nextY - faceBox.y : 0;
+        faceBox.x = nextX;
+        faceBox.y = nextY;
         faceBox.w = fw;
         faceBox.h = fh;
       }
@@ -406,6 +418,8 @@ import { PARTICLES_ENABLED } from '../config';
     // --- Simulación ------------------------------------------------------------
     const simulate = (time: number, dt: number) => {
       const scrollY = window.scrollY;
+      const scrollDelta = scrollY - previousScroll;
+      previousScroll = scrollY;
       const ef = faceEase;
       const faceOn = ef > 0 && facePointsReady;
       const r2 = MOUSE_RADIUS * MOUSE_RADIUS;
@@ -437,6 +451,10 @@ import { PARTICLES_ENABLED } from '../config';
         if (i === activeMain && i < mainCount) i = mainCount; // saltar recortadas
         const k = kind[i];
         const par = scrollY * SCROLL_PARALLAX * depth[i];
+        const e = faceOn && fx[i] >= 0 ? smooth(delay[i], delay[i] + 1 - FACE_STAGGER, ef) : 0;
+        // Move formed particles with their anchor directly: no spring drag on scroll.
+        px[i] += faceDX * e;
+        py[i] += (faceDY + scrollDelta * SCROLL_PARALLAX * depth[i]) * e;
         let s = py[i] - par; // y en pantalla
 
         // Las reservas duermen sin rostro ni imán: cero física, cero pintado
@@ -501,14 +519,12 @@ import { PARTICLES_ENABLED } from '../config';
           if (d2 < r2 && d2 > 0.01) {
             const d = Math.sqrt(d2);
             const q = (MOUSE_RADIUS - d) / MOUSE_RADIUS;
-            const f = (q * q * mForce * dt) / d;
+            const f = (q * q * mForce * dt * (1 - .94 * e)) / d;
             vx[i] += (dx - dy * MOUSE_SWIRL) * f;
             vy[i] += (dy + dx * MOUSE_SWIRL) * f;
           }
         }
 
-        // Progreso individual (cascada) hacia el rostro
-        const e = faceOn && fx[i] >= 0 ? smooth(delay[i], delay[i] + 1 - FACE_STAGGER, ef) : 0;
 
         // Deriva continua: el punto que la partícula persigue orbita lentamente
         // alrededor del hogar. Conforme el rostro se forma la deriva se aquieta.
