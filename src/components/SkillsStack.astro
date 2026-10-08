@@ -91,7 +91,7 @@ const tools = [
   if (lab && canvas && story) {
     const ctx = canvas.getContext('2d')!;
     const media = matchMedia('(prefers-reduced-motion: reduce)');
-    let stage = 0, progress = 0, width = 0, height = 0, raf = 0, visible = false, last = 0, previousFrame = 0, frameBudget = 0;
+    let stage = 0, progress = 0, width = 0, height = 0, raf = 0, visible = false, last = 0, previousFrame = 0, frameBudget = 0, flowTime = 0, flowProgress = 0;
     const steps = Array.from(story.querySelectorAll<HTMLElement>('[data-process-step]'));
     const points = Array.from({ length: 540 }, (_, i) => ({ x: .5, y: .5, seed: i * 2.39996, tx: 0, ty: 0, vx: 0, vy: 0 }));
     const paused = () => media.matches || document.documentElement.classList.contains('motion-paused');
@@ -138,6 +138,32 @@ const tools = [
     for (let i = 0; i < 4; i++) path(forms[2], [[.135,.31+i*.12],[.21,.31+i*.12]], 15);
     for (let i = 0; i < 3; i++) ring(forms[2], .135 + i * .035, .145, .008, .013, 10);
     path(forms[2], [[.76,.145],[.85,.145]], 10);
+    // Three signals share the same clock through every morph.
+    const routes: Point[][][] = [[], [], []];
+    for (let signal = 0; signal < 3; signal++) {
+      const focus: Point[] = [], decision: Point[] = [], product: Point[] = [];
+      const angle = signal / 3 * Math.PI * 2;
+      path(focus, [[.5 + Math.cos(angle) * .25, .43 + Math.sin(angle) * .40], [.5,.43]], 120);
+      const branchY = signal === 1 ? .68 : .24;
+      path(decision, [[.16,.43],[.43,.43],[.63,.43],[.63,branchY],[.805,branchY]], 120);
+      path(product, [[.31,.72],[.41,.65],[.51,.68],[.63,.54],[.73,.59],[.84,.50]], 120);
+      routes[0].push(focus); routes[1].push(decision); routes[2].push(product);
+    }
+    const morph = (value: number) => {
+      const from = Math.min(1, Math.floor(value));
+      const t = Math.max(0, Math.min(1, (value - from - .28) / .44));
+      return { from, blend: t * t * t * (t * (t * 6 - 15) + 10) };
+    };
+    const signalPoint = (signal: number, t: number, value: number): Point => {
+      const { from, blend } = morph(value);
+      const sample = (route: Point[]) => {
+        const index = Math.max(0, Math.min(1, t)) * (route.length - 1);
+        const i = Math.min(route.length - 2, Math.floor(index)), f = index - i;
+        return { x: route[i].x + (route[i+1].x - route[i].x) * f, y: route[i].y + (route[i+1].y - route[i].y) * f };
+      };
+      const a = sample(routes[from][signal]), b = sample(routes[from+1][signal]);
+      return { x: a.x + (b.x-a.x) * blend, y: a.y + (b.y-a.y) * blend };
+    };
     const target = (i: number, state: number) => forms[state][i];
     const select = (next: number) => {
       stage = next;
@@ -146,12 +172,9 @@ const tools = [
       lab.querySelector('.lab-stage-label')!.textContent = ['01 / Entender · Foco', '02 / Diseñar · Recorrido', '03 / Construir · Producto'][stage];
     };
     const setTargets = (snap = false) => {
-      const from = Math.min(1, Math.floor(progress));
-      const fraction = progress - from;
+      const { from, blend } = morph(progress);
       // A shorter scroll window gives the morph a quick, soft acceleration.
       // Quintic easing also removes acceleration jumps at both endpoints.
-      const t = Math.max(0, Math.min(1, (fraction - .28) / .44));
-      const blend = t * t * t * (t * (t * 6 - 15) + 10);
       points.forEach((p, i) => {
         const a = target(i, from), b = target(i, from + 1);
         const dx = b.x - a.x, dy = b.y - a.y;
@@ -170,6 +193,8 @@ const tools = [
       ctx.fillStyle = ctx.strokeStyle = color;
       ctx.lineCap = 'round'; ctx.lineWidth = .8;
       const still = paused();
+      const phases = [0, 1/3, 2/3].map(offset => (flowTime / 2800 + offset) % 1);
+      const heads = still ? [] : phases.map((t, i) => signalPoint(i, t, flowProgress));
       points.forEach((p, i) => {
         const drift = still ? 0 : Math.sin(time * .0008 + p.seed) * .0015;
         const x = (p.x + drift) * width, y = (p.y + drift * .7) * height;
@@ -181,9 +206,33 @@ const tools = [
           ctx.globalAlpha = Math.min(.24, speed / 1100);
           ctx.beginPath(); ctx.moveTo(x - vx / speed * length, y - vy / speed * length); ctx.lineTo(x, y); ctx.stroke();
         }
-        ctx.globalAlpha = .4 + (i % 5) * .12;
+        let energy = 0;
+        heads.forEach((head, j) => {
+          const distance = Math.hypot(x - head.x * width, y - head.y * height);
+          const fade = Math.min(1, phases[j] / .10, (1 - phases[j]) / .12);
+          energy = Math.max(energy, Math.max(0, 1 - distance / 20) * fade);
+        });
+        ctx.globalAlpha = Math.min(1, .4 + (i % 5) * .12 + energy * .45);
         ctx.beginPath(); ctx.arc(x, y, i % 11 === 0 ? 1.7 : 1.1, 0, Math.PI * 2); ctx.fill();
       });
+      if (!still) {
+        ctx.fillStyle = ctx.strokeStyle = document.documentElement.classList.contains('dark') ? '#ffe0ca' : '#6e2f15';
+        heads.forEach((head, i) => {
+          const t = phases[i], fade = Math.min(1, t / .10, (1 - t) / .12);
+          // A small moving packet illuminates the dots it passes, then fades at the end.
+          ctx.globalAlpha = fade * .42; ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          for (let n = 0; n <= 6; n++) {
+            const tail = signalPoint(i, Math.max(0, t - .055 + n / 6 * .055), flowProgress);
+            if (n === 0) ctx.moveTo(tail.x * width, tail.y * height); else ctx.lineTo(tail.x * width, tail.y * height);
+          }
+          ctx.stroke();
+          ctx.globalAlpha = fade * .12;
+          ctx.beginPath(); ctx.arc(head.x * width, head.y * height, 6, 0, Math.PI * 2); ctx.fill();
+          ctx.globalAlpha = fade * .95;
+          ctx.beginPath(); ctx.arc(head.x * width, head.y * height, 2.1, 0, Math.PI * 2); ctx.fill();
+        });
+      }
       ctx.globalAlpha = 1;
     };
     const tick = (time: number) => {
@@ -194,7 +243,9 @@ const tools = [
       if (frameBudget >= 1000 / 60) {
         frameBudget %= 1000 / 60;
         const dt = Math.max(1, Math.min(64, time - last));
+        flowTime += dt;
         const ease = 1 - Math.exp(-dt / 55);
+        flowProgress += (progress - flowProgress) * ease;
         const velocityEase = 1 - Math.exp(-dt / 45);
         points.forEach(p => {
           const dx = (p.tx - p.x) * ease, dy = (p.ty - p.y) * ease;
