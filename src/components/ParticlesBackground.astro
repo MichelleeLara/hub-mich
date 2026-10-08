@@ -158,7 +158,7 @@ import { PARTICLES_ENABLED } from '../config';
     const leased = new Set<number>();
     let particleEpoch = 0;
     let faceEase = 0;
-    let structureFlow = 0, structureClock = 0;
+    let structureFlow = 0, structureFlowTarget = 0;
     let facePointsReady = false;
     let faceAspect = 1;
     let pickFacePoint: (() => { x: number; y: number; a: number; birth: number }) | null = null;
@@ -360,7 +360,7 @@ import { PARTICLES_ENABLED } from '../config';
           // Last quarter of native scroll runs a complete signal through the built structure.
           const sectionProgress = Math.max(0, Math.min(1, (pinTop-box.top-startOffset)/Math.max(1,travel)));
           target = Math.min(1, sectionProgress/.75);
-          structureFlow = Math.max(0, (sectionProgress-.75)/.25);
+          structureFlowTarget = Math.max(0, (sectionProgress-.75)/.25);
           if (r.bottom <= 0 || r.top >= h) target = 0;
         }
 
@@ -382,6 +382,7 @@ import { PARTICLES_ENABLED } from '../config';
       }
       document.documentElement.classList.toggle('particles-portrait', facePointsReady && !reduceMotion);
       faceEase += (target - faceEase) * (1 - Math.exp(-dt * 16.67 / 55));
+      structureFlow += (structureFlowTarget-structureFlow) * (1-Math.exp(-dt*16.67/55));
       if (faceEase < 0.001) faceEase = 0;
       updateBuildState(faceEase);
     };
@@ -398,9 +399,10 @@ import { PARTICLES_ENABLED } from '../config';
       const damp = Math.pow(DAMPING, dt);
       const dim = BASE_DIM;
       const tSec = time * 0.001;
-      if (ef > .97) structureClock += dt * 16.67;
-      const flowStrength = smooth(.97,1,ef);
-      const flowHeads = [0,1/3,2/3].map(offset=>ideaFlowPoint(structureFlow + structureClock/5600 + offset));
+      const flowStrength = smooth(.97,1,ef) * (1-smooth(.72,.92,structureFlow));
+      const sealProgress = smooth(.78,.98,structureFlow);
+      const sealPulse = Math.sin(Math.PI*sealProgress);
+      const flowHeads = [0,1/3,2/3].map(offset=>ideaFlowPoint(structureFlow + offset));
       const tDrift = time * 0.0002;
       const wrapSpan = h + 80;
       const mouseOn = mouse.active;
@@ -546,8 +548,9 @@ import { PARTICLES_ENABLED } from '../config';
           a = base + (fa[i] - base) * e;
         }
         if (mg[i] > 0.01) a = Math.min(0.9, Math.max(a * (1 + MAGNET_GLOW * mg[i]), 0.5 * mg[i]));
-        const signal = .72 + .28 * (.5 + .5 * Math.cos(tSec * 1.7 - fy[i] * 9 + fx[i] * 4)) ** 8;
-        a *= twinkle * (1-e) + (.9 + .1 * signal) * e;
+        // Formed grain stays still: illumination and the final seal follow scroll only.
+        a *= twinkle * (1-e) + .98 * e;
+        if (e > .99 && fa[i] > .7) a=Math.min(1,a+sealPulse*.3+sealProgress*.08);
         if (e > .99 && flowStrength > 0) {
           let energy=0;
           for (const head of flowHeads) energy=Math.max(energy, Math.max(0,1-Math.hypot((fx[i]-head.x)*faceBox.w,(fy[i]-head.y)*faceBox.h)/18));
@@ -644,14 +647,14 @@ import { PARTICLES_ENABLED } from '../config';
         }
       }
       // Granular packets follow the edges rather than washing over the volume.
-      const strength=smooth(.97,1,faceEase);
+      const strength=smooth(.97,1,faceEase)*(1-smooth(.72,.92,structureFlow));
       if (strength > 0) {
         ctx.fillStyle=shapeColor;
         for (let packet=0;packet<3;packet++) {
-          for (let grain=0;grain<9;grain++) {
-            const point=ideaFlowPoint(structureFlow+structureClock/5600+packet/3-grain*.0035);
-            ctx.globalAlpha=strength*(1-grain/9)*.9;
-            ctx.beginPath(); ctx.arc(faceBox.x+point.x*faceBox.w,faceBox.y+point.y*faceBox.h,grain===0?1.7:1.1,0,Math.PI*2);ctx.fill();
+          for (let grain=0;grain<7;grain++) {
+            const point=ideaFlowPoint(structureFlow+packet/3-grain*.0035);
+            ctx.globalAlpha=strength*(1-grain/7)*.8;
+            ctx.beginPath(); ctx.arc(faceBox.x+point.x*faceBox.w,faceBox.y+point.y*faceBox.h,grain===0?1.35:1.0,0,Math.PI*2);ctx.fill();
           }
         }
       }
