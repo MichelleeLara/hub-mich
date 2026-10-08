@@ -3,7 +3,8 @@ export const ideaAspect = 1.1;
 export const ideaPoints: IdeaPoint[] = [];
 // The approved isometric proposal, normalized to its own illustration area.
 function project(u: number,v: number,z: number) {
-  return { x: .5+(u-v)*.16, y: .61+(u+v)*.085-z*.183 };
+  const scale = 1.15;
+  return { x: .5+(u-v)*.16*scale, y: .5+(.11+(u+v)*.085-z*.183)*scale };
 }
 function edge(a: number[], b: number[], count: number, birth: number, outer=true) {
   for(let j=0;j<count;j++) {

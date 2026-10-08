@@ -121,3 +121,7 @@ Probado en navegador real en100%: estructura fija con señales en distintas posi
 Pulida únicamente la granularidad/cierre. Eliminado reloj autónomo del recorrido y coseno temporal en partículas formadas. Destellos ahora dependen de progreso de scroll, con seguimiento55ms para asentarse suavemente al parar. Paquetes más finos:7granos, radios1.35/1px, alpha.8. Recorrido se atenúa hacia el cierre; último tramo activa un pulso breve en las aristas, que queda con contraste ligeramente reforzado como estructura sellada. Pulso y asentamiento son funciones de scroll, reversibles al subir; no se ejecutan solos.
 
 Prueba real IAB: construcción100%/recorrido.808 del tramo, reposo observado, scroll al cierre y captura estructura-sellada.jpg. Sin errores de consola capturados. Builds Astro5/7 y prueba del código real de progreso aprobados. Se mantiene figura/scroll sticky previo y sección03 intacta. Automatización apagada.
+
+
+## Objeto ligeramente mayor — petición directa
+Escala de estructura isométrica aumentada15% alrededor del centro, en proyección compartida por puntos, conexiones y recorrido granular. Anchor, tipografía y duración de scroll conservados; tamaño de cada grano igual. SVG permite overflow visible para preservar extremos durante pausa/sinJS (exceso vertical menor al margen20px existente). Builds Astro5/7 aprobados.
