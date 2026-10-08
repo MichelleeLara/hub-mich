@@ -160,7 +160,7 @@ import { PARTICLES_ENABLED } from '../config';
     let faceEase = 0;
     let facePointsReady = false;
     let faceAspect = 1;
-    let pickFacePoint: (() => { x: number; y: number; a: number }) | null = null;
+    let pickFacePoint: (() => { x: number; y: number; a: number; birth: number }) | null = null;
 
     const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, speed: 0, active: false };
 
@@ -240,6 +240,7 @@ import { PARTICLES_ENABLED } from '../config';
         fx[i] = c.x + (Math.random() - .5) * .006;
         fy[i] = c.y + (Math.random() - .5) * .010;
         fa[i] = c.a;
+        delay[i] = c.birth;
       }
     };
 
@@ -248,7 +249,7 @@ import { PARTICLES_ENABLED } from '../config';
       faceAspect = ideaAspect;
       pickFacePoint = () => {
         const point = ideaPoints[Math.floor(Math.random() * ideaPoints.length)];
-        return { x: point.x, y: point.y, a: .35 + Math.random() * .45 };
+        return { x: point.x, y: point.y, a: point.outer ? .70 + Math.random() * .12 : .20 + Math.random() * .12, birth: point.birth };
       };
       assignFaceTargets(); facePointsReady = true;
     };
@@ -318,6 +319,15 @@ import { PARTICLES_ENABLED } from '../config';
     const faceBox = { x: 0, y: 0, w: 0, h: 0 };
     let faceDX = 0, faceDY = 0, previousScroll = window.scrollY;
 
+    let buildStage = -1;
+    const updateBuildState = (progress: number) => {
+      const next = progress < .30 ? 0 : progress < .72 ? 1 : 2;
+      if (next === buildStage) return;
+      buildStage = next;
+      document.querySelectorAll('[data-build-stage]').forEach((node,i) => {
+        if (i === next) node.setAttribute('aria-current','step'); else node.removeAttribute('aria-current');
+      });
+    };
     const updateFace = (dt: number) => {
       if (!anchorEl || !anchorEl.isConnected) anchorEl = document.getElementById('face-anchor');
       let target = 0;
@@ -347,6 +357,7 @@ import { PARTICLES_ENABLED } from '../config';
       document.documentElement.classList.toggle('particles-portrait', faceEase > .94 && !reduceMotion);
       faceEase += (target - faceEase) * Math.min(1, 0.08 * dt);
       if (faceEase < 0.001) faceEase = 0;
+      updateBuildState(faceEase);
     };
 
     // --- Simulación ------------------------------------------------------------
@@ -385,7 +396,7 @@ import { PARTICLES_ENABLED } from '../config';
         if (i === activeMain && i < mainCount) i = mainCount; // saltar recortadas
         const k = kind[i];
         const par = scrollY * SCROLL_PARALLAX * depth[i];
-        const e = faceOn && fx[i] >= 0 ? smooth(delay[i], delay[i] + 1 - FACE_STAGGER, ef) : 0;
+        const e = faceOn && fx[i] >= 0 ? smooth(delay[i], Math.min(1, delay[i] + .24), ef) : 0;
         formWeight[i] = e;
         // Move formed particles with their anchor directly: no spring drag on scroll.
         px[i] += faceDX * e;
@@ -499,7 +510,7 @@ import { PARTICLES_ENABLED } from '../config';
           a = base + (fa[i] - base) * e;
         }
         if (mg[i] > 0.01) a = Math.min(0.9, Math.max(a * (1 + MAGNET_GLOW * mg[i]), 0.5 * mg[i]));
-        const signal = .72 + .28 * (.5 + .5 * Math.cos(tSec * 2.4 - fx[i] * 16)) ** 8;
+        const signal = .72 + .28 * (.5 + .5 * Math.cos(tSec * 1.7 - fy[i] * 9 + fx[i] * 4)) ** 8;
         a *= twinkle * (1-e) + signal * e;
         if (a < 0.008) {
           bucketOf[i] = 255;
@@ -677,7 +688,7 @@ import { PARTICLES_ENABLED } from '../config';
       reduceMotion = motionMedia.matches;
       const paused = reduceMotion || document.documentElement.classList.contains('motion-paused');
       canvas.style.display = paused ? 'none' : '';
-      if (paused) { cancelAnimationFrame(rafId); rafId = 0; document.documentElement.classList.remove('particles-portrait'); }
+      if (paused) { updateBuildState(1); cancelAnimationFrame(rafId); rafId = 0; document.documentElement.classList.remove('particles-portrait'); }
       else if (!document.hidden && !rafId) { if (!facePointsReady) sampleFace(); lastTime = lastFrame = performance.now(); rafId = requestAnimationFrame(step); }
     };
     document.addEventListener('motionchange', resumeMotion);

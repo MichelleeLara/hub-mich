@@ -1,29 +1,29 @@
-export type IdeaPoint = { x: number; y: number };
-export const ideaAspect = .6;
+export type IdeaPoint = { x: number; y: number; birth: number; outer: boolean };
+export const ideaAspect = 1.1;
 export const ideaPoints: IdeaPoint[] = [];
-function line(vertices: number[][], count: number, closed = false) {
-  const nodes = closed ? [...vertices, vertices[0]] : vertices;
-  const lengths = nodes.slice(1).map((p,i) => Math.hypot(p[0]-nodes[i][0], (p[1]-nodes[i][1]) * ideaAspect));
-  const total = lengths.reduce((a,b) => a+b,0);
-  for(let i=0;i<count;i++) {
-    let distance=(i+.5)/count*total, j=0;
-    while(j<lengths.length-1 && distance>lengths[j]) distance-=lengths[j++];
-    const t=distance/lengths[j], a=nodes[j],b=nodes[j+1];
-    ideaPoints.push({x:a[0]+(b[0]-a[0])*t,y:a[1]+(b[1]-a[1])*t});
+// The approved isometric proposal, normalized to its own illustration area.
+function project(u: number,v: number,z: number) {
+  return { x: .5+(u-v)*.16, y: .61+(u+v)*.085-z*.183 };
+}
+function edge(a: number[], b: number[], count: number, birth: number, outer=true) {
+  for(let j=0;j<count;j++) {
+    const t=j/(count-1);
+    const p=project(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t);
+    ideaPoints.push({...p,birth:birth+j/count*.05,outer});
   }
 }
-// Interwoven context becomes a single, legible product.
-for(let lane=-2;lane<=2;lane++) for(let i=0;i<100;i++) {
-  const t=i/99;
-  ideaPoints.push({x:.06+t*.44,y:.48+Math.sin(t*Math.PI*2.5+lane*.65)*.19*(1-t)**1.3+lane*.034*(1-t)});
+for(let z=0;z<=3;z++) {
+  const birth=.03+z*.18;
+  for(const [a,b] of [
+    [[0,0,z],[2,0,z]], [[2,0,z],[2,2,z]],
+    [[2,2,z],[0,2,z]], [[0,2,z],[0,0,z]],
+  ]) edge(a,b,30,birth);
+  for(let i=1;i<4;i++) {
+    const v=i*.5;
+    edge([v,0,z],[v,2,z],22,birth+.035,false);
+    edge([0,v,z],[2,v,z],22,birth+.035,false);
+  }
 }
-line([[.50,.48],[.60,.48]],40);
-line([[.60,.22],[.94,.22],[.94,.76],[.60,.76]],180,true);
-line([[.60,.33],[.94,.33]],45);
-line([[.67,.42],[.87,.42]],30);
-line([[.67,.48],[.82,.48]],25);
-line([[.67,.59],[.87,.59],[.87,.66],[.67,.66]],60,true);
-for(let n=0;n<3;n++) for(let i=0;i<12;i++) {
-  const a=i/12*Math.PI*2;
-  ideaPoints.push({x:.625+n*.024+Math.cos(a)*.004,y:.275+Math.sin(a)*.0067});
+for(const [u,v] of [[0,0],[2,0],[2,2],[0,2],[1,0],[2,1],[1,2],[0,1]]) {
+  for(let z=0;z<3;z++) edge([u,v,z],[u,v,z+1],22,.14+z*.19,u%2===0&&v%2===0);
 }
