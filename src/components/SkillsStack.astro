@@ -20,7 +20,7 @@ const tools = [
   <div class="method-layout">
     <div class="method-lab" id="particle-lab">
       <div class="lab-heading"><span>De las piezas al sistema</span><span class="lab-tag">Sigue el scroll</span></div>
-      <div class="lab-stage"><canvas id="process-particles" aria-hidden="true"></canvas><span class="lab-stage-label" aria-hidden="true">01 / Entender</span><span class="lab-axis axis-x" aria-hidden="true">+</span><span class="lab-axis axis-y" aria-hidden="true">+</span></div>
+      <div class="lab-stage"><canvas id="process-particles" aria-hidden="true"></canvas><span class="lab-stage-label" aria-hidden="true">01 / Entender · Foco</span><span class="lab-axis axis-x" aria-hidden="true">+</span><span class="lab-axis axis-y" aria-hidden="true">+</span></div>
       <div class="process-buttons requires-js" role="group" aria-label="Etapas de mi proceso">
         {steps.map((step, i) => <button type="button" data-process-stage={i} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`process-step-${i}`}><span>0{i + 1}</span>{step.name}</button>)}
       </div>
@@ -95,18 +95,55 @@ const tools = [
     const steps = Array.from(story.querySelectorAll<HTMLElement>('[data-process-step]'));
     const points = Array.from({ length: 540 }, (_, i) => ({ x: .5, y: .5, seed: i * 2.39996, tx: 0, ty: 0, vx: 0, vy: 0 }));
     const paused = () => media.matches || document.documentElement.classList.contains('motion-paused');
-    const target = (i: number, state: number) => {
-      const p = points[i];
-      if (state === 0) { const angle = p.seed; const r = .07 + ((i * 37 % 541) / 541) * .36; return { x: .5 + Math.cos(angle) * r, y: .46 + Math.sin(angle) * r * .86 }; }
-      if (state === 1) { const cluster = i % 3; const n = Math.floor(i / 3); const angle = n * 2.39996; const r = Math.sqrt(n / 180) * .135; return { x: .23 + cluster * .27 + Math.cos(angle) * r, y: .46 + Math.sin(angle) * r }; }
-      const col = i % 30, row = Math.floor(i / 30);
-      return { x: .15 + col / 30 * .64 + (col > 6 ? .06 : 0), y: .14 + row / 18 * .61 };
+    type Point = { x: number; y: number };
+    // Precompute semantic silhouettes; scroll only interpolates existing points.
+    const path = (out: Point[], vertices: number[][], count: number, closed = false) => {
+      const nodes = closed ? [...vertices, vertices[0]] : vertices;
+      const lengths = nodes.slice(1).map((v, i) => Math.hypot((v[0] - nodes[i][0]) * 1.6, v[1] - nodes[i][1]));
+      const total = lengths.reduce((sum, length) => sum + length, 0);
+      for (let i = 0; i < count; i++) {
+        let distance = (i + .5) / count * total, segment = 0;
+        while (segment < lengths.length - 1 && distance > lengths[segment]) distance -= lengths[segment++];
+        const t = distance / lengths[segment], a = nodes[segment], b = nodes[segment + 1];
+        out.push({ x: a[0] + (b[0] - a[0]) * t, y: a[1] + (b[1] - a[1]) * t });
+      }
     };
+    const ring = (out: Point[], x: number, y: number, rx: number, ry: number, count: number) => {
+      for (let i = 0; i < count; i++) { const angle = i / count * Math.PI * 2; out.push({ x: x + Math.cos(angle) * rx, y: y + Math.sin(angle) * ry }); }
+    };
+    const box = (out: Point[], x: number, y: number, w: number, h: number, count: number) => path(out, [[x,y],[x+w,y],[x+w,y+h],[x,y+h]], count, true);
+    const forms: Point[][] = [[], [], []];
+    // Entender: a lens with a dense center and signals converging toward it.
+    for (const radius of [.07, .125, .18]) ring(forms[0], .5, .43, radius, radius * 1.6, 100);
+    for (let i = 0; i < 60; i++) { const angle = i * 2.39996, radius = Math.sqrt(i / 60) * .038; forms[0].push({ x: .5 + Math.cos(angle) * radius, y: .43 + Math.sin(angle) * radius * 1.6 }); }
+    for (let i = 0; i < 12; i++) {
+      const angle = i / 12 * Math.PI * 2;
+      path(forms[0], [[.5 + Math.cos(angle) * .205, .43 + Math.sin(angle) * .328], [.5 + Math.cos(angle) * .25, .43 + Math.sin(angle) * .40]], 15);
+    }
+    // Diseñar: one starting point, a decision and two possible routes.
+    ring(forms[1], .16, .43, .045, .072, 60);
+    path(forms[1], [[.43,.27],[.53,.43],[.43,.59],[.33,.43]], 100, true);
+    box(forms[1], .73, .16, .15, .16, 80);
+    box(forms[1], .73, .60, .15, .16, 80);
+    path(forms[1], [[.205,.43],[.33,.43]], 40);
+    path(forms[1], [[.53,.43],[.63,.43],[.63,.24],[.73,.24]], 70);
+    path(forms[1], [[.53,.43],[.63,.43],[.63,.68],[.73,.68]], 70);
+    ring(forms[1], .43, .43, .024, .038, 40);
+    // Construir: the routes become a product with navigation, cards and data.
+    box(forms[2], .10, .08, .80, .75, 150);
+    path(forms[2], [[.10,.21],[.90,.21]], 50);
+    path(forms[2], [[.25,.21],[.25,.83]], 40);
+    for (let i = 0; i < 3; i++) box(forms[2], .31 + i * .19, .29, .15, .17, 40);
+    path(forms[2], [[.31,.72],[.41,.65],[.51,.68],[.63,.54],[.73,.59],[.84,.50]], 80);
+    for (let i = 0; i < 4; i++) path(forms[2], [[.135,.31+i*.12],[.21,.31+i*.12]], 15);
+    for (let i = 0; i < 3; i++) ring(forms[2], .135 + i * .035, .145, .008, .013, 10);
+    path(forms[2], [[.76,.145],[.85,.145]], 10);
+    const target = (i: number, state: number) => forms[state][i];
     const select = (next: number) => {
       stage = next;
       lab.querySelectorAll('[data-process-stage]').forEach((node, i) => node.setAttribute('aria-pressed', String(i === stage)));
       lab.querySelectorAll<HTMLElement>('[data-process-result]').forEach((node, i) => { node.hidden = i !== stage; });
-      lab.querySelector('.lab-stage-label')!.textContent = ['01 / Entender', '02 / Diseñar', '03 / Construir'][stage];
+      lab.querySelector('.lab-stage-label')!.textContent = ['01 / Entender · Foco', '02 / Diseñar · Recorrido', '03 / Construir · Producto'][stage];
     };
     const setTargets = (snap = false) => {
       const from = Math.min(1, Math.floor(progress));
