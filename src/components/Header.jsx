@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { motion, MotionConfig } from "framer-motion";
 import ThemeToggle from "./Themetoggle";
 import MotionToggle from "./MotionToggle";
+import { SPRING, SPRING_SLOW, STAGGER } from "../lib/motion";
 
 /* -------------------------------------------------------------------------- */
 /*  Iconos de línea (trazo fino, 16px para acompañar la barra compacta)       */
@@ -39,7 +40,6 @@ const SECTIONS = [
   { id: "contacto", sectionId: "contacto" },
 ];
 
-const SPRING = { type: "spring", duration: .3, bounce: 0 };
 
 // Base compartida de cada "isla".
 const ISLAND =
@@ -62,7 +62,7 @@ const Pill = ({ reduced }) => (
 /* -------------------------------------------------------------------------- */
 const groupVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: STAGGER, delayChildren: 0.15 } },
 };
 
 // dir: -1 izquierda, 0 centro, +1 derecha → arrancan convergidas hacia el centro
@@ -73,7 +73,7 @@ const islandVariants = {
     x: 0,
     scale: 1,
     filter: "blur(0px)",
-    transition: { type: "spring", duration: .5, bounce: 0 },
+    transition: SPRING_SLOW,
   },
 };
 
@@ -246,7 +246,7 @@ export default function Header() {
         className="fixed top-4 inset-x-0 z-[100] flex md:hidden items-center justify-between px-6"
         initial={reduced ? false : { opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", duration: reduced ? 0 : .3, bounce: 0, delay: reduced ? 0 : .1 }}
+        transition={reduced ? { duration: 0 } : { ...SPRING, delay: .1 }}
       >
         <a
           href="/"

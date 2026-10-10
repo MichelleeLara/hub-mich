@@ -1,6 +1,7 @@
 import { useReducedMotionPreference } from '../hooks/useReducedMotionPreference';
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import { DUR, SPRING } from "../lib/motion";
 
 /* -------------------------------------------------------------------------- */
 /*  Iconos de línea (coherentes con el header)                                */
@@ -51,7 +52,6 @@ const TABS = [
   { id: "contacto", label: "Contacto", path: "/#contacto", sectionId: "contacto", Icon: MailIcon },
 ];
 
-const SPRING = { type: "spring", duration: .3, bounce: 0 };
 
 export default function AnimatedTabs() {
   const reduced = useReducedMotionPreference();
@@ -113,7 +113,7 @@ export default function AnimatedTabs() {
       className="fixed bottom-[calc(env(safe-area-inset-bottom)+1rem)] inset-x-0 z-[100] flex md:hidden justify-center px-4 pointer-events-none"
       initial={reduced ? false : { opacity: 0, y: 44, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: "spring", duration: reduced ? 0 : .3, bounce: 0, delay: reduced ? 0 : .15 }}
+      transition={reduced ? { duration: 0 } : { ...SPRING, delay: .15 }}
     >
       <ul
         className="pointer-events-auto flex max-w-full items-center gap-1 overflow-hidden p-2 rounded-full
@@ -155,7 +155,7 @@ export default function AnimatedTabs() {
                         initial={{ width: 0, opacity: 0 }}
                         animate={{ width: "auto", opacity: 1 }}
                         exit={{ width: 0, opacity: 0 }}
-                        transition={{ duration: reduced ? 0 : 0.15, ease: "easeInOut" }}
+                        transition={{ duration: reduced ? 0 : DUR.fast, ease: "easeInOut" }}
                         className="text-sm font-medium whitespace-nowrap overflow-hidden"
                       >
                         {tab.label}
