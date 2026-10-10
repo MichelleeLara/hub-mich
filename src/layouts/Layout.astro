@@ -2,7 +2,6 @@
 import AnimatedTabs from '../components/Navbar';
 import Header from '../components/Header';
 import ParticlesBackground from '../components/ParticlesBackground.astro';
-import AccentLab from '../components/AccentLab.astro';
 import '@fontsource-variable/inter-tight/wght.css';
 import '../styles/product.css';
 const { title, description, image, url, noindex = false } = Astro.props;
@@ -73,7 +72,6 @@ export interface Props {
     </div>
     <!-- Menú de Navegación Persistente (bottom bar mobile) -->
     <AnimatedTabs client:load />
-    {import.meta.env.DEV && <AccentLab />}
     
   </body>
 </html>

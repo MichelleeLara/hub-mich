@@ -56,21 +56,25 @@ html.dark {
   --muted: #aaaab0;
   --line: rgba(255,255,255,.13);
   --line-subtle: rgba(255,255,255,.07);
-  --accent: #efaa85;
-  --accent-strong: #edb191;
-  --accent-deep: #ffe0ca;
-  --accent-soft: #30251f;
+  /* Acento por modo: clay de día, azul de noche (decidido 2026-10-10) */
+  --accent: #4f8ff7;
+  --accent-strong: #7aa9f9;
+  --accent-deep: #d8e6ff;
+  --accent-soft: #1a2638;
   --success: #22c55e;
 }
 ::selection { background: var(--accent-soft); color: var(--ink); }
 .font-accent { font-family: var(--font-accent); font-weight: 400; letter-spacing: 0; }
 
-/* Panel siempre oscuro (p. ej. métrica destacada del caso): tokens de dark en ambos modos */
+/* Paneles oscuros o invertidos: toman neutros del modo contrario pero el acento
+   del modo de la página, para que nunca convivan clay y azul en la misma vista. */
+/* Panel siempre oscuro (p. ej. métrica destacada del caso) */
 .theme-dark {
   --bg: #161616; --surface: #202020; --ink: #f6f6f6; --muted: #aaaab0;
   --line: rgba(255,255,255,.13); --line-subtle: rgba(255,255,255,.07); --accent: #efaa85; --accent-soft: #30251f;
   color-scheme: dark;
 }
+html.dark .theme-dark { --accent: #4f8ff7; --accent-soft: #1a2638; }
 /* Panel invertido (footer): mismos tokens, modo contrario */
 .theme-inverse {
   --bg: #161616; --surface: #202020; --surface-glass: rgba(28,28,28,.7); --ink: #f6f6f6; --muted: #aaaab0;
@@ -79,7 +83,7 @@ html.dark {
 }
 html.dark .theme-inverse {
   --bg: #ffffff; --surface: #f3f3f1; --surface-glass: rgba(255,255,255,.7); --ink: #202124; --muted: #62646b;
-  --line: rgba(0,0,0,.12); --line-subtle: rgba(0,0,0,.055); --accent: #a74316; --accent-soft: #f5e9e1; --success: #15803d;
+  --line: rgba(0,0,0,.12); --line-subtle: rgba(0,0,0,.055); --accent: #1d5fc4; --accent-soft: #e6eefb; --success: #15803d;
   color-scheme: light;
 }
 
