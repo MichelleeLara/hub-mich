@@ -86,6 +86,7 @@ const tools = [
   @media (prefers-reduced-motion: reduce) { .method-section .method-lab { position: static; } .method-section .process-step { min-height: 0; padding: 32px 0; scroll-margin-top: 120px; } }
 </style>
 <script>
+  import { tokenColor } from '../lib/tokens';
   const lab = document.getElementById('particle-lab');
   const canvas = document.getElementById('process-particles') as HTMLCanvasElement | null;
   const story = document.querySelector<HTMLElement>('.process-story');
@@ -207,7 +208,7 @@ const tools = [
     const drawFill = (time: number) => {
       flightCtx.clearRect(0,0,innerWidth,innerHeight);
       const rect = canvas.getBoundingClientRect(), elapsed = time - fillStart;
-      const color = getComputedStyle(document.documentElement).getPropertyValue('--accent-strong').trim();
+      const color = tokenColor('--accent-strong');
       let complete = true;
       points.forEach((p,i) => {
         const seed = fillSeeds[i % fillSeeds.length];
@@ -256,7 +257,7 @@ const tools = [
     const render = (time: number) => {
       ctx.clearRect(0, 0, width, height);
       if (filling && !paused()) { drawFill(time); if (filling) return; }
-      const color = getComputedStyle(document.documentElement).getPropertyValue('--accent-strong').trim();
+      const color = tokenColor('--accent-strong');
       ctx.fillStyle = ctx.strokeStyle = color;
       ctx.lineCap = 'round'; ctx.lineWidth = .8;
       const still = paused();
@@ -283,7 +284,7 @@ const tools = [
         ctx.beginPath(); ctx.arc(x, y, i % 11 === 0 ? 1.7 : 1.1, 0, Math.PI * 2); ctx.fill();
       });
       if (!still) {
-        ctx.fillStyle = ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-deep').trim();
+        ctx.fillStyle = ctx.strokeStyle = tokenColor('--accent-deep');
         heads.forEach((head, i) => {
           const t = phases[i], fade = Math.min(1, t / .10, (1 - t) / .12);
           // A small moving packet illuminates the dots it passes, then fades at the end.

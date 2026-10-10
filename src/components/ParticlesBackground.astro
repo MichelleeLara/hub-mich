@@ -31,6 +31,7 @@ import { PARTICLES_ENABLED } from '../config';
      se renderizó, no hace nada. -->
 <script>
   import { ideaPoints, ideaAspect, ideaFlowPoint } from '../data/ideasGeometry';
+  import { tokenColor } from '../lib/tokens';
   const el = document.getElementById('particles-bg') as HTMLCanvasElement | null;
   if (el) start(el);
 
@@ -628,7 +629,7 @@ import { PARTICLES_ENABLED } from '../config';
         const b = leased.has(i) ? 255 : bucketOf[i];
         if (b !== 255) order[bucketStart[b] + bucketCount[b]++] = i;
       }
-      const shapeColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-strong').trim();
+      const shapeColor = tokenColor('--accent-strong');
       // Separate passes preserve batched paint while the illustration turns orange.
       for (let pass = 0; pass < 2; pass++) {
         ctx.fillStyle = pass === 0 ? `rgb(${rgb})` : shapeColor;
