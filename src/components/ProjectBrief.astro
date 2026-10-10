@@ -8,7 +8,7 @@ import SectionHeading from './SectionHeading.astro';
     <summary><span>Preparar mi brief <span class="quiet">· 3 preguntas</span></span><span class="brief-plus" aria-hidden="true">+</span></summary>
     <form id="project-brief-form">
       <div class="brief-fields"><div><label for="brief-problem">¿Qué quieres resolver?</label><textarea id="brief-problem" name="problem" rows="3" maxlength="1200" required placeholder="Por ejemplo: mi equipo dedica horas a responder las mismas preguntas."></textarea><p id="brief-privacy">Se prepara aquí, en tu navegador. Tú decides si lo compartes.</p></div><div><label for="brief-users">¿Quién lo va a usar?</label><input id="brief-users" name="users" maxlength="200" required placeholder="Tu equipo, tus clientes, una comunidad…" /><label for="brief-goal">¿Qué debería mejorar?</label><select id="brief-goal" name="goal"><option>Ahorrar tiempo en una operación</option><option>Lanzar un producto con IA</option><option>Hacer más fácil un producto existente</option><option>Conectar datos, sistemas o dispositivos</option></select></div></div>
-      <button type="submit" class="brief-button pressable">Crear mi brief <span aria-hidden="true">↗</span></button>
+      <button type="submit" class="brief-button btn btn-primary">Crear mi brief <span class="btn-arrow" aria-hidden="true">↗</span></button>
       <div id="brief-result" hidden><h3>Tu punto de partida</h3><pre id="brief-text"></pre><div class="brief-actions"><button type="button" id="copy-brief" class="text-link">Copiar brief</button><button type="button" id="download-brief" class="text-link">Descargar .txt</button><a id="email-brief" class="text-link" href="mailto:mich.ia@hotmail.com">Abrir en mi correo <span aria-hidden="true">↗</span></a></div><p id="brief-status" role="status"></p></div>
     </form>
   </details>
@@ -22,12 +22,12 @@ import SectionHeading from './SectionHeading.astro';
   summary::-webkit-details-marker { display: none; }.brief-plus { font-size: 28px; } details[open] .brief-plus { transform: rotate(45deg); }
   form { padding: 8px 0 32px; }.brief-fields { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; }
   label { display: block; margin-bottom: 12px; font-weight: 500; font-size: 14px; }
-  input,textarea,select { display: block; width: 100%; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--muted); color: var(--ink); background: var(--surface); font-size: 14px; line-height: 1.6; }
+  input,textarea,select { display: block; width: 100%; padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--muted); color: var(--ink); background: var(--surface); font-size: 14px; line-height: 1.6; }
   input::placeholder,textarea::placeholder { color: var(--muted); }textarea { resize: vertical; } input { margin-bottom: 24px; }
   :is(input,textarea,select):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   #brief-privacy { margin-top: 12px; font-size: 12px; color: var(--muted); }
-  .brief-button { display: inline-flex; gap: 24px; margin-top: 24px; padding: 14px 24px; border-radius: 10px; background: var(--ink); color: var(--surface); font-size: 14px; font-weight: 500; }
-  #brief-result { margin-top: 28px; padding: 28px; border-radius: 18px; background: var(--surface); }h3 { font-size: var(--fs-lead); font-weight: 500; }
+  .brief-button { margin-top: 24px; }
+  #brief-result { margin-top: 28px; padding: 28px; border-radius: var(--radius-md); background: var(--surface); }h3 { font-size: var(--fs-lead); font-weight: 500; }
   pre { margin-top: 20px; font-family: inherit; font-size: 14px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }.brief-actions { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 24px; }#brief-status { font-size: 12px; color: var(--muted); margin-top: 8px; }
   @media(max-width:767px) { .brief-heading { display: block; }.brief-heading > p { margin-top: 24px; }.brief-fields { grid-template-columns: 1fr; gap: 24px; }#brief-result { padding: 20px; }summary { font-size: 14px; } }
 </style>

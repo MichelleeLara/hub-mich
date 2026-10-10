@@ -117,10 +117,10 @@ export default function AnimatedTabs() {
     >
       <ul
         className="pointer-events-auto flex max-w-full items-center gap-1 overflow-hidden p-2 rounded-full
-                   backdrop-blur-md bg-white/75 dark:bg-[#1c1c1c]/85
-                   border border-black/5 dark:border-white/10
+                   backdrop-blur-md bg-surface-glass
+                   border border-line-subtle dark:border-line
                    shadow-2xl shadow-black/10 dark:shadow-black/50
-                   transition-colors duration-500"
+                   transition-colors duration-base"
       >
         {TABS.map((tab) => {
           const isActive = active === tab.id;
@@ -133,10 +133,10 @@ export default function AnimatedTabs() {
                 onClick={onClick}
                 aria-label={tab.label}
                 aria-current={isActive ? "page" : undefined}
-                className={`relative flex items-center h-11 rounded-full px-3 xs:px-4 transition-colors duration-300 ${
+                className={`relative flex items-center h-11 rounded-full px-3 xs:px-4 transition-colors duration-base ${
                   isActive
-                    ? "text-gray-900 dark:text-white"
-                    : "text-gray-500 dark:text-terteary"
+                    ? "text-ink"
+                    : "text-muted"
                 }`}
               >
                 {isActive && (

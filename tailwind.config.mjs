@@ -39,9 +39,6 @@ export default {
 					soft: 'var(--accent-soft)',
 				},
 				success: 'var(--success)',
-				// Legado: se eliminan al migrar los componentes (paso 3).
-				'secondary': '#F6F6F6',
-				'terteary': '#858585',
 			},
 			borderRadius: {
 				control: 'var(--radius-sm)', // botones, inputs

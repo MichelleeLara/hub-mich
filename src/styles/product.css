@@ -64,6 +64,39 @@ html.dark {
 }
 ::selection { background: var(--accent-soft); color: var(--ink); }
 .font-accent { font-family: var(--font-accent); font-weight: 400; letter-spacing: 0; }
+
+/* Panel siempre oscuro (p. ej. métrica destacada del caso): tokens de dark en ambos modos */
+.theme-dark {
+  --bg: #161616; --surface: #202020; --ink: #f6f6f6; --muted: #aaaab0;
+  --line: rgba(255,255,255,.13); --line-subtle: rgba(255,255,255,.07); --accent: #efaa85; --accent-soft: #30251f;
+  color-scheme: dark;
+}
+/* Panel invertido (footer): mismos tokens, modo contrario */
+.theme-inverse {
+  --bg: #161616; --surface: #202020; --surface-glass: rgba(28,28,28,.7); --ink: #f6f6f6; --muted: #aaaab0;
+  --line: rgba(255,255,255,.13); --line-subtle: rgba(255,255,255,.07); --accent: #efaa85; --accent-soft: #30251f; --success: #22c55e;
+  color-scheme: dark;
+}
+html.dark .theme-inverse {
+  --bg: #ffffff; --surface: #f3f3f1; --surface-glass: rgba(255,255,255,.7); --ink: #202124; --muted: #62646b;
+  --line: rgba(0,0,0,.12); --line-subtle: rgba(0,0,0,.055); --accent: #a74316; --accent-soft: #f5e9e1; --success: #15803d;
+  color-scheme: light;
+}
+
+/* Botón: uno solo, dos variantes (decidido 2026-10-10) */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 24px; border-radius: var(--radius-sm); font-size: var(--fs-small); font-weight: 500; line-height: 1; white-space: nowrap; border: 1px solid transparent; }
+.btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-secondary { border-color: var(--line); color: var(--ink); }
+.btn-arrow { display: inline-block; }
+@media (hover: hover) { .btn-secondary:hover { border-color: var(--muted); } }
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: transform var(--dur-fast) ease-out, border-color var(--dur-fast), background-color var(--dur-fast); }
+  .btn-arrow { transition: transform var(--dur-base) var(--ease-out); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn:hover .btn-arrow, .text-link:hover .btn-arrow { transform: translateX(4px); }
+}
 .section-shell { width: min(100%,1152px); margin: auto; padding: 104px 24px; scroll-margin-top: 100px; color: var(--ink); }
 .section-kicker { display: flex; gap: 12px; align-items: center; font-size: var(--fs-caption); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .section-kicker::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
@@ -78,8 +111,8 @@ html.dark .project-picture { outline-color: oklch(1 0 0 / .1); }
 .skip-link:focus { transform: translateY(0); }
 html.motion-paused .hero-float, html.motion-paused .animate-ping { animation-play-state: paused; }
 @media (prefers-reduced-motion: no-preference) {
-  :where(button,.pressable):not(:disabled) { transition: transform 150ms ease-out; }
-  :where(button,.pressable):not(:disabled):active { transform: scale(.96); }
+  :where(button,.pressable,.btn):not(:disabled) { transition: transform var(--dur-fast) ease-out; }
+  :where(button,.pressable,.btn):not(:disabled):active { transform: scale(.96); }
 }
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }

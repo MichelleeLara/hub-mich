@@ -4,7 +4,7 @@ import SectionHeading from './SectionHeading.astro';
 // tema oscuro → footer claro). Cierra el Home y las páginas de detalle.
 ---
 
-<footer id="contacto" class="relative scroll-mt-24 overflow-hidden bg-zinc-950 pb-0 pt-24 text-white dark:bg-zinc-100 dark:text-zinc-900 rounded-tl-[4rem] rounded-tr-[4rem]">
+<footer id="contacto" class="theme-inverse relative scroll-mt-24 overflow-hidden bg-bg pb-0 pt-24 text-ink rounded-tl-[4rem] rounded-tr-[4rem]">
 	<!-- Grid superior · navegación -->
 	<div class="mx-auto max-w-7xl px-8">
 		<div class="grid grid-cols-1 gap-12 md:grid-cols-2">
@@ -22,31 +22,31 @@ import SectionHeading from './SectionHeading.astro';
 			<!-- Derecha · links (grid interno de 2 columnas) -->
 			<div class="grid grid-cols-2 gap-8">
 				<div>
-					<p class="mb-4 text-sm text-zinc-400 dark:text-zinc-600">Explora</p>
-					<nav class="flex flex-col gap-2 text-zinc-300 dark:text-zinc-600">
-						<a href="/#inicio" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">Inicio</a>
-						<a href="/#proyectos" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">Proyectos</a>
-						<a href="/#yo" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">Sobre mí</a>
+					<p class="mb-4 text-sm text-muted">Explora</p>
+					<nav class="flex flex-col gap-2 text-muted">
+						<a href="/#inicio" class="w-fit transition-colors duration-fast hover:text-ink">Inicio</a>
+						<a href="/#proyectos" class="w-fit transition-colors duration-fast hover:text-ink">Proyectos</a>
+						<a href="/#yo" class="w-fit transition-colors duration-fast hover:text-ink">Sobre mí</a>
 					</nav>
 				</div>
 				<div>
-					<p class="mb-4 text-sm text-zinc-400 dark:text-zinc-600">Redes</p>
-					<nav class="flex flex-col gap-2 text-zinc-300 dark:text-zinc-600">
-						<a href="https://www.linkedin.com/in/michelle-rodriguez-lara/" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">LinkedIn</a>
-						<a href="https://github.com/MichelleeLara" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">GitHub</a>
-						<a href="/pdf/CV_michelle_lara.pdf" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors hover:text-white dark:hover:text-zinc-900">CV</a>
+					<p class="mb-4 text-sm text-muted">Redes</p>
+					<nav class="flex flex-col gap-2 text-muted">
+						<a href="https://www.linkedin.com/in/michelle-rodriguez-lara/" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors duration-fast hover:text-ink">LinkedIn</a>
+						<a href="https://github.com/MichelleeLara" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors duration-fast hover:text-ink">GitHub</a>
+						<a href="/pdf/CV_michelle_lara.pdf" target="_blank" rel="noopener noreferrer" class="w-fit transition-colors duration-fast hover:text-ink">CV</a>
 					</nav>
 				</div>
 			</div>
 		</div>
 
 		<!-- Metadatos -->
-		<div class="mb-4 mt-24 flex flex-col gap-3 font-mono text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
+		<div class="mb-4 mt-24 flex flex-col gap-3 font-mono text-xs uppercase tracking-widest text-muted sm:flex-row sm:items-center sm:justify-between">
 			<span>© 2026 Mich Rodriguez</span>
 			<span class="inline-flex items-center gap-2">
 				<span class="relative flex h-2 w-2">
-					<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
-					<span class="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+					<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75"></span>
+					<span class="relative inline-flex h-2 w-2 rounded-full bg-success"></span>
 				</span>
 				Disponible para proyectos
 			</span>
@@ -82,14 +82,12 @@ import SectionHeading from './SectionHeading.astro';
 </footer>
 
 <style>
-  .footer-intro { --ink: #f6f6f6; }
-  :global(html.dark) .footer-intro { --ink: #202124; }
   .footer-intro .footer-contact-copy { margin-top: 32px; }
-  .footer-contact-copy { display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; min-height: 60px; width: min(100%, 320px); padding: 12px 0; border-bottom: 1px solid currentColor; font-family: ClashDisplay, 'Inter Tight Variable', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -.025em; color: inherit; }
+  .footer-contact-copy { display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; min-height: 60px; width: min(100%, 320px); padding: 12px 0; border-bottom: 1px solid currentColor; font-family: var(--font-display); font-size: var(--fs-lead); font-weight: 600; letter-spacing: -.025em; color: inherit; }
   .footer-contact-copy svg { flex-shrink: 0; width: 26px; height: 26px; }
   .footer-contact-copy:focus-visible { outline-color: currentColor; }
-  @media (hover: hover) { .footer-contact-copy:hover { color: #efaa85; } :global(html.dark) .footer-contact-copy:hover { color: #a74316; } }
-  @media (prefers-reduced-motion: no-preference) { .footer-contact-copy { transition: color 150ms; } .footer-contact-copy svg { transition: transform 150ms ease-out; } .footer-contact-copy:active svg { transform: scale(.96); } }
+  @media (hover: hover) { .footer-contact-copy:hover { color: var(--accent); } }
+  @media (prefers-reduced-motion: no-preference) { .footer-contact-copy { transition: color var(--dur-fast); } .footer-contact-copy svg { transition: transform var(--dur-fast) ease-out; } .footer-contact-copy:active svg { transform: scale(.96); } }
 
   @media (hover: hover) and (prefers-reduced-motion: no-preference) { .footer-contact-copy:hover svg { transform: translate(2px, -2px); } }
 

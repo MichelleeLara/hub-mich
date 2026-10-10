@@ -27,7 +27,7 @@ export default function ThemeToggle() {
   return <motion.button type="button" onClick={toggle}
     aria-label={theme === 'dark' ? 'Activar tema claro' : 'Activar tema oscuro'}
     title={theme === 'dark' ? 'Tema claro' : 'Tema oscuro'}
-    className="theme-toggle relative flex items-center justify-center w-11 h-11 rounded-full text-gray-800 dark:text-secondary"
+    className="theme-toggle relative flex items-center justify-center w-11 h-11 rounded-full text-ink"
     whileTap={reduced ? undefined : { scale: .96 }}>
     <AnimatePresence initial={false}>
       <motion.span key={theme} className="theme-glyph absolute flex items-center justify-center"

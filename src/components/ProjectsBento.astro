@@ -37,12 +37,13 @@ const others = ['anamseals-firmware', 'inteligencia-logistica', 'monitoreo-white
   h2 { margin-top: 24px; }
   .projects-heading > p { max-width: 290px; color: var(--muted); line-height: 1.7; font-size: var(--fs-body); }
   .project-grid { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-  .project-card { position: relative; display: flex; align-items: flex-end; min-width: 0; aspect-ratio: 1.25; overflow: hidden; border-radius: 24px; background: #171717; color: #fff; }
+  /* La tarjeta de proyecto es oscura en ambos modos (va sobre foto): sus colores son constantes del componente. */
+  .project-card { position: relative; display: flex; align-items: flex-end; min-width: 0; aspect-ratio: 1.25; overflow: hidden; border-radius: var(--radius-lg); background: #171717; color: #fff; }
   .project-card :global(.project-picture) { outline: none; }
   .project-card-image { position: absolute; inset: 0; }
   .project-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgb(0 0 0 / .12) 45%, rgb(0 0 0 / .78) 74%, #111 100%); pointer-events: none; }
   .project-card-tags { position: absolute; z-index: 1; top: 24px; right: 24px; left: 24px; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
-  .project-card-tags span { padding: 8px 11px; border-radius: 6px; background: #f3f1ed; color: #343434; font-size: var(--fs-micro); font-weight: 500; letter-spacing: .025em; line-height: 1.2; }
+  .project-card-tags span { padding: 8px 12px; border-radius: var(--radius-full); background: #f3f1ed; color: #343434; font-size: var(--fs-micro); font-weight: 500; letter-spacing: .025em; line-height: 1.2; }
   .project-card-info { position: relative; z-index: 1; width: 100%; padding: 32px; }
   .project-card-info h3 { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 600; line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
   .project-card-info > p { margin-top: 16px; color: #e0e0e0; font-size: var(--fs-small); line-height: 1.5; }

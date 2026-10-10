@@ -43,10 +43,10 @@ const SPRING = { type: "spring", duration: .3, bounce: 0 };
 
 // Base compartida de cada "isla".
 const ISLAND =
-  "rounded-full backdrop-blur-md bg-white/70 dark:bg-[#1c1c1c]/70 " +
-  "border border-black/5 dark:border-white/10 " +
+  "rounded-full backdrop-blur-md bg-surface-glass " +
+  "border border-line-subtle dark:border-line " +
   "shadow-lg shadow-black/5 dark:shadow-black/40 " +
-  "transition-colors duration-500";
+  "transition-colors duration-base";
 
 // Píldora gris de seguimiento (única, compartida entre islas via layoutId).
 const Pill = ({ reduced }) => (
@@ -170,7 +170,7 @@ export default function Header() {
           >
             <span className="relative flex items-center h-8 px-3 rounded-full">
               {highlighted === "logo" && <Pill reduced={reduced} />}
-              <span className="relative z-10 font-ClashDisplay font-semibold text-base text-gray-800 dark:text-secondary">
+              <span className="relative z-10 font-ClashDisplay font-semibold text-base text-ink">
                 ./mich
               </span>
             </span>
@@ -191,10 +191,10 @@ export default function Header() {
                   onMouseEnter={() => setHover(link.id)}
                   onClick={() => setActive(link.id)}
                   aria-current={active === link.id ? "page" : undefined}
-                  className={`relative flex items-center h-8 px-4 text-xs font-medium uppercase tracking-wide rounded-full transition-colors duration-300 ${
+                  className={`relative flex items-center h-8 px-4 text-xs font-medium uppercase tracking-wide rounded-full transition-colors duration-base ${
                     isOn
-                      ? "text-gray-900 dark:text-white"
-                      : "text-gray-500 dark:text-terteary hover:text-gray-800 dark:hover:text-secondary"
+                      ? "text-ink"
+                      : "text-muted hover:text-ink"
                   }`}
                 >
                   {isOn && <Pill reduced={reduced} />}
@@ -214,10 +214,10 @@ export default function Header() {
               href="/#contacto"
               onMouseEnter={() => setHover("contacto")}
               aria-current={active === "contacto" ? "page" : undefined}
-              className={`relative flex items-center gap-2 h-8 px-3 rounded-full text-xs font-medium uppercase tracking-wide transition-colors duration-300 ${
+              className={`relative flex items-center gap-2 h-8 px-3 rounded-full text-xs font-medium uppercase tracking-wide transition-colors duration-base ${
                 highlighted === "contacto"
-                  ? "text-gray-900 dark:text-white"
-                  : "text-gray-700 dark:text-secondary hover:text-gray-900 dark:hover:text-white"
+                  ? "text-ink"
+                  : "text-ink"
               }`}
             >
               {highlighted === "contacto" && <Pill reduced={reduced} />}
@@ -226,7 +226,7 @@ export default function Header() {
                 Contáctame
               </span>
             </a>
-            <span className="w-px h-5 bg-black/10 dark:bg-white/10" />
+            <span className="w-px h-5 bg-line" />
             <MotionToggle />
             <div
               onMouseEnter={() => setHover("toggle")}
@@ -252,11 +252,11 @@ export default function Header() {
           href="/"
           aria-label="Mich — inicio"
           onClick={reloadHome}
-          className="font-ClashDisplay font-semibold text-lg text-gray-800 dark:text-secondary"
+          className="font-ClashDisplay font-semibold text-lg text-ink"
         >
           ./mich
         </a>
-        <div className="flex items-center rounded-full bg-white/80 dark:bg-[#1c1c1c]/80 backdrop-blur-md"><MotionToggle /><ThemeToggle /></div>
+        <div className="flex items-center rounded-full bg-surface-glass backdrop-blur-md"><MotionToggle /><ThemeToggle /></div>
       </motion.div>
     </MotionConfig>
   );

@@ -67,7 +67,7 @@ const jobs = [
               class={`absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 md:left-1/2 md:-translate-x-1/2 ${
                 job.current
                   ? 'border-green-500/60 bg-green-500/20'
-                  : 'border-black/15 bg-transparent dark:border-white/15'
+                  : 'border-line bg-transparent'
               }`}
               aria-hidden="true"
             />
@@ -81,23 +81,23 @@ const jobs = [
               }
             >
               {/* Fechas */}
-              <span class="text-xs font-semibold uppercase tracking-[0.1em] text-gray-600 dark:text-terteary">
+              <span class="text-xs font-semibold uppercase tracking-[0.1em] text-muted">
                 {job.dates}
               </span>
 
               {/* Rol y empresa */}
-              <h3 class="mt-3 text-balance font-ClashDisplay text-[length:var(--fs-h3)] font-semibold leading-[1.1] tracking-[-.02em] text-gray-900 dark:text-secondary">
+              <h3 class="mt-3 text-balance font-ClashDisplay text-[length:var(--fs-h3)] font-semibold leading-[1.1] tracking-[-.02em] text-ink">
                 {job.role}
               </h3>
-              <p class="mt-1 text-[length:var(--fs-lead)] text-gray-600 dark:text-terteary">{job.company}</p>
+              <p class="mt-1 text-[length:var(--fs-lead)] text-muted">{job.company}</p>
 
               {/* Descripción */}
-              <p class="mt-5 text-gray-700 dark:text-gray-400">{job.summary}</p>
+              <p class="mt-5 text-muted">{job.summary}</p>
 
               {/* Tags */}
               <ul class="mt-7 flex flex-wrap gap-2">
                 {job.tags.map((tag) => (
-                  <li class="rounded-full border border-black/10 px-3.5 py-1.5 text-xs font-medium text-gray-600 dark:text-terteary dark:border-white/10">
+                  <li class="rounded-full border border-line px-3.5 py-1.5 text-[length:var(--fs-micro)] font-medium text-muted">
                     {tag}
                   </li>
                 ))}
@@ -117,8 +117,8 @@ const jobs = [
     opacity: 1;
     transform: none;
     transition:
-      opacity 0.7s ease,
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity var(--dur-reveal) ease,
+      transform var(--dur-reveal) var(--ease-out);
   }
 
   .trail-stop.is-waiting { opacity: 0; transform: translateY(16px); }

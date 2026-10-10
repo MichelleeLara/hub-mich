@@ -20,7 +20,7 @@ export default function MotionToggle() {
   };
   return <motion.button type="button" onClick={toggle} aria-label={reduced ? 'Movimiento reducido por tu sistema' : paused ? 'Activar animaciones' : 'Pausar animaciones'} aria-pressed={!paused && !reduced} disabled={!!reduced}
     title={reduced ? 'Movimiento reducido por tu sistema' : paused ? 'Activar animaciones' : 'Pausar animaciones'}
-    className="relative flex items-center justify-center w-11 h-11 rounded-full text-gray-800 dark:text-secondary disabled:opacity-50"
+    className="relative flex items-center justify-center w-11 h-11 rounded-full text-ink disabled:opacity-50"
     whileTap={reduced ? undefined : { scale: .96 }}>
     <AnimatePresence initial={false}><motion.span key={paused ? 'play' : 'pause'} className="absolute flex items-center justify-center"
       initial={reduced ? { opacity: 0 } : { opacity: 0, scale: .25, filter: 'blur(4px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} exit={reduced ? { opacity: 0 } : { opacity: 0, scale: .25, filter: 'blur(4px)' }} transition={{ type: 'spring', duration: .3, bounce: 0 }}>
