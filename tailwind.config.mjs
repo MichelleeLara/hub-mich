@@ -13,16 +13,12 @@ export default {
 				mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
 			},
 			screens: {
-				'xss': '300px',
 				'xs': '345px',
-				'sx': '420px',
-				'x': '500px',
 				'sm': '640px',
 				'md': '768px',
 				'lg': '1024px',
 				'xl': '1280px',
 				'2xl': '1536px',
-				'3xl': '1920px',
 			},
 			colors: {
 				bg: 'var(--bg)',
@@ -53,15 +49,6 @@ export default {
 			},
 			transitionTimingFunction: {
 				out: 'var(--ease-out)',
-			},
-			animation: {
-				spotlight: "spotlight 2s ease .75s 1 forwards",
-			},
-			keyframes: {
-				spotlight: {
-					"0%": { opacity: 0, transform: "translate(-72%, -62%) scale(0.5)" },
-					"100%": { opacity: 1, transform: "translate(-50%,-40%) scale(1)" },
-				},
 			},
 		},
 	},
