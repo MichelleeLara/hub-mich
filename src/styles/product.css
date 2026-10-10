@@ -1,8 +1,56 @@
-:root { --ink: #202124; --muted: #62646b; --surface: #f3f3f1; --surface-raised: #fff; --line: rgba(0,0,0,.12); --accent: #a74316; --accent-soft: #f5e9e1; --ease-out: cubic-bezier(.2,0,0,1); }
-:root { --surface-particle-card: #f9f9f8; --font-accent: 'Permanent Marker', cursive; --line-subtle: rgba(0,0,0,.055); }
-html.dark { --surface-particle-card: #202020; --line-subtle: rgba(255,255,255,.07); }
+/* ==========================================================================
+   Design system ./mich — tokens (decidido 2026-10-10, ver Marca personal/02 Estrategia/Decisiones.md)
+   Regla: ningún componente usa un hex; solo var(--token) o su clase de Tailwind.
+   ========================================================================== */
+:root {
+  /* Color */
+  --bg: #ffffff;
+  --surface: #f3f3f1;
+  --surface-glass: rgba(255,255,255,.7);
+  --surface-particle-card: #f9f9f8;
+  --ink: #202124;
+  --muted: #62646b;
+  --line: rgba(0,0,0,.12);
+  --line-subtle: rgba(0,0,0,.055);
+  --accent: #a74316;
+  --accent-strong: #95421d;
+  --accent-deep: #6e2f15;
+  --accent-soft: #f5e9e1;
+  --success: #15803d;
+
+  /* Radios: más grande el elemento, más grande el radio */
+  --radius-sm: 8px;    /* botones, inputs */
+  --radius-md: 16px;   /* tarjetas chicas */
+  --radius-lg: 24px;   /* proyectos, paneles */
+  --radius-full: 999px;/* menú, pills, tags, avatar */
+
+  /* Motion */
+  --dur-fast: 150ms;   /* confirmar: presionar, hover de color */
+  --dur-base: 300ms;   /* cambiar / señalar */
+  --dur-slow: 500ms;   /* entrar */
+  --dur-reveal: 700ms; /* revelar al hacer scroll (tope de interacción) */
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+
+  /* Tipografía */
+  --font-accent: 'Permanent Marker', cursive;
+}
+html.dark {
+  --bg: #161616;
+  --surface: #202020;
+  --surface-glass: rgba(28,28,28,.7);
+  --surface-particle-card: #202020;
+  --ink: #f6f6f6;
+  --muted: #aaaab0;
+  --line: rgba(255,255,255,.13);
+  --line-subtle: rgba(255,255,255,.07);
+  --accent: #efaa85;
+  --accent-strong: #edb191;
+  --accent-deep: #ffe0ca;
+  --accent-soft: #30251f;
+  --success: #22c55e;
+}
+::selection { background: var(--accent-soft); color: var(--ink); }
 .font-accent { font-family: var(--font-accent); font-weight: 400; letter-spacing: 0; }
-html.dark { --ink: #f6f6f6; --muted: #aaaab0; --surface: #202020; --surface-raised: #262626; --line: rgba(255,255,255,.13); --accent: #efaa85; --accent-soft: #30251f; }
 .section-shell { width: min(100%,1152px); margin: auto; padding: 104px 24px; scroll-margin-top: 100px; color: var(--ink); }
 .section-kicker { display: flex; gap: 12px; align-items: center; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .section-kicker::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }

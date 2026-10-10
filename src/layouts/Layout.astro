@@ -101,21 +101,14 @@ export interface Props {
      z-index -1 y debe quedar entre el fondo y el contenido. Un fondo
      opaco en body lo taparía. */
   html {
-    background: #161616;
-    transition: background-color 0.3s;
+    background: var(--bg);
+    transition: background-color var(--dur-base);
   }
 
   body {
     background: transparent;
   }
 
-  html:not(.dark) {
-    background: #ffffff; /* fondo claro */
-  }
-
-  html.dark {
-    background: #161616; /* fondo oscuro */
-  }
 
 
   @view-transition{
