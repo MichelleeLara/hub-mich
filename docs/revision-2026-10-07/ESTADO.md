@@ -129,3 +129,9 @@ Escala de estructura isométrica aumentada15% alrededor del centro, en proyecci�
 
 ## Segundo aumento del objeto — petición directa
 Otro15% sobre tamaño vigente: escala acumulada1.3225 (+32.25% respecto al original). Proyección compartida preserva recorrido y sellado. Margen vertical del anchor aumentado a48px escritorio/40px móvil para que los extremos ampliados no invadan encabezado ni etiquetas. SVG conserva overflow visible. Builds finales Astro5/7 aprobados.
+
+
+## Agrupamiento de proyectos — petición directa, 9 de octubre, 22:15 CDMX
+Michelle señala que cuesta reconocer cada tarjeta a primera vista. ProjectsBento ahora reúne imagen y contenido en una superficie opaca común con radio24px y borde estructural, consistente con Luz.ia. Imagen a sangre sin redondeo independiente; bloque de información con padding28px (24px móvil). Flecha SVG junto al título reemplaza botón flotante sobre imagen. Resultado con cifra destacada al pie; altura de las parejas alineada mediante flex. Separación32px entre tarjetas/filas (28px móvil). Sin cambios a proyectos, imágenes, cifras ni orden. Hover con contorno/acento y foco de teclado global preservado.
+
+Validación real IAB: escritorio1280px en oscuro/claro; móvil390x844, ancho de documento390 sin desbordamiento. Foco de teclado en tarjeta Inteligencia Logística con outline solid2px y href correcto. Screenshots reales docs/revision-2026-10-09/proyectos-agrupados-claro.jpg y proyectos-agrupados-mobile.jpg. Builds Astro5/7 aprobados. Inicio de prueba en servidor propio IPv4 tuvo módulos React sin hidratar; versión compilada y localhost habitual funcionan, control de tema confirmado allí. Servidor IPv4 temporal detenido; servidor habitual IPv6localhost4321 conservado. No modifica header/tema ni otros componentes. Tema/viewport de prueba restaurados. Respaldo /tmp/ProjectsBento-before-grouping-20261009.astro. Automatización apagada, sin publicación.
