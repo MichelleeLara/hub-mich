@@ -38,29 +38,29 @@ const proof = [
   .about-section { padding-top: 96px; }
   .about-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 80px; align-items: center; }
   h2 { margin-top: 28px; }
-  .about-description { margin-top: 28px; max-width: 470px; font-size: 18px; line-height: 1.65; }
-  .about-detail { margin: 16px 0 20px; max-width: 455px; color: var(--muted); font-size: 15px; line-height: 1.75; }
+  .about-description { margin-top: 28px; max-width: 470px; font-size: var(--fs-lead); line-height: 1.5; }
+  .about-detail { margin: 16px 0 20px; max-width: 455px; color: var(--muted); font-size: var(--fs-body); line-height: 1.7; }
   .portrait-study { position: relative; min-width: 0; }
-  .portrait-top { display: flex; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  .portrait-top { display: flex; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: var(--fs-caption); }
   #face-anchor { position: relative; width: min(100%, 440px); aspect-ratio: 10/11; margin: 48px auto; }
   .face-fallback { overflow: visible; width: 100%; height: 100%; color: var(--accent); }
-  .portrait-cross { position: absolute; font-family: monospace; color: var(--muted); }
+  .portrait-cross { position: absolute; font-family: var(--font-mono); color: var(--muted); }
   .cross-one { left: 0; top: 20px; } .cross-two { right: 0; bottom: 20px; }
-  .build-stages { display: flex; justify-content: space-between; gap: 10px; margin: 0 0 24px; font-family: monospace; font-size: 11px; color: var(--muted); }
-  .build-progress { display: none; align-items: center; gap: 12px; margin-bottom: 18px; color: var(--muted); font: 10px monospace; }
+  .build-stages { display: flex; justify-content: space-between; gap: 10px; margin: 0 0 24px; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--muted); }
+  .build-progress { display: none; align-items: center; gap: 12px; margin-bottom: 18px; color: var(--muted); font: var(--fs-micro) var(--font-mono); }
   .build-progress-track { height: 1px; flex: 1; background: var(--line); overflow: hidden; }
   [data-build-progress] { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--build-progress, 0)); transform-origin: left; }
   [data-build-percent] { min-width: 4ch; text-align: right; }
   .build-stages [aria-current="step"] { color: var(--accent); }
-  figcaption { display: flex; flex-direction: column; gap: 7px; text-align: center; font-size: 14px; }
-  .portrait-note { color: var(--muted); font-size: 12px; }
+  figcaption { display: flex; flex-direction: column; gap: 7px; text-align: center; font-size: var(--fs-small); }
+  .portrait-note { color: var(--muted); font-size: var(--fs-caption); }
   .proof-strip { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .proof-item { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 28px 28px 28px 0; }
   .proof-item + .proof-item { padding-left: 28px; border-left: 1px solid var(--line); }
-  .proof-item strong { font-family: ClashDisplay, sans-serif; font-size: 40px; font-weight: 600; letter-spacing: -.03em; }
-  .proof-item > span:not(.proof-arrow) { font-size: 13px; color: var(--muted); }
+  .proof-item strong { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 600; line-height: 1.1; letter-spacing: -.02em; }
+  .proof-item > span:not(.proof-arrow) { font-size: var(--fs-small); color: var(--muted); }
   .proof-arrow { position: absolute; top: 32px; right: 24px; color: var(--muted); }
-  @media (max-width: 767px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } .portrait-study { max-width: 380px; width: 100%; margin: auto; } #face-anchor { width: 100%; } .proof-strip { grid-template-columns: 1fr; margin-top: 48px; } .proof-item + .proof-item { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } .proof-item { padding: 22px 0; } .proof-item strong { font-size: 36px; } }
+  @media (max-width: 767px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } .portrait-study { max-width: 380px; width: 100%; margin: auto; } #face-anchor { width: 100%; } .proof-strip { grid-template-columns: 1fr; margin-top: 48px; } .proof-item + .proof-item { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } .proof-item { padding: 22px 0; } }
 </style>
 <style is:global>
   @media (prefers-reduced-motion: no-preference) {

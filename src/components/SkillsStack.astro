@@ -37,35 +37,35 @@ const tools = [
 <style>
   .method-intro { max-width: 780px; margin-bottom: 56px; }
   h2 { margin: 28px 0; }
-  .method-intro > p { margin-top: 28px; max-width: 510px; color: var(--muted); font-size: 17px; line-height: 1.7; }
+  .method-intro > p { margin-top: 28px; max-width: 510px; color: var(--muted); font-size: var(--fs-body); line-height: 1.7; }
   .method-layout { display: grid; grid-template-columns: 1fr 1.1fr; gap: 72px; align-items: start; }
   .process-story { grid-column: 1; grid-row: 1; align-self: stretch; display: flex; flex-direction: column; }
   .process-step { min-height: 65vh; display: flex; flex-direction: column; justify-content: flex-start; padding: 24px 0 48px; scroll-margin-top: 180px; }
   @media (min-width: 768px) { .method-section .process-story .process-step:last-child { min-height: 0; margin-top: auto; padding-bottom: 0; } }
-  .step-index { font-family: monospace; font-size: 12px; color: var(--accent); margin-bottom: 24px; }
-  .process-step h3 { font-family: ClashDisplay, sans-serif; font-size: clamp(28px, 3.4vw, 42px); font-weight: 500; line-height: 1.12; letter-spacing: -.025em; max-width: 400px; }
-  .process-step > p:last-child { margin-top: 24px; max-width: 390px; font-size: 16px; line-height: 1.8; color: var(--muted); }
+  .step-index { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-bottom: 24px; }
+  .process-step h3 { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 600; line-height: 1.1; letter-spacing: -.02em; max-width: 400px; }
+  .process-step > p:last-child { margin-top: 24px; max-width: 390px; font-size: var(--fs-body); line-height: 1.7; color: var(--muted); }
   .method-tools { margin-top: 48px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
   .method-tools > div { border-top: 1px solid var(--line); padding-top: 14px; }
   .method-tools span { font-size: 12px; font-weight: 600; }
-  .method-tools p { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.65; }
+  .method-tools p { margin-top: 8px; font-size: var(--fs-small); color: var(--muted); line-height: 1.65; }
   .method-lab { grid-column: 2; grid-row: 1; position: sticky; top: 120px; overflow: hidden; border-radius: 24px; background: var(--surface-particle-card); border: 1px solid var(--line-subtle); }
   .lab-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px 28px 0; font-size: 12px; color: var(--muted); }
   .lab-tag { color: var(--accent); white-space: nowrap; }
   .lab-stage { position: relative; height: min(38vh, 340px); min-height: 200px; margin: 12px 24px 20px; }
   canvas { display: block; width: 100%; height: 100%; }
-  .lab-stage-label { position: absolute; bottom: 12px; left: 12px; font-family: monospace; font-size: 11px; color: var(--muted); }
-  .lab-axis { position: absolute; top: 12px; color: var(--muted); font-family: monospace; }.axis-x { left: 12px; }.axis-y { right: 12px; }
+  .lab-stage-label { position: absolute; bottom: 12px; left: 12px; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--muted); }
+  .lab-axis { position: absolute; top: 12px; color: var(--muted); font-family: var(--font-mono); }.axis-x { left: 12px; }.axis-y { right: 12px; }
   .process-buttons { display: flex; gap: 6px; padding: 0 24px; }
-  .process-buttons button { display: flex; justify-content: center; gap: 8px; align-items: center; flex: 1; min-height: 48px; border-radius: 10px; color: var(--muted); font-size: 13px; transition: background-color 150ms, color 150ms; }
+  .process-buttons button { display: flex; justify-content: center; gap: 8px; align-items: center; flex: 1; min-height: 48px; border-radius: 10px; color: var(--muted); font-size: var(--fs-small); transition: background-color 150ms, color 150ms; }
   .process-buttons button span { font-size: 11px; }
   .process-buttons button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
   .lab-result { padding: 24px 28px; min-height: 106px; }
-  .lab-result > span { display: block; margin-bottom: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
-  .lab-result p { font-size: 13px; line-height: 1.6; }
+  .lab-result > span { display: block; margin-bottom: 8px; font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
+  .lab-result p { font-size: var(--fs-small); line-height: 1.6; }
   .lab-progress { height: 1px; background: var(--line); margin: 0 28px 16px; }
   .lab-progress span { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--process-progress, 0)); transform-origin: left; }
-  .lab-footnote { padding: 0 28px 20px; font-size: 11px; color: var(--muted); }
+  .lab-footnote { padding: 0 28px 20px; font-size: var(--fs-micro); color: var(--muted); }
   @media (min-width: 768px) and (max-width: 1023px) { .method-layout { gap: 32px; } .process-buttons { padding: 0 14px; } .process-buttons button { font-size: 12px; gap: 4px; } .lab-heading { padding: 24px 20px 0; } }
   @media (max-width: 767px) {
     .method-intro { margin-bottom: 32px; } .method-layout { display: block; }
@@ -73,9 +73,9 @@ const tools = [
     .lab-stage { margin: 8px 12px 12px; height: 24vh; min-height: 150px; }
     .process-buttons { padding: 0 14px; } .process-buttons button { font-size: 12px; gap: 6px; min-height: 44px; }
     .lab-result { padding: 16px 20px; min-height: 90px; } .lab-progress { margin: 0 20px 12px; }
-    .lab-footnote { padding: 0 20px 16px; font-size: 10px; }
+    .lab-footnote { padding: 0 20px 16px; }
     .process-step { min-height: 65vh; padding: 56px 0; scroll-margin-top: 490px; justify-content: flex-end; }
-    .process-step h3 { font-size: 32px; } .process-step > p:last-child { font-size: 15px; margin-top: 16px; }
+    .process-step > p:last-child { margin-top: 16px; }
     .step-index { margin-bottom: 18px; } .method-tools { grid-template-columns: 1fr 1fr; gap: 20px; }
   }
   @media (max-height: 620px) { .method-lab { position: static; } .process-step { min-height: 420px; } }

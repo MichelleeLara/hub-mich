@@ -27,7 +27,7 @@ import SectionHeading from './SectionHeading.astro';
   :is(input,textarea,select):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   #brief-privacy { margin-top: 12px; font-size: 12px; color: var(--muted); }
   .brief-button { display: inline-flex; gap: 24px; margin-top: 24px; padding: 14px 24px; border-radius: 10px; background: var(--ink); color: var(--surface); font-size: 14px; font-weight: 500; }
-  #brief-result { margin-top: 28px; padding: 28px; border-radius: 18px; background: var(--surface); }h3 { font-size: 22px; font-weight: 500; }
+  #brief-result { margin-top: 28px; padding: 28px; border-radius: 18px; background: var(--surface); }h3 { font-size: var(--fs-lead); font-weight: 500; }
   pre { margin-top: 20px; font-family: inherit; font-size: 14px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }.brief-actions { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 24px; }#brief-status { font-size: 12px; color: var(--muted); margin-top: 8px; }
   @media(max-width:767px) { .brief-heading { display: block; }.brief-heading > p { margin-top: 24px; }.brief-fields { grid-template-columns: 1fr; gap: 24px; }#brief-result { padding: 20px; }summary { font-size: 14px; } }
 </style>

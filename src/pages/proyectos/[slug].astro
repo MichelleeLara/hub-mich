@@ -60,7 +60,7 @@ const nextTags = next.brief
 							<!-- Narrativa -->
 							<div>
 								<p class="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-orange-700 dark:text-orange-400">Intro</p>
-								<div class="space-y-5 text-[15px] leading-relaxed text-gray-600 dark:text-zinc-300 md:text-base [&_em]:italic [&_em]:text-gray-600 dark:[&_em]:text-zinc-400 [&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-zinc-100">
+								<div class="space-y-5 text-base leading-[1.7] text-gray-600 dark:text-zinc-300 [&_em]:italic [&_em]:text-gray-600 dark:[&_em]:text-zinc-400 [&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-zinc-100">
 									{p.brief.intro.map((para) => (
 										<p set:html={para} />
 									))}
@@ -80,7 +80,7 @@ const nextTags = next.brief
 										<p class="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-700 dark:text-orange-400">{group.label}</p>
 										<div class="flex flex-wrap gap-2">
 											{group.tags.map((tag) => (
-												<span class="rounded-full border border-black/10 bg-black/5 px-3.5 py-1.5 text-[13px] font-medium text-gray-700 dark:border-white/10 dark:bg-white/10 dark:text-gray-300">
+												<span class="rounded-full border border-black/10 bg-black/5 px-3.5 py-1.5 text-[length:var(--fs-micro)] font-medium text-gray-700 dark:border-white/10 dark:bg-white/10 dark:text-gray-300">
 													{tag}
 												</span>
 											))}
@@ -100,7 +100,7 @@ const nextTags = next.brief
 		<section class="relative py-28 md:py-40">
 			<div class="mx-auto max-w-3xl px-6 text-center">
 				<span class="text-xs font-semibold uppercase tracking-[0.25em] text-orange-700 dark:text-orange-400">Detrás del producto</span>
-				<h2 class="mt-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-secondary md:text-5xl">Problema · Solución · Resultado</h2>
+				<h2 class="mt-4 text-[length:var(--fs-h2)] font-[650] leading-[1.12] tracking-[-.03em] text-gray-900 dark:text-secondary">Problema · Solución · Resultado</h2>
 				<p class="mt-4 text-base text-gray-600 dark:text-terteary">Qué necesitaba cambiar, qué decidí y qué resultado tuvo.</p>
 			</div>
 
@@ -143,7 +143,7 @@ const nextTags = next.brief
 							</div>
 							<div>
 								<p class="text-[11px] font-semibold uppercase tracking-widest text-gray-600 dark:text-zinc-400">01 · El contexto</p>
-								<h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-secondary">Problema</h3>
+								<h3 class="text-[length:var(--fs-lead)] font-[650] tracking-[-.02em] text-gray-900 dark:text-secondary">Problema</h3>
 							</div>
 						</div>
 						<ul class="space-y-3.5 text-sm leading-relaxed text-gray-600 dark:text-zinc-300">
@@ -164,7 +164,7 @@ const nextTags = next.brief
 							</div>
 							<div>
 								<p class="text-[11px] font-semibold uppercase tracking-widest text-gray-600 dark:text-zinc-400">02 · La decisión</p>
-								<h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-secondary">Solución</h3>
+								<h3 class="text-[length:var(--fs-lead)] font-[650] tracking-[-.02em] text-gray-900 dark:text-secondary">Solución</h3>
 							</div>
 						</div>
 						<div class="space-y-4 text-sm leading-relaxed text-gray-600 dark:text-zinc-300">
@@ -180,13 +180,13 @@ const nextTags = next.brief
 							</div>
 							<div>
 								<p class="text-[11px] font-semibold uppercase tracking-widest text-gray-600 dark:text-zinc-400">03 · El impacto</p>
-								<h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-secondary">Resultado</h3>
+								<h3 class="text-[length:var(--fs-lead)] font-[650] tracking-[-.02em] text-gray-900 dark:text-secondary">Resultado</h3>
 							</div>
 						</div>
 						<div class="space-y-6">
 							{p.resultado.map((metric) => (
 								<div>
-									<p class="text-4xl font-bold tracking-tighter text-[var(--accent)]">
+									<p class="font-ClashDisplay text-[length:var(--fs-h3)] font-semibold leading-[1.1] tracking-[-.02em] text-[var(--accent)]">
 										{metric.value}
 									</p>
 									<p class="mt-1 text-sm leading-snug text-gray-600 dark:text-zinc-400">{metric.label}</p>
@@ -214,7 +214,7 @@ const nextTags = next.brief
 							>
 							</div>
 							<div class="relative">
-								<p class="text-4xl font-bold tracking-tighter sm:text-6xl md:text-7xl">{p.impact.featured.metric}</p>
+								<p class="font-ClashDisplay text-[length:var(--fs-h1)] font-semibold leading-[1.05] tracking-[-.03em]">{p.impact.featured.metric}</p>
 								<p class="mt-4 text-sm font-semibold uppercase tracking-widest text-orange-400">{p.impact.featured.label}</p>
 							</div>
 							<p class="relative mt-10 max-w-xl text-base leading-relaxed text-zinc-400">{p.impact.featured.desc}</p>
@@ -234,7 +234,7 @@ const nextTags = next.brief
 											)}
 										</span>
 									)}
-									<p class="text-2xl font-bold tracking-tight md:text-3xl">{item.metric}</p>
+									<p class="font-ClashDisplay text-[length:var(--fs-h3)] font-semibold leading-[1.1] tracking-[-.02em]">{item.metric}</p>
 									<p class="mt-2 text-xs font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">{item.label}</p>
 								</div>
 								<p class="mt-6 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{item.desc}</p>
@@ -267,7 +267,7 @@ const nextTags = next.brief
 					<!-- Izquierda · texto -->
 					<div>
 						<span class="text-xs font-semibold uppercase tracking-[0.2em] text-orange-700 dark:text-orange-400">Siguiente Caso</span>
-						<h2 class="mt-4 font-ClashDisplay text-3xl font-bold uppercase leading-[1.05] tracking-tight break-words sm:text-5xl text-gray-900 dark:text-secondary md:text-6xl">
+						<h2 class="mt-4 font-ClashDisplay text-[length:var(--fs-h1)] font-semibold uppercase leading-[1.05] tracking-[-.03em] break-words text-gray-900 dark:text-secondary">
 							{next.title}
 						</h2>
 						<p class="mt-5 max-w-md text-sm leading-relaxed text-gray-600 dark:text-zinc-400 md:text-base">
