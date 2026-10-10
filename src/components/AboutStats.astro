@@ -1,79 +1,87 @@
 ---
-// Sección "Sobre mí": stats alrededor y un hueco central (#face-anchor)
-// donde el polvo estelar del fondo se recluta para formar el rostro.
-// El canvas global (ParticlesBackground) lee la posición de #face-anchor
-// para saber dónde y a qué escala condensar las partículas.
-
-// Cifras reales, cada una respaldada por un caso de estudio (ver projectsData.js).
-// Regla de marca: prueba, no promesa — nada de "clientes felices" genéricos.
-const statsLeft = [
-  { value: '$1M', label: 'USD de ahorro anual proyectado (AnamSeals)' },
-  { value: '6', label: 'Ingenieros liderados como Frontend Lead' },
-  { value: '~1M', label: 'Unidades/mes hacia producción masiva' },
-];
-
-const statsRight = [
-  { value: '+65%', label: 'Rendimiento ganado en el mapa logístico' },
-  { value: '3', label: 'Empresas · Bego, Bego AI, Row Quintero' },
-  { value: '2', label: 'Idiomas · ES / EN' },
+import { ideaPoints } from '../data/ideasGeometry';
+import SectionHeading from './SectionHeading.astro';
+const proof = [
+  { value: '< 2 min', label: 'Reportes con IA en Luz.ia', slug: 'luzia-agentes-ia' },
+  { value: '+65%', label: 'Rendimiento en logística', slug: 'inteligencia-logistica' },
+  { value: '6', label: 'Ingenieros liderados', slug: 'monitoreo-white-label' },
 ];
 ---
-
-<section id="sobre-mi" class="relative mx-auto max-w-6xl px-6 pt-[max(15vh,120px)] pb-24">
-  <!-- Eyebrow: mismo lenguaje que el del Hero; discreto para no competir
-       con el rostro de partículas ni con los números -->
-  <h2
-    class="flex items-center justify-center gap-3 text-xs font-semibold uppercase tracking-[0.1em]"
-  >
-    <span class="text-gray-800 dark:text-secondary">Sobre mí</span>
-    <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
-    <span class="text-terteary">El impacto en números</span>
-  </h2>
-
-  <!-- Aire generoso bajo el eyebrow: en el punto de reposo (rostro centrado)
-       el eyebrow ya salió del viewport en lugar de quedar tras el header -->
-  <div class="mt-12 md:mt-36 grid gap-8 md:grid-cols-[1fr_1.5fr_1fr] md:gap-6 items-stretch">
-    <!-- Stats izquierda -->
-    <div class="grid grid-cols-2 gap-6 md:flex md:flex-col md:justify-between md:gap-0">
-      {
-        statsLeft.map((s) => (
-          <div class="border-t border-black/10 pt-5 pb-8 dark:border-white/10 flex flex-col items-start">
-            <p class="font-ClashDisplay text-4xl md:text-5xl font-semibold text-gray-900 dark:text-secondary">
-              {s.value}
-            </p>
-            <p class="mt-2 text-sm text-terteary">{s.label}</p>
-          </div>
-        ))
-      }
+<section id="yo" class="section-shell about-section">
+  <div id="about-build-scroll" class="about-build-scroll">
+  <div class="about-grid">
+    <div class="about-copy">
+      <SectionHeading label="Mi enfoque" title="Productos simples para problemas complejos." />
+      <p class="about-description">Soy Mich. Uno diseño, ingeniería e IA para convertir un problema de negocio en algo que las personas puedan usar de verdad.</p>
+      <p class="about-detail">Uso la IA para explorar, construir y automatizar. Mi trabajo es darle dirección: elegir qué resolver, cuidar la experiencia y llevarlo hasta la entrega.</p>
+      <a href="#proyectos" class="text-link">Mira cómo se traduce en producto <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a>
     </div>
-
-    <!-- Hueco central: aquí se condensa el rostro de partículas.
-         Debe permanecer visualmente vacío — el dibujo lo hace el canvas
-         de fondo, no este elemento. -->
-    <div
-      id="face-anchor"
-      class="relative order-first h-[55vh] md:order-none md:h-auto md:min-h-[70vh]"
-      aria-label="Retrato de Michelle formado por partículas"
-    >
-      <span
-        class="absolute left-1/2 top-0 -translate-x-1/2 whitespace-nowrap rounded-full border border-black/10 bg-white/70 px-4 py-1.5 text-xs text-gray-700 backdrop-blur-sm dark:border-white/10 dark:bg-white/5 dark:text-gray-300"
-      >
-        Hola, soy Mich 👋
-      </span>
-    </div>
-
-    <!-- Stats derecha -->
-    <div class="grid grid-cols-2 gap-6 md:flex md:flex-col md:justify-between md:gap-0">
-      {
-        statsRight.map((s) => (
-          <div class="border-t border-black/10 pt-5 pb-8 dark:border-white/10 flex flex-col items-end">
-            <p class="font-ClashDisplay text-4xl md:text-5xl font-semibold text-gray-900 dark:text-secondary">
-              {s.value}
-            </p>
-            <p class="mt-2 text-sm text-terteary">{s.label}</p>
-          </div>
-        ))
-      }
-    </div>
+    <figure class="portrait-study">
+      <div class="portrait-top"><span>Diseño + ingeniería + IA</span><span aria-hidden="true">↗</span></div>
+      <div id="face-anchor">
+        <svg class="face-fallback" viewBox="0 0 600 660" role="img" aria-label="Estructura isométrica construida por capas: una base, conexiones y un producto ensamblado">
+          {ideaPoints.map((point, i) => <circle cx={point.x * 600} cy={point.y * 660} r={i % 11 === 0 ? 2.6 : 1.8} fill="currentColor" opacity={point.outer ? .76 : .44} />)}
+        </svg>
+        <span class="portrait-cross cross-one" aria-hidden="true">+</span><span class="portrait-cross cross-two" aria-hidden="true">+</span>
+      </div>
+      <div class="build-stages" aria-label="Etapas de construcción"><span data-build-stage="0">01 / Entender</span><span data-build-stage="1">02 / Diseñar</span><span data-build-stage="2" aria-current="step">03 / Construir</span></div>
+      <div class="build-progress" aria-hidden="true"><span class="build-progress-track"><span data-build-progress></span></span><span data-build-percent>0%</span></div>
+      <figcaption><span>Las piezas encuentran su lugar.</span><span class="portrait-note">De las piezas al producto</span></figcaption>
+    </figure>
+  </div>
+  </div>
+  <div class="proof-strip">
+    {proof.map(item => <a href={`/proyectos/${item.slug}`} class="proof-item"><strong>{item.value}</strong><span>{item.label}</span><span class="proof-arrow" aria-hidden="true">↗</span></a>)}
   </div>
 </section>
+<style>
+  .about-section { padding-top: 96px; }
+  .about-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 80px; align-items: center; }
+  h2 { margin-top: 28px; }
+  .about-description { margin-top: 28px; max-width: 470px; font-size: 18px; line-height: 1.65; }
+  .about-detail { margin: 16px 0 20px; max-width: 455px; color: var(--muted); font-size: 15px; line-height: 1.75; }
+  .portrait-study { position: relative; min-width: 0; }
+  .portrait-top { display: flex; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  #face-anchor { position: relative; width: min(100%, 440px); aspect-ratio: 10/11; margin: 48px auto; }
+  .face-fallback { overflow: visible; width: 100%; height: 100%; color: var(--accent); }
+  .portrait-cross { position: absolute; font-family: monospace; color: var(--muted); }
+  .cross-one { left: 0; top: 20px; } .cross-two { right: 0; bottom: 20px; }
+  .build-stages { display: flex; justify-content: space-between; gap: 10px; margin: 0 0 24px; font-family: monospace; font-size: 11px; color: var(--muted); }
+  .build-progress { display: none; align-items: center; gap: 12px; margin-bottom: 18px; color: var(--muted); font: 10px monospace; }
+  .build-progress-track { height: 1px; flex: 1; background: var(--line); overflow: hidden; }
+  [data-build-progress] { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--build-progress, 0)); transform-origin: left; }
+  [data-build-percent] { min-width: 4ch; text-align: right; }
+  .build-stages [aria-current="step"] { color: var(--accent); }
+  figcaption { display: flex; flex-direction: column; gap: 7px; text-align: center; font-size: 14px; }
+  .portrait-note { color: var(--muted); font-size: 12px; }
+  .proof-strip { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .proof-item { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 28px 28px 28px 0; }
+  .proof-item + .proof-item { padding-left: 28px; border-left: 1px solid var(--line); }
+  .proof-item strong { font-family: ClashDisplay, sans-serif; font-size: 40px; font-weight: 600; letter-spacing: -.03em; }
+  .proof-item > span:not(.proof-arrow) { font-size: 13px; color: var(--muted); }
+  .proof-arrow { position: absolute; top: 32px; right: 24px; color: var(--muted); }
+  @media (max-width: 767px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } .portrait-study { max-width: 380px; width: 100%; margin: auto; } #face-anchor { width: 100%; } .proof-strip { grid-template-columns: 1fr; margin-top: 48px; } .proof-item + .proof-item { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } .proof-item { padding: 22px 0; } .proof-item strong { font-size: 36px; } }
+</style>
+<style is:global>
+  @media (prefers-reduced-motion: no-preference) {
+    html.particles-build-ready:not(.motion-paused) .about-build-scroll { height: 280svh; }
+    html.particles-build-ready:not(.motion-paused) .about-grid { position: sticky; top: 120px; min-height: calc(100svh - 144px); }
+    html.particles-build-ready:not(.motion-paused) #face-anchor { width: min(100%, 440px, 43svh); }
+    html.particles-build-ready:not(.motion-paused) .build-progress { display: flex; }
+    @media (min-width: 768px) and (max-height: 760px) {
+      html.particles-build-ready:not(.motion-paused) .about-copy h2 { font-size: clamp(30px, 3.4vw, 48px); margin-top: 0; }
+      html.particles-build-ready:not(.motion-paused) .about-description { margin-top: 20px; font-size: 16px; }
+      html.particles-build-ready:not(.motion-paused) .about-detail { font-size: 14px; line-height: 1.6; }
+    }
+    @media (max-width: 767px) {
+      html.particles-build-ready:not(.motion-paused) .about-build-scroll { height: calc(280svh + 420px); }
+      html.particles-build-ready:not(.motion-paused) .about-grid { display: block; position: static; height: 100%; min-height: 0; }
+      html.particles-build-ready:not(.motion-paused) .portrait-study { position: sticky; top: 92px; margin: 48px auto 0; }
+      html.particles-build-ready:not(.motion-paused) #face-anchor { width: min(100%, 42svh); margin: 40px auto; }
+      html.particles-build-ready:not(.motion-paused) .build-stages { margin-bottom: 16px; }
+    }
+  }
+  html.particles-portrait .face-fallback { opacity: 0; }
+  html.motion-paused .portrait-note::after { content: ' · en pausa'; }
+  @media (prefers-reduced-motion: reduce) { html.particles-portrait .face-fallback { opacity: 1; } }
+</style>

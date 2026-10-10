@@ -1,0 +1,8 @@
+---
+import imageManifest from '../data/imageManifest.json';
+interface Props { name: keyof typeof imageManifest; alt: string; eager?: boolean; sizes?: string; }
+const { name, alt, eager = false, sizes = '(min-width: 1152px) 552px, (min-width: 768px) calc((100vw - 80px) / 2), calc(100vw - 48px)' } = Astro.props;
+const variants = imageManifest[name];
+const largest = variants[variants.length - 1];
+---
+<img class="project-picture" src={largest.src} srcset={variants.map(image => `${image.src} ${image.width}w`).join(', ')} sizes={sizes} alt={alt} width={largest.width} height={largest.height} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} decoding="async" />

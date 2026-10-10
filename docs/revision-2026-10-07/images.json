@@ -1,0 +1,114 @@
+[
+  {
+    "source": "hero-profile-left.png",
+    "path": "public/media/hero-profile-240.webp",
+    "originalBytes": 2302392,
+    "bytes": 11742,
+    "width": 240,
+    "height": 300
+  },
+  {
+    "source": "hero-profile-left.png",
+    "path": "public/media/hero-profile-480.webp",
+    "originalBytes": 2302392,
+    "bytes": 35962,
+    "width": 480,
+    "height": 600
+  },
+  {
+    "source": "hero_mich.png",
+    "path": "public/media/portrait-720.webp",
+    "originalBytes": 2025181,
+    "bytes": 80378,
+    "width": 720,
+    "height": 960
+  },
+  {
+    "source": "image.png",
+    "path": "public/media/portrait-fallback-720.webp",
+    "originalBytes": 2397818,
+    "bytes": 102580,
+    "width": 720,
+    "height": 1163
+  },
+  {
+    "source": "luziaOmmia.png",
+    "path": "public/media/luzia-720.webp",
+    "originalBytes": 1589741,
+    "bytes": 19680,
+    "width": 720,
+    "height": 480
+  },
+  {
+    "source": "luziaOmmia.png",
+    "path": "public/media/luzia-1440.webp",
+    "originalBytes": 1589741,
+    "bytes": 53042,
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "source": "anamsealsHand.png",
+    "path": "public/media/anamseals-720.webp",
+    "originalBytes": 1725801,
+    "bytes": 10834,
+    "width": 720,
+    "height": 581
+  },
+  {
+    "source": "anamsealsHand.png",
+    "path": "public/media/anamseals-1440.webp",
+    "originalBytes": 1725801,
+    "bytes": 30010,
+    "width": 1396,
+    "height": 1127
+  },
+  {
+    "source": "inteligenciaDashboard.png",
+    "path": "public/media/logistica-720.webp",
+    "originalBytes": 1715932,
+    "bytes": 38516,
+    "width": 720,
+    "height": 658
+  },
+  {
+    "source": "inteligenciaDashboard.png",
+    "path": "public/media/logistica-1440.webp",
+    "originalBytes": 1715932,
+    "bytes": 89174,
+    "width": 1312,
+    "height": 1199
+  },
+  {
+    "source": "trackingAduanal.png",
+    "path": "public/media/tracking-720.webp",
+    "originalBytes": 1886424,
+    "bytes": 43610,
+    "width": 720,
+    "height": 900
+  },
+  {
+    "source": "trackingAduanal.png",
+    "path": "public/media/tracking-1440.webp",
+    "originalBytes": 1886424,
+    "bytes": 82984,
+    "width": 1122,
+    "height": 1402
+  },
+  {
+    "source": "whiteLabelBrand.png",
+    "path": "public/media/white-label-720.webp",
+    "originalBytes": 1512222,
+    "bytes": 9234,
+    "width": 720,
+    "height": 573
+  },
+  {
+    "source": "whiteLabelBrand.png",
+    "path": "public/media/white-label-1440.webp",
+    "originalBytes": 1512222,
+    "bytes": 24124,
+    "width": 1405,
+    "height": 1119
+  }
+]

@@ -1,5 +1,6 @@
+import { useReducedMotionPreference } from '../hooks/useReducedMotionPreference';
 import React, { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 
 /* -------------------------------------------------------------------------- */
 /*  Iconos de línea (coherentes con el header)                                */
@@ -44,32 +45,78 @@ const MailIcon = (p) => (
 /*  Tabs (máx. 4 para respetar el área táctil)                                */
 /* -------------------------------------------------------------------------- */
 const TABS = [
-  { id: "inicio", label: "Inicio", path: "/", Icon: HomeIcon },
-  { id: "proyectos", label: "Proyectos", path: "/#proyectos", Icon: WorkIcon },
-  { id: "yo", label: "Sobre mí", path: "/#yo", Icon: UserIcon },
-  { id: "contacto", label: "Contacto", path: "/#footer", Icon: MailIcon },
+  { id: "inicio", label: "Inicio", path: "/#inicio", sectionId: "inicio", Icon: HomeIcon },
+  { id: "proyectos", label: "Proyectos", path: "/#proyectos", sectionId: "proyectos", Icon: WorkIcon },
+  { id: "yo", label: "Sobre mí", path: "/#yo", sectionId: "yo", Icon: UserIcon },
+  { id: "contacto", label: "Contacto", path: "/#contacto", sectionId: "contacto", Icon: MailIcon },
 ];
 
-const SPRING = { type: "spring", stiffness: 420, damping: 34 };
+const SPRING = { type: "spring", duration: .3, bounce: 0 };
 
 export default function AnimatedTabs() {
+  const reduced = useReducedMotionPreference();
   const [active, setActive] = useState("inicio");
 
   useEffect(() => {
-    const hash = window.location.hash;
-    const match = TABS.find((t) => t.path === `/${hash}`);
-    if (match) setActive(match.id);
+    const syncFromLocation = () => {
+      const path = window.location.pathname.replace(/\/$/, "") || "/";
+      const hash = window.location.hash.replace("#", "");
+
+      if (hash) {
+        const byHash = TABS.find((tab) => tab.sectionId === hash);
+        if (byHash) setActive(byHash.id);
+        return;
+      }
+
+      if (path.startsWith("/proyectos")) {
+        setActive("proyectos");
+        return;
+      }
+
+      setActive("inicio");
+    };
+
+    const syncFromScroll = () => {
+      const path = window.location.pathname.replace(/\/$/, "") || "/";
+      if (path !== "/") return;
+
+      const current = TABS
+        .map((tab) => {
+          const node = document.getElementById(tab.sectionId);
+          if (!node) return null;
+          return {
+            id: tab.id,
+            top: node.getBoundingClientRect().top,
+          };
+        })
+        .filter((item) => item && item.top <= 120)
+        .sort((a, b) => b.top - a.top)[0];
+
+      if (current) setActive(current.id);
+    };
+
+    syncFromLocation();
+    syncFromScroll();
+
+    window.addEventListener("hashchange", syncFromLocation);
+    window.addEventListener("scroll", syncFromScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("hashchange", syncFromLocation);
+      window.removeEventListener("scroll", syncFromScroll);
+    };
   }, []);
 
   return (
-    <motion.nav
-      className="fixed bottom-6 inset-x-0 z-[100] flex md:hidden justify-center pointer-events-none"
-      initial={{ opacity: 0, y: 44, scale: 0.92 }}
+    <MotionConfig reducedMotion="user"><motion.nav
+      aria-label="Navegación móvil"
+      className="fixed bottom-[calc(env(safe-area-inset-bottom)+1rem)] inset-x-0 z-[100] flex md:hidden justify-center px-4 pointer-events-none"
+      initial={reduced ? false : { opacity: 0, y: 44, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.15 }}
+      transition={{ type: "spring", duration: reduced ? 0 : .3, bounce: 0, delay: reduced ? 0 : .15 }}
     >
       <ul
-        className="pointer-events-auto flex items-center gap-1 p-2 rounded-full
+        className="pointer-events-auto flex max-w-full items-center gap-1 overflow-hidden p-2 rounded-full
                    backdrop-blur-md bg-white/75 dark:bg-[#1c1c1c]/85
                    border border-black/5 dark:border-white/10
                    shadow-2xl shadow-black/10 dark:shadow-black/50
@@ -86,7 +133,7 @@ export default function AnimatedTabs() {
                 onClick={onClick}
                 aria-label={tab.label}
                 aria-current={isActive ? "page" : undefined}
-                className={`relative flex items-center h-11 rounded-full px-4 transition-colors duration-300 ${
+                className={`relative flex items-center h-11 rounded-full px-3 xs:px-4 transition-colors duration-300 ${
                   isActive
                     ? "text-gray-900 dark:text-white"
                     : "text-gray-500 dark:text-terteary"
@@ -96,7 +143,7 @@ export default function AnimatedTabs() {
                   <motion.span
                     layoutId="tab-pill"
                     className="absolute inset-0 rounded-full bg-black/[0.06] dark:bg-white/10"
-                    transition={SPRING}
+                    transition={reduced ? { duration: 0 } : SPRING}
                   />
                 )}
                 <span className="relative z-10 flex items-center gap-2">
@@ -108,7 +155,7 @@ export default function AnimatedTabs() {
                         initial={{ width: 0, opacity: 0 }}
                         animate={{ width: "auto", opacity: 1 }}
                         exit={{ width: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        transition={{ duration: reduced ? 0 : 0.15, ease: "easeInOut" }}
                         className="text-sm font-medium whitespace-nowrap overflow-hidden"
                       >
                         {tab.label}
@@ -121,6 +168,6 @@ export default function AnimatedTabs() {
           );
         })}
       </ul>
-    </motion.nav>
+    </motion.nav></MotionConfig>
   );
 }

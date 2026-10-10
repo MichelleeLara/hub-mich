@@ -1,0 +1,146 @@
+[
+  {
+    "build": "dist",
+    "page": "index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/"
+    ]
+  },
+  {
+    "build": "dist",
+    "page": "proyectos/luzia-agentes-ia/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/luzia-agentes-ia/"
+    ]
+  },
+  {
+    "build": "dist",
+    "page": "proyectos/inteligencia-logistica/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/inteligencia-logistica/"
+    ]
+  },
+  {
+    "build": "dist",
+    "page": "proyectos/monitoreo-white-label/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/monitoreo-white-label/"
+    ]
+  },
+  {
+    "build": "dist",
+    "page": "proyectos/tracking-aduanal/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/tracking-aduanal/"
+    ]
+  },
+  {
+    "build": "dist",
+    "page": "proyectos/anamseals-firmware/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/anamseals-firmware/"
+    ]
+  },
+  {
+    "build": "/Users/michelle/.codex/worktrees/astro-7/hub-mich/dist",
+    "page": "index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/"
+    ]
+  },
+  {
+    "build": "/Users/michelle/.codex/worktrees/astro-7/hub-mich/dist",
+    "page": "proyectos/luzia-agentes-ia/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/luzia-agentes-ia/"
+    ]
+  },
+  {
+    "build": "/Users/michelle/.codex/worktrees/astro-7/hub-mich/dist",
+    "page": "proyectos/inteligencia-logistica/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/inteligencia-logistica/"
+    ]
+  },
+  {
+    "build": "/Users/michelle/.codex/worktrees/astro-7/hub-mich/dist",
+    "page": "proyectos/monitoreo-white-label/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/monitoreo-white-label/"
+    ]
+  },
+  {
+    "build": "/Users/michelle/.codex/worktrees/astro-7/hub-mich/dist",
+    "page": "proyectos/tracking-aduanal/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/tracking-aduanal/"
+    ]
+  },
+  {
+    "build": "/Users/michelle/.codex/worktrees/astro-7/hub-mich/dist",
+    "page": "proyectos/anamseals-firmware/index.html",
+    "h1": 1,
+    "main": 1,
+    "missingResources": [],
+    "brokenLocalLinks": [],
+    "description": true,
+    "canonical": [
+      "https://itsmich.com.mx/proyectos/anamseals-firmware/"
+    ]
+  }
+]

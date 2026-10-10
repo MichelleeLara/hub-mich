@@ -1,0 +1,88 @@
+{
+  "hero-profile": [
+    {
+      "src": "/media/hero-profile-240.webp",
+      "width": 240,
+      "height": 300
+    },
+    {
+      "src": "/media/hero-profile-480.webp",
+      "width": 480,
+      "height": 600
+    }
+  ],
+  "portrait": [
+    {
+      "src": "/media/portrait-720.webp",
+      "width": 720,
+      "height": 960
+    }
+  ],
+  "portrait-fallback": [
+    {
+      "src": "/media/portrait-fallback-720.webp",
+      "width": 720,
+      "height": 1163
+    }
+  ],
+  "luzia": [
+    {
+      "src": "/media/luzia-720.webp",
+      "width": 720,
+      "height": 480
+    },
+    {
+      "src": "/media/luzia-1440.webp",
+      "width": 1440,
+      "height": 960
+    }
+  ],
+  "anamseals": [
+    {
+      "src": "/media/anamseals-720.webp",
+      "width": 720,
+      "height": 581
+    },
+    {
+      "src": "/media/anamseals-1440.webp",
+      "width": 1396,
+      "height": 1127
+    }
+  ],
+  "logistica": [
+    {
+      "src": "/media/logistica-720.webp",
+      "width": 720,
+      "height": 658
+    },
+    {
+      "src": "/media/logistica-1440.webp",
+      "width": 1312,
+      "height": 1199
+    }
+  ],
+  "tracking": [
+    {
+      "src": "/media/tracking-720.webp",
+      "width": 720,
+      "height": 900
+    },
+    {
+      "src": "/media/tracking-1440.webp",
+      "width": 1122,
+      "height": 1402
+    }
+  ],
+  "white-label": [
+    {
+      "src": "/media/white-label-720.webp",
+      "width": 720,
+      "height": 573
+    },
+    {
+      "src": "/media/white-label-1440.webp",
+      "width": 1405,
+      "height": 1119
+    }
+  ]
+}

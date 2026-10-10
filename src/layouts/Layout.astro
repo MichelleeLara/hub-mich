@@ -2,9 +2,12 @@
 import AnimatedTabs from '../components/Navbar';
 import Header from '../components/Header';
 import ParticlesBackground from '../components/ParticlesBackground.astro';
-import '@fontsource-variable/inter-tight';
-import '@fontsource-variable/inter';
-const { title, description, image, url } = Astro.props;
+import '@fontsource-variable/inter-tight/wght.css';
+import '../styles/product.css';
+import '@fontsource-variable/inter/wght.css';
+const { title, description, image, url, noindex = false } = Astro.props;
+// og:image debe ser absoluta; algunas páginas pasan rutas relativas (/author.png)
+const imageUrl = new URL(image, Astro.site ?? Astro.url).href;
 
 
 // Definir las propiedades que el layout aceptará
@@ -13,6 +16,7 @@ export interface Props {
   description: string;
   image: string;
   url: string;
+  noindex?: boolean;
 }
 
 ---
@@ -21,16 +25,19 @@ export interface Props {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/author.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <title>{title}</title>
+    <link rel="canonical" href={url} />
 
     <!-- Meta Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content={image} />
-    <meta property="og:image:alt" content="itsmich — Mich, Product Engineer" />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content="itsmich — Mich, Software Engineer" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -39,16 +46,28 @@ export interface Props {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image" content={imageUrl} />
 
-
+    <!-- Tema antes de pintar: sin esto el <html class="dark"> del markup
+         gana hasta que React hidrata y quien eligió claro ve un flash oscuro
+         en cada carga. Preferencia guardada > preferencia del sistema. -->
+    <script is:inline>
+      document.documentElement.classList.add('has-js');
+      let saved = null, motion = null;
+      try { saved = localStorage.getItem('theme'); motion = localStorage.getItem('motion'); } catch {}
+      const dark = saved ? saved === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+      document.documentElement.classList.toggle('motion-paused', motion === 'paused');
+      document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+    </script>
   </head>
   <body class="flex flex-col min-h-screen">
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
     <!-- Fondo de partículas (detrás de todo el contenido) -->
     <ParticlesBackground />
     <!-- Navegación superior (islas desktop + barra mínima mobile) -->
     <Header client:load />
-    <div id="main-content" class="flex-grow">
+    <div id="main-content" class="flex-grow" tabindex="-1">
 
       <slot />
     </div>
@@ -59,52 +78,23 @@ export interface Props {
 </html>
 
 <style is:global>
-   @font-face {
-    font-family: 'Francy';
-    src: url('../../src/fonts/Francy.woff2') format('woff2'),
-         url('../../src/fonts/Francy.woff') format('woff'),
-         url('../../src/fonts/Francy.ttf') format('truetype'),
-         url('../../src/fonts/Francy.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-  }
-
-  @font-face {
-  font-family: 'ClashGrotesk-Semibold';
-  src: url('../../src/fonts/ClashGrotesk-Semibold.woff2') format('woff2'),
-       url('../../src/fonts/ClashGrotesk-Semibold.woff') format('woff'),
-       url('../../src/fonts/ClashGrotesk-Semibold.ttf') format('truetype'),
-       url('../../src/fonts/ClashGrotesk-Semibold.otf') format('opentype');
-  font-weight: 600;
-  font-display: swap;
-  font-style: normal;
-}
-  @font-face {
-  font-family: 'ClashGrotesk-Bold';
-  src: url('../../src/fonts/ClashGrotesk-Bold.woff2') format('woff2'),
-       url('../../src/fonts/ClashGrotesk-Bold.woff') format('woff'),
-       url('../../src/fonts/ClashGrotesk-Bold.ttf') format('truetype'),
-       url('../../src/fonts/ClashGrotesk-Bold.otf') format('opentype');
-  font-weight: 700;
-  font-display: swap;
-  font-style: normal;
-}
-  @font-face {
-  font-family: 'ClashDisplay';
-  src: url('../../src/fonts/ClashDisplay-Semibold.woff2') format('woff2'),
-       url('../../src/fonts/ClashDisplay-Semibold.woff') format('woff'),
-       url('../../src/fonts/ClashDisplay-Semibold.ttf') format('truetype'),
-       url('../../src/fonts/ClashDisplay-Semibold.otf') format('opentype');
-  font-weight: 600; /* SemiBold */
-  font-style: normal;
-}
+  @font-face { font-family: 'Francy'; src: url('../fonts/Francy.woff2') format('woff2'); font-display: swap; }
+  @font-face { font-family: 'ClashGrotesk-Semibold'; src: url('../fonts/ClashGrotesk-Semibold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+  @font-face { font-family: 'ClashGrotesk-Bold'; src: url('../fonts/ClashGrotesk-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+  @font-face { font-family: 'ClashDisplay'; src: url('../fonts/ClashDisplay-Semibold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
   html,
   body {
     margin: 0;
     width: 100%;
     height: 100%;
     font-family: 'Inter Tight Variable', sans-serif;
-    scroll-behavior: smooth;
+  }
+
+  /* Scroll suave solo para quien no pidió menos movimiento. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   /* El color de fondo vive SOLO en html: el canvas de partículas usa

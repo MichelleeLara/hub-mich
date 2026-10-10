@@ -1,92 +1,72 @@
 ---
-// Sección "Proyectos" — Bento Grid asimétrico que enlaza a los casos de estudio.
-// Fuente de datos: src/data/projectsData.js (misma que las páginas de detalle
-// /proyectos/[slug]). Cada tarjeta lleva `data-magnetic-card`: el sistema de
-// partículas global (ParticlesBackground) detecta el hover y atrae el polvo
-// hacia el borde de la tarjeta activa (glow magnético). Aquí NO hay canvas propio.
-
 import { projects } from '../data/projectsData.js';
-
-// Layout: grid de 2 columnas con cards grandes (referencia midu.design).
-// Fila 1 → AnamSeals a todo el ancho · Filas 2-3 → los otros cuatro en pares.
-// Con 5 proyectos esto llena la retícula sin huecos. Móvil apila.
-// `aspect` manda la altura (no `min-h`): en móvil todas van 4/3, y en desktop la
-// destacada se abre a 16/9 mientras las de par van verticales como en la ref.
-// `cover` → la foto va de fondo, a sangre, llenando la card.
-// `pos` = background-position del recorte: 'center top' cuando el sujeto está
-// arriba y centrar lo decapitaría.
-const PAIR = 'aspect-[4/3] md:aspect-[5/4]';
-const layout = [
-  { slug: 'anamseals-firmware', span: 'md:col-span-2', aspect: 'aspect-[4/3] md:aspect-[2/1]', featured: true, cover: true, pos: 'center top' },
-  { slug: 'monitoreo-white-label', span: '', aspect: PAIR, featured: false, cover: true, pos: 'center center' },
-  { slug: 'inteligencia-logistica', span: '', aspect: PAIR, featured: false, cover: true, pos: 'center center' },
-  { slug: 'tracking-aduanal', span: '', aspect: PAIR, featured: false, cover: true, pos: 'center top' },
-  { slug: 'luzia-agentes-ia', span: '', aspect: PAIR, featured: false, cover: true, pos: 'center center' },
-];
-
-// El velo que asienta el título va como PRIMERA capa de background, con la foto
-// como segunda, sobre el mismo elemento que lleva el `rounded-3xl`.
-// Motivo (medido): con la foto en un `<img>` y el velo en un div aparte, Chrome
-// rasteriza el recorte redondeado de cada capa con cobertura distinta, y la foto
-// se filtra como una hairline de 1px sobre el arco (brillo 103 contra 33 del
-// interior). Probé viñeta, sangrado del velo, `isolation`, `translateZ` y una capa
-// interna: todas siguen en +67. Un solo elemento con dos backgrounds da +0.
-const VEIL =
-  'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.74) 16%, rgba(0,0,0,0.38) 36%, transparent 58%)';
-
-const cards = layout
-  .map((l) => ({ ...l, ...projects.find((p) => p.slug === l.slug) }))
-  .filter((c) => c.title);
+import ProjectImage from './ProjectImage.astro';
+import { projectPresentation } from '../data/projectPresentation';
+import SectionHeading from './SectionHeading.astro';
+const featured = projects.find(p => p.slug === 'luzia-agentes-ia');
+const others = ['anamseals-firmware', 'inteligencia-logistica', 'monitoreo-white-label', 'tracking-aduanal'].map(slug => projects.find(p => p.slug === slug));
 ---
-
-<section id="proyectos-destacados" class="relative mx-auto max-w-6xl px-6 pt-[max(12vh,100px)] pb-24">
-  <!-- Eyebrow: mismo lenguaje que Hero y Sobre mí -->
-  <h2
-    class="flex items-center justify-center gap-3 text-xs font-semibold uppercase tracking-[0.1em]"
-  >
-    <span class="text-gray-800 dark:text-secondary">Proyectos</span>
-    <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
-    <span class="text-terteary">Casos de estudio</span>
-  </h2>
-
-  <!-- Titular editorial a dos tonos, estilo referencia -->
-  <p
-    class="mx-auto mt-8 max-w-3xl text-center font-ClashDisplay text-4xl font-semibold leading-tight tracking-wide md:text-5xl"
-  >
-    <span class="text-gray-900 dark:text-secondary">Lo que he construido.</span>
-    <span class="text-gray-400 dark:text-[#5a5a5a]"> Del problema al impacto medible.</span>
-  </p>
-
-  <!-- Grid de 2 columnas con cards grandes; móvil apila -->
-  <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
-    {
-      cards.map((p) => (
-        <a
-          href={`/proyectos/${p.slug}`}
-          data-magnetic-card
-          class={`group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-zinc-950 transition-transform duration-500 ease-out hover:scale-[1.015] ${p.aspect} ${p.span}`}
-          style={`background-image: ${VEIL}, url('${p.thumbnail}'); background-size: auto, cover; background-position: center; background-repeat: no-repeat;`}
-        >
-          <!-- Tags flotantes arriba-derecha -->
-          {p.brief?.tipo && (
-            <div class="absolute right-6 top-6 z-10 flex max-w-[80%] flex-wrap justify-end gap-2 md:right-7 md:top-7">
-              {p.brief.tipo.map((tag) => (
-                <span class="rounded-full border border-white/15 bg-black/60 px-4 py-2 text-xs font-medium text-white backdrop-blur-md md:text-sm">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <!-- Título + categoría overlaid abajo-izquierda -->
-          <div class="relative z-10 px-7 pb-8 pt-16 md:px-9 md:pb-9">
-            <h3 class="font-ClashDisplay text-3xl font-semibold tracking-wide text-white md:text-[2.5rem] md:leading-[1.1]">
-              {p.title}
-            </h3>
-            <p class="mt-2 text-sm text-zinc-300 md:text-base">{p.meta}</p>
-          </div>
-        </a>
-      ))
-    }
+<section id="proyectos" class="section-shell projects-section">
+  <div class="projects-heading">
+    <SectionHeading label="Trabajo seleccionado" title="Ideas que toman forma y generan impacto." />
+    <p>De agentes de IA a sistemas que operan en el mundo real. Cada caso cuenta el problema, las decisiones y lo que cambió.</p>
+  </div>
+  <a href={`/proyectos/${featured.slug}`} class="project-card featured-project">
+    <div class="project-card-image"><ProjectImage name="luzia" sizes="(min-width: 1152px) 1104px, calc(100vw - 48px)" alt="Visual de Luz.ia: panel de conversaciones, pacientes y agenda" /></div>
+    <div class="project-card-tags">{featured.brief.tipo.map(tag => <span>{tag}</span>)}</div>
+    <div class="project-card-info featured-copy">
+      <span class="featured-status">Proyecto propio · MVP en pre-validación</span>
+      <div class="featured-title"><h3>Luz.ia</h3><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></div>
+      <p>Hacer simple la operación detrás de un ecosistema de agentes de IA para el bienestar.</p>
+    </div>
+  </a>
+  <div class="project-grid">
+    {others.map(p => {
+      const visual = projectPresentation[p.slug];
+      return <a href={`/proyectos/${p.slug}`} class="project-card">
+        <div class="project-card-image"><ProjectImage name={visual.image} alt={visual.alt} /></div>
+        <div class="project-card-tags">{p.brief.tipo.map(tag => <span>{tag}</span>)}</div>
+        <div class="project-card-info"><h3>{p.title}</h3><p>{p.meta}</p></div>
+      </a>;
+    })}
   </div>
 </section>
+<style>
+  .projects-section { padding-top: 64px; }
+  .projects-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; margin-bottom: 48px; }
+  h2 { margin-top: 24px; }
+  .projects-heading > p { max-width: 290px; color: var(--muted); line-height: 1.7; font-size: 15px; }
+  .project-grid { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .project-card { position: relative; display: flex; align-items: flex-end; min-width: 0; aspect-ratio: 1.25; overflow: hidden; border-radius: 24px; background: #171717; color: #fff; }
+  .project-card :global(.project-picture) { outline: none; }
+  .project-card-image { position: absolute; inset: 0; }
+  .project-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgb(0 0 0 / .12) 45%, rgb(0 0 0 / .78) 74%, #111 100%); pointer-events: none; }
+  .project-card-tags { position: absolute; z-index: 1; top: 24px; right: 24px; left: 24px; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+  .project-card-tags span { padding: 8px 11px; border-radius: 6px; background: #f3f1ed; color: #343434; font-size: 11px; font-weight: 500; letter-spacing: .025em; line-height: 1.2; }
+  .project-card-info { position: relative; z-index: 1; width: 100%; padding: 32px; }
+  .project-card-info h3 { font-family: ClashDisplay, sans-serif; font-size: clamp(30px, 3.2vw, 44px); font-weight: 600; line-height: 1.1; text-wrap: balance; }
+  .project-card-info > p { margin-top: 16px; color: #e0e0e0; font-size: 16px; line-height: 1.5; }
+  .featured-project { aspect-ratio: 2.05; }
+  .featured-project::after { background: linear-gradient(180deg, rgb(0 0 0 / .08), transparent 20%, rgb(0 0 0 / .25) 42%, rgb(0 0 0 / .85) 75%, #111 100%); }
+  .featured-copy { padding: 36px; }
+  .featured-status { display: block; color: #e0e0e0; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+  .featured-title { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 12px; }
+  .featured-title h3 { font-size: clamp(44px, 6vw, 72px); line-height: 1; }
+  .featured-title svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .featured-copy > p { max-width: 530px; margin-top: 12px; }
+  @media (max-width: 767px) {
+    .projects-heading { display: block; }
+    .projects-heading > p { max-width: 450px; margin-top: 24px; }
+    .featured-project { aspect-ratio: auto; min-height: 350px; }
+    .featured-title h3 { font-size: 48px; }
+    .featured-title svg { width: 24px; height: 24px; }
+    .featured-status { font-size: 10px; }
+    .project-grid { grid-template-columns: 1fr; gap: 28px; }
+    .project-card-info { padding: 24px; }
+    .project-card-info h3 { font-size: 30px; }
+    .featured-title h3 { font-size: 48px; }
+    .project-card-info > p { font-size: 14px; margin-top: 12px; }
+    .project-card-tags { top: 16px; right: 16px; left: 16px; gap: 6px; }
+    .project-card-tags span { font-size: 10px; padding: 7px 9px; }
+  }
+</style>

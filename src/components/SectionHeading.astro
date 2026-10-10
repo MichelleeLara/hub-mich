@@ -1,0 +1,21 @@
+---
+import '@fontsource/permanent-marker/latin-400.css';
+interface Props {
+  title: string;
+  label: string;
+  id?: string;
+  compact?: boolean;
+}
+const { title, label, id, compact = false } = Astro.props;
+---
+<div class:list={['section-heading', { 'section-heading-compact': compact }]}>
+  <p class="section-label">{label}</p>
+  <h2 class="section-title" id={id}>{title}</h2>
+</div>
+<style>
+  .section-heading { display: grid; gap: 12px; max-width: 780px; }
+  .section-title { margin: 0; font-family: 'Inter Variable', sans-serif; font-size: clamp(30px, 3.4vw, 48px); font-weight: 550; line-height: 1.16; letter-spacing: -.035em; color: var(--ink); }
+  .section-label { margin: 0; font-family: var(--font-accent); font-size: clamp(16px, 1.5vw, 20px); font-weight: 400; line-height: 1.4; letter-spacing: 0; color: var(--accent); text-wrap: balance; }
+  .section-heading-compact .section-title { font-size: clamp(26px, 2.3vw, 32px); }
+  @media (max-width: 767px) { .section-heading { gap: 10px; } }
+</style>

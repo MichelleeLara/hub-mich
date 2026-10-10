@@ -26,3 +26,6 @@ pnpm-debug.log*
 .codegpt
 # Notas personales de marca (vault Obsidian)
 Marca personal/
+
+# Proyecto Angular aparte (repo git propio), no forma parte del sitio
+anamAA/

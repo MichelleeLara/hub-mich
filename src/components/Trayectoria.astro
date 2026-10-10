@@ -1,7 +1,7 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 // Sección "Trayectoria" — timeline vertical con revelado por scroll.
-// Mismo lenguaje que Sobre mí y Proyectos: eyebrow de tres partes +
-// titular editorial a dos tonos en ClashDisplay.
+// Encabezado compartido con las demás secciones del home.
 const jobs = [
   {
     role: 'Frontend Engineer · Firmware',
@@ -41,24 +41,9 @@ const jobs = [
 
 <section
   id="trayectoria"
-  class="relative mx-auto max-w-6xl scroll-mt-24 px-6 pt-[max(12vh,100px)] pb-24"
+  class="section-shell relative overflow-x-clip"
 >
-  <!-- Eyebrow: mismo lenguaje que Hero, Sobre mí y Proyectos -->
-  <h2
-    class="flex items-center justify-center gap-3 text-xs font-semibold uppercase tracking-[0.1em]"
-  >
-    <span class="text-gray-800 dark:text-secondary">Trayectoria</span>
-    <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
-    <span class="text-terteary">Cómo llegué aquí</span>
-  </h2>
-
-  <!-- Titular editorial a dos tonos -->
-  <p
-    class="mx-auto mt-8 max-w-3xl text-center font-ClashDisplay text-4xl font-semibold leading-tight tracking-wide md:text-5xl"
-  >
-    <span class="text-gray-900 dark:text-secondary">Cuatro años de recorrido.</span>
-    <span class="text-gray-400 dark:text-[#5a5a5a]"> De la interfaz al firmware.</span>
-  </p>
+  <SectionHeading label="Mi recorrido" title="Cuatro años construyendo producto." />
 
   <!-- Recorrido -->
   <ol id="trail" class="relative mx-auto mt-24 flex max-w-5xl flex-col">
@@ -92,11 +77,11 @@ const jobs = [
               class={
                 right
                   ? 'md:ml-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)]'
-                  : 'md:mr-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)] md:text-right'
+                  : 'md:mr-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)]'
               }
             >
               {/* Fechas */}
-              <span class="text-xs font-semibold uppercase tracking-[0.1em] text-terteary">
+              <span class="text-xs font-semibold uppercase tracking-[0.1em] text-gray-600 dark:text-terteary">
                 {job.dates}
               </span>
 
@@ -104,17 +89,15 @@ const jobs = [
               <h3 class="mt-3 text-balance font-ClashDisplay text-3xl font-semibold tracking-wide text-gray-900 dark:text-secondary md:text-4xl">
                 {job.role}
               </h3>
-              <p class="mt-1 text-lg text-terteary">{job.company}</p>
+              <p class="mt-1 text-lg text-gray-600 dark:text-terteary">{job.company}</p>
 
               {/* Descripción */}
               <p class="mt-5 text-gray-700 dark:text-gray-400">{job.summary}</p>
 
               {/* Tags */}
-              <ul
-                class={`mt-7 flex flex-wrap gap-2 ${right ? '' : 'md:justify-end'}`}
-              >
+              <ul class="mt-7 flex flex-wrap gap-2">
                 {job.tags.map((tag) => (
-                  <li class="rounded-full border border-black/10 px-3.5 py-1.5 text-xs font-medium text-terteary dark:border-white/10">
+                  <li class="rounded-full border border-black/10 px-3.5 py-1.5 text-xs font-medium text-gray-600 dark:text-terteary dark:border-white/10">
                     {tag}
                   </li>
                 ))}
@@ -131,12 +114,14 @@ const jobs = [
   /* Cada parada entra desde el lado del riel que le toca. En móvil la
      timeline es lineal, así que todas suben en vertical. */
   .trail-stop {
-    opacity: 0;
-    transform: translateY(16px);
+    opacity: 1;
+    transform: none;
     transition:
       opacity 0.7s ease,
       transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
+
+  .trail-stop.is-waiting { opacity: 0; transform: translateY(16px); }
 
   .trail-stop.is-active {
     opacity: 1;
@@ -144,19 +129,19 @@ const jobs = [
   }
 
   @media (min-width: 768px) {
-    .trail-stop[data-side='left']:not(.is-active) {
+    .trail-stop.is-waiting[data-side='left'] {
       transform: translateX(-32px);
     }
 
-    .trail-stop[data-side='right']:not(.is-active) {
+    .trail-stop.is-waiting[data-side='right'] {
       transform: translateX(32px);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .trail-stop,
-    .trail-stop[data-side='left'],
-    .trail-stop[data-side='right'] {
+    .trail-stop.is-waiting[data-side='left'],
+    .trail-stop.is-waiting[data-side='right'] {
       opacity: 1;
       transform: none;
       transition: none;
@@ -165,20 +150,17 @@ const jobs = [
 </style>
 
 <script>
-  // Revelado por scroll de cada parada.
   const stops = document.querySelectorAll<HTMLElement>('.trail-stop');
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    stops.forEach((s) => s.classList.add('is-active'));
-  } else {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('is-active');
-        });
-      },
-      { rootMargin: '-20% 0px -30% 0px' },
-    );
-    stops.forEach((s) => io.observe(s));
-  }
+  const preference = matchMedia('(prefers-reduced-motion: reduce)');
+  const paused = () => preference.matches || document.documentElement.classList.contains('motion-paused');
+  const reveal = (stop: Element) => { stop.classList.remove('is-waiting'); stop.classList.add('is-active'); };
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (entry.isIntersecting) { reveal(entry.target); io.unobserve(entry.target); } });
+  }, { rootMargin: '-20% 0px -30% 0px' });
+  // El contenido está visible sin JS. Activar el revelado solo al inicializarlo.
+  if (!paused()) stops.forEach(stop => { stop.classList.add('is-waiting'); io.observe(stop); });
+  const sync = () => { if (paused()) { stops.forEach(reveal); io.disconnect(); } };
+  preference.addEventListener('change', sync);
+  document.addEventListener('motionchange', sync);
+  sync();
 </script>

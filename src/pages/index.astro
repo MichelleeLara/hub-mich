@@ -1,30 +1,19 @@
 ---
-import ThemeToggle from "../components/Themetoggle";
 import Layout from "../layouts/Layout.astro";
-import { AnimateFragments } from "../components/Hero";
-import Jobs from "../components/Jobs";
-import Technologies from "../components/Technologies";
-import { IconArrowRight,IconIdea, IconGroup, IconArrowRightUp, IconEyes, IconDownload, ConversationIcon, GeminiIcon, OpenAIIcon, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT, IconTech, IconCloud, TypeScriptIcon, CloudFareIcons, GoogleIcon, GitIcon, GitHubIcon} from '../icons/Icons'
-import TechFront from '../sections/TechFront'
-import TechColaborate from '../sections/TechColaborate'
-import TechCloud from '../sections/TechCloud'
-import Particles from '../components/ui/Particles'
-import React from "react";
-import { IconWhatsapp } from "../icons/Icons";
-import { IconLinkedin } from "../icons/Icons";
 import Hero from "../components/Hero.astro";
 import AboutStats from "../components/AboutStats.astro";
 import ProjectsBento from "../components/ProjectsBento.astro";
 import Trayectoria from "../components/Trayectoria.astro";
 import SkillsStack from "../components/SkillsStack.astro";
 import MegaFooter from "../components/MegaFooter.astro";
+import ProjectBrief from "../components/ProjectBrief.astro";
 import { Spotlight } from "../components/ui/Spotlight";
 
 const meta = {
-  title: 'Mich · Product Engineer — Productos que resuelven, detalles que se notan',
-  description: 'Soy Mich, Product Engineer especializado en frontend con React y Next.js. Diseño y construyo productos digitales que resuelven problemas de negocio y se sienten simples de usar.',
-  image: 'https://hub-mich.vercel.app/OpenGraphl.png',
-  url: 'https://hub-mich.vercel.app/',
+  title: 'Mich · Software Engineer — Diseño, ingeniería e IA para productos de impacto',
+  description: 'Soy Mich. Combino diseño, ingeniería e IA para construir productos de impacto, bien pensados y fáciles de usar. Software Engineer con base en frontend (React, Next.js, Angular, TypeScript) y experiencia en backend, sistemas en tiempo real y firmware embebido. Construyo productos de punta a punta y lidero los equipos que los entregan.',
+  image: 'https://itsmich.com.mx/OpenGraphl.png',
+  url: 'https://itsmich.com.mx/',
 };
 
 ---
@@ -32,7 +21,7 @@ const meta = {
 <Layout {...meta}>
 
   <main
-    class="min-h-screen text-black dark:text-gray-300 transition-colors duration-300 pb-14 "
+    class="home-content text-black dark:text-gray-300 transition-colors duration-300 pb-14 "
   >
 
     <div class="w-full rounded-md flex md:items-center md:justify-center bg-black-[#161616] antialiased bg-grid-white/[0.02] relative overflow-hidden">
@@ -57,56 +46,11 @@ const meta = {
     <!-- Trayectoria: experiencia laboral (fondo claro, contrasta con el grid) -->
     <Trayectoria />
 
+    <ProjectBrief />
+
   </main>
 
   <!-- Mega Footer (mismo que las páginas de detalle) -->
   <MegaFooter />
 </Layout>
-
-<style>
-  .scroll_hide {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-}
-
-.scroll_hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
-}
-
-/* .tech-cards{
-  transform: skewY(-4deg) rotateX(-14deg) rotateY(20deg) translateZ(var(180)) translateX(var(calc(10% - 3%))) translateY(var(-15%));
-  transform-style: preserve-3d;
-  transition: .32s var(--ease-out-quad);
-  width: 60%;
-  background:red;
-} */
-
-</style>
-
-
-    <!-- Stack section
-    <section class="pt-28">
-      <div class="mx-6 flex flex-col gap-6">
-        <div class="flex items-center justify-between">
-          <div class="flex flex-col gap-1">
-            <h2 class="text-3xl text-balance font-ClashDisplay tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary">
-              Mi stack
-            </h2>
-            <p class="text-sm text-gray-800 dark:text-terteary max-w-[300px]">
-              Creo proyectos funcionales y escalables con estas tecnologías.
-            </p>
-          </div>
-
-          <button class="text-sm underline">Ver listado completo</button>
-        </div>
-
-        <!-- Frontend -->
-          <!-- <TechFront client:only="react" /> -->
-        <!-- Cloud -->
-        <!-- <TechCloud client:only="react" /> -->
-        <!-- Frontend -->
-          <!-- <TechColaborate client:only="react" /> -->
-      
-      <!-- </div>
-    </section> -->
 

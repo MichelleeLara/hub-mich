@@ -2,6 +2,7 @@
 ---
 
 <section
+  id="inicio"
   class="pt-40 pb-16 mx-6 flex items-center justify-center text-center"
 >
   <div
@@ -11,9 +12,9 @@
     <div
       class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest"
     >
-      <span class="text-gray-800 dark:text-secondary">Product Engineer</span>
+      <span class="text-gray-800 dark:text-secondary">Software Engineer</span>
       <span class="text-gray-300 dark:text-[#3a3a3a]" aria-hidden="true">|</span>
-      <span class="flex items-center gap-2 text-green-500">
+      <span class="flex items-center gap-2 text-green-700 dark:text-green-500">
         <span class="relative flex w-2 h-2">
           <span
             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60"
@@ -34,23 +35,18 @@
         <span class="block">Rodriguez</span>
       </h1>
 
-      <!-- Avatar encimado, centrado entre las dos líneas.
-           Las dos fotos están apiladas y se hace crossfade según el tema. -->
+      <!-- Avatar encimado, centrado entre las dos líneas. -->
       <div
         id="hero-avatar"
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 will-change-transform w-20 h-28 sm:w-28 sm:h-36 md:w-36 md:h-48"
+        class="absolute top-[51%] left-[52%] sm:left-[53%] -translate-x-1/2 -translate-y-1/2 z-20 will-change-transform w-20 h-32 xs:w-24 xs:h-36 sm:w-32 sm:h-48 md:w-40 md:h-56 lg:w-44 lg:h-60"
       >
-        <!-- Modo claro: versión con suéter negro -->
         <img
-          src="/hero_mich_black.png"
-          alt="Mich Rodriguez, Product Engineer"
-          class="hero-float absolute inset-0 w-[110%] h-[120%] object-cover object-top rounded-[6rem] bg-[#e0e0e0] border border-[#8f8f8f30] shadow-2xl opacity-100 dark:opacity-0"
-        />
-        <!-- Modo oscuro: versión original -->
-        <img
-          src="/hero_mich.png"
-          alt="Mich Rodriguez, Product Engineer"
-          class="hero-float absolute inset-0 w-[110%] h-[120%] object-cover object-top rounded-[6rem] dark:bg-[#1c1c1c] border border-transparent dark:border-[#272626] shadow-2xl opacity-0 dark:opacity-100"
+          src="/media/hero-profile-480.webp"
+          srcset="/media/hero-profile-240.webp 240w, /media/hero-profile-480.webp 480w"
+          sizes="(min-width: 1024px) 176px, (min-width: 768px) 160px, 96px"
+          width="480" height="768" fetchpriority="high" decoding="async"
+          alt="Mich Rodriguez, Software Engineer"
+          class="hero-float w-full h-full object-cover object-[47%_28%] rounded-full bg-[#e0e0e0] dark:bg-[#1c1c1c] border border-[#8f8f8f30] dark:border-[#272626] shadow-2xl"
         />
       </div>
     </div>
@@ -61,14 +57,14 @@
     >
       Convierto problemas de negocio en <span
         class="font-semibold dark:text-secondary">productos simples de usar</span
-      >. Interfaces donde los detalles técnicos y visuales se notan.
+      >. Diseño, ingeniería e IA, con atención a los detalles.
     </p>
 
     <!-- CTAs: primario (sólido) + secundario (borde) para marcar jerarquía -->
     <div class="flex gap-3 items-center justify-center flex-wrap mt-2">
       <!-- Primario: Ver proyectos -->
       <a
-        href="#proyectos"
+        href="/#proyectos"
         class="group flex items-center gap-2.5 text-sm font-medium rounded-lg py-3.5 px-7 bg-gray-900 text-white dark:bg-secondary dark:text-gray-900 transition-colors"
       >
         Ver proyectos
@@ -118,26 +114,6 @@
   </div>
 </section>
 
-<style is:global>
-  /* Transición de blur al cambiar de tema: la foto se desenfoca,
-     se hace el swap de imagen y vuelve a enfocarse. */
-  #hero-avatar img {
-    transition: opacity 0.4s ease, filter 0.25s ease;
-  }
-
-  /* Blur muy leve solo durante el cruce, para que la disolución
-     se sienta suave y no un cambio brusco de imagen. */
-  html.theme-swapping #hero-avatar img {
-    filter: blur(4px);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #hero-avatar img {
-      transition: none;
-    }
-  }
-</style>
-
 <style>
   /* Levitación en reposo (sutil) */
   .hero-float {
@@ -163,38 +139,38 @@
 </style>
 
 <script>
-  // Parallax sutil: el avatar acompaña al mouse con inercia.
-  const avatar = document.getElementById("hero-avatar");
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  if (avatar && !reduceMotion && window.matchMedia("(pointer: fine)").matches) {
-    let targetX = 0;
-    let targetY = 0;
-    let x = 0;
-    let y = 0;
-    const RANGE_X = 30; // más recorrido horizontal
-    const RANGE_Y = 24; // más recorrido vertical
-    const DAMP = 0.16; // seguimiento más rápido/reactivo al mouse
-
-    window.addEventListener(
-      "mousemove",
-      (e) => {
-        const nx = e.clientX / window.innerWidth - 0.5;
-        const ny = e.clientY / window.innerHeight - 0.5;
-        targetX = nx * 2 * RANGE_X;
-        targetY = ny * 2 * RANGE_Y;
-      },
-      { passive: true }
-    );
-
+  // Parallax con trabajo solo durante la interacción visible.
+  const avatar = document.getElementById('hero-avatar');
+  const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = matchMedia('(pointer: fine)');
+  if (avatar) {
+    let targetX = 0, targetY = 0, x = 0, y = 0, raf = 0, visible = false;
+    const canAnimate = () => visible && !document.hidden && !motionPreference.matches && finePointer.matches && !document.documentElement.classList.contains('motion-paused');
     const loop = () => {
-      x += (targetX - x) * DAMP;
-      y += (targetY - y) * DAMP;
+      raf = 0;
+      if (!canAnimate()) return;
+      x += (targetX - x) * .16; y += (targetY - y) * .16;
       avatar.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
-      requestAnimationFrame(loop);
+      if (Math.abs(targetX - x) + Math.abs(targetY - y) > .02) raf = requestAnimationFrame(loop);
     };
-    loop();
+    const sync = () => {
+      if (!canAnimate()) { cancelAnimationFrame(raf); raf = 0; }
+      if (motionPreference.matches || !finePointer.matches) {
+        targetX = targetY = x = y = 0;
+        avatar.style.transform = 'translate(-50%, -50%)';
+      }
+      if (canAnimate() && !raf) raf = requestAnimationFrame(loop);
+    };
+    window.addEventListener('mousemove', e => {
+      if (!canAnimate()) return;
+      targetX = (e.clientX / innerWidth - .5) * 60;
+      targetY = (e.clientY / innerHeight - .5) * 48;
+      if (!raf) raf = requestAnimationFrame(loop);
+    }, { passive: true });
+    new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }).observe(avatar);
+    motionPreference.addEventListener('change', sync);
+    finePointer.addEventListener('change', sync);
+    document.addEventListener('motionchange', sync);
+    document.addEventListener('visibilitychange', sync);
   }
 </script>

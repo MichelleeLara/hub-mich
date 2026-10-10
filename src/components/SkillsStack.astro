@@ -1,147 +1,362 @@
 ---
-import ExpertiseCard from './ExpertiseCard.astro';
-// Sección "Habilidades y Stack Técnico" del Home. Estilo editorial limpio:
-// tipografía gigante partida por un marquee de iconos a todo lo ancho, seguido
-// de tarjetas de expertise estilo Bento. Fondo claro; theme-aware para respetar
-// el toggle del header (mismo patrón que Trayectoria).
-
-// Tecnologías del marquee. `initials` es el texto que se muestra dentro del
-// cuadrado redondeado (logotipo tipográfico).
-const techs = [
-  'C', 'STM32', 'Next.js', 'Angular',
-  'FreeRTOS', 'Tailwind', 'Supabase', 'Mapbox',
+import SectionHeading from './SectionHeading.astro';
+const steps = [
+  { name: 'Entender', title: 'Primero, la pregunta correcta.', text: 'Identifico la fricción, el contexto y lo que necesita la persona. La IA me ayuda a explorar alternativas; el objetivo lo define el problema.', output: 'Un problema concreto y una decisión que se puede explicar.' },
+  { name: 'Diseñar', title: 'Darle orden a la complejidad.', text: 'Convierto las piezas en un flujo: qué se ve, qué se hace y qué pasa después. Prototipo, pruebo estados y cuido los detalles que hacen clara la experiencia.', output: 'Una experiencia que se entiende antes de construirla.' },
+  { name: 'Construir', title: 'Llevar la idea hasta el uso.', text: 'Conecto la interfaz, los datos y la automatización. Uso IA para acelerar la implementación y reviso el resultado con pruebas y uso real.', output: 'Un producto funcional, con una base que se puede mantener.' },
 ];
-// Duplicamos la lista para un loop infinito sin costuras.
-const marquee = [...techs, ...techs];
-
-// Tarjetas de áreas de expertise, estilo midu.design: título grande,
-// divisor, label "Info", descripción y botón circular de flecha.
-// Se reparten en dos columnas escalonadas (la derecha arranca más abajo).
-const cards = [
-  {
-    tag: 'UI/UX & Web',
-    title: 'Frontend Engineering',
-    description:
-      'Construyo interfaces responsivas y de alto rendimiento. De wireframes a componentes reutilizables con arquitecturas como FSD.',
-  },
-  {
-    tag: 'C embebido & RTOS',
-    title: 'Firmware & IoT',
-    description:
-      'Programación a bajo nivel para microcontroladores. Gestión de memoria, optimización de energía y concurrencia segura.',
-  },
-  {
-    tag: 'Full-Stack & Cloud',
-    title: 'Arquitectura',
-    description:
-      'Sincronización en tiempo real, bases de datos con Supabase y orquestación de sistemas distribuidos.',
-  },
+const tools = [
+  { label: 'Experiencia', items: 'Figma · React · Next.js · Angular' },
+  { label: 'Sistemas', items: 'TypeScript · Supabase · WebSockets' },
+  { label: 'IA aplicada', items: 'Claude · Agentes · Automatización' },
+  { label: 'Mundo físico', items: 'C · STM32 · FreeRTOS' },
 ];
-
-// Columnas escalonadas: izquierda (índices pares) y derecha (impares).
-const leftCards = cards.filter((_, i) => i % 2 === 0);
-const rightCards = cards.filter((_, i) => i % 2 === 1);
 ---
-
-<!-- Sin fondo sólido: transparente como AboutStats/ProjectsBento/Trayectoria
-     para dejar ver el canvas de partículas global. -->
-<section class="relative overflow-hidden py-32">
-  <!-- Encabezado híbrido estilo midu.design: línea 1 desplazada a la
-       izquierda del centro, marquee a todo lo ancho, línea 2 a la derecha. -->
-  <div class="mx-auto max-w-6xl px-8">
-    <!-- Línea 1 -->
-    <h2
-      class="text-center text-6xl font-black leading-none tracking-tighter text-zinc-900 dark:text-zinc-100 md:-translate-x-[6%] md:text-[8vw]"
-    >
-      Mi stack &amp;
-    </h2>
+<section id="Stack" class="section-shell method-section">
+  <div class="method-intro">
+    <SectionHeading label="Mi proceso" title="La IA acelera. El criterio da dirección." />
+    <p>Un buen producto nace de conectar las piezas correctas. Así paso de una idea a algo útil, claro y bien construido.</p>
   </div>
-
-  <!-- Marquee: banda a todo el ancho entre línea 1 y línea 2 -->
-  <div class="marquee flex w-full overflow-hidden py-4" aria-hidden="true">
-    <div class="marquee__track flex shrink-0 items-center gap-6 pr-6">
-      {
-        marquee.map((tech) => (
-          <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white text-center text-2xl font-bold text-zinc-900 shadow-lg dark:bg-zinc-800 dark:text-zinc-100">
-            <span class={tech.length > 3 ? 'text-[11px] leading-tight' : ''}>{tech}</span>
-          </div>
-        ))
-      }
+  <div class="method-layout">
+    <div class="method-lab" id="particle-lab">
+      <div class="lab-heading"><span>De las piezas al sistema</span><span class="lab-tag">Sigue el scroll</span></div>
+      <div class="lab-stage"><canvas id="process-particles" aria-hidden="true"></canvas><span class="lab-stage-label" aria-hidden="true">01 / Entender · Dar claridad</span><span class="lab-axis axis-x" aria-hidden="true">+</span><span class="lab-axis axis-y" aria-hidden="true">+</span></div>
+      <div class="process-buttons requires-js" role="group" aria-label="Etapas de mi proceso">
+        {steps.map((step, i) => <button type="button" data-process-stage={i} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`process-step-${i}`}><span>0{i + 1}</span>{step.name}</button>)}
+      </div>
+      <div class="lab-result"><span>Resultado</span>{steps.map((step, i) => <p data-process-result={i} hidden={i !== 0}>{step.output}</p>)}</div>
+      <div class="lab-progress" aria-hidden="true"><span></span></div>
+      <p class="lab-footnote">Desplázate o elige una etapa para explorar el proceso.</p>
+    </div>
+    <div class="process-story">
+      {steps.map((step, i) => <article id={`process-step-${i}`} data-process-step={i} class="process-step"><p class="step-index">0{i + 1} / {step.name}</p><h3>{step.title}</h3><p>{step.text}</p></article>)}
     </div>
   </div>
-
-  <div class="mx-auto max-w-6xl px-8">
-    <!-- Línea 2: desplazada hacia la derecha, como "your brand." -->
-    <h2
-      class="text-center text-6xl font-black leading-none tracking-tighter text-zinc-900 dark:text-zinc-100 md:-translate-x-[4%] md:text-right md:text-[8vw]"
-    >
-      tu producto.
-    </h2>
-
-    <!-- Descripción + CTA, alineadas a la izquierda como en la referencia -->
-    <div class="mt-16 max-w-md md:ml-[8%]">
-      <p class="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-        Desde el desarrollo de firmware con C embebido hasta la creación de
-        interfaces pixel-perfect. Diseño arquitecturas escalables que viven en
-        el mundo físico y digital.
-      </p>
-
-      <a
-        href="/proyectos"
-        class="mt-8 inline-flex items-center gap-2 rounded-xl bg-zinc-200/80 px-6 py-4 text-base font-medium text-zinc-900 transition-colors hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
-      >
-        <svg
-          class="h-4 w-4"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M7 7h10v10" />
-          <path d="M7 17 17 7" />
-        </svg>
-        Mira cómo trabajo
-      </a>
-    </div>
-  </div>
-
-  <!-- Tarjetas de expertise estilo midu.design: dos columnas escalonadas,
-       la derecha arranca más arriba que la izquierda. -->
-  <div class="mx-auto mt-24 grid max-w-6xl grid-cols-1 gap-8 px-8 md:grid-cols-2">
-    <div class="flex flex-col gap-8 md:mt-28">
-      {leftCards.map((card) => <ExpertiseCard {...card} />)}
-    </div>
-    <div class="flex flex-col gap-8">
-      {rightCards.map((card) => <ExpertiseCard {...card} />)}
-    </div>
-  </div>
+  <div class="method-tools">{tools.map(tool => <div><span>{tool.label}</span><p>{tool.items}</p></div>)}</div>
 </section>
-
 <style>
-  /* Marquee infinito: el track se duplica (techs x2) y se desplaza -50%,
-     creando un loop sin costuras. */
-  .marquee__track {
-    animation: marquee-scroll 28s linear infinite;
+  .method-intro { max-width: 780px; margin-bottom: 56px; }
+  h2 { margin: 28px 0; }
+  .method-intro > p { margin-top: 28px; max-width: 510px; color: var(--muted); font-size: 17px; line-height: 1.7; }
+  .method-layout { display: grid; grid-template-columns: 1fr 1.1fr; gap: 72px; align-items: start; }
+  .process-story { grid-column: 1; grid-row: 1; align-self: stretch; display: flex; flex-direction: column; }
+  .process-step { min-height: 65vh; display: flex; flex-direction: column; justify-content: flex-start; padding: 24px 0 48px; scroll-margin-top: 180px; }
+  @media (min-width: 768px) { .method-section .process-story .process-step:last-child { min-height: 0; margin-top: auto; padding-bottom: 0; } }
+  .step-index { font-family: monospace; font-size: 12px; color: var(--accent); margin-bottom: 24px; }
+  .process-step h3 { font-family: ClashDisplay, sans-serif; font-size: clamp(28px, 3.4vw, 42px); font-weight: 500; line-height: 1.12; letter-spacing: -.025em; max-width: 400px; }
+  .process-step > p:last-child { margin-top: 24px; max-width: 390px; font-size: 16px; line-height: 1.8; color: var(--muted); }
+  .method-tools { margin-top: 48px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .method-tools > div { border-top: 1px solid var(--line); padding-top: 14px; }
+  .method-tools span { font-size: 12px; font-weight: 600; }
+  .method-tools p { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.65; }
+  .method-lab { grid-column: 2; grid-row: 1; position: sticky; top: 120px; overflow: hidden; border-radius: 24px; background: var(--surface-particle-card); border: 1px solid var(--line-subtle); }
+  .lab-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px 28px 0; font-size: 12px; color: var(--muted); }
+  .lab-tag { color: var(--accent); white-space: nowrap; }
+  .lab-stage { position: relative; height: min(38vh, 340px); min-height: 200px; margin: 12px 24px 20px; }
+  canvas { display: block; width: 100%; height: 100%; }
+  .lab-stage-label { position: absolute; bottom: 12px; left: 12px; font-family: monospace; font-size: 11px; color: var(--muted); }
+  .lab-axis { position: absolute; top: 12px; color: var(--muted); font-family: monospace; }.axis-x { left: 12px; }.axis-y { right: 12px; }
+  .process-buttons { display: flex; gap: 6px; padding: 0 24px; }
+  .process-buttons button { display: flex; justify-content: center; gap: 8px; align-items: center; flex: 1; min-height: 48px; border-radius: 10px; color: var(--muted); font-size: 13px; transition: background-color 150ms, color 150ms; }
+  .process-buttons button span { font-size: 11px; }
+  .process-buttons button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+  .lab-result { padding: 24px 28px; min-height: 106px; }
+  .lab-result > span { display: block; margin-bottom: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
+  .lab-result p { font-size: 13px; line-height: 1.6; }
+  .lab-progress { height: 1px; background: var(--line); margin: 0 28px 16px; }
+  .lab-progress span { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--process-progress, 0)); transform-origin: left; }
+  .lab-footnote { padding: 0 28px 20px; font-size: 11px; color: var(--muted); }
+  @media (min-width: 768px) and (max-width: 1023px) { .method-layout { gap: 32px; } .process-buttons { padding: 0 14px; } .process-buttons button { font-size: 12px; gap: 4px; } .lab-heading { padding: 24px 20px 0; } }
+  @media (max-width: 767px) {
+    .method-intro { margin-bottom: 32px; } .method-layout { display: block; }
+    .method-lab { top: 92px; z-index: 2; } .lab-heading { padding: 18px 20px 0; }
+    .lab-stage { margin: 8px 12px 12px; height: 24vh; min-height: 150px; }
+    .process-buttons { padding: 0 14px; } .process-buttons button { font-size: 12px; gap: 6px; min-height: 44px; }
+    .lab-result { padding: 16px 20px; min-height: 90px; } .lab-progress { margin: 0 20px 12px; }
+    .lab-footnote { padding: 0 20px 16px; font-size: 10px; }
+    .process-step { min-height: 65vh; padding: 56px 0; scroll-margin-top: 490px; justify-content: flex-end; }
+    .process-step h3 { font-size: 32px; } .process-step > p:last-child { font-size: 15px; margin-top: 16px; }
+    .step-index { margin-bottom: 18px; } .method-tools { grid-template-columns: 1fr 1fr; gap: 20px; }
   }
-
-  .marquee:hover .marquee__track {
-    animation-play-state: paused;
-  }
-
-  @keyframes marquee-scroll {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .marquee__track {
-      animation: none;
-    }
-  }
+  @media (max-height: 620px) { .method-lab { position: static; } .process-step { min-height: 420px; } }
 </style>
+<style is:global>
+  html.motion-paused .method-lab { position: static; }
+  html.motion-paused .process-step { min-height: 0; padding: 32px 0; scroll-margin-top: 120px; }
+  @media (prefers-reduced-motion: reduce) { .method-section .method-lab { position: static; } .method-section .process-step { min-height: 0; padding: 32px 0; scroll-margin-top: 120px; } }
+</style>
+<script>
+  const lab = document.getElementById('particle-lab');
+  const canvas = document.getElementById('process-particles') as HTMLCanvasElement | null;
+  const story = document.querySelector<HTMLElement>('.process-story');
+  if (lab && canvas && story) {
+    const ctx = canvas.getContext('2d')!;
+    const media = matchMedia('(prefers-reduced-motion: reduce)');
+    let stage = 0, progress = 0, width = 0, height = 0, raf = 0, visible = false, last = 0, previousFrame = 0, frameBudget = 0, flowTime = 0, flowProgress = 0;
+    const steps = Array.from(story.querySelectorAll<HTMLElement>('[data-process-step]'));
+    const points = Array.from({ length: 540 }, (_, i) => ({ x: .5, y: .5, seed: i * 2.39996, tx: 0, ty: 0, vx: 0, vy: 0 }));
+    const paused = () => media.matches || document.documentElement.classList.contains('motion-paused');
+    type Point = { x: number; y: number };
+    // Precompute semantic silhouettes; scroll only interpolates existing points.
+    const path = (out: Point[], vertices: number[][], count: number, closed = false) => {
+      const nodes = closed ? [...vertices, vertices[0]] : vertices;
+      const lengths = nodes.slice(1).map((v, i) => Math.hypot((v[0] - nodes[i][0]) * 1.6, v[1] - nodes[i][1]));
+      const total = lengths.reduce((sum, length) => sum + length, 0);
+      for (let i = 0; i < count; i++) {
+        let distance = (i + .5) / count * total, segment = 0;
+        while (segment < lengths.length - 1 && distance > lengths[segment]) distance -= lengths[segment++];
+        const t = distance / lengths[segment], a = nodes[segment], b = nodes[segment + 1];
+        out.push({ x: a[0] + (b[0] - a[0]) * t, y: a[1] + (b[1] - a[1]) * t });
+      }
+    };
+    const ring = (out: Point[], x: number, y: number, rx: number, ry: number, count: number) => {
+      for (let i = 0; i < count; i++) { const angle = i / count * Math.PI * 2; out.push({ x: x + Math.cos(angle) * rx, y: y + Math.sin(angle) * ry }); }
+    };
+    const box = (out: Point[], x: number, y: number, w: number, h: number, count: number) => path(out, [[x,y],[x+w,y],[x+w,y+h],[x,y+h]], count, true);
+    const forms: Point[][] = [[], [], []];
+    // Entender: quiet strands of context converge into one clear direction.
+    const contextThread = (lane: number, t: number): Point => {
+      if (t >= .8) return { x: .70 + (t - .8) / .2 * .18, y: .43 };
+      const u = t / .8, v = 1 - u;
+      return {
+        x: v*v*v*.12 + 3*v*v*u*.34 + 3*v*u*u*.43 + u*u*u*.70,
+        y: .43 + lane * .20 * (v*v*v + 3*v*v*u) + Math.sin(Math.PI*u) ** 2 * .012,
+      };
+    };
+    for (let lane = -1; lane <= 1; lane++) {
+      for (let i = 0; i < 180; i++) {
+        const t = i / 179, p = contextThread(lane, t);
+        const feather = Math.sin(i * 2.39996 + lane) * .004 * (1 - t);
+        forms[0].push({ x: p.x, y: p.y + feather });
+      }
+    }
+    // Diseñar: one starting point, a decision and two possible routes.
+    ring(forms[1], .16, .43, .045, .072, 60);
+    path(forms[1], [[.43,.27],[.53,.43],[.43,.59],[.33,.43]], 100, true);
+    box(forms[1], .73, .16, .15, .16, 80);
+    box(forms[1], .73, .60, .15, .16, 80);
+    path(forms[1], [[.205,.43],[.33,.43]], 40);
+    path(forms[1], [[.53,.43],[.63,.43],[.63,.24],[.73,.24]], 70);
+    path(forms[1], [[.53,.43],[.63,.43],[.63,.68],[.73,.68]], 70);
+    ring(forms[1], .43, .43, .024, .038, 40);
+    // Construir: the routes become a product with navigation, cards and data.
+    box(forms[2], .10, .08, .80, .75, 150);
+    path(forms[2], [[.10,.21],[.90,.21]], 50);
+    path(forms[2], [[.25,.21],[.25,.83]], 40);
+    for (let i = 0; i < 3; i++) box(forms[2], .31 + i * .19, .29, .15, .17, 40);
+    path(forms[2], [[.31,.72],[.41,.65],[.51,.68],[.63,.54],[.73,.59],[.84,.50]], 80);
+    for (let i = 0; i < 4; i++) path(forms[2], [[.135,.31+i*.12],[.21,.31+i*.12]], 15);
+    for (let i = 0; i < 3; i++) ring(forms[2], .135 + i * .035, .145, .008, .013, 10);
+    path(forms[2], [[.76,.145],[.85,.145]], 10);
+    // Three signals share the same clock through every morph.
+    const routes: Point[][][] = [[], [], []];
+    for (let signal = 0; signal < 3; signal++) {
+      const focus: Point[] = [], decision: Point[] = [], product: Point[] = [];
+      for (let i = 0; i < 120; i++) focus.push(contextThread(signal - 1, i / 119));
+      const branchY = signal === 1 ? .68 : .24;
+      path(decision, [[.16,.43],[.43,.43],[.63,.43],[.63,branchY],[.805,branchY]], 120);
+      path(product, [[.31,.72],[.41,.65],[.51,.68],[.63,.54],[.73,.59],[.84,.50]], 120);
+      routes[0].push(focus); routes[1].push(decision); routes[2].push(product);
+    }
+    const morph = (value: number) => {
+      const from = Math.min(1, Math.floor(value));
+      const t = Math.max(0, Math.min(1, (value - from - .28) / .44));
+      return { from, blend: t * t * t * (t * (t * 6 - 15) + 10) };
+    };
+    const signalPoint = (signal: number, t: number, value: number): Point => {
+      const { from, blend } = morph(value);
+      const sample = (route: Point[]) => {
+        const index = Math.max(0, Math.min(1, t)) * (route.length - 1);
+        const i = Math.min(route.length - 2, Math.floor(index)), f = index - i;
+        return { x: route[i].x + (route[i+1].x - route[i].x) * f, y: route[i].y + (route[i+1].y - route[i].y) * f };
+      };
+      const a = sample(routes[from][signal]), b = sample(routes[from+1][signal]);
+      return { x: a.x + (b.x-a.x) * blend, y: a.y + (b.y-a.y) * blend };
+    };
+    // Keep the exact approved animation available for side-by-side comparison.
+    const fillExperiment = new URLSearchParams(location.search).get('particle-fill') !== 'off';
+    type Seed = { x: number; y: number; alpha: number; radius: number; color: string };
+    let fillSeeds: Seed[] = [], fillStart = 0, filling = false, entered = false;
+    let releaseParticles: (() => void) | null = null;
+    const flight = document.createElement('canvas');
+    flight.setAttribute('aria-hidden', 'true');
+    flight.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;display:none';
+    const flightCtx = flight.getContext('2d')!;
+    if (fillExperiment) document.body.append(flight);
+    const sizeFlight = () => {
+      const dpr = Math.min(devicePixelRatio, 2);
+      flight.width = Math.round(innerWidth * dpr); flight.height = Math.round(innerHeight * dpr);
+      flightCtx.setTransform(dpr,0,0,dpr,0,0);
+    };
+    const stopFill = () => {
+      filling = false; flight.style.display = 'none';
+      releaseParticles?.(); releaseParticles = null; fillSeeds = [];
+    };
+    const beginFill = () => {
+      if (!fillExperiment || paused() || entered) return;
+      entered = true;
+      const rect = lab.getBoundingClientRect();
+      document.dispatchEvent(new CustomEvent('process-particle-request', { detail: {
+        amount: points.length, rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom },
+        receive: (seeds: Seed[], release: () => void) => {
+          fillSeeds = seeds; releaseParticles = release;
+          filling = true; fillStart = performance.now(); sizeFlight(); flight.style.display = 'block';
+        },
+      } }));
+    };
+    const drawFill = (time: number) => {
+      flightCtx.clearRect(0,0,innerWidth,innerHeight);
+      const rect = canvas.getBoundingClientRect(), elapsed = time - fillStart;
+      const color = document.documentElement.classList.contains('dark') ? '#edb191' : '#95421d';
+      let complete = true;
+      points.forEach((p,i) => {
+        const seed = fillSeeds[i % fillSeeds.length];
+        const delay = (i * 37 % 541) / 541 * 280;
+        const t = Math.max(0, Math.min(1, (elapsed - delay) / 850));
+        if (t < 1) complete = false;
+        const ease = t*t*t*(t*(t*6-15)+10);
+        const endX = rect.left + p.x * rect.width, endY = rect.top + p.y * rect.height;
+        const dx = endX - seed.x, dy = endY - seed.y;
+        const bend = Math.sin(Math.PI * ease) * Math.sin(p.seed) * Math.min(45, Math.hypot(dx,dy) * .12);
+        const x = seed.x + dx * ease + bend, y = seed.y + dy * ease - bend * .4;
+        // Extra detail appears only after the borrowed particles reach the panel.
+        const density = i < fillSeeds.length ? 1 : ease;
+        const alpha = (seed.alpha + (.4 + (i%5)*.12 - seed.alpha) * ease) * density;
+        flightCtx.fillStyle = seed.color; flightCtx.globalAlpha = alpha * (1-ease);
+        flightCtx.beginPath(); flightCtx.arc(x,y,seed.radius + (1.1-seed.radius)*ease,0,Math.PI*2); flightCtx.fill();
+        flightCtx.fillStyle = color; flightCtx.globalAlpha = alpha * ease;
+        flightCtx.beginPath(); flightCtx.arc(x,y,i%11===0?1.7:1.1,0,Math.PI*2); flightCtx.fill();
+      });
+      flightCtx.globalAlpha = 1;
+      if (complete) { filling = false; flight.style.display = 'none'; }
+    };
+    const target = (i: number, state: number) => forms[state][i];
+    const select = (next: number) => {
+      stage = next;
+      lab.querySelectorAll('[data-process-stage]').forEach((node, i) => node.setAttribute('aria-pressed', String(i === stage)));
+      lab.querySelectorAll<HTMLElement>('[data-process-result]').forEach((node, i) => { node.hidden = i !== stage; });
+      lab.querySelector('.lab-stage-label')!.textContent = ['01 / Entender · Dar claridad', '02 / Diseñar · Recorrido', '03 / Construir · Producto'][stage];
+    };
+    const setTargets = (snap = false) => {
+      const { from, blend } = morph(progress);
+      // A shorter scroll window gives the morph a quick, soft acceleration.
+      // Quintic easing also removes acceleration jumps at both endpoints.
+      points.forEach((p, i) => {
+        const a = target(i, from), b = target(i, from + 1);
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const distance = Math.hypot(dx, dy);
+        // A small reversible arc replaces the rigid straight-line trajectory.
+        const bend = Math.sin(Math.PI * blend) * Math.sin(p.seed) * .045;
+        p.tx = a.x + dx * blend - (distance ? dy / distance : 0) * bend;
+        p.ty = a.y + dy * blend + (distance ? dx / distance : 0) * bend;
+        if (snap || paused()) { p.x = p.tx; p.y = p.ty; p.vx = p.vy = 0; }
+      });
+      lab.style.setProperty('--process-progress', String(progress / 2));
+    };
+    const render = (time: number) => {
+      ctx.clearRect(0, 0, width, height);
+      if (filling && !paused()) { drawFill(time); if (filling) return; }
+      const color = document.documentElement.classList.contains('dark') ? '#edb191' : '#95421d';
+      ctx.fillStyle = ctx.strokeStyle = color;
+      ctx.lineCap = 'round'; ctx.lineWidth = .8;
+      const still = paused();
+      const phases = [0, 1/3, 2/3].map(offset => (flowTime / 2800 + offset) % 1);
+      const heads = still ? [] : phases.map((t, i) => signalPoint(i, t, flowProgress));
+      points.forEach((p, i) => {
+        const drift = still ? 0 : Math.sin(time * .0008 + p.seed) * .0015;
+        const x = (p.x + drift) * width, y = (p.y + drift * .7) * height;
+        const vx = p.vx * width, vy = p.vy * height;
+        const speed = Math.hypot(vx, vy);
+        // A single, bounded trail follows current velocity: no blur accumulation.
+        if (!still && speed > 12) {
+          const length = Math.min(18, speed * .024);
+          ctx.globalAlpha = Math.min(.24, speed / 1100);
+          ctx.beginPath(); ctx.moveTo(x - vx / speed * length, y - vy / speed * length); ctx.lineTo(x, y); ctx.stroke();
+        }
+        let energy = 0;
+        heads.forEach((head, j) => {
+          const distance = Math.hypot(x - head.x * width, y - head.y * height);
+          const fade = Math.min(1, phases[j] / .10, (1 - phases[j]) / .12);
+          energy = Math.max(energy, Math.max(0, 1 - distance / 20) * fade);
+        });
+        ctx.globalAlpha = Math.min(1, .4 + (i % 5) * .12 + energy * .45);
+        ctx.beginPath(); ctx.arc(x, y, i % 11 === 0 ? 1.7 : 1.1, 0, Math.PI * 2); ctx.fill();
+      });
+      if (!still) {
+        ctx.fillStyle = ctx.strokeStyle = document.documentElement.classList.contains('dark') ? '#ffe0ca' : '#6e2f15';
+        heads.forEach((head, i) => {
+          const t = phases[i], fade = Math.min(1, t / .10, (1 - t) / .12);
+          // A small moving packet illuminates the dots it passes, then fades at the end.
+          ctx.globalAlpha = fade * .42; ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          for (let n = 0; n <= 6; n++) {
+            const tail = signalPoint(i, Math.max(0, t - .055 + n / 6 * .055), flowProgress);
+            if (n === 0) ctx.moveTo(tail.x * width, tail.y * height); else ctx.lineTo(tail.x * width, tail.y * height);
+          }
+          ctx.stroke();
+          ctx.globalAlpha = fade * .12;
+          ctx.beginPath(); ctx.arc(head.x * width, head.y * height, 6, 0, Math.PI * 2); ctx.fill();
+          ctx.globalAlpha = fade * .95;
+          ctx.beginPath(); ctx.arc(head.x * width, head.y * height, 2.1, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+      ctx.globalAlpha = 1;
+    };
+    const tick = (time: number) => {
+      if (!visible || document.hidden || paused()) { raf = 0; return; }
+      frameBudget += Math.min(64, time - previousFrame);
+      previousFrame = time;
+      // Up to 60 fps; time-based response remains consistent across refresh rates.
+      if (frameBudget >= 1000 / 60) {
+        frameBudget %= 1000 / 60;
+        const dt = Math.max(1, Math.min(64, time - last));
+        flowTime += dt;
+        const ease = 1 - Math.exp(-dt / 55);
+        flowProgress += (progress - flowProgress) * ease;
+        const velocityEase = 1 - Math.exp(-dt / 45);
+        points.forEach(p => {
+          const dx = (p.tx - p.x) * ease, dy = (p.ty - p.y) * ease;
+          p.x += dx; p.y += dy;
+          p.vx += (dx * 1000 / dt - p.vx) * velocityEase;
+          p.vy += (dy * 1000 / dt - p.vy) * velocityEase;
+        });
+        last = time; render(time);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    const resume = () => { if (paused()) { setTargets(true); render(0); } else if (!raf && visible && !document.hidden) { last = previousFrame = performance.now(); frameBudget = 0; raf = requestAnimationFrame(tick); } };
+    const updateScroll = () => {
+      if (paused()) return;
+      const marker = innerWidth < 768 && innerHeight > 620 ? lab.getBoundingClientRect().bottom + 80 : innerHeight * .54;
+      const centers = steps.map(step => { const r = step.getBoundingClientRect(); return r.top + r.height / 2; });
+      let next = 0;
+      if (marker >= centers[2]) next = 2;
+      else if (marker > centers[0]) { const from = marker > centers[1] ? 1 : 0; next = from + (marker - centers[from]) / (centers[from + 1] - centers[from]); }
+      progress = Math.max(0, Math.min(2, next));
+      const active = Math.round(progress);
+      if (stage !== active) select(active);
+      setTargets(); resume();
+    };
+    // Reading and updates run once per scroll frame, without intercepting scrolling.
+    let scrollFrame = 0;
+    window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(() => { scrollFrame = 0; updateScroll(); }); }, { passive: true });
+    new ResizeObserver(() => { const box = canvas.getBoundingClientRect(); width = box.width; height = box.height; const dpr = Math.min(devicePixelRatio, 2); canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); updateScroll(); render(0); }).observe(canvas);
+    new IntersectionObserver(entries => { const entry = entries[0]; visible = entry.isIntersecting; if (entry.intersectionRatio >= .25) beginFill(); if (!visible) { stopFill(); entered = false; } updateScroll(); resume(); }, { threshold: [0,.25] }).observe(canvas);
+    const preferenceChanged = () => { if (paused()) { stopFill(); progress = stage; setTargets(true); } else updateScroll(); resume(); };
+    new MutationObserver(preferenceChanged).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    media.addEventListener('change', preferenceChanged);
+    window.addEventListener('resize', stopFill, { passive: true });
+    window.addEventListener('pagehide', stopFill);
+    document.addEventListener('visibilitychange', resume);
+    lab.querySelectorAll<HTMLButtonElement>('[data-process-stage]').forEach(button => button.addEventListener('click', () => {
+      const next = Number(button.dataset.processStage);
+      select(next); progress = next; setTargets(paused()); render(performance.now()); resume();
+      if (!paused()) {
+        const marker = innerWidth < 768 && innerHeight > 620 ? lab.getBoundingClientRect().bottom + 80 : innerHeight * .54;
+        const r = steps[next].getBoundingClientRect();
+        window.scrollTo({ top: scrollY + r.top + r.height / 2 - marker, behavior: 'auto' });
+      }
+    }));
+    setTargets(true); updateScroll(); resume();
+  }
+</script>
