@@ -25,7 +25,7 @@ export default function MotionToggle() {
     whileTap={reduced ? undefined : { scale: .96 }}>
     <AnimatePresence initial={false}><motion.span key={paused ? 'play' : 'pause'} className="absolute flex items-center justify-center"
       initial={reduced ? { opacity: 0 } : { opacity: 0, scale: .25, filter: 'blur(4px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} exit={reduced ? { opacity: 0 } : { opacity: 0, scale: .25, filter: 'blur(4px)' }} transition={SPRING}>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {paused ? <path d="m9 5 11 7-11 7Z"/> : <><path d="M9 5v14M15 5v14"/></>}
       </svg>
     </motion.span></AnimatePresence>
