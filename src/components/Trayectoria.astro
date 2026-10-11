@@ -66,7 +66,7 @@ const jobs = [
             <span
               class={`absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 md:left-1/2 md:-translate-x-1/2 ${
                 job.current
-                  ? 'border-green-500/60 bg-green-500/20'
+                  ? 'border-success bg-[color-mix(in_srgb,var(--success)_20%,transparent)]'
                   : 'border-line bg-transparent'
               }`}
               aria-hidden="true"
@@ -97,7 +97,7 @@ const jobs = [
               {/* Tags */}
               <ul class="mt-8 flex flex-wrap gap-2">
                 {job.tags.map((tag) => (
-                  <li class="rounded-full border border-line px-3.5 py-1.5 text-[length:var(--fs-micro)] font-medium text-muted">
+                  <li class="tag">
                     {tag}
                   </li>
                 ))}

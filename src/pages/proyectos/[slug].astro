@@ -80,7 +80,7 @@ const nextTags = next.brief
 										<p class="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">{group.label}</p>
 										<div class="flex flex-wrap gap-2">
 											{group.tags.map((tag) => (
-												<span class="rounded-full border border-line bg-black/5 px-3.5 py-1.5 text-[length:var(--fs-micro)] font-medium text-muted dark:bg-white/10">
+												<span class="tag">
 													{tag}
 												</span>
 											))}
@@ -277,7 +277,7 @@ const nextTags = next.brief
 						{nextTags.length > 0 && (
 							<div class="mt-6 flex flex-wrap gap-2">
 								{nextTags.map((tag) => (
-									<span class="rounded-full border border-line bg-black/5 px-3.5 py-1.5 text-xs font-medium text-muted dark:bg-white/10">
+									<span class="tag">
 										{tag}
 									</span>
 								))}

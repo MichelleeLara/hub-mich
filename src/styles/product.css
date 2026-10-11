@@ -103,6 +103,10 @@ html.dark .theme-inverse {
   color-scheme: light;
 }
 
+/* Tag: .tag sobre superficies del tema · .tag-photo sobre foto (constante, ambos modos) */
+.tag { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: var(--radius-full); border: 1px solid var(--line); color: var(--muted); font-size: var(--fs-micro); font-weight: 500; letter-spacing: .025em; line-height: 1.2; }
+.tag-photo { display: inline-flex; align-items: center; padding: 8px 12px; border-radius: var(--radius-full); background: #f3f1ed; color: #343434; font-size: var(--fs-micro); font-weight: 500; letter-spacing: .025em; line-height: 1.2; }
+
 /* Botón: uno solo, dos variantes (decidido 2026-10-10) */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3); height: 48px; padding: 0 24px; border-radius: var(--radius-sm); font-size: var(--fs-small); font-weight: 500; line-height: 1; white-space: nowrap; border: 1px solid transparent; }
 .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
