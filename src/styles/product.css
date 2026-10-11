@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Design system ./mich — tokens (decidido 2026-10-10, ver Marca personal/02 Estrategia/Decisiones.md)
+   Design system ./mich — tokens (decidido 2026-10-10, guía: docs/design-system.md · vista viva: /design)
    Regla: ningún componente usa un hex; solo var(--token) o su clase de Tailwind.
    ========================================================================== */
 :root {
