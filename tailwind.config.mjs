@@ -41,6 +41,10 @@ export default {
 				card: 'var(--radius-md)',    // tarjetas chicas
 				panel: 'var(--radius-lg)',   // proyectos, paneles
 			},
+			boxShadow: {
+				float: 'var(--shadow-float)', // menú, barra móvil, toggles
+				lift: 'var(--shadow-lift)',   // avatar, tarjetas del caso
+			},
 			transitionDuration: {
 				fast: 'var(--dur-fast)',
 				base: 'var(--dur-base)',

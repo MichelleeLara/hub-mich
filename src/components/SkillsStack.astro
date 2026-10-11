@@ -35,48 +35,48 @@ const tools = [
   <div class="method-tools">{tools.map(tool => <div><span>{tool.label}</span><p>{tool.items}</p></div>)}</div>
 </section>
 <style>
-  .method-intro { max-width: 780px; margin-bottom: 56px; }
-  h2 { margin: 28px 0; }
-  .method-intro > p { margin-top: 28px; max-width: 510px; color: var(--muted); font-size: var(--fs-body); line-height: 1.7; }
-  .method-layout { display: grid; grid-template-columns: 1fr 1.1fr; gap: 72px; align-items: start; }
+  .method-intro { max-width: 780px; margin-bottom: var(--space-8); }
+  h2 { margin: var(--space-6) 0; }
+  .method-intro > p { margin-top: var(--space-6); max-width: 510px; color: var(--muted); font-size: var(--fs-body); line-height: 1.7; }
+  .method-layout { display: grid; grid-template-columns: 1fr 1.1fr; gap: var(--space-8); align-items: start; }
   .process-story { grid-column: 1; grid-row: 1; align-self: stretch; display: flex; flex-direction: column; }
   .process-step { min-height: 65vh; display: flex; flex-direction: column; justify-content: flex-start; padding: 24px 0 48px; scroll-margin-top: 180px; }
   @media (min-width: 768px) { .method-section .process-story .process-step:last-child { min-height: 0; margin-top: auto; padding-bottom: 0; } }
-  .step-index { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-bottom: 24px; }
+  .step-index { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-bottom: var(--space-5); }
   .process-step h3 { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 600; line-height: 1.1; letter-spacing: -.02em; max-width: 400px; }
-  .process-step > p:last-child { margin-top: 24px; max-width: 390px; font-size: var(--fs-body); line-height: 1.7; color: var(--muted); }
-  .method-tools { margin-top: 48px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .process-step > p:last-child { margin-top: var(--space-5); max-width: 390px; font-size: var(--fs-body); line-height: 1.7; color: var(--muted); }
+  .method-tools { margin-top: var(--space-7); display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
   .method-tools > div { border-top: 1px solid var(--line); padding-top: 14px; }
   .method-tools span { font-size: 12px; font-weight: 600; }
-  .method-tools p { margin-top: 8px; font-size: var(--fs-small); color: var(--muted); line-height: 1.65; }
+  .method-tools p { margin-top: var(--space-2); font-size: var(--fs-small); color: var(--muted); line-height: 1.65; }
   .method-lab { grid-column: 2; grid-row: 1; position: sticky; top: 120px; overflow: hidden; border-radius: var(--radius-lg); background: var(--surface-particle-card); border: 1px solid var(--line-subtle); }
-  .lab-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px 28px 0; font-size: 12px; color: var(--muted); }
+  .lab-heading { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); padding: 24px 28px 0; font-size: 12px; color: var(--muted); }
   .lab-tag { color: var(--accent); white-space: nowrap; }
-  .lab-stage { position: relative; height: min(38vh, 340px); min-height: 200px; margin: 12px 24px 20px; }
+  .lab-stage { position: relative; height: min(38vh, 340px); min-height: 200px; margin: var(--space-3) var(--space-5) var(--space-5); }
   canvas { display: block; width: 100%; height: 100%; }
   .lab-stage-label { position: absolute; bottom: 12px; left: 12px; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--muted); }
   .lab-axis { position: absolute; top: 12px; color: var(--muted); font-family: var(--font-mono); }.axis-x { left: 12px; }.axis-y { right: 12px; }
-  .process-buttons { display: flex; gap: 6px; padding: 0 24px; }
-  .process-buttons button { display: flex; justify-content: center; gap: 8px; align-items: center; flex: 1; min-height: 48px; border-radius: var(--radius-sm); color: var(--muted); font-size: var(--fs-small); transition: background-color var(--dur-fast), color var(--dur-fast); }
+  .process-buttons { display: flex; gap: var(--space-2); padding: 0 24px; }
+  .process-buttons button { display: flex; justify-content: center; gap: var(--space-2); align-items: center; flex: 1; min-height: 48px; border-radius: var(--radius-sm); color: var(--muted); font-size: var(--fs-small); transition: background-color var(--dur-fast), color var(--dur-fast); }
   .process-buttons button span { font-size: 11px; }
   .process-buttons button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
   .lab-result { padding: 24px 28px; min-height: 106px; }
-  .lab-result > span { display: block; margin-bottom: 8px; font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
+  .lab-result > span { display: block; margin-bottom: var(--space-2); font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
   .lab-result p { font-size: var(--fs-small); line-height: 1.6; }
-  .lab-progress { height: 1px; background: var(--line); margin: 0 28px 16px; }
+  .lab-progress { height: 1px; background: var(--line); margin: 0 var(--space-6) var(--space-4); }
   .lab-progress span { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--process-progress, 0)); transform-origin: left; }
   .lab-footnote { padding: 0 28px 20px; font-size: var(--fs-micro); color: var(--muted); }
-  @media (min-width: 768px) and (max-width: 1023px) { .method-layout { gap: 32px; } .process-buttons { padding: 0 14px; } .process-buttons button { font-size: 12px; gap: 4px; } .lab-heading { padding: 24px 20px 0; } }
+  @media (min-width: 768px) and (max-width: 1023px) { .method-layout { gap: var(--space-6); } .process-buttons { padding: 0 14px; } .process-buttons button { font-size: 12px; gap: var(--space-1); } .lab-heading { padding: 24px 20px 0; } }
   @media (max-width: 767px) {
-    .method-intro { margin-bottom: 32px; } .method-layout { display: block; }
+    .method-intro { margin-bottom: var(--space-6); } .method-layout { display: block; }
     .method-lab { top: 92px; z-index: 2; } .lab-heading { padding: 18px 20px 0; }
-    .lab-stage { margin: 8px 12px 12px; height: 24vh; min-height: 150px; }
-    .process-buttons { padding: 0 14px; } .process-buttons button { font-size: 12px; gap: 6px; min-height: 44px; }
-    .lab-result { padding: 16px 20px; min-height: 90px; } .lab-progress { margin: 0 20px 12px; }
+    .lab-stage { margin: var(--space-2) var(--space-3) var(--space-3); height: 24vh; min-height: 150px; }
+    .process-buttons { padding: 0 14px; } .process-buttons button { font-size: 12px; gap: var(--space-2); min-height: 44px; }
+    .lab-result { padding: 16px 20px; min-height: 90px; } .lab-progress { margin: 0 var(--space-5) var(--space-3); }
     .lab-footnote { padding: 0 20px 16px; }
     .process-step { min-height: 65vh; padding: 56px 0; scroll-margin-top: 490px; justify-content: flex-end; }
-    .process-step > p:last-child { margin-top: 16px; }
-    .step-index { margin-bottom: 18px; } .method-tools { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .process-step > p:last-child { margin-top: var(--space-4); }
+    .step-index { margin-bottom: var(--space-4); } .method-tools { grid-template-columns: 1fr 1fr; gap: var(--space-5); }
   }
   @media (max-height: 620px) { .method-lab { position: static; } .process-step { min-height: 420px; } }
 </style>

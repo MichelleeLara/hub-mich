@@ -56,17 +56,17 @@ const nextTags = next.brief
 			<section id="decisiones" class="relative scroll-mt-28 px-6 pb-20">
 				<div class="mx-auto max-w-5xl">
 					<div class="relative overflow-hidden rounded-panel border border-line bg-surface p-8 md:p-12">
-						<div class="grid grid-cols-1 gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-16">
+						<div class="grid grid-cols-1 gap-12 lg:grid-cols-[1.6fr_1fr] lg:gap-16">
 							<!-- Narrativa -->
 							<div>
 								<p class="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-accent">Intro</p>
-								<div class="space-y-5 text-base leading-[1.7] text-muted [&_em]:italic [&_em]:text-muted [&_strong]:font-semibold [&_strong]:text-ink">
+								<div class="space-y-6 text-base leading-[1.7] text-muted [&_em]:italic [&_em]:text-muted [&_strong]:font-semibold [&_strong]:text-ink">
 									{p.brief.intro.map((para) => (
 										<p set:html={para} />
 									))}
 								</div>
 								{p.brief.note && (
-									<div class="mt-8 inline-flex items-center gap-2.5 rounded-control border border-line bg-black/5 px-4 py-3 text-xs italic text-muted dark:bg-white/5">
+									<div class="mt-8 inline-flex items-center gap-3 rounded-control border border-line bg-black/5 px-4 py-3 text-xs italic text-muted dark:bg-white/5">
 										<svg class="h-4 w-4 flex-shrink-0 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
 										{p.brief.note}
 									</div>
@@ -74,7 +74,7 @@ const nextTags = next.brief
 							</div>
 
 							<!-- Ficha · pills agrupados (Herramientas reutiliza el stack) -->
-							<div class="space-y-7 lg:border-l lg:border-line lg:pl-14 dark:lg:border-white/10">
+							<div class="space-y-8 lg:border-l lg:border-line lg:pl-14 dark:lg:border-white/10">
 								{facts.map((group) => (
 									<div>
 										<p class="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">{group.label}</p>
@@ -104,7 +104,7 @@ const nextTags = next.brief
 				<p class="mt-4 text-base text-muted">Qué necesitaba cambiar, qué decidí y qué resultado tuvo.</p>
 			</div>
 
-			<div class="relative mx-auto mt-20 max-w-6xl px-6">
+			<div class="relative mx-auto mt-24 max-w-6xl px-6">
 				<!-- Conectores punteados (solo desktop). Dos SVGs pequeños con
 				     viewBox = tamaño de caja → escala uniforme, puntos siempre
 				     redondos y curva sin deformar. Uno por gap entre tarjetas. -->
@@ -136,8 +136,8 @@ const nextTags = next.brief
 				<!-- Tarjetas: layout asimétrico en desktop, apiladas en móvil -->
 				<div class="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-start lg:gap-6">
 					<!-- 1 · PROBLEMA (viñetas) -->
-					<div class="rounded-card bg-surface p-8 shadow-xl shadow-zinc-900/5 ring-1 ring-line-subtle dark:ring-line lg:mt-8 lg:-rotate-1">
-						<div class="mb-5 flex items-center gap-3">
+					<div class="rounded-card bg-surface p-8 shadow-lift ring-1 ring-line-subtle dark:ring-line lg:mt-8 lg:-rotate-1">
+						<div class="mb-6 flex items-center gap-3">
 							<div class="flex h-10 w-10 items-center justify-center rounded-control bg-accent-soft text-accent">
 								<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
 							</div>
@@ -146,7 +146,7 @@ const nextTags = next.brief
 								<h3 class="text-[length:var(--fs-lead)] font-[650] tracking-[-.02em] text-ink">Problema</h3>
 							</div>
 						</div>
-						<ul class="space-y-3.5 text-sm leading-relaxed text-muted">
+						<ul class="space-y-4 text-sm leading-relaxed text-muted">
 							{p.problema.map((item) => (
 								<li class="flex gap-3">
 									<span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent"></span>
@@ -157,8 +157,8 @@ const nextTags = next.brief
 					</div>
 
 					<!-- 2 · SOLUCIÓN (párrafos) — centro, elevada y rotada -->
-					<div class="rounded-card bg-surface p-8 shadow-2xl shadow-zinc-900/10 ring-1 ring-line-subtle dark:ring-line lg:-mt-4 lg:rotate-2">
-						<div class="mb-5 flex items-center gap-3">
+					<div class="rounded-card bg-surface p-8 shadow-lift ring-1 ring-line-subtle dark:ring-line lg:-mt-4 lg:rotate-2">
+						<div class="mb-6 flex items-center gap-3">
 							<div class="flex h-10 w-10 items-center justify-center rounded-control bg-accent-soft text-accent">
 								<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
 							</div>
@@ -173,8 +173,8 @@ const nextTags = next.brief
 					</div>
 
 					<!-- 3 · RESULTADO (métricas grandes en acento) -->
-					<div class="rounded-card bg-surface p-8 shadow-xl shadow-zinc-900/5 ring-1 ring-line-subtle dark:ring-line lg:mt-12 lg:rotate-1">
-						<div class="mb-5 flex items-center gap-3">
+					<div class="rounded-card bg-surface p-8 shadow-lift ring-1 ring-line-subtle dark:ring-line lg:mt-12 lg:rotate-1">
+						<div class="mb-6 flex items-center gap-3">
 							<div class="flex h-10 w-10 items-center justify-center rounded-control bg-accent-soft text-accent">
 								<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
 							</div>
@@ -217,7 +217,7 @@ const nextTags = next.brief
 								<p class="font-ClashDisplay text-[length:var(--fs-h1)] font-semibold leading-[1.05] tracking-[-.03em]">{p.impact.featured.metric}</p>
 								<p class="mt-4 text-sm font-semibold uppercase tracking-widest text-accent">{p.impact.featured.label}</p>
 							</div>
-							<p class="relative mt-10 max-w-xl text-base leading-relaxed text-muted">{p.impact.featured.desc}</p>
+							<p class="relative mt-12 max-w-xl text-base leading-relaxed text-muted">{p.impact.featured.desc}</p>
 						</div>
 
 						<!-- Tarjetas 2 y 3 · Hardware / arquitectura (con icono técnico) -->
@@ -225,7 +225,7 @@ const nextTags = next.brief
 							<div class="flex flex-col justify-between rounded-panel border border-line bg-surface p-8 text-ink md:col-span-1">
 								<div>
 									{item.icon && (
-										<span class="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-control border border-line bg-bg text-muted">
+										<span class="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-control border border-line bg-bg text-muted">
 											{item.icon === 'cpu' && (
 												<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
 											)}
@@ -263,14 +263,14 @@ const nextTags = next.brief
 				data-magnetic-card
 				class="group mx-auto block max-w-6xl rounded-panel border border-line bg-surface p-8 transition-colors duration-base hover:border-muted md:p-12"
 			>
-				<div class="grid grid-cols-1 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
+				<div class="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
 					<!-- Izquierda · texto -->
 					<div>
 						<span class="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Siguiente Caso</span>
 						<h2 class="mt-4 font-ClashDisplay text-[length:var(--fs-h1)] font-semibold uppercase leading-[1.05] tracking-[-.03em] break-words text-ink">
 							{next.title}
 						</h2>
-						<p class="mt-5 max-w-md text-sm leading-relaxed text-muted md:text-base">
+						<p class="mt-6 max-w-md text-sm leading-relaxed text-muted md:text-base">
 							{next.intro.left}
 						</p>
 

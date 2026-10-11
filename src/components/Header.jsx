@@ -45,7 +45,7 @@ const SECTIONS = [
 const ISLAND =
   "rounded-full backdrop-blur-md bg-surface-glass " +
   "border border-line-subtle dark:border-line " +
-  "shadow-lg shadow-black/5 dark:shadow-black/40 " +
+  "shadow-float " +
   "transition-colors duration-base";
 
 // Píldora gris de seguimiento (única, compartida entre islas via layoutId).
@@ -152,7 +152,7 @@ export default function Header() {
       <div className="fixed top-8 inset-x-0 z-[100] hidden md:flex justify-center pointer-events-none px-6">
         <motion.nav
           aria-label="Navegación principal"
-          className="flex items-center gap-2.5 pointer-events-auto"
+          className="flex items-center gap-3 pointer-events-auto"
           variants={reduced ? { hidden: {}, show: { transition: { duration: 0 } } } : groupVariants}
           initial={reduced ? false : "hidden"}
           animate="show"

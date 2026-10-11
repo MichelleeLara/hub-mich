@@ -15,21 +15,21 @@ import SectionHeading from './SectionHeading.astro';
 </section>
 <style>
   .brief-section { padding-top: 40px; padding-bottom: 88px; }
-  .brief-heading { display: flex; gap: 60px; align-items: end; justify-content: space-between; }
-  h2 { margin-top: 24px; }.brief-heading > p { max-width: 370px; font-size: 16px; color: var(--muted); line-height: 1.7; }
-  details { margin-top: 36px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .brief-heading { display: flex; gap: var(--space-8); align-items: end; justify-content: space-between; }
+  h2 { margin-top: var(--space-5); }.brief-heading > p { max-width: 370px; font-size: 16px; color: var(--muted); line-height: 1.7; }
+  details { margin-top: var(--space-6); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   summary { min-height: 76px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 16px; list-style: none; }
   summary::-webkit-details-marker { display: none; }.brief-plus { font-size: 28px; } details[open] .brief-plus { transform: rotate(45deg); }
-  form { padding: 8px 0 32px; }.brief-fields { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; }
-  label { display: block; margin-bottom: 12px; font-weight: 500; font-size: 14px; }
+  form { padding: 8px 0 32px; }.brief-fields { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-7); }
+  label { display: block; margin-bottom: var(--space-3); font-weight: 500; font-size: 14px; }
   input,textarea,select { display: block; width: 100%; padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--muted); color: var(--ink); background: var(--surface); font-size: 14px; line-height: 1.6; }
-  input::placeholder,textarea::placeholder { color: var(--muted); }textarea { resize: vertical; } input { margin-bottom: 24px; }
+  input::placeholder,textarea::placeholder { color: var(--muted); }textarea { resize: vertical; } input { margin-bottom: var(--space-5); }
   :is(input,textarea,select):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  #brief-privacy { margin-top: 12px; font-size: 12px; color: var(--muted); }
-  .brief-button { margin-top: 24px; }
-  #brief-result { margin-top: 28px; padding: 28px; border-radius: var(--radius-md); background: var(--surface); }h3 { font-size: var(--fs-lead); font-weight: 500; }
-  pre { margin-top: 20px; font-family: inherit; font-size: 14px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }.brief-actions { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 24px; }#brief-status { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  @media(max-width:767px) { .brief-heading { display: block; }.brief-heading > p { margin-top: 24px; }.brief-fields { grid-template-columns: 1fr; gap: 24px; }#brief-result { padding: 20px; }summary { font-size: 14px; } }
+  #brief-privacy { margin-top: var(--space-3); font-size: 12px; color: var(--muted); }
+  .brief-button { margin-top: var(--space-5); }
+  #brief-result { margin-top: var(--space-6); padding: var(--space-6); border-radius: var(--radius-md); background: var(--surface); }h3 { font-size: var(--fs-lead); font-weight: 500; }
+  pre { margin-top: var(--space-5); font-family: inherit; font-size: 14px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }.brief-actions { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); margin-top: var(--space-5); }#brief-status { font-size: 12px; color: var(--muted); margin-top: var(--space-2); }
+  @media(max-width:767px) { .brief-heading { display: block; }.brief-heading > p { margin-top: var(--space-5); }.brief-fields { grid-template-columns: 1fr; gap: var(--space-5); }#brief-result { padding: var(--space-5); }summary { font-size: 14px; } }
 </style>
 <script>
   const form = document.getElementById('project-brief-form') as HTMLFormElement | null;

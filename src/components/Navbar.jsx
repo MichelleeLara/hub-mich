@@ -119,7 +119,7 @@ export default function AnimatedTabs() {
         className="pointer-events-auto flex max-w-full items-center gap-1 overflow-hidden p-2 rounded-full
                    backdrop-blur-md bg-surface-glass
                    border border-line-subtle dark:border-line
-                   shadow-2xl shadow-black/10 dark:shadow-black/50
+                   shadow-float
                    transition-colors duration-base"
       >
         {TABS.map((tab) => {
