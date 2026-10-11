@@ -1,0 +1,17 @@
+<!-- @dsCard group="Contenido" height=340 subtitle="Normal; la foto es un relleno oscuro" -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&display=swap">
+<style>
+  .pc { position: relative; display: flex; align-items: flex-end; max-width: 460px; aspect-ratio: 1.25; overflow: hidden; border-radius: var(--radius-lg); background: #171717; color: #fff; text-decoration: none; }
+  .pc::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgb(0 0 0 / .12) 45%, rgb(0 0 0 / .78) 74%, #111 100%); }
+  .pc-tags { position: absolute; z-index: 1; top: 24px; right: 24px; left: 24px; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); }
+  .pc-info { position: relative; z-index: 1; padding: var(--space-6); }
+  .pc-info h3 { margin: 0; font-family: var(--font-display); font-size: 36px; font-weight: 600; line-height: 1.1; letter-spacing: -.02em; }
+  .pc-info p { margin: var(--space-4) 0 0; color: #e0e0e0; font-size: 14px; }
+</style>
+<div style="padding:24px;background:var(--bg)">
+  <a href="#" class="pc" aria-label="AnamSeals, caso de estudio">
+    <div class="pc-tags"><span class="tag-photo">IoT</span><span class="tag-photo">Firmware</span><span class="tag-photo">Hardware</span></div>
+    <div class="pc-info"><h3>AnamSeals</h3><p>Firmware · Bego — 2025–26</p></div>
+  </a>
+</div>
+<script>document.querySelector('.pc').addEventListener('click', e => e.preventDefault());</script>
