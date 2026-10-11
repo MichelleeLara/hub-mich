@@ -2,7 +2,7 @@
 
 > **Productos que resuelven, detalles que se notan.**
 
-Sitio personal de Michelle Rodriguez Lara (Mich), Frontend Engineer. Diseño y construyo productos digitales que resuelven problemas de negocio y se sienten simples de usar.
+Sitio personal de Michelle Rodriguez Lara (Mich), Product Engineer. Diseño y construyo productos digitales que resuelven problemas de negocio y se sienten simples de usar.
 
 **En vivo:** [itsmich.com.mx](https://itsmich.com.mx) *(mientras se conecta el dominio: [hub-mich.vercel.app](https://hub-mich.vercel.app))*
 

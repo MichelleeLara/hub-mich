@@ -17,7 +17,7 @@ Uno el diseño y el código: simplifico lo complejo, automatizo lo repetitivo y 
 ## 3. Identidad
 
 - **Marca:** Mich · **Casa digital:** itsmich.com.mx
-- **Título profesional:** Frontend Engineer (buscable para reclutadores; la mentalidad de producto se demuestra en el trabajo y el copy, no en el puesto)
+- **Título profesional:** Product Engineer (decidido 2026-10-10). Las keywords de frontend (React, Next.js, TypeScript) se mantienen en la meta description y en habilidades para que reclutadores lo encuentren.
 - **Nombre único en todo:** definir uno (hoy conviven Michelle Lara / Michelle Rodriguez) y usarlo idéntico en CV, footer, LinkedIn y GitHub.
 
 ## 4. Pilares
@@ -46,11 +46,11 @@ Cercano y directo. Primera persona ("Soy Mich"), sin jerga corporativa, sin infl
 Mismo núcleo, distinto énfasis (meta 2-3 años: híbrido empleo + proyectos).
 
 - **Clientes:** "Tu producto va a resolver lo que necesita tu negocio y tus usuarios lo van a entender sin manual. Yo me encargo del diseño, el código y los detalles."
-- **Reclutadores/empresas:** "Frontend Engineer con ojo de diseño: construyo funcionalidades bien pensadas, con rendimiento y accesibilidad, y las explico en términos de producto."
+- **Reclutadores/empresas:** "Product Engineer con base en frontend y ojo de diseño: construyo funcionalidades bien pensadas, con rendimiento y accesibilidad, y las explico en términos de producto."
 
 ## 8. Elevator pitch
 
-> Soy Mich, Frontend Engineer. Diseño y construyo productos digitales que resuelven problemas de negocio y se sienten simples de usar. Mi diferencia está en los detalles: funcionalidades bien pensadas, interfaces sin fricción y comunicación clara de principio a fin.
+> Soy Mich, Product Engineer. Diseño y construyo productos digitales que resuelven problemas de negocio y se sienten simples de usar. Mi diferencia está en los detalles: funcionalidades bien pensadas, interfaces sin fricción y comunicación clara de principio a fin.
 
 ## 9. Prueba, no promesa
 
