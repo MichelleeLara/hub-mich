@@ -1,0 +1,133 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectsBento from '../components/ProjectsBento.astro';
+import ProjectsStack from '../components/ProjectsStack.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectImage from '../components/ProjectImage.astro';
+import { projects } from '../data/projectsData.js';
+import { projectPresentation } from '../data/projectPresentation';
+const order=['luzia-agentes-ia','anamseals-firmware','inteligencia-logistica','monitoreo-white-label','tracking-aduanal'];
+const selected=order.map(slug=>projects.find(p=>p.slug===slug)!);
+const options=[{id:'actual',label:'01 · Actual',description:'Imágenes grandes con el texto dentro de cada tarjeta.'},{id:'editorial',label:'02 · Editorial',description:'El producto se ve completo; el contexto y tu aporte tienen su propio espacio.'},{id:'impacto',label:'03 · Impacto',description:'Una selección compacta para explorar los proyectos y comparar sus resultados.'}];
+---
+<Layout title="Proyectos · Opciones de diseño" description="Tres propuestas para la sección de trabajo seleccionado de Mich." image="/author.png" url={Astro.url.href} noindex>
+ <main>
+  <div class="preview-controls">
+   <p>Proyectos · Elige una dirección</p>
+   <div class="option-buttons" aria-label="Opciones de presentación">{options.map(option=><button type="button" data-option={option.id} aria-pressed={option.id==='editorial'}>{option.label}</button>)}</div>
+   <p data-option-description>{options[1].description}</p>
+  </div>
+  <div data-proposal="actual" hidden><ProjectsBento /></div>
+  <div data-proposal="editorial"><ProjectsStack id="proyectos-preview" /></div>
+  {['impacto'].map(mode=><section data-proposal={mode} hidden={mode!=='editorial'} class={`section-shell proposal ${mode}`}>
+   <header class="proposal-heading">
+    <SectionHeading label="Trabajo seleccionado" title="Ideas que toman forma y generan impacto." />
+    <p>De agentes de IA a sistemas que operan en el mundo real. Cada caso cuenta el problema, las decisiones y lo que cambió.</p>
+   </header>
+   <div class="cases"><div class="case-deck">{selected.map((project,index)=>{
+    const visual=projectPresentation[project.slug];
+    const own=project.slug==='luzia-agentes-ia';
+    return <a class="case" href={`/proyectos/${project.slug}`} style={`--case-index:${index}`}>
+     {mode==='editorial'&&<div class="case-tail" aria-hidden="true"><span>0{index+1}</span><span>{project.title}</span><span>↗</span></div>}
+     <div class="case-image"><ProjectImage name={visual.image} alt={visual.alt} sizes={mode==='editorial'?'(min-width:768px) 620px, calc(100vw - 48px)':'(min-width:768px) 550px, calc(100vw - 48px)'} /></div>
+     <div class="case-copy">
+      <div class="case-meta"><span class="case-number">0{index+1}</span><span>{visual.category}</span></div>
+      <h3>{project.title}</h3>
+      <p class="case-story">{mode==='editorial'?visual.summary:visual.headline}</p>
+      {own?<p class="case-status">Proyecto propio · MVP en prevalidación</p>:<div class="case-result"><strong>{visual.result}</strong><span>{visual.resultLabel}</span></div>}
+      <span class="case-link">Explorar el caso <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></span>
+     </div>
+    </a>;
+   })}</div></div>
+  </section>)}
+  <div class="preview-end"><a href="/#proyectos">Volver a la sección actual</a></div>
+ </main>
+</Layout>
+<style>
+ .preview-controls { width:min(100%,var(--container)); margin:120px auto 0; padding:0 var(--gutter); color:var(--ink); }
+ .preview-controls>p:first-child { font:var(--fs-small) var(--font-mono); color:var(--accent); }
+ .option-buttons { display:flex; flex-wrap:wrap; gap:var(--space-2); margin:var(--space-4) 0; }
+ .option-buttons button { min-height:44px; border:1px solid var(--line); padding:10px 18px; border-radius:var(--radius-pill,999px); color:var(--ink); background:var(--surface); cursor:pointer; transition:background .2s,color .2s; }
+ .option-buttons button[aria-pressed=true] { background:var(--ink); color:var(--bg); }
+ [data-option-description] { color:var(--muted); font-size:var(--fs-small); min-height:42px; max-width:620px; }
+ .proposal { padding-top:var(--space-6); }
+ .proposal-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:var(--space-7); margin-bottom:var(--space-8); }
+ .proposal-heading>p { max-width:290px; font-size:var(--fs-body); color:var(--muted); line-height:1.7; }
+ .case { color:var(--ink); display:grid; min-width:0; }
+ .case-image { overflow:hidden; border-radius:var(--radius-lg); aspect-ratio:1.4; background:var(--surface); }
+ .case-image :global(img) { width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.2,.7,.2,1); }
+ .case:hover .case-image :global(img) { transform:scale(1.025); }
+ .case-meta { display:flex; gap:var(--space-4); align-items:center; color:var(--muted); font-size:var(--fs-small); }
+ .case-number { color:var(--accent); font-family:var(--font-mono); }
+ h3 { font-family:var(--font-display); font-weight:600; font-size:clamp(28px,3vw,42px); letter-spacing:-.03em; line-height:1.1; margin:var(--space-5) 0 var(--space-4); }
+ .case-story { color:var(--muted); font-size:var(--fs-body); line-height:1.65; max-width:460px; }
+ .case-result { border-top:1px solid var(--line); margin-top:var(--space-6); padding-top:var(--space-5); display:flex; flex-direction:column; gap:var(--space-2); }
+ .case-result strong { font-family:var(--font-display); font-size:32px; line-height:1.1; font-weight:500; }
+ .case-result span,.case-status { font-size:var(--fs-small); color:var(--muted); }
+ .case-status { margin-top:var(--space-6); padding-top:var(--space-5); border-top:1px solid var(--line); line-height:1.6; }
+ .case-link { display:inline-flex; gap:var(--space-4); align-items:center; min-height:44px; margin-top:var(--space-5); font-size:var(--fs-small); }
+ .case-link svg { width:20px; height:20px; transition:transform .25s; }
+ .case:hover .case-link svg { transform:translate(3px,-3px); }
+ .editorial .cases { position:relative; isolation:isolate; }
+ .editorial .case-deck { display:flex; flex-direction:column; gap:var(--space-5); }
+ .impacto .case-deck { display:contents; }
+ .editorial .case { position:relative; z-index:calc(var(--case-index) + 1); grid-template-columns:minmax(0,1.45fr) minmax(0,1fr); column-gap:var(--space-6); row-gap:var(--space-4); align-items:center; padding:var(--space-3) var(--space-5) var(--space-5); border:1px solid var(--line); border-radius:var(--radius-lg); background:var(--bg); box-shadow:var(--shadow-float); margin-bottom:0; scroll-margin-top:112px; }
+ .editorial .case:last-child { margin-bottom:0; }
+ .editorial .case:focus-visible { z-index:10; }
+ .case-tail { grid-column:1/-1; display:flex; align-items:center; gap:var(--space-3); color:var(--muted); font-size:var(--fs-small); line-height:20px; }
+ .case-tail span:first-child { color:var(--accent); font-family:var(--font-mono); }
+ .case-tail span:last-child { margin-left:auto; }
+ .editorial .case-image { aspect-ratio:1.85; border-radius:var(--radius-md); }
+ .editorial h3 { font-size:clamp(28px,2.8vw,38px); margin-top:var(--space-4); }
+ .editorial .case-result,.editorial .case-status { margin-top:var(--space-4); padding-top:var(--space-4); }
+ .editorial .case-link { margin-top:var(--space-3); }
+ .editorial .case:nth-child(even) .case-image { order:2; }
+ .editorial .case:nth-child(even) { grid-template-columns:minmax(0,1fr) minmax(0,1.45fr); }
+ .impacto .cases { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-8) var(--space-6); }
+ .impacto .case-copy { padding:var(--space-5) 0 0; }
+ .impacto h3 { font-size:32px; }
+ .impacto .case-story { min-height:54px; }
+ .impacto .case-result { flex-direction:row; align-items:center; gap:var(--space-4); }
+ .impacto .case-result span { max-width:230px; }
+ .preview-end { text-align:center; padding:var(--space-8) var(--gutter) 120px; color:var(--muted); }
+ [data-proposal][hidden] { display:none; }
+ @media(max-width:767px) {
+  .preview-controls { margin-top:100px; }
+  .proposal-heading { display:block; margin-bottom:var(--space-6); }
+  .proposal-heading>p { max-width:450px; margin-top:var(--space-5); }
+  .editorial .case,.editorial .case:nth-child(even),.impacto .cases { grid-template-columns:minmax(0,1fr); }
+  .editorial .case { gap:var(--space-4); padding:var(--space-2) var(--space-4) var(--space-4); margin-bottom:0; }
+  .editorial .case-image { aspect-ratio:auto; height:clamp(120px,19svh,160px); }
+  .editorial .case-meta { font-size:12px; gap:var(--space-2); }
+  .editorial .case-story { font-size:var(--fs-small); }
+  .editorial h3 { font-size:28px; margin:var(--space-3) 0; }
+  .editorial .case-result strong { font-size:28px; }
+  .case-tail { font-size:12px; }
+  .editorial .case:nth-child(even) .case-image { order:0; }
+  .editorial .cases { gap:0; }
+  .case-result,.case-status { margin-top:var(--space-5); }
+  .impacto .case-story { min-height:0; }
+ }
+ @media(prefers-reduced-motion:reduce) { .case-image :global(img),.case-link svg { transition:none; } }
+ @media(max-height:680px),(max-width:767px) and (max-height:759px),(prefers-reduced-motion:reduce) {
+  .editorial .case { position:relative; top:auto; margin-bottom:var(--space-5); }
+ }
+ :global(html.motion-paused) .editorial .case { position:relative; top:auto; margin-bottom:var(--space-5); }
+ :global(html.motion-paused) .case-image :global(img),:global(html.motion-paused) .case-link svg { transition:none; }
+ :global(html.project-stack-ready) .editorial .cases { height:var(--stack-runway); }
+ :global(html.project-stack-ready) .editorial .case-deck { position:sticky; top:var(--stack-top); height:var(--stack-height); display:block; }
+ :global(html.project-stack-ready) .editorial .case { position:absolute; top:calc(var(--case-index)*var(--stack-tail)); left:0; right:0; transform:translateY(var(--stack-entry,0px)); visibility:var(--stack-visibility,visible); }
+ :global(html.project-stack-ready) .editorial .case:focus-visible { transform:none; visibility:visible; }
+</style>
+<script>
+ const descriptions={actual:'Imágenes grandes con el texto dentro de cada tarjeta.',editorial:'El producto se ve completo; el contexto y tu aporte tienen su propio espacio.',impacto:'Una selección compacta para explorar los proyectos y comparar sus resultados.'};
+ const controls=Array.from(document.querySelectorAll<HTMLButtonElement>('[data-option]'));
+ controls.forEach(button=>button.addEventListener('click',()=>{
+  const selected=button.dataset.option!;
+  controls.forEach(control=>control.setAttribute('aria-pressed',String(control===button)));
+  document.querySelectorAll<HTMLElement>('[data-proposal]').forEach(proposal=>proposal.hidden=proposal.dataset.proposal!==selected);
+  const description=document.querySelector('[data-option-description]');
+  if(description)description.textContent=descriptions[selected as keyof typeof descriptions];
+  document.dispatchEvent(new Event('project-stack-refresh'));
+ }));
+</script>

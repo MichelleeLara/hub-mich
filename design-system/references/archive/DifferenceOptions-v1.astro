@@ -1,0 +1,137 @@
+---
+interface Props { variant: 'comparison' | 'table' | 'cards'; }
+const { variant } = Astro.props;
+const titleId = `difference-${variant}-title`;
+const points = [
+ { label: 'Dirección', before: 'Una lista de ideas sin prioridades.', after: 'Un problema claro y un siguiente paso.', short: 'Claridad antes de construir.', detail: 'Entender qué necesita tu producto y dónde conviene empezar.' },
+ { label: 'Construcción', before: 'Diseño y desarrollo por separado.', after: 'Diseño y código trabajando juntos.', short: 'Del diseño al producto.', detail: 'Las decisiones de experiencia llegan hasta la implementación.' },
+ { label: 'Operación', before: 'Tareas que se repiten a mano.', after: 'IA y automatización donde aportan.', short: 'Más tiempo para avanzar.', detail: 'Encontrar lo que puede simplificarse y conectar las piezas.' },
+ { label: 'Continuidad', before: 'Una entrega difícil de retomar.', after: 'Una base que puedes seguir usando.', short: 'Pensado para lo que sigue.', detail: 'Código, documentación y contexto para continuar el proyecto.' },
+];
+---
+<section class:list={['difference', `difference-${variant}`]} aria-labelledby={titleId}>
+ {variant === 'comparison' && <>
+  <header class="center-heading">
+   <p class="eyebrow">La diferencia está en cómo lo construimos</p>
+   <h2 id={titleId}>Tu proyecto.<br/>Con todas las piezas <span>conectadas.</span></h2>
+  </header>
+  <div class="comparison-grid">
+   <article class="comparison-panel separate">
+    <header><span class="tiny-label">CUANDO TODO VA POR SEPARADO</span><h3>Piezas sueltas.</h3></header>
+    <ul>{points.map(point => <li><span class="status minus" aria-hidden="true">−</span><span>{point.before}</span></li>)}</ul>
+   </article>
+   <article class="comparison-panel together">
+    <header><span class="tiny-label">DISEÑO · INGENIERÍA · IA</span><h3><span class="wordmark">./mich</span> De principio a fin.</h3></header>
+    <ul>{points.map(point => <li><span class="status check" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m5 10 3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>{point.after}</span></li>)}</ul>
+   </article>
+  </div>
+ </>}
+ {variant === 'table' && <>
+  <header class="editorial-heading">
+   <div><p class="eyebrow">Una forma de trabajar conectada</p><h2 id={titleId}>Menos fricción.<br/><span>Más producto.</span></h2></div>
+   <p class="intro">Una misma mirada para entender el problema, diseñar la experiencia y llevarla al código.</p>
+  </header>
+  <div class="comparison-table">
+   <div class="table-head" aria-hidden="true"><span>En cada etapa</span><span>Piezas separadas</span><span>Con ./mich</span></div>
+   {points.map((point,index) => <article class="table-row">
+    <h3><span class="row-number">0{index+1}</span>{point.label}</h3>
+    <p class="before"><span class="mobile-label">Piezas separadas</span>{point.before}</p>
+    <p class="after"><span class="mobile-label">Con ./mich</span><span class="status check" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m5 10 3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>{point.after}</span></p>
+   </article>)}
+  </div>
+ </>}
+ {variant === 'cards' && <>
+  <div class="value-grid">
+   <header class="value-intro">
+    <p class="eyebrow">Las piezas conectan mejor</p>
+    <h2 id={titleId}>Una mirada.<br/><span>De la idea<br/>a lo real.</span></h2>
+    <p class="intro">Diseño, ingeniería e IA en la misma conversación. Para que cada decisión tenga sentido en el producto.</p>
+    <div class="connected-disciplines" aria-label="Diseño, código e inteligencia artificial conectados"><span>Diseño</span><i aria-hidden="true"></i><span>Código</span><i aria-hidden="true"></i><span>IA</span></div>
+   </header>
+   <div class="value-cards">
+    {points.map((point,index) => <article class="value-card">
+     <span class="card-number" aria-hidden="true">0{index+1}</span>
+     <div><p class="tiny-label">{point.label}</p><h3>{point.short}</h3><p>{point.detail}</p></div>
+     <span class="status check" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m5 10 3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </article>)}
+   </div>
+  </div>
+ </>}
+ <footer class="difference-footer"><p>Una parte del producto o el recorrido completo.</p><a href="mailto:mich.ia@hotmail.com?subject=Una%20idea%20de%20producto">Hablemos de tu idea <span aria-hidden="true">↗</span></a></footer>
+</section>
+<style>
+ .difference { padding:48px 0 36px; color:var(--ink); }
+ .eyebrow { color:var(--accent); font:400 clamp(25px,2.5vw,30px)/1.3 var(--font-accent); margin-bottom:16px; }
+ h2 { font:650 clamp(36px,4.6vw,62px)/1.06 var(--font-sans); letter-spacing:-.045em; text-wrap:balance; }
+ h2 span { color:var(--muted); }
+ h3 { font:600 25px/1.18 var(--font-sans); letter-spacing:-.025em; }
+ .center-heading { text-align:center; max-width:900px; margin:0 auto 40px; }
+ .comparison-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+ .comparison-panel { border:1px solid var(--line); border-radius:var(--radius-lg); padding:32px; background:var(--surface-glass); }
+ .separate { background:var(--surface); }
+ .together { background:linear-gradient(140deg,var(--accent-soft),var(--surface-glass) 68%); border-color:color-mix(in srgb,var(--accent) 26%,var(--line)); }
+ .comparison-panel header { padding-bottom:24px; border-bottom:1px solid var(--line); }
+ .tiny-label { font:500 11px/1.4 var(--font-mono); letter-spacing:.075em; color:var(--muted); display:block; margin-bottom:12px; }
+ .wordmark { font-family:var(--font-display); margin-right:12px; }
+ ul { list-style:none; padding:0; margin:24px 0 0; display:grid; gap:22px; }
+ li { display:flex; align-items:center; gap:14px; font-size:18px; line-height:1.35; }
+ .separate li { color:var(--muted); }
+ .status { width:24px; height:24px; flex-shrink:0; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+ .minus { border:1px solid var(--line); color:var(--muted); font-size:18px; }
+ .check { background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 24%,transparent); }
+ .check svg { width:20px; height:20px; }
+ .editorial-heading { display:flex; justify-content:space-between; align-items:flex-end; gap:48px; margin-bottom:36px; }
+ .intro { color:var(--muted); font-size:18px; line-height:1.55; max-width:330px; }
+ .comparison-table { border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-glass); }
+ .table-head,.table-row { display:grid; grid-template-columns:.75fr 1fr 1.12fr; gap:32px; align-items:center; padding:24px 32px; }
+ .table-head { background:var(--surface); color:var(--muted); font:500 12px/1.5 var(--font-mono); }
+ .table-head span:last-child { color:var(--accent); }
+ .table-row { min-height:84px; border-top:1px solid var(--line); }
+ .table-row h3 { font-size:18px; display:flex; gap:16px; align-items:center; }
+ .row-number { font:12px/1.4 var(--font-mono); color:var(--muted); }
+ .table-row p { font-size:16px; line-height:1.45; }
+ .before { color:var(--muted); }
+ .after { display:flex; gap:12px; align-items:center; }
+ .mobile-label { display:none; }
+ .value-grid { display:grid; grid-template-columns:1fr 1.12fr; gap:64px; }
+ .value-intro { padding-top:16px; }
+ .value-intro .intro { margin-top:28px; }
+ .connected-disciplines { display:flex; align-items:center; gap:10px; margin-top:32px; color:var(--muted); font-size:13px; }
+ .connected-disciplines span { border:1px solid var(--line); border-radius:var(--radius-full); padding:9px 14px; background:var(--surface-glass); }
+ .connected-disciplines i { width:16px; height:1px; background:var(--line); }
+ .value-cards { display:grid; gap:12px; }
+ .value-card { padding:24px; display:flex; gap:20px; align-items:flex-start; border:1px solid var(--line); border-radius:var(--radius-lg); background:linear-gradient(145deg,var(--surface),var(--surface-glass)); }
+ .card-number { font:12px/1.6 var(--font-mono); color:var(--accent); margin-top:3px; }
+ .value-card>div { flex:1; }
+ .value-card .tiny-label { margin-bottom:6px; }
+ .value-card h3 { font-size:22px; }
+ .value-card p:not(.tiny-label) { color:var(--muted); font-size:15px; line-height:1.5; margin-top:8px; }
+ .difference-footer { margin-top:32px; display:flex; gap:24px; justify-content:space-between; align-items:center; }
+ .difference-footer p { color:var(--muted); font-size:14px; }
+ .difference-footer a { display:inline-flex; align-items:center; justify-content:center; gap:28px; min-height:48px; border-radius:var(--radius-full); background:var(--ink); color:var(--bg); padding:12px 24px; font-size:14px; font-weight:600; }
+ @media(max-width:767px) {
+  .difference { padding-top:32px; }
+  .center-heading { text-align:left; margin-bottom:28px; }
+  h2 { font-size:clamp(34px,8.8vw,48px); }
+  .comparison-grid,.value-grid { grid-template-columns:1fr; gap:20px; }
+  .comparison-panel { padding:24px; }
+  li { font-size:16px; align-items:flex-start; }
+  .comparison-panel h3 { font-size:22px; }
+  .editorial-heading { display:block; margin-bottom:28px; }
+  .editorial-heading .intro { margin-top:20px; max-width:450px; font-size:16px; }
+  .table-head { display:none; }
+  .table-row { grid-template-columns:1fr; gap:14px; padding:24px; }
+  .table-row:first-of-type { border-top:0; }
+  .table-row h3 { margin-bottom:4px; }
+  .mobile-label { display:block; color:var(--muted); font:11px/1.4 var(--font-mono); margin-bottom:5px; }
+  .after { display:block; padding-left:36px; position:relative; }
+  .after .check { position:absolute; left:0; bottom:0; }
+  .value-intro { padding-top:0; }
+  .value-intro .intro { max-width:450px; margin-top:20px; font-size:16px; }
+  .connected-disciplines { margin-top:24px; }
+  .value-cards { gap:16px; }
+  .value-card { padding:20px; gap:16px; }
+  .value-card h3 { font-size:21px; }
+  .difference-footer { align-items:flex-start; flex-direction:column; gap:16px; }
+ }
+</style>

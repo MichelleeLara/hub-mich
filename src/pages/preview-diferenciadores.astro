@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DifferenceOptions from '../components/DifferenceOptions.astro';
+const options = [
+ { key: 'editorial', label: '01 · Personal + gráficos', detail: 'Finalista · Tu retrato, cuatro motivos y los gráficos de nuestra biblioteca.' },
+ { key: 'reasons', label: '02 · Visual', detail: 'Finalista · Tres motivos con los gráficos de nuestra biblioteca.' },
+] as const;
+const selected = options.find(option => option.key === Astro.url.searchParams.get('opcion')) ?? options[0];
+---
+<Layout title="Mich · Por qué trabajar conmigo" description="Dos opciones finalistas para mostrar por qué elegir trabajar con Michelle." image="/author.png" url={Astro.url.href} noindex>
+ <main class="difference-preview">
+  <h1 class="sr-only">Por qué trabajar conmigo · Opciones de diseño</h1>
+  <div class="preview-top"><a href="/preview-completo#servicios">← Vista completa</a><span>Texto provisional · Elegimos primero el formato</span></div>
+  <nav class="option-nav" aria-label="Opciones de formato">
+   {options.map(option=><a href={`?opcion=${option.key}`} data-choice={option.key} aria-current={option===selected?'page':undefined}>{option.label}</a>)}
+  </nav>
+  {options.map(option=><div data-option={option.key} hidden={option!==selected}>
+   <p class="option-description">{option.detail}</p>
+   <DifferenceOptions variant={option.key} />
+  </div>)}
+ </main>
+</Layout>
+<script>
+ const preview = document.querySelector('.difference-preview');
+ if(preview){
+  const links = Array.from(preview.querySelectorAll<HTMLAnchorElement>('[data-choice]'));
+  const panels = Array.from(preview.querySelectorAll<HTMLElement>('[data-option]'));
+  function select(value:string,updateUrl=false){
+   const aliases:Record<string,string>={comparison:'editorial',table:'reasons',cards:'reasons'};
+   const requested=aliases[value]??value;
+   const key=links.some(link=>link.dataset.choice===requested)?requested:'editorial';
+   panels.forEach(panel=>panel.hidden=panel.dataset.option!==key);
+   links.forEach(link=>{if(link.dataset.choice===key)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
+   if(updateUrl){const url=new URL(location.href);url.searchParams.set('opcion',key);history.pushState(null,'',url);}
+  }
+  links.forEach(link=>link.addEventListener('click',event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();select(link.dataset.choice!,true);}));
+  const fromUrl=()=>select(new URLSearchParams(location.search).get('opcion')??'editorial');
+  window.addEventListener('popstate',fromUrl);fromUrl();
+ }
+</script>
+<style>
+ .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+ .difference-preview { width:min(100%,var(--container)); margin:112px auto 0; padding:0 var(--gutter) 64px; }
+ .preview-top { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 24px; color:var(--muted); font-size:12px; }
+ .preview-top a { min-height:44px; display:inline-flex; align-items:center; }
+ .option-nav { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+ .option-nav a { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:10px 18px; border:1px solid var(--line); border-radius:var(--radius-full); color:var(--muted); font-size:13px; background:var(--surface-glass); }
+ .option-nav a[aria-current=page] { background:var(--ink); border-color:var(--ink); color:var(--bg); }
+ .option-description { color:var(--muted); font-size:13px; margin-top:16px; }
+ @media(max-width:767px) { .difference-preview { margin-top:80px; padding-bottom:112px; } .option-nav { gap:8px; } .option-nav a { padding:10px 14px; } }
+</style>

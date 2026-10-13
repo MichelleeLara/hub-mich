@@ -1,198 +1,259 @@
+import { useReducedMotionPreference } from '../hooks/useReducedMotionPreference';
 import React, { useEffect, useState } from "react";
-import { AnimatePresence, color, motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 import ThemeToggle from "./Themetoggle";
-// import throttle from "lodash/throttle"; // O implementa tu propia.
+import MotionToggle from "./MotionToggle";
+import { SPRING, SPRING_SLOW, STAGGER } from "../lib/motion";
 
-const Header = () => {
-  const [hidden, setHidden] = useState(false);
-  const [currentVariant, setCurrentVariant] = useState('expanded')
+/* -------------------------------------------------------------------------- */
+/*  Iconos de línea (trazo fino, 16px para acompañar la barra compacta)       */
+/* -------------------------------------------------------------------------- */
+const iconBase = {
+  width: 16,
+  height: 16,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.5,
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+  "aria-hidden": "true",
+};
 
-  let lastScroll = 0;
+const MailIcon = (p) => (
+  <svg {...iconBase} {...p}>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="m3 7 9 6 9-6" />
+  </svg>
+);
+
+/* -------------------------------------------------------------------------- */
+/*  Config de navegación (sitio de una página → anclas)                       */
+/* -------------------------------------------------------------------------- */
+const LINKS = [
+  { id: "inicio", label: "Inicio", path: "/#inicio", sectionId: "inicio" },
+  { id: "proyectos", label: "Proyectos", path: "/#proyectos", sectionId: "proyectos" },
+  { id: "yo", label: "Sobre mí", path: "/#yo", sectionId: "yo" },
+];
+
+const SECTIONS = [
+  ...LINKS,
+  { id: "contacto", sectionId: "contacto" },
+];
+
+
+// Base compartida de cada "isla".
+const ISLAND =
+  "rounded-full backdrop-blur-md bg-surface-glass " +
+  "border border-line-subtle dark:border-line " +
+  "shadow-float " +
+  "transition-colors duration-base";
+
+// Píldora gris de seguimiento (única, compartida entre islas via layoutId).
+const Pill = ({ reduced }) => (
+  <motion.span
+    data-nav-pill=""
+    layoutId="nav-pill"
+    className="absolute inset-0 rounded-full bg-black/[0.06] dark:bg-white/10"
+    transition={reduced ? { duration: 0 } : SPRING}
+  />
+);
+
+/* -------------------------------------------------------------------------- */
+/*  Animación de carga "gotas": las islas nacen unidas al centro y se separan */
+/* -------------------------------------------------------------------------- */
+const groupVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: STAGGER, delayChildren: 0.15 } },
+};
+
+// dir: -1 izquierda, 0 centro, +1 derecha → arrancan convergidas hacia el centro
+const islandVariants = {
+  hidden: (dir) => ({ opacity: 0, x: dir * 64, scale: 0.8, filter: "blur(6px)" }),
+  show: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: SPRING_SLOW,
+  },
+};
+
+export default function Header() {
+  const reduced = useReducedMotionPreference();
+  const [active, setActive] = useState("inicio");
+
+  const reloadHome = (event) => {
+    event.preventDefault();
+
+    if (window.location.pathname === "/" && !window.location.search) {
+      window.location.reload();
+      return;
+    }
+
+    window.location.assign("/");
+  };
 
   useEffect(() => {
-    // Ejemplo con requestAnimationFrame (sin lodash)
-    let ticking = false;
+    const syncFromLocation = () => {
+      const path = window.location.pathname.replace(/\/$/, "") || "/";
+      const hash = window.location.hash.replace("#", "");
 
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentScroll = window.scrollY;
-
-          if (currentScroll > lastScroll) {
-            setHidden(false);
-            setCurrentVariant("hidden");
-          } else if ( currentScroll < lastScroll && currentScroll > 130){
-            setHidden(true);
-            setCurrentVariant("visible");
-          } else if (currentScroll < 130){
-            setHidden(false);
-            setCurrentVariant('expanded')
-          }
-
-          lastScroll = Math.max(currentScroll, 0);
-          ticking = false;
-        });
-        ticking = true;
+      if (hash) {
+        const byHash = SECTIONS.find((section) => section.sectionId === hash);
+        if (byHash) setActive(byHash.id);
+        return;
       }
+
+      if (path.startsWith("/proyectos")) {
+        setActive("proyectos");
+        return;
+      }
+
+      setActive("inicio");
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const syncFromScroll = () => {
+      const path = window.location.pathname.replace(/\/$/, "") || "/";
+      if (path !== "/" && path !== "/preview-completo") return;
+
+      const current = SECTIONS
+        .map((section) => {
+          const node = document.getElementById(section.sectionId);
+          if (!node) return null;
+          return {
+            id: section.id,
+            top: node.getBoundingClientRect().top,
+          };
+        })
+        .filter((item) => item && item.top <= 120)
+        .sort((a, b) => b.top - a.top)[0];
+
+      if (current) setActive(current.id);
+    };
+
+    syncFromLocation();
+    syncFromScroll();
+
+    window.addEventListener("hashchange", syncFromLocation);
+    window.addEventListener("scroll", syncFromScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("hashchange", syncFromLocation);
+      window.removeEventListener("scroll", syncFromScroll);
+    };
   }, []);
 
- // Puedes ajustar los valores de color a tu gusto
-const variants = {
-  expanded: {
-    width: "100%",
-    y: 0,
-    borderRadius: 0,
-    // transparente
-    transition: {
-      // Aquí definimos transiciones separadas
-      backgroundColor: {
-        duration: .3,   // Duración para el color
-        ease: "easeInOut",
-        stiffness:100,
-      },
-      // Si deseas que las demás props (por ejemplo y, width, etc.) usen otra transición,
-      // las declaras, o usas "default"
-      default: {
-        type: "spring",
-        duration: 0.4,
-        stiffness: 380,
-        damping: 32
-      }
-    }
-  },
-  visible: {
-    y: 10,
-    width: "50%",
-    borderRadius: 60,
-
-    transition: {
-      // Aquí definimos transiciones separadas
-      backgroundColor: {
-        duration: .3,   // Duración para el color
-        ease: "easeInOut",
-        stiffness:100
-      },
-      // Si deseas que las demás props (por ejemplo y, width, etc.) usen otra transición,
-      // las declaras, o usas "default"
-      default: {
-        type: "spring",
-        duration: 0.4,
-        stiffness: 380,
-        damping: 32
-      }
-    }
-  },
-  hidden: {
-    y: "-80%", // se oculta por completo
-    width: "50%",
-    borderRadius: 60,
-   
-    transition: {
-      // Aquí definimos transiciones separadas
-      backgroundColor: {
-        duration: .3,   // Duración para el color
-        ease: "easeInOut",
-        stiffness:100
-      },
-      // Si deseas que las demás props (por ejemplo y, width, etc.) usen otra transición,
-      // las declaras, o usas "default"
-      default: {
-        type: "spring",
-        duration: 0.4,
-        stiffness: 380,
-        damping: 32
-      }
-    }
-  },
-};
-
-  console.log(currentVariant)
+  // La píldora indica únicamente la sección activa; el cursor aporta el hover.
+  const highlighted = active;
 
   return (
-    <AnimatePresence>
-      <div className="fixed top-0 left-0 w-full z-[100]  will-change-auto flex items-center justify-center">
-        <motion.header
-          className={`min-w-[310px] w-2/4   dark:shadow-none py-3 md:flex md:items-center md:justify-center md:w-3/4 ${currentVariant !== 'expanded' ? 'shadow-2xl border border-[#d2d2d2] dark:border-[#5c5c5c] bg-[#fbfcfc] dark:bg-[#1c1c1c] ' : ''}`} // Para activar GPU
-          // style={{ transformOrigin: "top center" }}
-          variants={variants}
-          initial="expanded"
-          animate={currentVariant}
+    <MotionConfig reducedMotion="user">
+      {/* ------------------------------ DESKTOP ------------------------------ */}
+      <div className="fixed top-8 inset-x-0 z-[100] hidden md:flex justify-center pointer-events-none px-6">
+        <motion.nav
+          aria-label="Navegación principal"
+          className="flex items-center gap-3 pointer-events-auto"
+          variants={reduced ? { hidden: {}, show: { transition: { duration: 0 } } } : groupVariants}
+          initial={false}
+          animate="show"
         >
-          <div className="mx-6 flex gap-3 items-center justify-between md:w-full md:max-w-screen-xl">
-            <a href="#" className="flex gap-1.5 items-center text-nowrap">
-              <img src="/author.png" className="w-12 object-top" alt="Author" />
-              <AnimatePresence>
-                <div className="flex flex-col gap-0">
-                  <p className="font-semibold  text-sm dark:text-secondary">
-                    {(currentVariant !== 'expanded') ? <span>Mich R.</span> : <span>Mich </span>}
-                    {(currentVariant === 'expanded') && (
-                      <motion.span
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        Rodriguez
-                      </motion.span>
-                    )}
-                  </p>
-                  <p className="text-xs font-medium text-terteary">
-                    Frontend{" "}
-                    {(currentVariant === 'expanded') && (
-                      <motion.span
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        Engineer
-                      </motion.span>
-                    )}
-                  </p>
-                </div>
-              </AnimatePresence>
-            </a>
-            <div className="flex items-center justify-center gap-2 ">
-              <AnimatePresence>
-                {/* Si está en modo hidden, NO mostramos el botón */}
-                {(currentVariant !== 'expanded') && (
-                  <motion.a
-                    href="/pdf/CV_michelle_lara.pdf" target="_self"
-                    key="island-btn"
-                    className="flex justify-center items-center text-xs rounded-xl py-1 px-2 gap-2 md:hidden"
-                    /*  
-                      * Aquí es donde agregamos x: 50 → x: 0 para que “nazca” desde la derecha 
-                    */
-                    initial={{ opacity: 0, scale: 0.8, y: -50 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.8}}
-                    transition={{ duration: 0.8, stiffness: 800, type: "spring", damping: 40 }}
-                  >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path opacity="0.4" d="M20.5 10.19H17.61C15.24 10.19 13.31 8.26 13.31 5.89V3C13.31 2.45 12.86 2 12.31 2H8.07C4.99 2 2.5 4 2.5 7.57V16.43C2.5 20 4.99 22 8.07 22H15.93C19.01 22 21.5 20 21.5 16.43V11.19C21.5 10.64 21.05 10.19 20.5 10.19Z" fill="currentColor"></path><path d="M15.7997 2.20999C15.3897 1.79999 14.6797 2.07999 14.6797 2.64999V6.13999C14.6797 7.59999 15.9197 8.80999 17.4297 8.80999C18.3797 8.81999 19.6997 8.81999 20.8297 8.81999C21.3997 8.81999 21.6997 8.14999 21.2997 7.74999C19.8597 6.29999 17.2797 3.68999 15.7997 2.20999Z" fill="currentColor"></path><path d="M13.5 13.75H7.5C7.09 13.75 6.75 13.41 6.75 13C6.75 12.59 7.09 12.25 7.5 12.25H13.5C13.91 12.25 14.25 12.59 14.25 13C14.25 13.41 13.91 13.75 13.5 13.75Z" fill="currentColor"></path><path d="M11.5 17.75H7.5C7.09 17.75 6.75 17.41 6.75 17C6.75 16.59 7.09 16.25 7.5 16.25H11.5C11.91 16.25 12.25 16.59 12.25 17C12.25 17.41 11.91 17.75 11.5 17.75Z" fill="currentColor"></path></svg>
-                    <p>CV</p>
-                  </motion.a>
-                )}
-              </AnimatePresence>
-              <ul className="hidden md:flex items-center gap-4 uppercase text-xs font-semibold">
-                <li>
-                  <a href="#footer">Contáctme</a>
-                </li>
-                <li>
-                  <a href="/pdf/CV_michelle_lara.pdf" target="_blank" rel="noopener noreferrer" >Mi cv</a>
-                </li>
-             
-              </ul>
-              <ThemeToggle />
-            </div>
-          </div>
-        </motion.header>
-      </div>
-    </AnimatePresence>
-  );
-};
+          {/* Isla izquierda: logo */}
+          <motion.a
+            href="/"
+            aria-label="Mich — inicio"
+            custom={-1}
+            variants={reduced ? { hidden: { opacity: 0 }, show: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0 } } } : islandVariants}
+            onClick={reloadHome}
+            className={`${ISLAND} h-11 px-2 flex items-center`}
+          >
+            <span className="relative flex items-center h-8 px-3 rounded-full">
+              {highlighted === "logo" && <Pill reduced={reduced} />}
+              <span className="relative z-10 font-ClashDisplay font-semibold text-base text-ink">
+                ./mich
+              </span>
+            </span>
+          </motion.a>
 
-export default Header;
+          {/* Isla central: links */}
+          <motion.div
+            custom={0}
+            variants={reduced ? { hidden: { opacity: 0 }, show: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0 } } } : islandVariants}
+            className={`${ISLAND} h-11 px-1.5 flex items-center gap-0.5`}
+          >
+            {LINKS.map((link) => {
+              const isOn = highlighted === link.id;
+              return (
+                <a
+                  key={link.id}
+                  href={link.path}
+                  onClick={() => setActive(link.id)}
+                  aria-current={active === link.id ? "page" : undefined}
+                  className={`relative flex items-center h-8 px-4 text-xs font-medium uppercase tracking-wide rounded-full transition-colors duration-base ${
+                    isOn
+                      ? "text-ink"
+                      : "text-muted"
+                  }`}
+                >
+                  {isOn && <Pill reduced={reduced} />}
+                  <span className="relative z-10">{link.label}</span>
+                </a>
+              );
+            })}
+          </motion.div>
+
+          {/* Isla derecha: CTA contacto + toggle de tema */}
+          <motion.div
+            custom={1}
+            variants={reduced ? { hidden: { opacity: 0 }, show: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0 } } } : islandVariants}
+            className={`${ISLAND} h-11 pl-2 pr-1.5 flex items-center gap-1`}
+          >
+            <a
+              href="/#contacto"
+              aria-current={active === "contacto" ? "page" : undefined}
+              className={`relative flex items-center gap-2 h-8 px-3 rounded-full text-xs font-medium uppercase tracking-wide transition-colors duration-base ${
+                highlighted === "contacto"
+                  ? "text-ink"
+                  : "text-ink"
+              }`}
+            >
+              {highlighted === "contacto" && <Pill reduced={reduced} />}
+              <span className="relative z-10 flex items-center gap-2">
+                <MailIcon />
+                Contáctame
+              </span>
+            </a>
+            <span className="w-px h-5 bg-line" />
+            <MotionToggle />
+            <div
+              className="relative flex items-center justify-center h-11 w-11 rounded-full"
+            >
+              {highlighted === "toggle" && <Pill reduced={reduced} />}
+              <div className="relative z-10">
+                <ThemeToggle />
+              </div>
+            </div>
+          </motion.div>
+        </motion.nav>
+      </div>
+
+      {/* ------------------------------ MOBILE (top) ------------------------- */}
+      <motion.div
+        className="fixed top-4 inset-x-0 z-[100] flex md:hidden items-center justify-between px-6"
+        initial={false}
+        animate={{ opacity: 1, y: 0 }}
+        transition={reduced ? { duration: 0 } : { ...SPRING, delay: .1 }}
+      >
+        <a
+          href="/"
+          aria-label="Mich — inicio"
+          onClick={reloadHome}
+          className="font-ClashDisplay font-semibold text-lg text-ink"
+        >
+          ./mich
+        </a>
+        <div className="flex items-center rounded-full bg-surface-glass backdrop-blur-md"><MotionToggle /><ThemeToggle /></div>
+      </motion.div>
+    </MotionConfig>
+  );
+}

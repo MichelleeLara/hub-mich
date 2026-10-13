@@ -1,0 +1,40 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Propuesta isométrica · Mich</title><style>body{margin:0;background:#161616;color:#f5f5f5;font:14px Arial,sans-serif}main{height:260vh}.viewer{position:sticky;top:0;min-height:100vh;display:grid;align-content:center}#art svg{display:block;width:100%;max-height:84vh}footer{display:flex;gap:20px;align-items:center;justify-content:center;padding:16px 24px}button{background:transparent;color:#efaa85;border:1px solid #555;border-radius:8px;min-height:44px;padding:0 18px;cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid #efaa85;outline-offset:4px}input{accent-color:#efaa85;width:min(40vw,360px)}.note{text-align:center;color:#aaaab0;padding:0 20px;font-size:12px}</style><main><div class="viewer"><div id="art"></div><footer><button id="play">Reproducir propuesta</button><label for="progress">Avance</label><input type="range" id="progress" min="0" max="100" value="0"></footer><p class="note">Preview independiente. Desplázate o mueve el control. El sitio no se ha modificado.</p></div></main><script>
+const dots=[];
+function iso(u,v,z){return {x:824+(u-v)*73,y:350+(u+v)*38-z*82};}
+function edge(a,b,count,birth,outer=true){for(let j=0;j<count;j++){let t=j/(count-1);let p=iso(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t);dots.push({...p,birth:birth+j/count*.05,outer});}}
+for(let z=0;z<=3;z++){
+ let birth=.03+z*.18;
+ for(const [a,b] of [[[0,0,z],[2,0,z]],[[2,0,z],[2,2,z]],[[2,2,z],[0,2,z]],[[0,2,z],[0,0,z]]])edge(a,b,30,birth,true);
+ for(let i=1;i<4;i++){let v=i*.5;edge([v,0,z],[v,2,z],22,birth+.035,false);edge([0,v,z],[2,v,z],22,birth+.035,false);}
+}
+for(const [u,v] of [[0,0],[2,0],[2,2],[0,2],[1,0],[2,1],[1,2],[0,1]])for(let z=0;z<3;z++)edge([u,v,z],[u,v,z+1],22,.14+z*.19,u%2===0&&v%2===0);
+const ease=t=>{t=Math.max(0,Math.min(1,t));return t*t*t*(t*(t*6-15)+10);};
+function scene(p,time=0){
+ const phase=p<.30?0:p<.72?1:2;
+ const titles=['Entender la complejidad','Dar estructura a las ideas','Construir algo simple'];
+ const notes=['Las piezas llegan. El problema toma forma.','Las conexiones se ordenan y construyen una base.','El sistema funciona; la experiencia se siente clara.'];
+ const polygon=(arr)=>arr.map(v=>{let q=iso(...v);return q.x+','+q.y;}).join(' ');
+ let art='';
+ let skin=ease((p-.79)/.18);
+ art+='<polygon points="'+polygon([[0,0,3],[2,0,3],[2,2,3],[0,2,3]])+'" fill="#efaa85" opacity="'+skin*.06+'"/>';
+ art+='<polygon points="'+polygon([[0,2,0],[2,2,0],[2,2,3],[0,2,3]])+'" fill="#efaa85" opacity="'+skin*.06+'"/>';
+ art+='<polygon points="'+polygon([[2,0,0],[2,2,0],[2,2,3],[2,0,3]])+'" fill="#efaa85" opacity="'+skin*.11+'"/>';
+ for(let i=0;i<dots.length;i++){
+  const d=dots[i],e=ease((p-d.birth)/.16),angle=i*2.39996;
+  const start={x:824+Math.cos(angle)*(160+i%65),y:265+Math.sin(angle)*(145+i%35)};
+  const bend=Math.sin(Math.PI*e)*Math.sin(angle)*22;
+  const x=start.x+(d.x-start.x)*e+bend,y=start.y+(d.y-start.y)*e;
+  const wave=Math.max(0,Math.cos(time*1.7-d.y*.022+d.x*.006))**10;
+  const alpha=(.045+(d.outer?.70:.40)*e)*(d.outer?1:1-skin*.6)+wave*.18*e;
+  art+='<circle cx="'+x.toFixed(2)+'" cy="'+y.toFixed(2)+'" r="'+(d.outer?1.35:1.0)+'" fill="#efaa85" opacity="'+Math.min(.98,alpha).toFixed(3)+'"/>';
+ }
+ const labels=['01  Entender','02  Diseñar','03  Construir'];
+ let steps='';labels.forEach((l,i)=>{steps+='<text x="'+(646+i*129)+'" y="565" fill="'+(phase===i?'#efaa85':'#87878e')+'" font-size="13">'+l+'</text>';});
+ return '<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620"><rect width="1100" height="620" fill="#161616"/><g font-family="Arial,sans-serif"><text x="54" y="53" fill="#aaaab0" font-size="11" letter-spacing="1.8">PROPUESTA · CONSTRUCCIÓN ISOMÉTRICA</text><circle cx="59" cy="133" r="3" fill="#efaa85"/><text x="73" y="137" fill="#aaaab0" font-size="11" letter-spacing="1.5">UNA FORMA DE CONSTRUIR</text><text x="54" y="207" fill="#f5f5f5" font-size="42" font-weight="600" letter-spacing="-1.5">Ideas complejas.</text><text x="54" y="261" fill="#aaaab0" font-size="42" font-weight="600" letter-spacing="-1.5">Productos que</text><text x="54" y="315" fill="#aaaab0" font-size="42" font-weight="600" letter-spacing="-1.5">se sienten simples.</text><text x="54" y="384" fill="#efaa85" font-size="15">'+titles[phase]+'</text><text x="54" y="414" fill="#aaaab0" font-size="12">'+notes[phase]+'</text><text x="54" y="559" fill="#87878e" font-size="11">DISEÑO + INGENIERÍA + IA</text>'+art+'<path d="M646 524H1030" stroke="#39393c"/><path d="M646 524H'+(646+p*384)+'" stroke="#efaa85"/>'+steps+'</g></svg>';
+}
+
+const art=document.getElementById('art'),slider=document.getElementById('progress'),play=document.getElementById('play'),reduce=matchMedia('(prefers-reduced-motion:reduce)');let frame=0,p=0,last=0,start=0;
+function paint(){art.innerHTML=scene(p,performance.now()/1000);slider.value=Math.round(p*100);}
+function stop(){cancelAnimationFrame(frame);frame=0;play.textContent='Reproducir propuesta';}
+function tick(t){if(!frame)return;p=Math.min(1,(t-start)/5600);if(t-last>32){paint();last=t;}frame=requestAnimationFrame(tick);}
+play.onclick=()=>{if(frame){stop();return;}if(reduce.matches){p=1;paint();return;}start=performance.now();play.textContent='Pausar';frame=requestAnimationFrame(tick);};slider.oninput=()=>{stop();p=+slider.value/100;paint();};addEventListener('scroll',()=>{stop();p=Math.max(0,Math.min(1,scrollY/(document.documentElement.scrollHeight-innerHeight)));paint();},{passive:true});reduce.addEventListener('change',()=>{stop();paint();});document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});paint();</script></html>

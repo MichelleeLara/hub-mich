@@ -1,0 +1,166 @@
+---
+import SectionHeading from './SectionHeading.astro';
+// Sección "Trayectoria" — timeline vertical con revelado por scroll.
+// Encabezado compartido con las demás secciones del home.
+const jobs = [
+  {
+    role: 'Frontend Engineer · Firmware',
+    company: 'Bego',
+    dates: 'Feb 2025 — Presente',
+    current: true,
+    summary:
+      'Entré para el proyecto de candados IoT y terminé tocando el producto completo: del navegador al firmware. Lideré a 6 ingenieros y mi propuesta de arquitectura quedó como convención corporativa.',
+    tags: ['Angular', 'TypeScript', 'WebSockets', 'FSD', 'C embebido', 'FreeRTOS'],
+  },
+  {
+    role: 'Tech Lead',
+    company: 'Rand Abogados',
+    dates: 'Sep — Dic 2024',
+    summary:
+      'Primer rol de liderazgo. Elegí el stack, implementé Scrum y traduje requerimientos de un cliente no técnico en decisiones de producto.',
+    tags: ['React', 'Next.js', 'TypeScript', 'Scrum'],
+  },
+  {
+    role: 'Fullstack Engineer',
+    company: 'Nomad Technologies',
+    dates: 'Ago 2022 — Sep 2024',
+    summary:
+      'Empecé en frontend y fui ampliando alcance hasta backend e infraestructura: APIs, pagos, seguridad y despliegue en AWS para una app con 500 usuarios.',
+    tags: ['React', 'Node.js', 'AWS', 'Stripe', 'JWT'],
+  },
+  {
+    role: 'Fullstack Developer',
+    company: 'Hospital MediBiologica',
+    dates: 'Dic 2022 — Mar 2023',
+    summary:
+      'Proyecto en paralelo. Sitio multilingüe optimizado para velocidad y SEO técnico, hasta el top 10 de Google.',
+    tags: ['Astro', 'React', 'i18n', 'SEO'],
+  },
+];
+---
+
+<section
+  id="trayectoria"
+  class="section-shell relative overflow-x-clip"
+>
+  <SectionHeading label="Mi recorrido" title="Cuatro años construyendo producto." />
+
+  <!-- Recorrido -->
+  <ol id="trail" class="relative mx-auto mt-24 flex max-w-5xl flex-col">
+    <!-- Riel: izquierdo en móvil, central en desktop -->
+    <span
+      class="pointer-events-none absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-transparent via-black/10 to-transparent dark:via-white/10 md:left-1/2 md:-translate-x-1/2"
+      aria-hidden="true"
+    ></span>
+
+    {
+      jobs.map((job, i) => {
+        // Alternancia estricta: pares a la izquierda, impares a la derecha.
+        const right = i % 2 === 1;
+        return (
+          <li
+            data-side={right ? 'right' : 'left'}
+            class="trail-stop relative pb-24 pl-10 last:pb-0 md:pl-0"
+          >
+            {/* Nodo sobre el riel */}
+            <span
+              class={`absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 md:left-1/2 md:-translate-x-1/2 ${
+                job.current
+                  ? 'border-success bg-[color-mix(in_srgb,var(--success)_20%,transparent)]'
+                  : 'border-line bg-transparent'
+              }`}
+              aria-hidden="true"
+            />
+
+            {/* Media caja, alineada al lado que toca */}
+            <div
+              class={
+                right
+                  ? 'md:ml-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)]'
+                  : 'md:mr-[calc(50%+2.5rem)] md:max-w-[calc(50%-2.5rem)]'
+              }
+            >
+              {/* Fechas */}
+              <span class="text-xs font-semibold uppercase tracking-[0.1em] text-muted">
+                {job.dates}
+              </span>
+
+              {/* Rol y empresa */}
+              <h3 class="mt-3 text-balance font-ClashDisplay text-[length:var(--fs-h3)] font-semibold leading-[1.1] tracking-[-.02em] text-ink">
+                {job.role}
+              </h3>
+              <p class="mt-1 text-[length:var(--fs-lead)] text-muted">{job.company}</p>
+
+              {/* Descripción */}
+              <p class="mt-6 text-muted">{job.summary}</p>
+
+              {/* Tags */}
+              <ul class="mt-8 flex flex-wrap gap-2">
+                {job.tags.map((tag) => (
+                  <li class="tag">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ol>
+</section>
+
+<style>
+  /* Cada parada entra desde el lado del riel que le toca. En móvil la
+     timeline es lineal, así que todas suben en vertical. */
+  .trail-stop {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--dur-reveal) ease,
+      transform var(--dur-reveal) var(--ease-out);
+  }
+
+  .trail-stop.is-waiting { opacity: 0; transform: translateY(16px); }
+
+  .trail-stop.is-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (min-width: 768px) {
+    .trail-stop.is-waiting[data-side='left'] {
+      transform: translateX(-32px);
+    }
+
+    .trail-stop.is-waiting[data-side='right'] {
+      transform: translateX(32px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trail-stop,
+    .trail-stop.is-waiting[data-side='left'],
+    .trail-stop.is-waiting[data-side='right'] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const stops = document.querySelectorAll<HTMLElement>('.trail-stop');
+  const preference = matchMedia('(prefers-reduced-motion: reduce)');
+  const paused = () => preference.matches || document.documentElement.classList.contains('motion-paused');
+  const reveal = (stop: Element) => { stop.classList.remove('is-waiting'); stop.classList.add('is-active'); };
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (entry.isIntersecting) { reveal(entry.target); io.unobserve(entry.target); } });
+  }, { rootMargin: '-20% 0px -30% 0px' });
+  // El contenido está visible sin JS. Activar el revelado solo al inicializarlo.
+  if (!paused()) stops.forEach(stop => { stop.classList.add('is-waiting'); io.observe(stop); });
+  const sync = () => { if (paused()) { stops.forEach(reveal); io.disconnect(); } };
+  preference.addEventListener('change', sync);
+  document.addEventListener('motionchange', sync);
+  sync();
+</script>

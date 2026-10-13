@@ -1,0 +1,29 @@
+<!-- @dsCard group="Navegación" height=200 subtitle="Islas de escritorio y barra móvil (estático)" -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&display=swap">
+<style>
+  .nv { display: flex; flex-direction: column; gap: var(--space-6); align-items: flex-start; padding: 32px 24px; background: var(--surface); }
+  .nv-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .island { height: 44px; box-sizing: border-box; display: flex; align-items: center; gap: 2px; padding: 0 6px; border-radius: var(--radius-full); background: var(--surface-glass); border: 1px solid var(--line-subtle); box-shadow: var(--shadow-float); backdrop-filter: blur(12px); }
+  [data-theme="dark"] .island { border-color: var(--line); }
+  .wordmark { padding: 0 14px; font-family: var(--font-display); font-weight: 600; font-size: 16px; color: var(--ink); text-decoration: none; }
+  .pill { height: 32px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-radius: var(--radius-full); font-size: 12px; font-weight: 500; letter-spacing: .025em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .pill[aria-current="page"] { color: var(--ink); background: rgba(0,0,0,.06); }
+  [data-theme="dark"] .pill[aria-current="page"] { background: rgba(255,255,255,.1); }
+  .bar { display: flex; gap: 4px; padding: 8px; border-radius: var(--radius-full); background: var(--surface-glass); border: 1px solid var(--line-subtle); box-shadow: var(--shadow-float); }
+  .bar a { height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 12px; box-sizing: border-box; border-radius: var(--radius-full); color: var(--muted); font-size: 14px; font-weight: 500; text-decoration: none; }
+  .bar a[aria-current="page"] { color: var(--ink); background: rgba(0,0,0,.06); padding: 0 16px; }
+  [data-theme="dark"] .bar a[aria-current="page"] { background: rgba(255,255,255,.1); }
+  .bar svg { width: 20px; height: 20px; }
+</style>
+<div class="nv">
+  <nav class="nv-row" aria-label="Menú de escritorio">
+    <span class="island"><a href="#" class="wordmark">./mich</a></span>
+    <span class="island"><a href="#" class="pill" aria-current="page">Inicio</a><a href="#" class="pill">Proyectos</a><a href="#" class="pill">Sobre mí</a></span>
+  </nav>
+  <nav class="bar" aria-label="Menú móvil">
+    <a href="#" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9H3z"/></svg>Inicio</a>
+    <a href="#" aria-label="Proyectos"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></a>
+    <a href="#" aria-label="Sobre mí"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></a>
+  </nav>
+</div>
+<script>document.querySelectorAll('a[href="#"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));</script>

@@ -1,0 +1,31 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-12",
+  "styleReference": "public/anamsealsHand.webp",
+  "covers": [
+    {
+      "project": "luzia",
+      "prompt": "Use case: style-transfer. Create ONE landscape 3:2 portfolio project cover, photorealistic studio product photograph. Image 1 is the lighting/background/style reference AnamSeals: seamless pale warm gray background, soft diffuse light, matte black product, natural subtle shadows, minimal uncluttered composition. Image 2 is the edit target for the software and monitor: Luz.ia dashboard. Rephotograph that black desktop monitor showing the SAME dark Spanish medical AI dashboard, preserve the screen layout, sidebar, greeting 'hola, valeria', metrics 3 / 2 / 4 / 3 and terracotta action buttons. Keep the monitor physically plausible, nearly frontal with a slight elegant 3/4 angle, centered, screen clearly visible, filling about 60 percent of width, fully contained with generous top and side breathing room. Place its stand on an understated seamless gray studio surface matching image 1. Remove the office, window, keyboard, mouse and padded blurred vignette from image 2. Background is light warm gray edge to edge, no gradients to black, no overlay text, no watermark, no glow. Match AnamSeals' quiet natural premium photo style, not futuristic illustration. Leave safe space around the device for website cropping.",
+      "sourceGenerated": "/Users/michelle/.codex/generated_images/01a1268d-8df2-7962-be42-f2da9e700fe4/exec-d6d8258f-5914-44e0-815c-1ebbcf85b365.png",
+      "saved": "assets/source-images/project-covers/luzia-studio-v2.png"
+    },
+    {
+      "project": "logistica",
+      "prompt": "Use case: style-transfer. Create ONE landscape 3:2 photorealistic portfolio product photo. Image 1 AnamSeals is the style reference: seamless pale warm gray studio background edge to edge, natural diffuse lighting, matte black hardware, subtle soft shadows, quiet minimal product photography. Image 2 is the project/device and screen content reference. Match the warm gray background, lighting and restrained photographic character of image 1. Remove any office background, furniture, props, keyboard accessories and padded blurred frame. No neon, no illustration, no titles or labels outside the device screen, no watermark. Subject completely contained, centered, with safe top and side breathing room for website cropping. Subject: a dark graphite open laptop, slight three-quarter angle on seamless neutral gray surface, occupying about 65% of width. Preserve the light Spanish Inteligencia Logística dashboard, its sidebar, metrics 128 / 96 / 24 / 7, large recognizable Mexico route map and recent transport list. Keep the original blue/green interface details and realistic physical screen. No detached keyboard, no extra objects.",
+      "sourceGenerated": "/Users/michelle/.codex/generated_images/01a1268d-8df2-7962-be42-f2da9e700fe4/exec-37f8197d-9aef-431a-9ab0-589bc62dcef6.png",
+      "saved": "assets/source-images/project-covers/logistica-studio-v2.png"
+    },
+    {
+      "project": "white-label",
+      "prompt": "Use case: style-transfer. Create ONE landscape 3:2 photorealistic portfolio product photo. Image 1 AnamSeals is the style reference: seamless pale warm gray studio background edge to edge, natural diffuse lighting, matte black hardware, subtle soft shadows, quiet minimal product photography. Image 2 is the project/device and screen content reference. Match the warm gray background, lighting and restrained photographic character of image 1. Remove any office background, furniture, props, keyboard accessories and padded blurred frame. No neon, no illustration, no titles or labels outside the device screen, no watermark. Subject completely contained, centered, with safe top and side breathing room for website cropping. Subject: a matte black desktop monitor with neutral metal stand, centered and nearly frontal, about 62% of image width on a seamless gray surface. Preserve the light White-Label dashboard from image 2, metrics 126 / 96 / 24 / 7, activity line chart and blue, green and terracotta brand tiles. No separate keyboard or mouse, no desk edge, clean background.",
+      "sourceGenerated": "/Users/michelle/.codex/generated_images/01a1268d-8df2-7962-be42-f2da9e700fe4/exec-1f0158f4-b72e-4165-bc19-5aea091691e0.png",
+      "saved": "assets/source-images/project-covers/white-label-studio-v2.png"
+    },
+    {
+      "project": "tracking",
+      "prompt": "Use case: style-transfer. Create ONE landscape 3:2 photorealistic portfolio product photo. Image 1 AnamSeals is the style reference: seamless pale warm gray studio background edge to edge, natural diffuse lighting, matte black hardware, subtle soft shadows, quiet minimal product photography. Image 2 is the project/device and screen content reference. Match the warm gray background, lighting and restrained photographic character of image 1. Remove any office background, furniture, props, keyboard accessories and padded blurred frame. No neon, no illustration, no titles or labels outside the device screen, no watermark. Subject completely contained, centered, with safe top and side breathing room for website cropping. Subject: the black smartphone from image 2 held naturally in one right hand entering from below, like the black AnamSeals product in image 1. Vertical phone gently tilted clockwise, screen clearly visible, phone centered slightly right and height about 62% of frame. Preserve the dark Spanish tracking interface: En vivo, 24 transportes activos, route map of Mexico, status tabs and transport list. Warm natural skin, realistic fingers, no office props. Match image 1 hand/product scale and lighting.",
+      "sourceGenerated": "/Users/michelle/.codex/generated_images/01a1268d-8df2-7962-be42-f2da9e700fe4/exec-49e9c8ba-cb76-4422-8979-8015809b0f8e.png",
+      "saved": "assets/source-images/project-covers/tracking-studio-v2.png"
+    }
+  ]
+}

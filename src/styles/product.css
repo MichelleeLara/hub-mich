@@ -1,0 +1,146 @@
+@font-face { font-family:'Damion'; src:url('/media/damion.ttf') format('truetype'); font-weight:400; font-style:normal; font-display:swap; }
+/* ==========================================================================
+   Design system ./mich — tokens (decidido 2026-10-10, guía: docs/design-system.md · vista viva: /design)
+   Regla: ningún componente usa un hex; solo var(--token) o su clase de Tailwind.
+   ========================================================================== */
+:root {
+  /* Color */
+  --bg: #ffffff;
+  --surface: #f3f3f1;
+  --surface-glass: rgba(255,255,255,.7);
+  --surface-particle-card: #f9f9f8;
+  --ink: #202124;
+  --muted: #62646b;
+  --line: rgba(0,0,0,.12);
+  --line-subtle: rgba(0,0,0,.055);
+  --accent: #a74316;
+  --accent-strong: #95421d;
+  --accent-deep: #6e2f15;
+  --accent-soft: #f5e9e1;
+  --success: #15803d;
+
+  /* Espaciado: escala de 9 pasos (múltiplos de 4, = escala de Tailwind 1·2·3·4·6·8·12·16·24).
+     Para el espacio ENTRE cosas; el relleno interno de un componente es parte de su ficha. */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px; --space-5: 24px;
+  --space-6: 32px; --space-7: 48px; --space-8: 64px; --space-9: 96px;
+
+  /* Layout */
+  --container: 1152px;
+  --gutter: 24px;
+  --section-y: 104px;
+
+  /* Elevación: float = flota sobre el contenido · lift = se separa del fondo */
+  --shadow-float: 0 8px 24px -8px rgba(0,0,0,.12);
+  --shadow-lift: 0 24px 48px -12px rgba(0,0,0,.18);
+
+  /* Radios: más grande el elemento, más grande el radio */
+  --radius-sm: 8px;    /* botones, inputs */
+  --radius-md: 16px;   /* tarjetas chicas */
+  --radius-lg: 24px;   /* proyectos, paneles */
+  --radius-full: 999px;/* menú, pills, tags, avatar */
+
+  /* Motion */
+  --dur-fast: 150ms;   /* confirmar: presionar, hover de color */
+  --dur-base: 300ms;   /* cambiar / señalar */
+  --dur-slow: 500ms;   /* entrar */
+  --dur-reveal: 700ms; /* revelar al hacer scroll (tope de interacción) */
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+
+  /* Tipografía: ClashDisplay = nombres y cifras · Inter Tight = frases · Damion = etiquetas de sección */
+  --font-display: ClashDisplay, 'Inter Tight Variable', sans-serif;
+  --font-sans: 'Inter Tight Variable', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-accent: 'Damion', cursive;
+  --fs-display: clamp(48px, 10vw, 144px); /* ClashDisplay 600 */
+  --fs-h1: clamp(44px, 6vw, 80px);        /* ClashDisplay 600 · ls -.03em */
+  --fs-h2: clamp(30px, 3.4vw, 48px);      /* Inter Tight 650 · ls -.03em */
+  --fs-h2-compact: clamp(26px, 2.3vw, 32px);
+  --fs-h3: clamp(28px, 3.2vw, 40px);      /* ClashDisplay 600 · ls -.02em */
+  --fs-lead: 20px;
+  --fs-body: 16px;
+  --fs-small: 14px;
+  --fs-caption: 12px;
+  --fs-micro: 11px;                       /* mínimo del sistema */
+}
+html.dark {
+  --bg: #161616;
+  --surface: #202020;
+  --surface-glass: rgba(28,28,28,.7);
+  --surface-particle-card: #202020;
+  --ink: #f6f6f6;
+  --muted: #aaaab0;
+  --line: rgba(255,255,255,.13);
+  --line-subtle: rgba(255,255,255,.07);
+  --accent: #efaa85;
+  --accent-strong: #edb191;
+  --accent-deep: #ffe0ca;
+  --accent-soft: #30251f;
+  --success: #22c55e;
+  --shadow-float: 0 8px 24px -8px rgba(0,0,0,.5);
+  --shadow-lift: 0 24px 48px -12px rgba(0,0,0,.6);
+}
+::selection { background: var(--accent-soft); color: var(--ink); }
+.font-accent { font-family: var(--font-accent); font-weight: 400; letter-spacing: 0; }
+
+/* Panel siempre oscuro (p. ej. métrica destacada del caso) */
+.theme-dark {
+  --bg: #161616; --surface: #202020; --ink: #f6f6f6; --muted: #aaaab0;
+  --line: rgba(255,255,255,.13); --line-subtle: rgba(255,255,255,.07); --accent: #efaa85; --accent-soft: #30251f;
+  color-scheme: dark;
+}
+/* Panel invertido (footer): mismos tokens, modo contrario */
+.theme-inverse {
+  --bg: #161616; --surface: #202020; --surface-glass: rgba(28,28,28,.7); --ink: #f6f6f6; --muted: #aaaab0;
+  --line: rgba(255,255,255,.13); --line-subtle: rgba(255,255,255,.07); --accent: #efaa85; --accent-soft: #30251f; --success: #22c55e;
+  color-scheme: dark;
+}
+html.dark .theme-inverse {
+  --bg: #ffffff; --surface: #f3f3f1; --surface-glass: rgba(255,255,255,.7); --ink: #202124; --muted: #62646b;
+  --line: rgba(0,0,0,.12); --line-subtle: rgba(0,0,0,.055); --accent: #a74316; --accent-soft: #f5e9e1; --success: #15803d;
+  color-scheme: light;
+}
+
+/* Tag: .tag sobre superficies del tema · .tag-photo sobre foto (constante, ambos modos) */
+.tag { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: var(--radius-full); border: 1px solid var(--line); color: var(--muted); font-size: var(--fs-micro); font-weight: 500; letter-spacing: .025em; line-height: 1.2; }
+.tag-photo { display: inline-flex; align-items: center; padding: 8px 12px; border-radius: var(--radius-full); background: #f3f1ed; color: #343434; font-size: var(--fs-micro); font-weight: 500; letter-spacing: .025em; line-height: 1.2; }
+
+/* Botón: uno solo, dos variantes (decidido 2026-10-10) */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3); height: 48px; padding: 0 24px; border-radius: var(--radius-sm); font-size: var(--fs-small); font-weight: 500; line-height: 1; white-space: nowrap; border: 1px solid transparent; }
+.btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-secondary { border-color: var(--line); color: var(--ink); }
+.btn-arrow { display: inline-block; }
+@media (hover: hover) { .btn-secondary:hover { border-color: var(--muted); } }
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: transform var(--dur-fast) ease-out, border-color var(--dur-fast), background-color var(--dur-fast); }
+  .btn-arrow { transition: transform var(--dur-base) var(--ease-out); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn:hover .btn-arrow, .text-link:hover .btn-arrow { transform: translateX(4px); }
+}
+.section-shell { width: min(100%,var(--container)); margin: auto; padding: var(--section-y) var(--gutter); scroll-margin-top: 100px; color: var(--ink); }
+.section-kicker { display: flex; gap: var(--space-3); align-items: center; font-size: var(--fs-caption); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.section-kicker::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.quiet { color: var(--muted); }
+.text-link { display: inline-flex; gap: var(--space-3); align-items: center; min-height: 44px; font-size: var(--fs-small); font-weight: 600; }
+.text-link svg { width: 18px; height: 18px; }
+.project-picture { display: block; width: 100%; height: 100%; object-fit: cover; outline: 1px solid oklch(0 0 0 / .1); outline-offset: -1px; }
+html.dark .project-picture { outline-color: oklch(1 0 0 / .1); }
+:where(a,button,summary):focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+:where(button) { touch-action: manipulation; }
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 200; padding: 12px 20px; border-radius: 8px; background: var(--ink); color: var(--surface); transform: translateY(-150%); }
+.skip-link:focus { transform: translateY(0); }
+html.motion-paused .hero-float, html.motion-paused .animate-ping { animation-play-state: paused; }
+@media (prefers-reduced-motion: no-preference) {
+  :where(button,.pressable,.btn):not(:disabled) { transition: transform var(--dur-fast) ease-out; }
+  :where(button,.pressable,.btn):not(:disabled):active { transform: scale(.96); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  .hero-float { animation: none !important; }
+}
+@media (max-width: 767px) { :root { --section-y: 72px; } }
+
+html:not(.has-js) .requires-js { display: none; }
+:where(a,button,input,textarea,select,summary,[tabindex]) { scroll-margin-block: 104px; }
+#brief-result { scroll-margin-block: 100px; }

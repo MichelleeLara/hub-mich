@@ -1,133 +1,49 @@
 ---
-import ThemeToggle from "../components/Themetoggle";
 import Layout from "../layouts/Layout.astro";
-import { AnimateFragments } from "../components/Hero";
-import Jobs from "../components/Jobs";
-import Technologies from "../components/Technologies";
-import { IconArrowRight,IconIdea, IconGroup, IconArrowRightUp, IconEyes, IconDownload, ConversationIcon, GeminiIcon, OpenAIIcon, FramerIcon, Figma, NextJS, TailwindIcon, ReactIcon, IconWhatsappT, IconTech, IconCloud, TypeScriptIcon, CloudFareIcons, GoogleIcon, GitIcon, GitHubIcon} from '../icons/Icons'
-import TechFront from '../sections/TechFront'
-import TechColaborate from '../sections/TechColaborate'
-import TechCloud from '../sections/TechCloud'
-import Header from "../components/Header";
-import Particles from '../components/ui/Particles'
-import React from "react";
-import { IconWhatsapp } from "../icons/Icons";
-import { IconLinkedin } from "../icons/Icons";
 import Hero from "../components/Hero.astro";
-import ContactBanner from "../components/ContactBanner.jsx";
-import AboutMe from "../components/AboutMe.jsx";
-import Stack from "../components/Stack.jsx";
-import Lenguage from "../components/Lenguague.astro";
-import Services from "../components/Services.jsx";
-import Aws from "../icons/Aws.astro";
-import Projects from "../components/Projects.astro";
-import Cta from "../components/Cta.astro";
-import Footer from "../sections/Footer.astro";
+import AboutStats from "../components/AboutStats.astro";
+import ProjectsGallery from "../components/ProjectsGallery.astro";
+import Trayectoria from "../components/Trayectoria.astro";
+import Services from "../components/Services.astro";
+import DifferenceOptions from "../components/DifferenceOptions.astro";
+import SiteClosing from "../components/SiteClosing.astro";
+import IosPointer from "../components/IosPointer.astro";
 import { Spotlight } from "../components/ui/Spotlight";
 
 const meta = {
-  title: 'Inicio',
-  description: 'Soy Frontend React, explora el espacio donde mi experiencia y atención a los detalles elevan cada proyecto a una solución única y de calidad.',
-  image: 'https://hub-mich.vercel.app/OpenGraphl.png',
-  url: 'https://hub-mich.vercel.app/',
+  title: 'Mich · Product Engineer — Diseño, ingeniería e IA para productos de impacto',
+  description: 'Soy Mich. Combino diseño, ingeniería e IA para construir productos de impacto, bien pensados y fáciles de usar. Product Engineer con base en frontend (React, Next.js, Angular, TypeScript) y experiencia en backend, sistemas en tiempo real y firmware embebido. Construyo productos de punta a punta y lidero los equipos que los entregan.',
+  image: 'https://itsmich.com.mx/OpenGraphl.png',
+  url: 'https://itsmich.com.mx/',
 };
 
 ---
 
 <Layout {...meta}>
+  <IosPointer />
+  <main class="home-content text-ink">
 
-  <main
-    class="bg-white min-h-screen text-black dark:bg-[#161616] dark:text-gray-300 transition-colors duration-300 pb-14 "
-  >
-  
-    <Header client:only="react"/>
-
-    <div class="w-full rounded-md flex md:items-center md:justify-center bg-black-[#161616] antialiased bg-grid-white/[0.02] relative overflow-hidden">
+    <div class="w-full rounded-md flex md:items-center md:justify-center antialiased bg-grid-white/[0.02] relative overflow-hidden">
       <Spotlight
         className=""
         fill="white"
       />
       <!-- Hero Section -->
        <Hero />
-      
+
     </div>
 
-     
+    <ProjectsGallery />
+    <Services />
+    <AboutStats />
 
-    <!-- Contact easy section -->
-     <ContactBanner client:load/>
+    <DifferenceOptions variant="editorial" integrated id="por-que-conmigo" />
 
-    <!-- About me section -->
-    <AboutMe client:load/>
-
-    <!-- Lenguage section -->
-    <Lenguage />
-
-    <!-- Services section -->
-    <Services client:only="react" />
-
-    <!-- Stack section -->
-    <Stack client:visible/>
-
-    <!-- Projects section -->
-   <Projects />
-
-    <!-- CTA section -->
-    <Cta />
+    <!-- Trayectoria: experiencia laboral (fondo claro, contrasta con el grid) -->
+    <Trayectoria />
 
   </main>
-  <div class="relative overflow-hidden h-fit">
-    <Footer />
-    <!-- <div
-    class="w-52 h-52 -bottom-28 blur-[260px] left-0 right-0 z-30 bg-opacity-85 bg-primary absolute md:-bottom-[10rem]"
-  ></div> -->
-  </div>
+
+  <SiteClosing />
 </Layout>
-
-<style>
-  .scroll_hide {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-}
-
-.scroll_hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
-}
-
-/* .tech-cards{
-  transform: skewY(-4deg) rotateX(-14deg) rotateY(20deg) translateZ(var(180)) translateX(var(calc(10% - 3%))) translateY(var(-15%));
-  transform-style: preserve-3d;
-  transition: .32s var(--ease-out-quad);
-  width: 60%;
-  background:red;
-} */
-
-</style>
-
-
-    <!-- Stack section
-    <section class="pt-28">
-      <div class="mx-6 flex flex-col gap-6">
-        <div class="flex items-center justify-between">
-          <div class="flex flex-col gap-1">
-            <h2 class="text-3xl text-balance font-ClashDisplay tracking-wide text-gray-800 font-semibold min-h-fit dark:text-secondary">
-              Mi stack
-            </h2>
-            <p class="text-sm text-gray-800 dark:text-terteary max-w-[300px]">
-              Creo proyectos funcionales y escalables con estas tecnologías.
-            </p>
-          </div>
-
-          <button class="text-sm underline">Ver listado completo</button>
-        </div>
-
-        <!-- Frontend -->
-          <!-- <TechFront client:only="react" /> -->
-        <!-- Cloud -->
-        <!-- <TechCloud client:only="react" /> -->
-        <!-- Frontend -->
-          <!-- <TechColaborate client:only="react" /> -->
-      
-      <!-- </div>
-    </section> -->
 

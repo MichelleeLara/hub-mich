@@ -1,0 +1,256 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { ideaPoints, ideaFlowPoint, ideaFlowRoute } from '../data/ideasGeometry';
+const staticPoints = ideaPoints.map(p=>({x:.5+(p.x-.5)*.78,y:.5+(p.y-.5)*.78}));
+const stages = [
+  { number: '01', title: 'Entender el problema.', text: 'Antes de pensar en una solución, busco la fricción: qué necesita la persona, qué está fallando y qué cambiaría si lo resolvemos.', detail: 'La IA me ayuda a explorar alternativas. El problema marca la dirección.' },
+  { number: '02', title: 'Diseñar el recorrido.', text: 'Conecto las piezas en una experiencia: qué se ve, qué se hace y qué pasa después. Prototipo, pruebo estados y cuido los detalles.', detail: 'Diseño e ingeniería trabajan juntas para que la solución se entienda antes de construirla.' },
+  { number: '03', title: 'Construir el producto.', text: 'Uno interfaz, datos e IA para construir un producto funcional. Reviso el resultado con pruebas y uso real, y lo llevo hasta la entrega.', detail: 'La tecnología acelera el trabajo. El criterio mantiene la dirección.' },
+];
+const proof = [
+  { value: '< 2 min', label: 'Reportes con IA en Luz.ia', slug: 'luzia-agentes-ia' },
+  { value: '+65%', label: 'Rendimiento en logística', slug: 'inteligencia-logistica' },
+  { value: '6', label: 'Ingenieros liderados', slug: 'monitoreo-white-label' },
+];
+---
+<Layout noindex title="Preview · Mi enfoque editorial" description="Vista previa del enfoque por niveles, con scroll y composición editorial." image="/OpenGraphl.png" url="https://itsmich.com.mx/preview-enfoque">
+ <main class="editorial-preview">
+  <header class="editorial-heading"><SectionHeading label="Mi enfoque" title="Productos simples para problemas complejos." /></header>
+  <section id="enfoque-preview" class="editorial-runway" aria-label="Mi enfoque: recorrido por tres niveles">
+   <div class="editorial-sticky">
+    <div class="editorial-grid">
+
+     <div class="editorial-content">
+      {stages.map((stage, i) => <article data-editorial-stage={i} hidden={i !== 0}>
+       <div class="editorial-title"><span class="editorial-number" aria-hidden="true">{stage.number}</span><h3><span class="editorial-sr-only">Etapa {stage.number}: </span>{stage.title}</h3></div>
+       <div class="editorial-copy"><p>{stage.text}</p><p>{stage.detail}</p></div>
+      </article>)}
+      <span id="editorial-announcement" class="editorial-sr-only" role="status" aria-live="polite"></span>
+     </div>
+     <figure class="editorial-figure" aria-label="Las partículas forman bases cuadradas que se ensamblan en una estructura por niveles">
+      <canvas id="editorial-canvas" aria-hidden="true"></canvas>
+      <svg class="editorial-fallback" viewBox="0 0 600 660" aria-hidden="true">{staticPoints.map((point, i) => <circle cx={point.x * 600} cy={point.y * 660} r={i % 11 === 0 ? 2.6 : 1.8} fill="currentColor" opacity={i % 4 === 0 ? .76 : .44} />)}</svg>
+      <span class="editorial-cross first" aria-hidden="true">+</span><span class="editorial-cross last" aria-hidden="true">+</span>
+     </figure>
+    </div>
+    <div class="editorial-scroll"><span>Sigue el scroll</span><div class="editorial-track" aria-hidden="true"><span data-editorial-progress></span></div><span data-editorial-position>01 / 03</span></div>
+   </div>
+  </section>
+  <section class="editorial-proof" aria-label="Resultados de este enfoque">{proof.map(item=><a href={`/proyectos/${item.slug}`}><strong>{item.value}</strong><span>{item.label}</span></a>)}</section>
+  <div class="editorial-end"><p>De las decisiones al producto.</p><a href="/" class="text-link">Volver al inicio</a></div>
+ </main>
+</Layout>
+<style>
+ .editorial-preview { color: var(--ink); padding: 104px var(--gutter) var(--space-9); }
+ .editorial-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+ .editorial-runway { width: min(100%, var(--container)); margin: auto; }
+ .editorial-sticky { padding: var(--space-4) 0; }
+ .editorial-heading { display: flex; justify-content: center; text-align: center; margin-bottom: var(--space-7); }
+ .editorial-heading :global(.section-heading) { max-width: 680px; }
+ .editorial-grid { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); align-items: center; gap: var(--space-8); width: min(100%, 1000px); margin: auto; }
+ .editorial-figure { position: relative; width: min(100%, 460px); aspect-ratio: 10/11; margin: auto; color: var(--accent); }
+ #editorial-canvas, .editorial-fallback { width: 100%; height: 100%; display: block; }
+ #editorial-canvas { display: none; }
+ .editorial-cross { position: absolute; color: var(--muted); font: var(--fs-small) var(--font-mono); }
+ .first { left: 0; top: 20px; } .last { right: 0; bottom: 20px; }
+ .editorial-content { min-width: 0; position: relative; }
+ .editorial-title { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-5); }
+ .editorial-number { color: var(--accent); font: 500 64px/1 var(--font-display); letter-spacing: -.04em; flex-shrink: 0; }
+ .editorial-title h3 { font-family: var(--font-sans); font-weight: 650; font-size: clamp(28px, 3vw, 36px); letter-spacing: -.03em; line-height: 1.12; max-width: 400px; text-wrap: balance; }
+ .editorial-copy { max-width: 470px; font-size: var(--fs-body); line-height: 1.7; }
+ .editorial-copy p+p { margin-top: var(--space-4); color: var(--muted); }
+ .editorial-scroll { display: flex; gap: var(--space-4); align-items: center; max-width: 1000px; margin: var(--space-6) auto 0; color: var(--muted); font: var(--fs-micro) var(--font-mono); }
+ .editorial-scroll>span { white-space: nowrap; }
+ .editorial-track { flex: 1; height: 1px; background: var(--line); }
+ .editorial-track span { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--editorial-progress, 0)); transform-origin: left; }
+ .editorial-proof { width: min(100%,1000px); margin: var(--space-8) auto 0; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border-block: 1px solid var(--line); }
+ .editorial-proof a { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-6) var(--space-5); }
+ .editorial-proof a+a { border-left: 1px solid var(--line); }
+ .editorial-proof strong { font: 600 var(--fs-h3)/1.1 var(--font-display); letter-spacing: -.02em; }
+ .editorial-proof a>span { font-size: var(--fs-small); color: var(--muted); }
+ .editorial-end { text-align: center; padding: var(--space-9) 0; color: var(--muted); }
+ .editorial-end p { margin-bottom: var(--space-4); }
+ @media (max-width:767px) {
+  .editorial-preview { padding-top: var(--space-9); }
+  .editorial-heading { margin-bottom: var(--space-5); }
+  .editorial-heading :global(.section-title) { font-size: 30px; }
+  .editorial-grid { grid-template-columns: minmax(0,1fr); gap: var(--space-5); }
+  .editorial-figure { width: min(100%,260px); }
+  .editorial-number { font-size: 48px; }
+  .editorial-title { gap: var(--space-4); margin-bottom: var(--space-4); }
+  .editorial-title h3 { font-size: 28px; }
+  .editorial-proof { grid-template-columns: 1fr; }
+  .editorial-proof a { padding: var(--space-5) 0; }
+  .editorial-proof a+a { border-left: 0; border-top: 1px solid var(--line); }
+ }
+</style>
+<style is:global>
+ html.editorial-ready:not(.motion-paused) .editorial-runway { height: 310svh; }
+ html.editorial-ready:not(.motion-paused) .editorial-sticky { position: sticky; top: 92px; }
+ html.editorial-ready:not(.motion-paused) .editorial-figure { width: min(100%,460px,52svh); }
+ html.editorial-ready:not(.motion-paused) #editorial-canvas { display: block; }
+ html.editorial-ready:not(.motion-paused) .editorial-fallback { display: none; }
+ @media (max-width:767px) {
+  html.editorial-ready:not(.motion-paused) .editorial-sticky { top: 80px; }
+  html.editorial-ready:not(.motion-paused) .editorial-figure { width: min(100%,220px,26svh); }
+ }
+ html.editorial-ready.editorial-tall:not(.motion-paused) .editorial-sticky { position: static; }
+ html.editorial-ready.editorial-tall:not(.motion-paused) .editorial-runway { height: auto; }
+ html.editorial-ready.editorial-tall:not(.motion-paused) #editorial-canvas { display: none; }
+ html.editorial-ready.editorial-tall:not(.motion-paused) .editorial-fallback { display: block; }
+ html.editorial-tall [data-editorial-stage], html.motion-paused [data-editorial-stage] { display: block; }
+ html.editorial-tall [data-editorial-stage]+[data-editorial-stage], html.motion-paused [data-editorial-stage]+[data-editorial-stage] { margin-top: var(--space-7); }
+ @media (prefers-reduced-motion: reduce) {
+  html.editorial-ready .editorial-runway { height: auto !important; }
+  html.editorial-ready .editorial-sticky { position: static !important; }
+  html.editorial-ready #editorial-canvas { display: none !important; }
+  html.editorial-ready .editorial-fallback { display: block !important; }
+  [data-editorial-stage] { display: block; }
+  [data-editorial-stage]+[data-editorial-stage] { margin-top: var(--space-7); }
+ }
+</style>
+<script>
+ import { ideaPoints, ideaFlowPoint, ideaFlowRoute } from '../data/ideasGeometry';
+ const runway=document.getElementById('enfoque-preview');
+ const sticky=runway?.querySelector<HTMLElement>('.editorial-sticky');
+ const figure=runway?.querySelector<HTMLElement>('.editorial-figure');
+ const canvas=document.getElementById('editorial-canvas') as HTMLCanvasElement|null;
+ const ctx=canvas?.getContext('2d');
+ if(runway&&sticky&&figure&&canvas&&ctx){
+  const articles=Array.from(runway.querySelectorAll<HTMLElement>('[data-editorial-stage]'));
+  const counter=runway.querySelector('[data-editorial-position]');
+  const announcement=document.getElementById('editorial-announcement');
+  const progressLine=runway.querySelector<HTMLElement>('[data-editorial-progress]');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let width=0,height=0,raf=0,visible=true,progress=0,target=0,active=-1,last=0,ambientTime=0;
+  const offsets=ideaPoints.map(()=>({x:0,y:0,vx:0,vy:0}));
+  const pointer={x:0,y:0,inside:false};
+  figure.addEventListener('pointermove',event=>{
+   if(event.pointerType!=='mouse'||disabled())return;
+   const box=figure.getBoundingClientRect();pointer.x=event.clientX-box.left;pointer.y=event.clientY-box.top;pointer.inside=true;schedule();
+  },{passive:true});
+  figure.addEventListener('pointerleave',()=>{pointer.inside=false;schedule();},{passive:true});
+  const clamp=(x:number)=>Math.max(0,Math.min(1,x));
+  const ease=(x:number)=>{const t=clamp(x);return t*t*(3-2*t);};
+  let color=getComputedStyle(runway).getPropertyValue('--accent').trim();
+  const paused=()=>document.documentElement.classList.contains('motion-paused');
+  const disabled=()=>reduced.matches||paused()||document.documentElement.classList.contains('editorial-tall');
+  function measure(){
+   document.documentElement.classList.remove('editorial-tall');
+   if(!reduced.matches&&!paused())articles.forEach((a,i)=>a.hidden=i!==(active<0?0:active));
+   const box=figure!.getBoundingClientRect();width=box.width;height=box.height;
+   const dpr=Math.min(devicePixelRatio||1,2);canvas!.width=Math.round(width*dpr);canvas!.height=Math.round(height*dpr);ctx!.setTransform(dpr,0,0,dpr,0,0);
+   const top=parseFloat(getComputedStyle(sticky!).top)||92;
+   document.documentElement.classList.toggle('editorial-tall',!reduced.matches&&!paused()&&sticky!.getBoundingClientRect().height>innerHeight-top-40);
+   color=getComputedStyle(runway!).getPropertyValue('--accent').trim();
+   updateTarget();schedule();
+  }
+  function updateTarget(){const top=parseFloat(getComputedStyle(sticky!).top)||92;const box=runway!.getBoundingClientRect();target=clamp((top-box.top)/Math.max(1,box.height-sticky!.getBoundingClientRect().height));schedule();}
+  function schedule(){if(!raf&&visible&&!document.hidden&&!disabled())raf=requestAnimationFrame(frame);}
+  function setStage(stage:number){
+   if(stage===active)return;
+   const previous=active;
+   articles.forEach(article=>article.getAnimations().forEach(animation=>animation.cancel()));
+   const container=articles[0].parentElement!;
+   container.querySelectorAll('[data-transition-ghost]').forEach(e=>e.remove());
+   if(previous>=0&&!disabled()){
+    const ghost=articles[previous].cloneNode(true) as HTMLElement;
+    ghost.hidden=false;ghost.setAttribute('aria-hidden','true');ghost.setAttribute('data-transition-ghost','');ghost.removeAttribute('data-editorial-stage');
+    Object.assign(ghost.style,{position:'absolute',inset:'0',pointerEvents:'none'});container.append(ghost);
+    ghost.animate([{opacity:1,filter:'blur(0px)'},{opacity:0,filter:'blur(3px)'}],{duration:220,easing:'ease-out'}).finished.then(()=>ghost.remove()).catch(()=>ghost.remove());
+
+   }
+   active=stage;articles.forEach((a,i)=>a.hidden=i!==stage);
+   if(counter)counter.textContent=`0${stage+1} / 03`;
+   if(announcement)announcement.textContent=['01: Entender el problema','02: Diseñar el recorrido','03: Construir el producto'][stage];
+   if(!disabled())articles[stage].animate([{opacity:0,filter:'blur(3px)'},{opacity:1,filter:'blur(0px)'}],{duration:420,delay:previous>=0?160:0,fill:'backwards',easing:'cubic-bezier(.22,1,.36,1)'});
+  }
+  function frame(time:number){
+   raf=0;if(disabled()||!visible||document.hidden)return;
+   const dt=Math.min(50,time-last||16);last=time;ambientTime+=dt/1000;progress+=(target-progress)*(1-Math.exp(-dt/90));
+   const stage=progress<1/3?0:progress<2/3?1:2;setStage(stage);
+   progressLine?.style.setProperty('--editorial-progress',String(progress));
+   ctx!.clearRect(0,0,width,height);ctx!.fillStyle=color;
+   const design=ease((progress-1/3)/.29),assemble=ease((progress-2/3)/.24),connect=ease((progress-.88)/.12);
+   const scale=1.3225*.78;
+   const fit=(p:{x:number;y:number})=>({x:.5+(p.x-.5)*.78,y:.5+(p.y-.5)*.78});
+   const project=(u:number,v:number,z:number)=>({x:.5+(u-v)*.16*scale,y:.5+(.11+(u+v)*.085-z*.183)*scale});
+   const drift=ambientTime;
+   const curve=(a:{x:number;y:number},b:{x:number;y:number},t:number,bend:number)=>{
+    const arc=Math.sin(Math.PI*t)*bend;
+    return {x:a.x+(b.x-a.x)*t-(b.y-a.y)*arc,y:a.y+(b.y-a.y)*t+(b.x-a.x)*arc};
+   };
+   for(let i=0;i<ideaPoints.length;i++){
+    const p=ideaPoints[i],z=(p.baseY-p.y)/(.183*1.3225),floor=Math.min(3,Math.max(0,Math.round(z))),final=fit(p);
+    const scattered={x:.5+Math.sin(i*2.399)*(.12+(i%23)/75),y:.5+Math.cos(i*1.731)*(.10+(i%19)/65)};
+    const blueprint={x:.28+(floor%2)*.44+(p.x-.5)*.34,y:.32+Math.floor(floor/2)*.36+(p.baseY-.69)*.60};
+    // Individual arrival times and curved advection prevent the floors moving as rigid objects.
+    const seed=(Math.sin(i*12.9898)*43758.5453)%1;
+    const delay=Math.abs(seed)*.045;
+    const localDesign=ease((progress-1/3-delay)/.23),localAssembly=ease((progress-2/3-delay)/.23);
+    const planned=curve(scattered,blueprint,localDesign,Math.sin(i*.7)*.35);
+    const position=curve(planned,final,localAssembly,.3+Math.sin(i*1.3)*.2);
+    const settled=localDesign*(1-localAssembly)+localAssembly;
+    const movement=(p.outer?.0004:.0025)*settled+.008*(1-settled);
+    const baseX=(position.x+Math.sin(drift*.55+i*.73)*movement)*width;
+    const baseY=(position.y+Math.cos(drift*.48+i*.91)*movement)*height;
+    const offset=offsets[i],step=dt/16.667;
+    let forceX=0,forceY=0;
+    if(pointer.inside){
+     const dx=baseX+offset.x-pointer.x,dy=baseY+offset.y-pointer.y,distance=Math.hypot(dx,dy),radius=Math.min(width*.23,72);
+     if(distance<radius){const force=(1-distance/radius)**2*1.6;forceX=dx/Math.max(1,distance)*force;forceY=dy/Math.max(1,distance)*force;}
+    }
+    offset.vx=(offset.vx+(forceX-offset.x*.035)*step)*Math.pow(.83,step);
+    offset.vy=(offset.vy+(forceY-offset.y*.035)*step)*Math.pow(.83,step);
+    offset.x+=offset.vx*step;offset.y+=offset.vy*step;
+    const x=baseX+offset.x,y=baseY+offset.y;
+    const posts=Math.abs(z-Math.round(z))>.025;
+    ctx!.globalAlpha=(p.outer?.64:.28)*(posts?(1-localDesign+localAssembly)*.5:1)*(.85+.15*Math.sin(drift*.8+i*.27));
+    ctx!.beginPath();ctx!.arc(x,y,p.outer?1.15:.8,0,Math.PI*2);ctx!.fill();
+   }
+   ctx!.strokeStyle=color;
+   // Stable drafting molds keep the design legible while their particles remain free.
+   for(let floor=0;floor<4;floor++){
+    const cx=.28+(floor%2)*.44,cy=.32+Math.floor(floor/2)*.36+.108;
+    ctx!.globalAlpha=design*(1-assemble)*.025;ctx!.beginPath();ctx!.moveTo((cx-.144)*width,cy*height);ctx!.lineTo(cx*width,(cy-.135)*height);ctx!.lineTo((cx+.144)*width,cy*height);ctx!.lineTo(cx*width,(cy+.135)*height);ctx!.closePath();ctx!.fill();
+    ctx!.globalAlpha=design*(1-assemble)*.22;ctx!.lineWidth=.65;ctx!.stroke();
+    // Registration marks make the four planes read as considered design modules.
+    ctx!.globalAlpha=design*(1-assemble)*.35;ctx!.beginPath();ctx!.moveTo(cx*width-3,cy*height);ctx!.lineTo(cx*width+3,cy*height);ctx!.moveTo(cx*width,cy*height-3);ctx!.lineTo(cx*width,cy*height+3);ctx!.stroke();
+   }
+   // Subtle signals pass between bases, instead of a dashed assembly diagram.
+   const centers=[{x:.28,y:.428},{x:.72,y:.428},{x:.72,y:.788},{x:.28,y:.788}];
+   for(let packet=0;packet<3;packet++){
+    const travel=(drift*.06+packet/3)%1,index=Math.floor(travel*4),t=(travel*4)%1;
+    const p=curve(centers[index],centers[(index+1)%4],t,.35);
+    ctx!.globalAlpha=design*(1-assemble)*.35;ctx!.beginPath();ctx!.arc(p.x*width,p.y*height,1.5,0,Math.PI*2);ctx!.fill();
+   }
+   for(let z=0;z<=3;z++){
+    const corners=[[0,0],[2,0],[2,2],[0,2],[0,0]].map(([u,v])=>project(u,v,z));
+    ctx!.globalAlpha=connect*.10;ctx!.lineWidth=.7;ctx!.beginPath();corners.forEach((p,i)=>i?ctx!.lineTo(p.x*width,p.y*height):ctx!.moveTo(p.x*width,p.y*height));ctx!.stroke();
+   }
+   for(const [u,v] of [[0,0],[2,0],[2,2],[0,2]]){const a=project(u,v,0),b=project(u,v,3);ctx!.globalAlpha=connect*.14;ctx!.beginPath();ctx!.moveTo(a.x*width,a.y*height);ctx!.lineTo(b.x*width,b.y*height);ctx!.stroke();}
+   if(connect>0){
+    const flow=(drift*.035+clamp((progress-.88)/.12)*.16)%1;
+    for(let packet=0;packet<3;packet++){
+     for(let grain=0;grain<14;grain++){
+      const p=fit(ideaFlowPoint(flow+packet/3-grain*.002));
+      ctx!.globalAlpha=connect*(1-grain/14)*.8;ctx!.beginPath();ctx!.arc(p.x*width,p.y*height,grain===0?2:1,0,Math.PI*2);ctx!.fill();
+     }
+    }
+    for(let floor=0;floor<4;floor++){const p=fit(ideaFlowRoute[floor*5]);ctx!.globalAlpha=connect*.35;ctx!.beginPath();ctx!.arc(p.x*width,p.y*height,2.4,0,Math.PI*2);ctx!.fill();}
+   }
+   ctx!.globalAlpha=1;
+   raf=requestAnimationFrame(frame);
+  }
+  document.documentElement.classList.add('editorial-ready');
+  new ResizeObserver(measure).observe(figure);
+  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)schedule();else{cancelAnimationFrame(raf);raf=0;}},{rootMargin:'100px'}).observe(sticky);
+  addEventListener('scroll',updateTarget,{passive:true});addEventListener('resize',measure,{passive:true});
+  const sync=()=>{cancelAnimationFrame(raf);raf=0;measure();if(disabled())articles.forEach(a=>a.hidden=false);else {active=-1;setStage(progress<1/3?0:progress<2/3?1:2);}};
+  document.addEventListener('motionchange',sync);reduced.addEventListener('change',sync);
+  document.addEventListener('visibilitychange',schedule);
+  new MutationObserver(()=>{color=getComputedStyle(runway).getPropertyValue('--accent').trim();schedule();}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+  measure();
+ }
+</script>

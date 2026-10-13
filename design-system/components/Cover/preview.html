@@ -1,0 +1,46 @@
+<!-- @dsCard height=300 -->
+<style>
+  .cv { position: relative; width: 960px; height: 300px; background: var(--bg); overflow: hidden; font-family: var(--font-sans); }
+  .cv svg { position: absolute; inset: 0; }
+  .b-accent { fill: var(--accent); }
+  .b-ink { fill: var(--ink); }
+  .b-soft { fill: var(--accent-soft); }
+  .b-strong { fill: var(--accent-strong); }
+  .dot-bg { fill: var(--bg); }
+  .r-lg { rx: var(--radius-lg); }
+  .r-md { rx: var(--radius-md); }
+  .cv-text { position: absolute; left: 48px; bottom: 40px; max-width: 420px; }
+  .cv-name { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 120px; line-height: .92; letter-spacing: -.025em; color: var(--ink); }
+  .cv-tag { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+</style>
+<div class="cv">
+  <!--
+    blocks: accent 208×196 (radius-lg) · ink 160×132 (radius-lg) bleeding off the top · accent-soft 288×96 (radius-md) · accent-strong 128×132 (radius-md) · accent-soft 64×64 disc
+    arrangement: one tall clay slab with satellites, ink block bleeding off the top edge, all right of x = 480
+    pattern: dot grid at space-4 (16px) pitch — the site's particle field (ParticlesBackground, AboutStats) is its literal motif; dots cut out of the clay blocks in bg
+    scales: pitch space-4 = 16, gaps space-5 = 24 / space-6 = 32, radii radius-lg 24 · radius-md 16 · radius-full for the disc
+  -->
+  <svg width="960" height="300" viewBox="0 0 960 300" aria-hidden="true">
+    <rect class="b-ink r-lg" x="728" y="-40" width="160" height="132"></rect>
+    <rect class="b-accent r-lg" x="512" y="40" width="208" height="196"></rect>
+    <rect class="b-strong r-md" x="752" y="116" width="128" height="132"></rect>
+    <rect class="b-soft r-md" x="512" y="260" width="288" height="96"></rect>
+    <circle class="b-soft" cx="912" cy="148" r="32"></circle>
+    <g class="dot-bg">
+      <circle cx="560" cy="88" r="2.4"></circle><circle cx="576" cy="88" r="2.4"></circle><circle cx="592" cy="88" r="2.4"></circle><circle cx="608" cy="88" r="2.4"></circle><circle cx="624" cy="88" r="2.4"></circle><circle cx="640" cy="88" r="2.4"></circle><circle cx="656" cy="88" r="2.4"></circle><circle cx="672" cy="88" r="2.4"></circle>
+      <circle cx="560" cy="104" r="2.4"></circle><circle cx="576" cy="104" r="2.4"></circle><circle cx="592" cy="104" r="2.4"></circle><circle cx="608" cy="104" r="2.4"></circle><circle cx="624" cy="104" r="2.4"></circle><circle cx="640" cy="104" r="2.4"></circle>
+      <circle cx="560" cy="120" r="2.4"></circle><circle cx="576" cy="120" r="2.4"></circle><circle cx="592" cy="120" r="2.4"></circle><circle cx="608" cy="120" r="2.4"></circle>
+      <circle cx="560" cy="136" r="2.4"></circle><circle cx="576" cy="136" r="2.4"></circle>
+    </g>
+    <g class="dot-bg">
+      <circle cx="784" cy="136" r="2.4"></circle><circle cx="800" cy="136" r="2.4"></circle><circle cx="816" cy="136" r="2.4"></circle><circle cx="832" cy="136" r="2.4"></circle><circle cx="848" cy="136" r="2.4"></circle>
+      <circle cx="800" cy="152" r="2.4"></circle><circle cx="816" cy="152" r="2.4"></circle><circle cx="832" cy="152" r="2.4"></circle><circle cx="848" cy="152" r="2.4"></circle>
+      <circle cx="816" cy="168" r="2.4"></circle><circle cx="832" cy="168" r="2.4"></circle><circle cx="848" cy="168" r="2.4"></circle>
+      <circle cx="832" cy="184" r="2.4"></circle><circle cx="848" cy="184" r="2.4"></circle>
+    </g>
+  </svg>
+  <div class="cv-text">
+    <p class="cv-name">./mich</p>
+    <p class="cv-tag">Productos que resuelven, detalles que se notan.</p>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+{
+  "mobile": [
+    {
+      "broken": [],
+      "overflow": false,
+      "page": "/proyectos/anamseals-firmware/",
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "broken": [],
+      "overflow": false,
+      "page": "/proyectos/inteligencia-logistica/",
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "broken": [],
+      "overflow": false,
+      "page": "/proyectos/monitoreo-white-label/",
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "broken": [],
+      "overflow": false,
+      "page": "/proyectos/tracking-aduanal/",
+      "theme": "light",
+      "width": 390
+    }
+  ],
+  "desktop": [
+    {
+      "route": "anamseals-firmware",
+      "overflow": false
+    },
+    {
+      "route": "inteligencia-logistica",
+      "overflow": false
+    },
+    {
+      "route": "monitoreo-white-label",
+      "overflow": false
+    },
+    {
+      "route": "tracking-aduanal",
+      "overflow": false
+    }
+  ],
+  "dark": [
+    {
+      "route": "anamseals-firmware",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "inteligencia-logistica",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "monitoreo-white-label",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "tracking-aduanal",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "anamseals-firmware",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "route": "inteligencia-logistica",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "route": "monitoreo-white-label",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "route": "tracking-aduanal",
+      "width": 320,
+      "overflow": false
+    }
+  ]
+}

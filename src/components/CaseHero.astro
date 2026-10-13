@@ -1,0 +1,37 @@
+---
+import ProjectImage from './ProjectImage.astro';
+import { projectPresentation } from '../data/projectPresentation';
+const { project: p } = Astro.props;
+const visual = projectPresentation[p.slug];
+---
+<section class="case-hero section-shell">
+  <a href="/#proyectos" class="case-back text-link"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5m6-6-6 6 6 6"/></svg>Trabajo seleccionado</a>
+  <div class="case-intro">
+    <div><p class="section-kicker">{visual.category}</p><h1>{p.title}</h1><p class="case-headline">{visual.headline}</p></div>
+    <div class="case-lead"><p>{visual.summary}</p><div class="case-key-result"><strong>{visual.result}</strong><span>{visual.resultLabel}</span></div><a href="#decisiones" class="text-link">Leer las decisiones <span aria-hidden="true">↓</span></a></div>
+  </div>
+  <figure class="case-visual"><ProjectImage name={visual.image} alt={visual.alt} eager sizes="(min-width: 1152px) 1104px, calc(100vw - 48px)" /><figcaption>Visual del proyecto <span>{p.meta}</span></figcaption></figure>
+  <dl class="case-facts">
+    <div><dt>Mi rol</dt><dd>{p.brief?.rol.join(' · ')}</dd></div>
+    <div><dt>Estado</dt><dd>{p.brief?.estado.join(' · ')}</dd></div>
+    <div><dt>Herramientas</dt><dd>{p.stack.map(t => t.label).join(' · ')}</dd></div>
+  </dl>
+</section>
+<style>
+  .case-hero { padding-top: 128px; padding-bottom: 64px; }
+  .case-back { color: var(--muted); font-size: var(--fs-small); margin-bottom: var(--space-8); }
+  .case-intro { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--space-8); align-items: end; margin-bottom: var(--space-7); }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h1); letter-spacing: -.03em; line-height: 1.05; margin: var(--space-5) 0; text-wrap: balance; overflow-wrap: break-word; }
+  .case-headline { color: var(--muted); font-size: var(--fs-lead); line-height: 1.5; max-width: 520px; text-wrap: balance; }
+  .case-lead > p { font-size: var(--fs-body); line-height: 1.7; color: var(--muted); }
+  .case-key-result { display: flex; gap: var(--space-5); align-items: center; margin: var(--space-5) 0 var(--space-4); padding-top: 24px; border-top: 1px solid var(--line); }
+  .case-key-result strong { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 600; letter-spacing: -.02em; line-height: 1.1; white-space: nowrap; }
+  .case-key-result span { font-size: var(--fs-caption); color: var(--muted); max-width: 150px; }
+  .case-visual { border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); }
+  .case-visual :global(img) { aspect-ratio: 1.7; height: auto; object-fit: cover; }
+  figcaption { padding: 16px 24px; display: flex; justify-content: space-between; gap: var(--space-3); font-size: var(--fs-caption); color: var(--muted); }
+  .case-facts { display: grid; grid-template-columns: 1fr 1fr 1.7fr; gap: var(--space-6); padding-top: 32px; margin-top: var(--space-2); }
+  dt { font-size: var(--fs-micro); color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: var(--space-3); }
+  dd { font-size: var(--fs-small); line-height: 1.6; }
+  @media (max-width: 767px) { .case-hero { padding-top: 96px; } .case-back { margin-bottom: var(--space-6); } .case-intro { grid-template-columns: 1fr; gap: var(--space-6); } .case-facts { grid-template-columns: 1fr 1fr; gap: var(--space-5); } .case-facts > div:last-child { grid-column: 1/-1; } figcaption { flex-direction: column; padding: 14px 18px; } .case-visual :global(img) { aspect-ratio: 1.3; } }
+</style>

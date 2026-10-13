@@ -1,0 +1,239 @@
+---
+// /design — el design system ./mich vivo, renderizado con los tokens y componentes reales.
+// Oculta: noindex y fuera del sitemap. Guía escrita: docs/design-system.md
+import Layout from '../layouts/Layout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const meta = {
+  title: 'Design system · ./mich',
+  description: 'Tokens, tipografía, espaciado y componentes del sitio de Mich.',
+  image: 'https://itsmich.com.mx/OpenGraphl.png',
+  url: 'https://itsmich.com.mx/design',
+};
+
+const colors = [
+  ['--bg', 'Fondo de página'], ['--surface', 'Inputs, tarjetas'], ['--surface-glass', 'Islas del menú'],
+  ['--surface-particle-card', 'Laboratorio'], ['--ink', 'Texto principal'], ['--muted', 'Texto secundario'],
+  ['--line', 'Bordes'], ['--line-subtle', 'Divisores suaves'], ['--accent', 'Acento'],
+  ['--accent-strong', 'Partículas'], ['--accent-deep', 'Partículas · detalle'], ['--accent-soft', 'Selección'],
+  ['--success', 'Disponible'],
+];
+const type = [
+  ['display', 'var(--font-display)', 'var(--fs-display)', 600, '-.025em', 'Michelle', true],
+  ['h1', 'var(--font-display)', 'var(--fs-h1)', 600, '-.03em', 'AnamSeals', false],
+  ['h2', 'var(--font-sans)', 'var(--fs-h2)', 650, '-.03em', 'Ideas que toman forma y generan impacto.', false],
+  ['h2 compacto', 'var(--font-sans)', 'var(--fs-h2-compact)', 650, '-.03em', 'Construyo producto de punta a punta.', false],
+  ['h3', 'var(--font-display)', 'var(--fs-h3)', 600, '-.02em', '$1M USD', false],
+  ['lead', 'var(--font-sans)', 'var(--fs-lead)', 400, '0', 'Uno diseño, ingeniería e IA para convertir un problema de negocio en algo que las personas puedan usar.', false],
+  ['body', 'var(--font-sans)', 'var(--fs-body)', 400, '0', 'Uso la IA para explorar, construir y automatizar. Mi trabajo es darle dirección.', false],
+  ['small', 'var(--font-sans)', 'var(--fs-small)', 500, '0', 'Ver proyectos', false],
+  ['caption', 'var(--font-sans)', 'var(--fs-caption)', 600, '.12em', 'PRODUCT ENGINEER', false],
+  ['micro', 'var(--font-mono)', 'var(--fs-micro)', 400, '0', '01 / Entender · 02 / Diseñar · 03 / Construir', false],
+];
+const spaces = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const radii = [['--radius-sm', 'Botones, inputs'], ['--radius-md', 'Tarjetas chicas'], ['--radius-lg', 'Proyectos, paneles'], ['--radius-full', 'Menú, tags, avatar']];
+const durations = [['--dur-fast', 'Confirmar'], ['--dur-base', 'Cambiar, señalar'], ['--dur-slow', 'Entrar'], ['--dur-reveal', 'Revelar (tope)']];
+---
+
+<Layout noindex {...meta}>
+  <main class="ds text-ink pb-24">
+    <header class="section-shell ds-hero">
+      <p class="section-kicker">Design system</p>
+      <h1>./mich</h1>
+      <p class="ds-lead">Los tokens y componentes reales del sitio. Cambia el tema con el botón del menú para ver los dos modos. Guía escrita en <code>docs/design-system.md</code>.</p>
+      <nav class="ds-toc" aria-label="Secciones del design system">
+        <a href="#color">Color</a><a href="#tipografia">Tipografía</a><a href="#espacio">Espacio</a><a href="#radios">Radios y sombras</a><a href="#motion">Motion</a><a href="#componentes">Componentes</a><a href="#iconos">Íconos</a>
+      </nav>
+    </header>
+
+    <section id="color" class="section-shell">
+      <SectionHeading label="Color" title="Un acento, no un arcoíris." />
+      <ul class="ds-swatches">
+        {colors.map(([token, use]) => (
+          <li>
+            <span class="ds-swatch" style={`background: var(${token})`}></span>
+            <code>{token}</code>
+            <span class="ds-note">{use}</span>
+            <span class="ds-value" data-token={token}></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="tipografia" class="section-shell">
+      <SectionHeading label="Tipografía" title="Nombres en Clash, frases en Inter Tight." />
+      <ul class="ds-type">
+        {type.map(([name, family, size, weight, ls, sample, upper]) => (
+          <li>
+            <code>{name}</code>
+            <span style={`font-family:${family};font-size:${size};font-weight:${weight};letter-spacing:${ls};line-height:1.1;${upper ? 'text-transform:uppercase;' : ''}`}>{sample}</span>
+          </li>
+        ))}
+        <li><code>label</code><span class="font-accent ds-label">Trabajo seleccionado</span></li>
+      </ul>
+    </section>
+
+    <section id="espacio" class="section-shell">
+      <SectionHeading label="Espacio" title="Nueve pasos, múltiplos de 4." />
+      <ul class="ds-spaces">
+        {spaces.map(n => (
+          <li><code>--space-{n}</code><span class="ds-bar" style={`width: var(--space-${n})`}></span><span class="ds-value" data-token={`--space-${n}`}></span></li>
+        ))}
+      </ul>
+      <p class="ds-note ds-rule">Layout: <code>--container</code> <span data-token="--container"></span> · <code>--gutter</code> <span data-token="--gutter"></span> · <code>--section-y</code> <span data-token="--section-y"></span></p>
+    </section>
+
+    <section id="radios" class="section-shell">
+      <SectionHeading label="Radios y sombras" title="Más grande el elemento, más grande el radio." />
+      <div class="ds-grid4">
+        {radii.map(([token, use]) => (
+          <div class="ds-tile"><span class="ds-shape" style={`border-radius: var(${token})`}></span><code>{token}</code><span class="ds-note">{use}</span></div>
+        ))}
+      </div>
+      <div class="ds-grid2">
+        <div class="ds-tile"><span class="ds-elev" style="box-shadow: var(--shadow-float); border-radius: var(--radius-full)"></span><code>--shadow-float</code><span class="ds-note">Islas del menú, barra móvil</span></div>
+        <div class="ds-tile"><span class="ds-elev" style="box-shadow: var(--shadow-lift); border-radius: var(--radius-md)"></span><code>--shadow-lift</code><span class="ds-note">Avatar, tarjetas del caso</span></div>
+      </div>
+    </section>
+
+    <section id="motion" class="section-shell">
+      <SectionHeading label="Motion" title="El motion orienta, nunca estorba." />
+      <ul class="ds-motion">
+        {durations.map(([token, use]) => (
+          <li><code>{token}</code><span class="ds-value" data-token={token}></span><span class="ds-note">{use}</span></li>
+        ))}
+        <li><code>--ease-out</code><span class="ds-value" data-token="--ease-out"></span><span class="ds-note">Toda transición CSS</span></li>
+      </ul>
+      <p class="ds-note ds-rule">Prueba los patrones: pasa el cursor por los botones (señalar) y presiónalos (confirmar).</p>
+    </section>
+
+    <section id="componentes" class="section-shell">
+      <SectionHeading label="Componentes" title="Las piezas, tal como viven en el sitio." />
+
+      <div class="ds-block">
+        <h3 class="ds-h">Botón y enlace</h3>
+        <div class="ds-row">
+          <a href="#componentes" class="btn btn-primary">Ver proyectos <svg aria-hidden="true" class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+          <a href="#componentes" class="btn btn-secondary">Leer mi CV</a>
+          <a href="#componentes" class="text-link">Leer las decisiones <svg aria-hidden="true" class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+        </div>
+      </div>
+
+      <div class="ds-block">
+        <h3 class="ds-h">Kicker, estado y tags</h3>
+        <div class="ds-row">
+          <p class="section-kicker">Firmware · IoT</p>
+          <span class="ds-status"><span class="ds-dot"></span>Disponible</span>
+          <span class="tag">React</span><span class="tag">Design System</span>
+          <span class="ds-photo"><span class="tag-photo">IoT</span><span class="tag-photo">Firmware</span></span>
+        </div>
+      </div>
+
+      <div class="ds-block">
+        <h3 class="ds-h">Tarjeta de superficie</h3>
+        <div class="ds-grid2">
+          <article class="ds-card ds-card-lift"><span class="ds-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg></span><p class="ds-eyebrow">01 · El contexto</p><h4>Problema</h4><p class="ds-note">Con elevación: --shadow-lift.</p></article>
+          <article class="ds-card"><h4>Tu punto de partida</h4><p class="ds-note">Sin elevación: resultado del brief.</p></article>
+        </div>
+      </div>
+
+      <div class="ds-block">
+        <h3 class="ds-h">Formulario</h3>
+        <div class="ds-form">
+          <label for="ds-input">¿Qué quieres resolver?</label>
+          <input id="ds-input" type="text" placeholder="Por ejemplo: mi equipo dedica horas a…" />
+          <p class="ds-note">Foco: 2px --accent, separación 3px. Pruébalo con Tab.</p>
+        </div>
+      </div>
+
+      <div class="ds-block">
+        <h3 class="ds-h">Datos</h3>
+        <div class="ds-proof">
+          <div><strong>&lt; 2 min</strong><span>Reportes con IA en Luz.ia</span></div>
+          <div><strong>+65%</strong><span>Rendimiento en logística</span></div>
+          <div><strong>6</strong><span>Ingenieros liderados</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="iconos" class="section-shell">
+      <SectionHeading label="Íconos" title="Un solo trazo." />
+      <div class="ds-row ds-icons">
+        <span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg><code>16 · texto, botones</code></span>
+        <span><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9H3z"/></svg><code>20 · navegación, controles</code></span>
+      </div>
+      <p class="ds-note ds-rule">viewBox 24 · stroke 1.5 currentColor · extremos redondos · decorativos con aria-hidden.</p>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  // Muestra el valor actual de cada token (cambia al alternar el tema).
+  const fill = () => {
+    const cs = getComputedStyle(document.documentElement);
+    document.querySelectorAll<HTMLElement>('[data-token]').forEach(el => { el.textContent = cs.getPropertyValue(el.dataset.token!).trim(); });
+  };
+  fill();
+  new MutationObserver(fill).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+</script>
+
+<style>
+  .ds-hero { padding-top: 160px; }
+  .ds-hero h1 { margin-top: var(--space-4); font-family: var(--font-display); font-size: var(--fs-display); font-weight: 600; line-height: .98; letter-spacing: -.025em; }
+  .ds-lead { margin-top: var(--space-5); max-width: 620px; font-size: var(--fs-lead); line-height: 1.5; color: var(--muted); }
+  .ds-toc { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-6); }
+  .ds-toc a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--radius-full); font-size: var(--fs-small); }
+  code { font-family: var(--font-mono); font-size: var(--fs-caption); }
+  .ds-note { font-size: var(--fs-small); color: var(--muted); line-height: 1.6; }
+  .ds-value { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--muted); }
+  .ds-rule { margin-top: var(--space-5); }
+  .ds-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-5); margin-top: var(--space-7); }
+  .ds-swatches li { display: flex; flex-direction: column; gap: var(--space-2); }
+  .ds-swatch { height: 88px; border-radius: var(--radius-md); border: 1px solid var(--line); }
+  .ds-type { margin-top: var(--space-7); border-top: 1px solid var(--line); }
+  .ds-type li { display: grid; grid-template-columns: 120px 1fr; gap: var(--space-6); align-items: center; padding: var(--space-5) 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+  .ds-type li code { color: var(--muted); }
+  .ds-label { font-size: clamp(16px, 1.5vw, 20px); color: var(--accent); }
+  .ds-spaces { margin-top: var(--space-7); display: flex; flex-direction: column; gap: var(--space-3); }
+  .ds-spaces li { display: grid; grid-template-columns: 120px 1fr 60px; gap: var(--space-4); align-items: center; }
+  .ds-bar { display: block; height: 16px; border-radius: 4px; background: var(--accent); }
+  .ds-grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); margin-top: var(--space-7); }
+  .ds-grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-5); margin-top: var(--space-5); }
+  .ds-tile { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-5); border: 1px solid var(--line); border-radius: var(--radius-md); }
+  .ds-shape { width: 72px; height: 72px; background: var(--accent-soft); border: 1px solid var(--accent); margin-bottom: var(--space-3); }
+  .ds-elev { width: 140px; height: 56px; background: var(--bg); border: 1px solid var(--line-subtle); margin: var(--space-4) 0 var(--space-5); }
+  .ds-motion { margin-top: var(--space-7); border-top: 1px solid var(--line); }
+  .ds-motion li { display: grid; grid-template-columns: 140px 220px 1fr; gap: var(--space-4); align-items: center; padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
+  .ds-block { margin-top: var(--space-7); }
+  .ds-h { font-size: var(--fs-small); font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .ds-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); margin-top: var(--space-4); }
+  .ds-status { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--success); }
+  .ds-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+  .ds-photo { display: inline-flex; gap: var(--space-2); padding: var(--space-4); border-radius: var(--radius-md); background: #171717; } /* constante: simula foto */
+  .ds-card { padding: var(--space-6); border-radius: var(--radius-md); background: var(--surface); display: flex; flex-direction: column; gap: var(--space-3); }
+  .ds-card-lift { box-shadow: var(--shadow-lift); }
+  .ds-card h4 { font-size: var(--fs-lead); font-weight: 650; letter-spacing: -.02em; }
+  .ds-eyebrow { font-size: var(--fs-micro); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .ds-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent); }
+  .ds-icon svg { width: 20px; height: 20px; }
+  .ds-form { max-width: 520px; margin-top: var(--space-4); }
+  .ds-form label { display: block; margin-bottom: var(--space-3); font-weight: 500; font-size: var(--fs-small); }
+  .ds-form input { display: block; width: 100%; padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--muted); color: var(--ink); background: var(--surface); font-size: var(--fs-small); margin-bottom: var(--space-3); }
+  .ds-form input::placeholder { color: var(--muted); }
+  .ds-form input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .ds-proof { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: var(--space-4); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .ds-proof div { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-6) var(--space-6) var(--space-6) 0; }
+  .ds-proof div + div { padding-left: var(--space-6); border-left: 1px solid var(--line); }
+  .ds-proof strong { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+  .ds-proof span { font-size: var(--fs-small); color: var(--muted); }
+  .ds-icons span { display: inline-flex; align-items: center; gap: var(--space-3); }
+  @media (max-width: 767px) {
+    .ds-hero { padding-top: 120px; }
+    .ds-grid4 { grid-template-columns: repeat(2, 1fr); }
+    .ds-grid2, .ds-proof { grid-template-columns: 1fr; }
+    .ds-proof div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+    .ds-type li { grid-template-columns: 1fr; gap: var(--space-2); }
+    .ds-motion li { grid-template-columns: 1fr 1fr; }
+    .ds-motion li .ds-note { grid-column: 1 / -1; }
+  }
+</style>

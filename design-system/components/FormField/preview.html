@@ -1,0 +1,16 @@
+<!-- @dsCard group="Formularios" height=260 subtitle="Label, input, ayuda y envío" -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&display=swap">
+<style>
+  .ff { max-width: 480px; padding: 24px; background: var(--bg); color: var(--ink); }
+  .ff label { display: block; margin-bottom: var(--space-3); font-size: 14px; font-weight: 500; }
+  .ff input { display: block; box-sizing: border-box; width: 100%; padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--muted); background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; line-height: 1.6; }
+  .ff input::placeholder { color: var(--muted); }
+  .ff input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .ff .help { margin: var(--space-3) 0 var(--space-5); font-size: 12px; color: var(--muted); }
+</style>
+<form class="ff" onsubmit="event.preventDefault()">
+  <label for="ff-problem">¿Qué quieres resolver?</label>
+  <input id="ff-problem" type="text" placeholder="Por ejemplo: mi equipo dedica horas a responder lo mismo">
+  <p class="help">Pruébalo con Tab para ver el foco.</p>
+  <button type="submit" class="btn btn-primary">Crear mi brief <span class="btn-arrow" aria-hidden="true">↗</span></button>
+</form>

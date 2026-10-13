@@ -1,0 +1,69 @@
+---
+import { projects } from '../data/projectsData.js';
+import ProjectImage from './ProjectImage.astro';
+import { projectPresentation } from '../data/projectPresentation';
+import SectionHeading from './SectionHeading.astro';
+const featured = projects.find(p => p.slug === 'luzia-agentes-ia');
+const others = ['anamseals-firmware', 'inteligencia-logistica', 'monitoreo-white-label', 'tracking-aduanal'].map(slug => projects.find(p => p.slug === slug));
+---
+<section id="proyectos" class="section-shell projects-section">
+  <div class="projects-heading">
+    <SectionHeading label="Trabajo seleccionado" title="Ideas que toman forma y generan impacto." />
+    <p>De agentes de IA a sistemas que operan en el mundo real. Cada caso cuenta el problema, las decisiones y lo que cambió.</p>
+  </div>
+  <a href={`/proyectos/${featured.slug}`} class="project-card featured-project">
+    <div class="project-card-image"><ProjectImage name="luzia" sizes="(min-width: 1152px) 1104px, calc(100vw - 48px)" alt="Visual de Luz.ia: panel de conversaciones, pacientes y agenda" /></div>
+    <div class="project-card-tags">{featured.brief.tipo.map(tag => <span class="tag-photo">{tag}</span>)}</div>
+    <div class="project-card-info featured-copy">
+      <span class="featured-status">Proyecto propio · MVP en pre-validación</span>
+      <div class="featured-title"><h3>Luz.ia</h3><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></div>
+      <p>Hacer simple la operación detrás de un ecosistema de agentes de IA para el bienestar.</p>
+    </div>
+  </a>
+  <div class="project-grid">
+    {others.map(p => {
+      const visual = projectPresentation[p.slug];
+      return <a href={`/proyectos/${p.slug}`} class="project-card">
+        <div class="project-card-image"><ProjectImage name={visual.image} alt={visual.alt} /></div>
+        <div class="project-card-tags">{p.brief.tipo.map(tag => <span class="tag-photo">{tag}</span>)}</div>
+        <div class="project-card-info"><h3>{p.title}</h3><p>{p.meta}</p></div>
+      </a>;
+    })}
+  </div>
+</section>
+<style>
+  .projects-section { padding-top: 64px; }
+  .projects-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-7); margin-bottom: var(--space-7); }
+  h2 { margin-top: var(--space-5); }
+  .projects-heading > p { max-width: 290px; color: var(--muted); line-height: 1.7; font-size: var(--fs-body); }
+  .project-grid { margin-top: var(--space-6); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+  /* La tarjeta de proyecto es oscura en ambos modos (va sobre foto): sus colores son constantes del componente. */
+  .project-card { position: relative; display: flex; align-items: flex-end; min-width: 0; aspect-ratio: 1.25; overflow: hidden; border-radius: var(--radius-lg); background: #171717; color: #fff; }
+  .project-card :global(.project-picture) { outline: none; }
+  .project-card-image { position: absolute; inset: 0; }
+  .project-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgb(0 0 0 / .12) 45%, rgb(0 0 0 / .78) 74%, #111 100%); pointer-events: none; }
+  .project-card-tags { position: absolute; z-index: 1; top: 24px; right: 24px; left: 24px; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); }
+  .project-card-info { position: relative; z-index: 1; width: 100%; padding: 32px; }
+  .project-card-info h3 { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: 600; line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
+  .project-card-info > p { margin-top: var(--space-4); color: #e0e0e0; font-size: var(--fs-small); line-height: 1.5; }
+  .featured-copy > p { font-size: var(--fs-body); }
+  .featured-project { aspect-ratio: 2.05; }
+  .featured-project::after { background: linear-gradient(180deg, rgb(0 0 0 / .08), transparent 20%, rgb(0 0 0 / .25) 42%, rgb(0 0 0 / .85) 75%, #111 100%); }
+  .featured-copy { padding: var(--space-6); }
+  .featured-status { display: block; color: #e0e0e0; font-size: var(--fs-micro); letter-spacing: .06em; text-transform: uppercase; }
+  .featured-title { display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); margin-top: var(--space-3); }
+  .featured-title h3 { font-size: var(--fs-h1); line-height: 1; letter-spacing: -.03em; }
+  .featured-title svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .featured-copy > p { max-width: 530px; margin-top: var(--space-3); }
+  @media (max-width: 767px) {
+    .projects-heading { display: block; }
+    .projects-heading > p { max-width: 450px; margin-top: var(--space-5); }
+    .featured-project { aspect-ratio: auto; min-height: 350px; }
+    .featured-title svg { width: 24px; height: 24px; }
+    .project-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+    .project-card-info { padding: 24px; }
+    .project-card-info > p { margin-top: var(--space-3); }
+    .project-card-tags { top: 16px; right: 16px; left: 16px; gap: var(--space-2); }
+    .project-card-tags .tag-photo { padding: 7px 10px; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import SectionHeading from './SectionHeading.astro';
+---
+<section class="section-shell brief-section" aria-labelledby="brief-title">
+  <div class="brief-heading"><SectionHeading label="Hablemos" title="Démosle forma a tu idea." id="brief-title" /><p>Una buena conversación empieza por un problema claro. Prepara un brief corto y llévatelo, o úsalo para escribirme.</p></div>
+  <noscript><p class="text-link">Puedes contarme tu idea en <a href="mailto:mich.ia@hotmail.com">mich.ia@hotmail.com</a>.</p></noscript>
+  <details class="brief-builder requires-js">
+    <summary><span>Preparar mi brief <span class="quiet">· 3 preguntas</span></span><span class="brief-plus" aria-hidden="true">+</span></summary>
+    <form id="project-brief-form">
+      <div class="brief-fields"><div><label for="brief-problem">¿Qué quieres resolver?</label><textarea id="brief-problem" name="problem" rows="3" maxlength="1200" required placeholder="Por ejemplo: mi equipo dedica horas a responder las mismas preguntas."></textarea><p id="brief-privacy">Se prepara aquí, en tu navegador. Tú decides si lo compartes.</p></div><div><label for="brief-users">¿Quién lo va a usar?</label><input id="brief-users" name="users" maxlength="200" required placeholder="Tu equipo, tus clientes, una comunidad…" /><label for="brief-goal">¿Qué debería mejorar?</label><select id="brief-goal" name="goal"><option>Ahorrar tiempo en una operación</option><option>Lanzar un producto con IA</option><option>Hacer más fácil un producto existente</option><option>Conectar datos, sistemas o dispositivos</option></select></div></div>
+      <button type="submit" class="brief-button btn btn-primary">Crear mi brief <span class="btn-arrow" aria-hidden="true">↗</span></button>
+      <div id="brief-result" hidden><h3>Tu punto de partida</h3><pre id="brief-text"></pre><div class="brief-actions"><button type="button" id="copy-brief" class="text-link">Copiar brief</button><button type="button" id="download-brief" class="text-link">Descargar .txt</button><a id="email-brief" class="text-link" href="mailto:mich.ia@hotmail.com">Abrir en mi correo <span aria-hidden="true">↗</span></a></div><p id="brief-status" role="status"></p></div>
+    </form>
+  </details>
+</section>
+<style>
+  .brief-section { padding-top: 40px; padding-bottom: 88px; }
+  .brief-heading { display: flex; gap: var(--space-8); align-items: end; justify-content: space-between; }
+  h2 { margin-top: var(--space-5); }.brief-heading > p { max-width: 370px; font-size: 16px; color: var(--muted); line-height: 1.7; }
+  details { margin-top: var(--space-6); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  summary { min-height: 76px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 16px; list-style: none; }
+  summary::-webkit-details-marker { display: none; }.brief-plus { font-size: 28px; } details[open] .brief-plus { transform: rotate(45deg); }
+  form { padding: 8px 0 32px; }.brief-fields { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-7); }
+  label { display: block; margin-bottom: var(--space-3); font-weight: 500; font-size: 14px; }
+  input,textarea,select { display: block; width: 100%; padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--muted); color: var(--ink); background: var(--surface); font-size: 14px; line-height: 1.6; }
+  input::placeholder,textarea::placeholder { color: var(--muted); }textarea { resize: vertical; } input { margin-bottom: var(--space-5); }
+  :is(input,textarea,select):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  #brief-privacy { margin-top: var(--space-3); font-size: 12px; color: var(--muted); }
+  .brief-button { margin-top: var(--space-5); }
+  #brief-result { margin-top: var(--space-6); padding: var(--space-6); border-radius: var(--radius-md); background: var(--surface); }h3 { font-size: var(--fs-lead); font-weight: 500; }
+  pre { margin-top: var(--space-5); font-family: inherit; font-size: 14px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }.brief-actions { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); margin-top: var(--space-5); }#brief-status { font-size: 12px; color: var(--muted); margin-top: var(--space-2); }
+  @media(max-width:767px) { .brief-heading { display: block; }.brief-heading > p { margin-top: var(--space-5); }.brief-fields { grid-template-columns: 1fr; gap: var(--space-5); }#brief-result { padding: var(--space-5); }summary { font-size: 14px; } }
+</style>
+<script>
+  const form = document.getElementById('project-brief-form') as HTMLFormElement | null;
+  if (form) {
+    let brief = '';
+    const status = document.getElementById('brief-status')!;
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const data = new FormData(form);
+      brief = `Hola Mich, tengo una idea de producto.\n\nProblema que quiero resolver\n${String(data.get('problem')).trim()}\n\nPersonas que lo usarían\n${String(data.get('users')).trim()}\n\nObjetivo\n${data.get('goal')}\n\nPor definir juntos\n• Cómo funciona hoy el proceso\n• Qué datos y sistemas ya existen\n• Qué cambio nos diría que funcionó\n• Alcance de una primera versión`;
+      document.getElementById('brief-text')!.textContent = brief;
+      const result = document.getElementById('brief-result')!;
+      result.hidden = false;
+      result.setAttribute('tabindex', '-1'); result.focus({ preventScroll: true });
+      result.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      (document.getElementById('email-brief') as HTMLAnchorElement).href = `mailto:mich.ia@hotmail.com?subject=${encodeURIComponent('Una idea de producto — itsmich')}&body=${encodeURIComponent(brief)}`;
+      status.textContent = 'Brief listo. Puedes editar tus respuestas y volver a crearlo.';
+    });
+    document.getElementById('copy-brief')!.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(brief); status.textContent = 'Brief copiado.'; }
+      catch { status.textContent = 'Puedes seleccionar el texto del brief y copiarlo manualmente.'; }
+    });
+    document.getElementById('download-brief')!.addEventListener('click', () => {
+      const url = URL.createObjectURL(new Blob([brief], { type: 'text/plain;charset=utf-8' }));
+      const link = document.createElement('a'); link.href = url; link.download = 'mi-idea-de-producto.txt'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+      status.textContent = 'Tu brief está listo para guardar.';
+    });
+  }
+</script>
