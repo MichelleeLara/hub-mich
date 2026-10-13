@@ -1,0 +1,95 @@
+---
+interface Props {
+ variant: 'context' | 'build';
+ id: string;
+}
+const { variant, id } = Astro.props;
+---
+
+<div class:list={['panel-resource', 'difference-artwork', `difference-${variant}`]} aria-hidden="true">
+ <svg viewBox="0 0 400 260" fill="none" aria-hidden="true" focusable="false">
+  <defs>
+   <linearGradient id={`${id}-paper`} x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="var(--difference-tint)" />
+    <stop offset="1" stop-color="var(--bg)" />
+   </linearGradient>
+   <linearGradient id={`${id}-highlight`} x1="0" y1="0" x2="0" y2="1">
+    <stop stop-color="var(--accent)" stop-opacity=".3" />
+    <stop offset="1" stop-color="var(--accent)" stop-opacity=".04" />
+   </linearGradient>
+   <filter id={`${id}-shadow`} x="-35%" y="-35%" width="170%" height="180%">
+    <feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="var(--ink)" flood-opacity=".045" />
+   </filter>
+  </defs>
+
+  {variant === 'context' && <>
+   <g class="context-back motion-layer">
+    <g transform="rotate(9 217 126)">
+     <rect class="glass faint" x="153" y="43" width="126" height="163" rx="13" fill={`url(#${id}-paper)`} />
+     <rect class="pill faint" x="170" y="61" width="48" height="7" rx="3.5" fill={`url(#${id}-highlight)`} />
+     <rect class="skeleton faint" x="170" y="81" width="72" height="3" rx="1.5" />
+     <rect class="skeleton faint" x="170" y="91" width="49" height="3" rx="1.5" />
+    </g>
+   </g>
+   <g class="context-side motion-layer">
+    <g transform="rotate(-17 139 153)">
+     <rect class="glass faint" x="87" y="99" width="104" height="111" rx="10" fill={`url(#${id}-paper)`} />
+     <rect class="pill faint" x="103" y="116" width="55" height="6" rx="3" fill={`url(#${id}-highlight)`} />
+     <rect class="skeleton faint" x="103" y="137" width="65" height="3" rx="1.5" />
+     <rect class="skeleton faint" x="103" y="147" width="44" height="3" rx="1.5" />
+    </g>
+   </g>
+   <g class="context-focus motion-layer">
+    <rect class="glass" x="173" y="109" width="134" height="64" rx="11" fill={`url(#${id}-paper)`} filter={`url(#${id}-shadow)`} />
+    <circle class="icon-disc" cx="202" cy="141" r="16" />
+    <circle class="accent-stroke" cx="202" cy="141" r="8" />
+    <circle class="accent-stroke" cx="202" cy="141" r="3" />
+    <path class="accent-stroke" d="m205 138 7-7m-3 0h3v3" />
+    <rect class="pill" x="231" y="131" width="54" height="6" rx="3" fill={`url(#${id}-highlight)`} />
+    <rect class="skeleton" x="231" y="145" width="38" height="3" rx="1.5" />
+   </g>
+  </>}
+
+  {variant === 'build' && <>
+   <g class="build-interface motion-layer">
+    <g transform="translate(200 125) rotate(17) skewX(-8) translate(-200 -125)">
+     <rect class="glass faint" x="124" y="42" width="158" height="168" rx="13" fill={`url(#${id}-paper)`} />
+     <rect class="pill faint" x="142" y="60" width="55" height="7" rx="3.5" fill={`url(#${id}-highlight)`} />
+     <rect class="glass faint" x="143" y="87" width="48" height="59" rx="8" fill={`url(#${id}-paper)`} />
+     <rect class="glass faint" x="203" y="87" width="59" height="59" rx="8" fill={`url(#${id}-paper)`} />
+     <rect class="skeleton faint" x="143" y="164" width="61" height="3" rx="1.5" />
+    </g>
+   </g>
+   <g class="build-code motion-layer">
+    <rect class="glass" x="181" y="132" width="132" height="64" rx="11" fill={`url(#${id}-paper)`} filter={`url(#${id}-shadow)`} />
+    <rect class="icon-disc" x="193" y="146" width="36" height="36" rx="8" />
+    <path class="accent-stroke" d="m204 158-4 6 4 6m13-12 4 6-4 6m-5-15-3 18" />
+    <rect class="pill" x="242" y="154" width="50" height="5" rx="2.5" fill={`url(#${id}-highlight)`} />
+    <rect class="skeleton" x="242" y="168" width="34" height="3" rx="1.5" />
+   </g>
+  </>}
+ </svg>
+</div>
+
+<style>
+ .difference-artwork {
+  --difference-tint:color-mix(in srgb,var(--accent) 9%,var(--bg));
+  --difference-stroke:color-mix(in srgb,var(--ink) 15%,transparent);
+  position:relative; display:grid; place-items:center; width:100%; height:240px; padding:0; border:0;
+  background:none; overflow:hidden; isolation:isolate;
+ }
+ svg { display:block; width:100%; height:100%; max-width:400px; overflow:visible; }
+ .glass { stroke:var(--difference-stroke); stroke-width:1; vector-effect:non-scaling-stroke; }
+ .faint { opacity:.55; }
+ .skeleton { fill:color-mix(in srgb,var(--ink) 13%,transparent); }
+ .pill { stroke:var(--difference-stroke); stroke-width:.6; }
+ .icon-disc { fill:color-mix(in srgb,var(--accent) 13%,transparent); stroke:var(--difference-stroke); }
+ .accent-stroke { stroke:color-mix(in srgb,var(--accent) 65%,var(--ink)); stroke-width:1.3; stroke-linecap:round; stroke-linejoin:round; }
+ @media(prefers-reduced-motion:no-preference) {
+  .motion-layer { transition:translate 550ms cubic-bezier(.22,1,.36,1); }
+  :global(html:not(.motion-paused) .editorial-reasons article:is(:hover,:focus-within,:active,.is-active)) .context-side { translate:-3px 1px; }
+  :global(html:not(.motion-paused) .editorial-reasons article:is(:hover,:focus-within,:active,.is-active)) .context-focus { translate:3px -3px; }
+  :global(html:not(.motion-paused) .editorial-reasons article:is(:hover,:focus-within,:active,.is-active)) .build-code { translate:3px -3px; }
+ }
+ :global(html.motion-paused) .motion-layer { transition:none; translate:none; }
+</style>

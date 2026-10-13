@@ -1,0 +1,202 @@
+---
+interface Props {
+  variant: 'authentication' | 'profile' | 'intelligence';
+  id: string;
+  inverted?: boolean;
+}
+
+const { variant, id, inverted = false } = Astro.props;
+const labels = {
+  authentication: 'Explorar la verificación de identidad',
+  profile: 'Explorar la tarjeta de perfil',
+  intelligence: 'Explorar las capas del asistente inteligente',
+};
+const dots = Array.from({ length: 52 }, (_, index) => {
+  const angle = (-90 + index * (360 / 52)) * Math.PI / 180;
+  return { x: 160 + Math.cos(angle) * 31, y: 104 + Math.sin(angle) * 31 };
+});
+---
+
+<button
+  class:list={['onboarding-resource', `resource-${variant}`, { inverted }]}
+  type="button"
+  data-library-resource
+  data-onboarding-resource
+  data-variant={variant}
+  aria-label={labels[variant]}
+  aria-pressed="false"
+>
+  <svg class="resource-art" viewBox="0 0 320 240" fill="none" aria-hidden="true">
+    <defs>
+      <linearGradient id={`${id}-sheet`} x1="0" y1="0" x2="1" y2="1">
+        <stop stop-color="var(--resource-glass-light)" />
+        <stop offset="1" stop-color="var(--resource-glass)" />
+      </linearGradient>
+      <linearGradient id={`${id}-scan`} x1="0" y1="0" x2="1" y2="0">
+        <stop stop-color="var(--accent)" stop-opacity=".17" />
+        <stop offset=".52" stop-color="var(--accent)" stop-opacity=".08" />
+        <stop offset="1" stop-color="var(--accent)" stop-opacity="0" />
+      </linearGradient>
+      <radialGradient id={`${id}-glow`}>
+        <stop stop-color="var(--accent)" stop-opacity=".07" />
+        <stop offset="1" stop-color="var(--accent)" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id={`${id}-arc`} x1="0" y1="0" x2="0" y2="1">
+        <stop stop-color="var(--resource-glass-light)" />
+        <stop offset="1" stop-color="var(--resource-paper)" stop-opacity=".2" />
+      </linearGradient>
+    </defs>
+
+    <ellipse cx="160" cy="121" rx="147" ry="112" fill={`url(#${id}-glow)`} />
+
+    {variant === 'authentication' && <>
+      <g class="auth-orbits">
+        <circle cx="160" cy="156" r="115" />
+        <circle cx="160" cy="156" r="84" />
+        <circle cx="160" cy="156" r="53" />
+      </g>
+      <g class="identity-card glass-shadow">
+        <rect class="glass-edge" x="76" y="47" width="168" height="143" rx="20" fill={`url(#${id}-sheet)`} />
+        <circle class="identity-disc" cx="160" cy="96" r="23" />
+        <circle class="identity-person" cx="160" cy="90" r="8" />
+        <path class="identity-person" d="M145 112c0-10 7-15 15-15s15 5 15 15Z" />
+        <rect class="skeleton" x="128" y="132" width="64" height="8" rx="4" />
+        <rect class="skeleton secondary" x="112" y="150" width="96" height="6" rx="3" />
+        <rect class="skeleton secondary" x="122" y="165" width="76" height="6" rx="3" />
+      </g>
+      <g class="scanning-sheet">
+        <rect x="161" y="19" width="88" height="201" fill={`url(#${id}-scan)`} />
+        <path class="scan-line" d="M161 19v201" />
+        <path class="scan-glint" d="M161 67v105" />
+      </g>
+      <g class="verified-badge glass-shadow">
+        <circle cx="224" cy="175" r="14" fill="var(--resource-paper)" />
+        <circle class="badge-rim" cx="224" cy="175" r="14" />
+        <path class="check" d="m218 175 4 4 8-9" />
+      </g>
+    </>}
+
+    {variant === 'profile' && <>
+      <g class="profile-back">
+        <rect class="glass-edge" x="52" y="78" width="216" height="93" rx="24" fill={`url(#${id}-sheet)`} />
+      </g>
+      <g class="profile-row glass-shadow">
+        <rect class="glass-edge" x="45" y="70" width="230" height="88" rx="23" fill={`url(#${id}-sheet)`} />
+        <rect class="profile-avatar" x="64" y="89" width="45" height="46" rx="12" />
+        <circle class="avatar-person" cx="86.5" cy="104" r="5" />
+        <path class="avatar-person" d="M76 122c0-7 5-11 10.5-11S97 115 97 122Z" />
+        <rect class="skeleton" x="126" y="94" width="66" height="9" rx="4.5" />
+        <rect class="skeleton secondary" x="126" y="113" width="126" height="6" rx="3" />
+        <rect class="skeleton secondary" x="126" y="126" width="92" height="6" rx="3" />
+      </g>
+      <g class="profile-status glass-shadow">
+        <circle class="glass-edge" cx="266" cy="70" r="17" fill={`url(#${id}-sheet)`} />
+        <circle class="status-dot" cx="266" cy="64" r="1.4" />
+        <circle class="status-dot" cx="266" cy="70" r="1.4" />
+        <circle class="status-dot" cx="266" cy="76" r="1.4" />
+        <path class="status-check" d="m259 70 5 5 10-11" />
+      </g>
+    </>}
+
+    {variant === 'intelligence' && <>
+      <g class="intelligence-back glass-shadow">
+        <rect class="glass-edge" x="84" y="48" width="142" height="158" rx="24" transform="rotate(-18 155 127)" fill={`url(#${id}-sheet)`} />
+      </g>
+      <g class="intelligence-card glass-shadow">
+        <rect class="glass-edge" x="87" y="58" width="146" height="159" rx="23" fill={`url(#${id}-sheet)`} />
+        <rect class="intelligence-inset" x="93" y="64" width="134" height="147" rx="18" />
+        <g class="intelligence-dots">{dots.map(dot => <circle cx={dot.x} cy={dot.y} r=".8" />)}</g>
+        <path class="sparkle main-sparkle" d="m161 88 4.5 10.5 10.5 4.5-10.5 4.5L161 118l-4.5-10.5-10.5-4.5 10.5-4.5Z" />
+        <path class="sparkle small-sparkle" d="m144 85 1.7 4.3 4.3 1.7-4.3 1.7L144 97l-1.7-4.3-4.3-1.7 4.3-1.7Z" />
+        <path class="sparkle small-sparkle" d="m141 116 1.2 3.8 3.8 1.2-3.8 1.2-1.2 3.8-1.2-3.8-3.8-1.2 3.8-1.2Z" />
+      </g>
+      <g class="intelligence-arc">
+        <path d="M34 246a126 126 0 0 1 252 0" stroke={`url(#${id}-arc)`} stroke-width="44" />
+        <path class="arc-edge" d="M12 246a148 148 0 0 1 296 0" />
+      </g>
+    </>}
+  </svg>
+</button>
+
+<style>
+  .onboarding-resource {
+    --resource-paper: var(--bg);
+    --resource-ink: var(--ink);
+    --resource-glass: color-mix(in srgb, var(--accent) 7%, var(--resource-paper));
+    --resource-glass-light: color-mix(in srgb, var(--accent) 3%, var(--resource-paper));
+    --resource-edge: color-mix(in srgb, var(--resource-ink) 13%, transparent);
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 240px;
+    padding: 0;
+    border: 0;
+    border-radius: 22px;
+    overflow: hidden;
+    isolation: isolate;
+    background: none;
+    color: var(--resource-ink);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .onboarding-resource.inverted { --resource-paper: var(--ink); --resource-ink: var(--bg); }
+  .onboarding-resource:focus-visible { outline: 2px solid var(--accent); outline-offset: -5px; }
+  .resource-art { width: min(100%, 340px); height: 240px; overflow: visible; }
+  .glass-edge { stroke: var(--resource-edge); stroke-width: .9; }
+  .glass-shadow { filter: drop-shadow(0 9px 10px color-mix(in srgb, var(--resource-ink) 7%, transparent)); }
+  .skeleton { fill: color-mix(in srgb, var(--accent) 22%, var(--resource-paper)); }
+  .skeleton.secondary { fill: color-mix(in srgb, var(--resource-ink) 8%, var(--resource-paper)); }
+  .identity-card, .profile-row, .profile-back, .profile-status, .intelligence-card, .intelligence-back {
+    transition: transform 650ms cubic-bezier(.22, 1, .36, 1);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .auth-orbits { stroke: color-mix(in srgb, var(--resource-ink) 5%, transparent); stroke-width: .7; }
+  .identity-disc { fill: color-mix(in srgb, var(--resource-ink) 3%, var(--resource-paper)); }
+  .identity-person { fill: var(--resource-paper); }
+  .scanning-sheet { transition: transform 800ms cubic-bezier(.22, 1, .36, 1); }
+  .scan-line { stroke: color-mix(in srgb, var(--accent) 32%, transparent); stroke-width: .8; }
+  .scan-glint { stroke: color-mix(in srgb, var(--accent) 40%, var(--resource-paper)); stroke-width: 1; }
+  .verified-badge { opacity: 0; transition: opacity 450ms; }
+  .badge-rim { stroke: color-mix(in srgb, var(--accent) 38%, var(--resource-edge)); }
+  .check, .status-check { stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .resource-authentication:is(:hover, :focus-visible, .is-active) .scanning-sheet { transform: translateX(40px); }
+  .resource-authentication:is(:hover, :focus-visible, .is-active) .verified-badge { opacity: 1; }
+  .profile-back { opacity: .36; }
+  .profile-avatar { fill: color-mix(in srgb, var(--accent) 12%, var(--resource-paper)); }
+  .avatar-person { fill: color-mix(in srgb, var(--accent) 30%, var(--resource-paper)); }
+  .status-dot { fill: color-mix(in srgb, var(--resource-ink) 28%, transparent); transition: opacity 250ms; }
+  .status-check { opacity: 0; transition: opacity 350ms; }
+  .resource-profile:is(:hover, :focus-visible, .is-active) .profile-row { transform: translateY(-5px); }
+  .resource-profile:is(:hover, :focus-visible, .is-active) .profile-back { transform: translateY(4px); }
+  .resource-profile:is(:hover, :focus-visible, .is-active) .profile-status { transform: translateY(-5px); }
+  .resource-profile:is(:hover, :focus-visible, .is-active) .status-dot { opacity: 0; }
+  .resource-profile:is(:hover, :focus-visible, .is-active) .status-check { opacity: 1; }
+  .intelligence-back { opacity: .7; }
+  .intelligence-inset { stroke: color-mix(in srgb, var(--accent) 9%, transparent); stroke-width: .8; }
+  .intelligence-dots { fill: color-mix(in srgb, var(--accent) 32%, var(--resource-paper)); transition: opacity 400ms; }
+  .sparkle { fill: var(--resource-paper); stroke: color-mix(in srgb, var(--accent) 28%, var(--resource-paper)); stroke-width: .6; }
+  .main-sparkle { transform-box: fill-box; transform-origin: center; transition: transform 600ms cubic-bezier(.22, 1, .36, 1); }
+  .small-sparkle { opacity: .8; }
+  .arc-edge { stroke: color-mix(in srgb, var(--accent) 8%, transparent); stroke-width: .7; }
+  .resource-intelligence:is(:hover, :focus-visible, .is-active) .intelligence-card { transform: translateY(-5px); }
+  .resource-intelligence:is(:hover, :focus-visible, .is-active) .intelligence-back { transform: translate(-5px, -3px); }
+  .resource-intelligence:is(:hover, :focus-visible, .is-active) .main-sparkle { transform: rotate(9deg) scale(1.08); }
+  .resource-intelligence:is(:hover, :focus-visible, .is-active) .intelligence-dots { opacity: .6; }
+  @media (prefers-reduced-motion: reduce) {
+    .resource-art * { transition: none !important; }
+    .onboarding-resource:is(:hover, :focus-visible, .is-active) :is(.scanning-sheet, .identity-card, .profile-row, .profile-back, .profile-status, .intelligence-card, .intelligence-back, .main-sparkle) { transform: none !important; }
+  }
+  :global(html.motion-paused) .resource-art * { transition: none !important; }
+  :global(html.motion-paused) .onboarding-resource :is(.scanning-sheet, .identity-card, .profile-row, .profile-back, .profile-status, .intelligence-card, .intelligence-back, .main-sparkle) { transform: none !important; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-onboarding-resource]').forEach(button => {
+    button.addEventListener('click', () => {
+      const active = button.classList.toggle('is-active');
+      button.setAttribute('aria-pressed', String(active));
+    });
+  });
+</script>

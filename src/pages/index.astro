@@ -2,11 +2,12 @@
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import AboutStats from "../components/AboutStats.astro";
-import ProjectsBento from "../components/ProjectsBento.astro";
+import ProjectsGallery from "../components/ProjectsGallery.astro";
 import Trayectoria from "../components/Trayectoria.astro";
-import SkillsStack from "../components/SkillsStack.astro";
-import MegaFooter from "../components/MegaFooter.astro";
-import ProjectBrief from "../components/ProjectBrief.astro";
+import Services from "../components/Services.astro";
+import DifferenceOptions from "../components/DifferenceOptions.astro";
+import SiteClosing from "../components/SiteClosing.astro";
+import IosPointer from "../components/IosPointer.astro";
 import { Spotlight } from "../components/ui/Spotlight";
 
 const meta = {
@@ -19,10 +20,8 @@ const meta = {
 ---
 
 <Layout {...meta}>
-
-  <main
-    class="home-content text-ink transition-colors duration-base pb-14"
-  >
+  <IosPointer />
+  <main class="home-content text-ink">
 
     <div class="w-full rounded-md flex md:items-center md:justify-center antialiased bg-grid-white/[0.02] relative overflow-hidden">
       <Spotlight
@@ -34,23 +33,17 @@ const meta = {
 
     </div>
 
-    <!-- Sobre mí: stats + rostro de partículas -->
+    <ProjectsGallery />
+    <Services />
     <AboutStats />
 
-    <!-- Proyectos: bento grid con glow magnético de partículas -->
-    <ProjectsBento />
-
-    <!-- Habilidades y Stack Técnico: tipografía gigante + marquee + bento -->
-    <SkillsStack />
+    <DifferenceOptions variant="editorial" integrated id="por-que-conmigo" />
 
     <!-- Trayectoria: experiencia laboral (fondo claro, contrasta con el grid) -->
     <Trayectoria />
 
-    <ProjectBrief />
-
   </main>
 
-  <!-- Mega Footer (mismo que las páginas de detalle) -->
-  <MegaFooter />
+  <SiteClosing />
 </Layout>
 

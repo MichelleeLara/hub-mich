@@ -84,5 +84,65 @@
       "width": 1405,
       "height": 1119
     }
+  ],
+  "luzia-studio-v2": [
+    {
+      "src": "/media/project-covers/luzia-studio-v2-720.webp",
+      "width": 720,
+      "height": 480
+    },
+    {
+      "src": "/media/project-covers/luzia-studio-v2-1440.webp",
+      "width": 1440,
+      "height": 960
+    }
+  ],
+  "logistica-studio-v2": [
+    {
+      "src": "/media/project-covers/logistica-studio-v2-720.webp",
+      "width": 720,
+      "height": 480
+    },
+    {
+      "src": "/media/project-covers/logistica-studio-v2-1440.webp",
+      "width": 1440,
+      "height": 960
+    }
+  ],
+  "white-label-studio-v2": [
+    {
+      "src": "/media/project-covers/white-label-studio-v2-720.webp",
+      "width": 720,
+      "height": 480
+    },
+    {
+      "src": "/media/project-covers/white-label-studio-v2-1440.webp",
+      "width": 1440,
+      "height": 960
+    }
+  ],
+  "tracking-studio-v2": [
+    {
+      "src": "/media/project-covers/tracking-studio-v2-720.webp",
+      "width": 720,
+      "height": 480
+    },
+    {
+      "src": "/media/project-covers/tracking-studio-v2-1440.webp",
+      "width": 1440,
+      "height": 960
+    }
+  ],
+  "luzia-studio-wide-v2": [
+    {
+      "src": "/media/project-covers/luzia-studio-wide-v2-720.webp",
+      "width": 720,
+      "height": 288
+    },
+    {
+      "src": "/media/project-covers/luzia-studio-wide-v2-1440.webp",
+      "width": 1440,
+      "height": 576
+    }
   ]
 }

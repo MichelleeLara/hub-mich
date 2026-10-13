@@ -32,11 +32,18 @@ import { PARTICLES_ENABLED } from '../config';
 <script>
   import { ideaPoints, ideaAspect, ideaFlowPoint } from '../data/ideasGeometry';
   import { tokenColor } from '../lib/tokens';
+  import { ENFOQUE_PARTICLE_EVENT, type EnfoqueParticleFrame } from '../lib/enfoqueParticles';
   const el = document.getElementById('particles-bg') as HTMLCanvasElement | null;
   if (el) start(el);
 
   function start(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d')!;
+    let enfoque:EnfoqueParticleFrame={points:[],strength:0};
+    let enfoqueBlend=0;
+    document.addEventListener(ENFOQUE_PARTICLE_EVENT,event=>{
+      const next=(event as CustomEvent<EnfoqueParticleFrame>).detail;
+      enfoque=next.points.length?next:{points:enfoque.points,strength:0};
+    });
 
     const motionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
     let reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -405,6 +412,8 @@ import { PARTICLES_ENABLED } from '../config';
       const sealPulse = Math.sin(Math.PI*sealProgress);
       const flowHeads = [0,1/3,2/3].map(offset=>ideaFlowPoint(structureFlow + offset));
       const tDrift = time * 0.0002;
+      enfoqueBlend+=(enfoque.strength-enfoqueBlend)*(1-Math.exp(-dt*16.67/180));
+      if(enfoqueBlend<.001)enfoqueBlend=0;
       const wrapSpan = h + 80;
       const mouseOn = mouse.active;
       const mForce = MOUSE_FORCE * (MOUSE_REST + (1 - MOUSE_REST) * Math.min(1, mouse.speed / MOUSE_SPEED_FULL));
@@ -434,6 +443,24 @@ import { PARTICLES_ENABLED } from '../config';
         px[i] += faceDX * e;
         py[i] += (faceDY + scrollDelta * SCROLL_PARALLAX * depth[i]) * e;
         let s = py[i] - par; // y en pantalla
+
+        if(enfoqueBlend>0&&enfoque.points.length&&i<mainCount){
+          // Recruit the existing field itself; no new population or second canvas.
+          const point=enfoque.points[Math.floor(i*enfoque.points.length/activeMain)];
+          const homeX=hx[i]+Math.sin(tDrift*tw[i]+phase[i])*amp[i];
+          const homeY=hy[i]-par+Math.cos(tDrift*tw[i]*.77+phase[i]*1.7)*amp[i]*.8;
+          const targetX=homeX+(point.x-homeX)*enfoqueBlend;
+          const targetY=homeY+(point.y-homeY)*enfoqueBlend;
+          const follow=1-Math.exp(-dt*16.67/110);
+          px[i]+=(targetX-px[i])*follow;
+          py[i]+=(targetY+par-py[i])*follow;
+          sy[i]=py[i]-par;vx[i]=vy[i]=0;
+          const arrival=1-smooth(3,32,Math.hypot(px[i]-point.x,sy[i]-point.y));
+          formWeight[i]=point.tint*arrival*enfoqueBlend;
+          drawA[i]=(alpha[i]*BASE_DIM*(1-enfoqueBlend)+point.alpha*enfoqueBlend)*Math.min(1,enfoque.points.length/activeMain);
+          bucketOf[i]=Math.min(ALPHA_BUCKETS-1,(drawA[i]*ALPHA_BUCKETS)|0);
+          continue;
+        }
 
         // Las reservas duermen sin composición ni imán: cero física, cero pintado
         if (k === KIND_RESERVE && !faceOn && !magOn && mg[i] < 0.001) {
@@ -609,6 +636,20 @@ import { PARTICLES_ENABLED } from '../config';
         }
         ctx.globalAlpha = 1;
         return;
+      }
+      if(enfoqueBlend>0&&enfoque.points.length){
+        const accent=tokenColor('--accent').replace('#','');
+        const tintRGB=[0,2,4].map(offset=>parseInt(accent.slice(offset,offset+2),16));
+        const baseRGB=rgb.split(',').map(Number);
+        const palette=Array.from({length:16},(_,step)=>`rgb(${baseRGB.map((channel,j)=>Math.round(channel+(tintRGB[j]-channel)*step/15)).join(',')})`);
+        for(let i=0;i<activeMain;i++){
+          const point=enfoque.points[Math.floor(i*enfoque.points.length/activeMain)];
+          const tint=formWeight[i];
+          ctx.fillStyle=palette[Math.round(tint*15)];
+          ctx.globalAlpha=drawA[i];
+          ctx.beginPath();ctx.arc(px[i],sy[i],size[i]/2+(point.radius-size[i]/2)*enfoqueBlend,0,Math.PI*2);ctx.fill();
+        }
+        ctx.globalAlpha=1;drawn=activeMain;return;
       }
       void time;
       const end = mainCount + activeReserve;

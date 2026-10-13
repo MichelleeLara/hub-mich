@@ -1,15 +1,18 @@
 ---
 import SectionHeading from './SectionHeading.astro';
+interface Props { compact?: boolean; id?: string; seamless?: boolean; }
+const { compact=false, id='contacto', seamless=false }=Astro.props;
+const gradientId = `${id}-mich-gradient`;
 // Mega Footer — invertido respecto al tema (tema claro → footer oscuro ·
 // tema oscuro → footer claro). Cierra el Home y las páginas de detalle.
 ---
 
-<footer id="contacto" class="theme-inverse relative scroll-mt-24 overflow-hidden bg-bg pb-0 pt-24 text-ink rounded-tl-[4rem] rounded-tr-[4rem]">
+<footer id={id} class:list={["relative scroll-mt-24 overflow-hidden bg-bg pb-0 text-ink",{ 'theme-inverse':!seamless, 'footer-seamless':seamless },compact?'footer-after-cta pt-12':'pt-24 rounded-tl-[4rem] rounded-tr-[4rem]']}>
 	<!-- Grid superior · navegación -->
-	<div class="mx-auto max-w-7xl px-8">
+	<div class="footer-inner mx-auto max-w-7xl px-8">
 		<div class="grid grid-cols-1 gap-12 md:grid-cols-2">
 			<!-- Izquierda · CTA -->
-			<div class="footer-intro">
+			{compact ? <div class="footer-signature"><a href="/#inicio" aria-label="Mich — volver al inicio">./mich</a><p>Diseño, ingeniería e IA.<br />De la idea al producto.</p></div> : <div class="footer-intro">
 				<SectionHeading label="Product Engineer." title="Construyo producto de punta a punta y lidero a quienes lo entregan." compact />
 				<a
 					href="mailto:mich.ia@hotmail.com?subject=Tengo%20una%20idea%20para%20un%20proyecto&amp;body=Hola%20Mich%2C%0A%0AQuiero%20contarte%20una%20idea%3A%0A%0AEl%20problema%20que%20me%20gustar%C3%ADa%20resolver%20es%E2%80%A6%0A%0ALo%20que%20tengo%20en%20mente%20es%E2%80%A6%0A%0A%C2%BFPodemos%20conversar%3F"
@@ -17,7 +20,7 @@ import SectionHeading from './SectionHeading.astro';
 				>
 					<span>Cuéntame tu idea</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 19 19 5M5 5h14v14" /></svg>
 				</a>
-			</div>
+			</div>}
 
 			<!-- Derecha · links (grid interno de 2 columnas) -->
 			<div class="grid grid-cols-2 gap-8">
@@ -64,7 +67,7 @@ import SectionHeading from './SectionHeading.astro';
 		aria-hidden="true"
 	>
 		<defs>
-			<linearGradient id="michGrad" x1="0" y1="0" x2="0" y2="1">
+			<linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
 				<stop offset="0" stop-color="var(--mich-top)" />
 				<stop offset="1" stop-color="var(--mich-bottom)" />
 			</linearGradient>
@@ -75,13 +78,18 @@ import SectionHeading from './SectionHeading.astro';
 			text-anchor="middle"
 			textLength="1000"
 			lengthAdjust="spacingAndGlyphs"
-			fill="url(#michGrad)"
+			fill={`url(#${gradientId})`}
 			style="font-family:'Inter Tight Variable',sans-serif;font-weight:900;font-size:340px;"
 		>MICH.</text>
 	</svg>
 </footer>
 
 <style>
+ .footer-signature>a { font:600 32px/1 var(--font-display); letter-spacing:-.04em; }
+ .footer-signature>p { color:var(--muted); font-size:var(--fs-body); line-height:1.7; margin-top:var(--space-5); }
+ .footer-after-cta :global(.mt-24) { margin-top:var(--space-7); }
+ .footer-after-cta.footer-seamless { padding-top:0; }
+ .footer-seamless .footer-inner { width:min(100%,var(--container)); max-width:var(--container); padding:28px var(--gutter) 0; border-top:1px solid var(--line); }
   .footer-intro .footer-contact-copy { margin-top: var(--space-6); }
   .footer-contact-copy { display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-6); min-height: 60px; width: min(100%, 320px); padding: 12px 0; border-bottom: 1px solid currentColor; font-family: var(--font-display); font-size: var(--fs-lead); font-weight: 600; letter-spacing: -.025em; color: inherit; }
   .footer-contact-copy svg { flex-shrink: 0; width: 26px; height: 26px; }

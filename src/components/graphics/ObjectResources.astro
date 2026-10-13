@@ -1,0 +1,208 @@
+---
+interface Props {
+ variant: 'stack' | 'capsule' | 'globe' | 'toolbox';
+ id: string;
+ inverted?: boolean;
+}
+const { variant, id, inverted = false } = Astro.props;
+const resourceId = (part: string) => `${id}-object-${part}`;
+const labels = {
+ stack: 'Separar y reunir las capas de datos',
+ capsule: 'Abrir y cerrar la cápsula de datos',
+ globe: 'Explorar la órbita del globo',
+ toolbox: 'Abrir y cerrar la caja de herramientas',
+};
+const particles = Array.from({ length: 29 }, (_, i) => ({
+ x: 160 + ((i * 19) % 43),
+ y: 86 + ((i * 23) % 68),
+ r: i % 5 === 0 ? 2.2 : 1.1,
+ accent: i % 3 === 0,
+}));
+const sparks = Array.from({ length: 15 }, (_, i) => ({
+ x: 133 + ((i * 29) % 94),
+ y: 99 + ((i * 13) % 67),
+ r: i % 4 === 0 ? 1.8 : .8,
+}));
+---
+<button
+ class:list={['object-resource', `object-${variant}`, { inverted }]}
+ type="button"
+ data-library-resource
+ data-object-resource
+ data-variant={variant}
+ aria-pressed="false"
+ aria-label={labels[variant]}
+>
+ <svg class="object-drawing" viewBox="0 0 360 240" fill="none" aria-hidden="true">
+  <defs>
+   <linearGradient id={resourceId('glass')} x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="var(--object-paper)" stop-opacity=".9" />
+    <stop offset=".48" stop-color="var(--object-text)" stop-opacity=".035" />
+    <stop offset="1" stop-color="var(--object-text)" stop-opacity=".11" />
+   </linearGradient>
+   <linearGradient id={resourceId('side')} x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="var(--object-text)" stop-opacity=".025" />
+    <stop offset="1" stop-color="var(--object-text)" stop-opacity=".14" />
+   </linearGradient>
+   <linearGradient id={resourceId('shell')} x1="0" y1="0" x2=".2" y2="1">
+    <stop stop-color="var(--object-paper)" />
+    <stop offset=".4" stop-color="var(--object-surface)" />
+    <stop offset="1" stop-color="var(--object-text)" stop-opacity=".12" />
+   </linearGradient>
+   <radialGradient id={resourceId('sphere')} cx=".32" cy=".23" r=".78">
+    <stop stop-color="color-mix(in srgb,var(--accent) 30%,var(--object-paper))" />
+    <stop offset=".35" stop-color="var(--accent)" />
+    <stop offset="1" stop-color="color-mix(in srgb,var(--accent) 62%,var(--object-text))" />
+   </radialGradient>
+   <radialGradient id={resourceId('neutral')} cx=".32" cy=".22" r=".8">
+    <stop stop-color="var(--object-paper)" />
+    <stop offset=".45" stop-color="var(--object-surface)" />
+    <stop offset="1" stop-color="color-mix(in srgb,var(--object-text) 20%,var(--object-paper))" />
+   </radialGradient>
+   <radialGradient id={resourceId('glow')}>
+    <stop stop-color="var(--accent)" stop-opacity=".25" />
+    <stop offset=".46" stop-color="var(--accent)" stop-opacity=".09" />
+    <stop offset="1" stop-color="var(--accent)" stop-opacity="0" />
+   </radialGradient>
+   <linearGradient id={resourceId('edge')} x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="var(--object-text)" stop-opacity=".04" />
+    <stop offset=".4" stop-color="var(--object-text)" stop-opacity=".17" />
+    <stop offset="1" stop-color="var(--object-text)" stop-opacity=".025" />
+   </linearGradient>
+   <linearGradient id={resourceId('fade')} x1="0" y1="0" x2="0" y2="1">
+    <stop offset=".4" stop-color="white" />
+    <stop offset="1" stop-color="white" stop-opacity="0" />
+   </linearGradient>
+   <mask id={resourceId('bottom-fade')}>
+    <rect width="360" height="240" fill={`url(#${resourceId('fade')})`} />
+   </mask>
+   <clipPath id={resourceId('globe-clip')}><circle cx="180" cy="177" r="91" /></clipPath>
+  </defs>
+
+  {variant === 'stack' && <>
+   <g class="object-ground" stroke={`url(#${resourceId('edge')})`} stroke-width=".55">
+    {[0, 1, 2, 3, 4].map(i => <path d={`M${83 - i * 9} ${194 + i * 7}l140 57M${277 + i * 9} ${194 + i * 7}l-140 57`} />)}
+   </g>
+   {[{ y: -7, layer: 'top', accent: false }, { y: 66, layer: 'middle', accent: true }, { y: 139, layer: 'bottom', accent: false }].map(cube => <g class={`cube-layer cube-${cube.layer}`}>
+    <g transform={`translate(0 ${cube.y})`}>
+     <path class="cube-rear" d="M180 23L239 47V103L180 79L121 103V47Z" fill={`url(#${resourceId('side')})`} />
+     <circle class="cube-sphere" cx="180" cy="73" r="25" fill={`url(#${resourceId(cube.accent ? 'sphere' : 'neutral')})`} />
+     <path d="M121 47L180 71L239 47L180 23Z" fill={`url(#${resourceId('glass')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".7" />
+     <path d="M121 47L180 71V127L121 103Z" fill={`url(#${resourceId('glass')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".6" />
+     <path d="M180 71L239 47V103L180 127Z" fill={`url(#${resourceId('side')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".6" />
+     <path d="M122 48L180 72V126" stroke="var(--object-paper)" stroke-opacity=".5" stroke-width=".8" />
+    </g>
+   </g>)}
+  </>}
+
+  {variant === 'capsule' && <g class="capsule-diagonal" transform="rotate(-21 180 120)">
+   <ellipse cx="180" cy="150" rx="117" ry="18" fill={`url(#${resourceId('glow')})`} opacity=".4" />
+   <g class="capsule-half capsule-left">
+    <path d="M153 79H111A41 41 0 0 0 111 161H153Z" fill={`url(#${resourceId('shell')})`} stroke={`url(#${resourceId('edge')})`} />
+    <ellipse cx="153" cy="120" rx="9" ry="41" fill="var(--object-surface)" stroke={`url(#${resourceId('edge')})`} />
+    <ellipse cx="153" cy="120" rx="6" ry="36" fill={`url(#${resourceId('side')})`} />
+    <path d="M112 83c-23 0-36 15-36 35" stroke="var(--object-paper)" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" />
+    <g class="capsule-shell-dots" fill="var(--accent)" opacity=".22">
+     {[0,1,2,3,4,5,6,7,8].map(i => <circle cx={102 + (i % 3) * 17} cy={98 + Math.floor(i / 3) * 21} r="1" />)}
+    </g>
+   </g>
+   <g class="capsule-particles">
+    {particles.map(p => <circle cx={p.x} cy={p.y} r={p.r} fill={p.accent ? 'var(--accent)' : 'var(--object-text)'} opacity={p.accent ? '.58' : '.16'} />)}
+   </g>
+   <g class="capsule-half capsule-right">
+    <path d="M209 79H251A41 41 0 0 1 251 161H209Z" fill={`url(#${resourceId('shell')})`} stroke={`url(#${resourceId('edge')})`} />
+    <ellipse cx="209" cy="120" rx="9" ry="41" fill="var(--object-surface)" stroke={`url(#${resourceId('edge')})`} />
+    <ellipse cx="209" cy="120" rx="6" ry="36" fill={`url(#${resourceId('side')})`} />
+    <path d="M249 83c21 0 37 15 37 35" stroke="var(--object-paper)" stroke-opacity=".7" stroke-width="2" stroke-linecap="round" />
+    <g class="capsule-shell-dots" fill="var(--accent)" opacity=".2">
+     {[0,1,2,3,4,5,6,7,8].map(i => <circle cx={226 + (i % 3) * 17} cy={98 + Math.floor(i / 3) * 21} r="1" />)}
+    </g>
+   </g>
+  </g>}
+
+  {variant === 'globe' && <>
+   <ellipse cx="180" cy="181" rx="132" ry="80" fill={`url(#${resourceId('glow')})`} />
+   <g class="globe-orbit" stroke={`url(#${resourceId('edge')})`} stroke-width=".8">
+    <ellipse cx="180" cy="177" rx="132" ry="34" transform="rotate(-27 180 177)" />
+    <ellipse cx="180" cy="177" rx="132" ry="34" transform="rotate(27 180 177)" opacity=".45" />
+   </g>
+   <circle cx="180" cy="177" r="91" fill={`url(#${resourceId('neutral')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".8" />
+   <g class="globe-grid" clip-path={`url(#${resourceId('globe-clip')})`} stroke="var(--object-text)" stroke-opacity=".1" stroke-width=".65">
+    <ellipse cx="180" cy="177" rx="32" ry="91" /><ellipse cx="180" cy="177" rx="65" ry="91" />
+    <ellipse cx="180" cy="177" rx="91" ry="29" /><ellipse cx="180" cy="136" rx="82" ry="22" /><ellipse cx="180" cy="217" rx="82" ry="22" />
+    <path d="M89 177h182M180 86v182" />
+   </g>
+   <g class="globe-satellite">
+    <circle cx="290" cy="126" r="10" fill={`url(#${resourceId('glow')})`} />
+    <circle cx="290" cy="126" r="3" fill="var(--accent)" stroke="var(--object-paper)" stroke-width="1.5" />
+    <path d="M268 140a130 34 0 0 0 22-14" stroke="var(--accent)" stroke-opacity=".35" stroke-width="1" />
+   </g>
+   <path d="M116 128c10-19 30-32 51-35" stroke="var(--object-paper)" stroke-width="2" stroke-opacity=".7" stroke-linecap="round" />
+  </>}
+
+  {variant === 'toolbox' && <>
+   <ellipse cx="180" cy="214" rx="109" ry="15" fill={`url(#${resourceId('glow')})`} opacity=".5" />
+   <g class="box-lid">
+    <path d="M104 62L188 30L272 62L188 94Z" fill={`url(#${resourceId('shell')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".75" />
+    <path d="M104 62V70L188 103V94Z" fill={`url(#${resourceId('glass')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".6" />
+    <path d="M188 94L272 62V70L188 103Z" fill={`url(#${resourceId('side')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".6" />
+    <path d="M109 62L188 33L267 62" stroke="var(--object-paper)" stroke-opacity=".65" stroke-width="1" />
+   </g>
+   <path d="M96 151L180 119L264 151L180 184Z" fill={`url(#${resourceId('side')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".6" />
+   <ellipse class="box-glow" cx="180" cy="154" rx="91" ry="59" fill={`url(#${resourceId('glow')})`} />
+   <path d="M101 151L180 123L259 151L180 181Z" fill="var(--accent)" opacity=".11" />
+   <g class="box-sparks">{sparks.map(p => <circle cx={p.x} cy={p.y} r={p.r} fill="var(--accent)" opacity=".46" />)}</g>
+   <g class="box-front" mask={`url(#${resourceId('bottom-fade')})`}>
+    <path d="M96 151L180 184V235L96 202Z" fill={`url(#${resourceId('shell')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".75" />
+    <path d="M180 184L264 151V202L180 235Z" fill={`url(#${resourceId('side')})`} stroke={`url(#${resourceId('edge')})`} stroke-width=".75" />
+    <path d="M97 152L180 185V234" stroke="var(--object-paper)" stroke-opacity=".65" stroke-width="1" />
+   </g>
+  </>}
+ </svg>
+</button>
+
+<style>
+ .object-resource {
+  --object-paper:var(--bg); --object-surface:var(--surface); --object-text:var(--ink);
+  position:relative; display:grid; place-items:center; width:100%; height:240px;
+  overflow:hidden; padding:0; border:0; border-radius:inherit; background:none;
+  color:var(--object-text); cursor:pointer; isolation:isolate; -webkit-tap-highlight-color:transparent;
+ }
+ .object-resource.inverted {
+  --object-paper:var(--ink); --object-surface:color-mix(in srgb,var(--ink) 94%,var(--bg)); --object-text:var(--bg);
+ }
+ .object-resource:focus-visible { outline:2px solid var(--accent); outline-offset:-5px; border-radius:16px; }
+ .object-drawing { display:block; width:100%; max-width:360px; height:240px; overflow:hidden; }
+ .object-stack .object-drawing { max-width:310px; }
+ .cube-middle .cube-sphere { transform-box:fill-box; transform-origin:center; }
+ .cube-top,.cube-bottom,.cube-middle .cube-sphere,.capsule-half,.capsule-particles,.box-lid,.box-sparks,.globe-satellite,.globe-orbit { transition:transform 700ms cubic-bezier(.22,1,.36,1),opacity 600ms ease; }
+ .capsule-particles { transform-box:fill-box; transform-origin:center; }
+ .box-lid { transform-box:fill-box; transform-origin:80% 60%; }
+ .box-sparks { opacity:.7; }
+ .globe-satellite,.globe-orbit { transform-origin:180px 177px; }
+ @media(prefers-reduced-motion:no-preference) {
+  :global(html:not(.motion-paused)) .object-stack:is(:hover,:focus-visible,.is-active) .cube-top { transform:translateY(-10px); }
+  :global(html:not(.motion-paused)) .object-stack:is(:hover,:focus-visible,.is-active) .cube-bottom { transform:translateY(7px); }
+  :global(html:not(.motion-paused)) .object-stack:is(:hover,:focus-visible,.is-active) .cube-middle .cube-sphere { transform:scale(1.06); }
+  :global(html:not(.motion-paused)) .object-capsule:is(:hover,:focus-visible,.is-active) .capsule-left { transform:translateX(-13px); }
+  :global(html:not(.motion-paused)) .object-capsule:is(:hover,:focus-visible,.is-active) .capsule-right { transform:translateX(13px); }
+  :global(html:not(.motion-paused)) .object-capsule:is(:hover,:focus-visible,.is-active) .capsule-particles { transform:scaleX(1.35); }
+  :global(html:not(.motion-paused)) .object-toolbox:is(:hover,:focus-visible,.is-active) .box-lid { transform:translate(-4px,-13px) rotate(-5deg); }
+  :global(html:not(.motion-paused)) .object-toolbox:is(:hover,:focus-visible,.is-active) .box-sparks { transform:translateY(-8px); opacity:1; }
+  :global(html:not(.motion-paused)) .object-globe:is(:hover,:focus-visible,.is-active) .globe-satellite { transform:rotate(13deg); }
+  :global(html:not(.motion-paused)) .object-globe:is(:hover,:focus-visible,.is-active) .globe-orbit { transform:rotate(4deg); }
+ }
+ @media(prefers-reduced-motion:reduce) { .object-drawing * { transition:none!important; } }
+ :global(html.motion-paused) .object-drawing * { transition:none!important; }
+</style>
+
+<script>
+ document.querySelectorAll<HTMLButtonElement>('[data-object-resource]').forEach(button => {
+  if (button.dataset.objectReady) return;
+  button.dataset.objectReady = 'true';
+  button.addEventListener('click', () => {
+   const active = button.classList.toggle('is-active');
+   button.setAttribute('aria-pressed', String(active));
+  });
+ });
+</script>

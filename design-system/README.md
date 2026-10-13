@@ -40,13 +40,14 @@ Design system de itsmich.com.mx, el sitio personal de Michelle Rodriguez (Mich),
 **ClashDisplay para nombres y cifras; Inter Tight para frases.** Nunca las dos a tamaños parecidos en el mismo bloque.
 
 - `display` (ClashDisplay 600, hasta 144px, mayúsculas): solo el nombre del hero.
+- El [Hero lateral](components/Hero/README.md) aprobado usa una escala propia de nombre: 42–68px en escritorio y 38–60px en móvil, sin estirar las letras ni superponer el retrato.
 - `h1` (ClashDisplay 600, 44–80px): título de caso y proyecto destacado.
 - `h2` (Inter Tight **650**, 30–48px, `-0.03em`): títulos de sección. Variante `h2-compact` en el footer.
 - `h3` (ClashDisplay 600, 28–40px): títulos de tarjeta, cifras, rol en Trayectoria.
 - `lead` 20 · `body` 16 · `small` 14 · `caption` 12 (mayúsculas) · `micro` 11 (mínimo del sistema).
-- `label` (Permanent Marker) solo encima de un `h2`, siempre en `accent`.
+- `label` (Damion) solo encima de un `h2`, siempre en `accent`.
 - Pesos de Inter Tight: 400 texto, 500 UI, 600 énfasis, 650 `h2`, 900 solo el "MICH." gráfico del footer.
-- Fuentes: ClashDisplay va como archivo (`fonts/`); Inter Tight y Permanent Marker se cargan de Google Fonts.
+- Fuentes: ClashDisplay va como archivo (`fonts/`); Inter Tight se carga con @fontsource; Damion vive en `public/media/` con su licencia.
 
 ## Espacio, radios y elevación
 
@@ -85,5 +86,9 @@ Fichas en Componentes. Las clases (`.btn`, `.btn-primary`, `.btn-secondary`, `.t
 
 - Componentes de React/Astro sin compilar (Header, Navbar, ProjectsBento, ProjectBrief, Trayectoria, AboutStats, CaseHero): se documentan con vistas previas estáticas hechas a mano desde su código.
 - Motion no es una familia de tokens en este formato: queda documentado arriba.
-- Inter Tight y Permanent Marker no van como archivo: se cargan de Google Fonts.
+- Inter Tight se distribuye con @fontsource y Damion como archivo local en `public/media/`.
 - Los valores con `clamp()` se guardan con su máximo; el rango está en la nota de cada estilo.
+
+## Lenguaje gráfico
+
+Los seis gráficos aprobados del bento de servicios son la base del estilo. [Guía de recursos gráficos](graphics/README.md) · biblioteca interna `/biblioteca-graficos`. Cada recurso es editable y reutilizable; colores del repo, vidrio suave, capas y movimiento discreto.

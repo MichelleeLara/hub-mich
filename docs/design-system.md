@@ -55,7 +55,7 @@ Vista viva: [`/design`](../src/pages/design.astro) (oculta, `noindex`).
 | small | `--fs-small` | Inter Tight 400/500 | 14px | botones, labels |
 | caption | `--fs-caption` | Inter Tight 500/600 | 12px | kicker, menú (uppercase) |
 | micro | `--fs-micro` | Inter Tight 500 o mono | 11px | tags, metadatos. **Mínimo del sistema** |
-| label | `--font-accent` | Permanent Marker | 16–20px | solo etiquetas de sección, en `--accent` |
+| label | `--font-accent` | Damion | 26–32px | solo etiquetas de sección, en `--accent` |
 
 Pesos de Inter Tight: 400 texto · 500 UI · 600 énfasis · 650 h2 · 900 solo el "MICH." del footer.
 En Tailwind: `text-[length:var(--fs-h3)]`, `font-ClashDisplay`, `font-mono`.
@@ -118,13 +118,14 @@ framer-motion: `SPRING` (.3s), `SPRING_SLOW` (.5s), `STAGGER` en `src/lib/motion
 |---|---|---|
 | Botón | `.btn` + `.btn-primary` / `.btn-secondary` | 48px, padding 0×24, `--radius-sm`, small 500, ícono 16. Flecha `.btn-arrow` +4px en hover |
 | Enlace con flecha | `.text-link` | small 600, min 44px, gap 12 |
-| Encabezado de sección | `SectionHeading.astro` | label (Permanent Marker) → 12 → h2; prop `compact` |
+| Encabezado de sección | `SectionHeading.astro` | label (Damion) → 12 → h2; prop `compact` |
 | Kicker | `.section-kicker` | caption 600 uppercase, punto de 6px en `--accent` |
 | Tag | `.tag` / `.tag-photo` | `--radius-full`, micro 500. `.tag` con borde; `.tag-photo` sobre foto |
 | Tarjeta de proyecto | `ProjectsBento.astro` | `--radius-lg`, foto + degradado, tags arriba, padding `--space-6` |
 | Tarjeta de superficie | caso, brief | `--surface`, padding `--space-6`, `--radius-md`; con `shadow-lift` si se separa del fondo |
 | Formulario | `ProjectBrief.astro` | input 14×16, `--radius-sm`, borde `--muted`, foco 2px `--accent` offset 3 |
 | Navegación | `Header.jsx`, `Navbar.jsx` | islas 44px, `--surface-glass`, `shadow-float`; pill 32px que se desliza |
+| Hero lateral | `Hero.astro` | nombre ClashDisplay 600 de 42–68px (38–60px móvil), retrato lateral de 240×344px (112×152px arriba en móvil); ficha en `design-system/components/Hero/README.md` |
 | Parada de Trayectoria | `Trayectoria.astro` | nodo 14px (actual en `--success`), fechas caption, rol h3, empresa lead, `.tag` |
 | Datos | `AboutStats.astro`, `CaseHero.astro` | cifra h3 + etiqueta small; `dl` con dt micro uppercase |
 
@@ -144,3 +145,7 @@ Se mantienen: foco visible, "Saltar al contenido", objetivos ≥ 44px, `prefers-
 1. Proponerlo y probarlo (canvas "itsmich · Design system" o `/design`).
 2. Registrarlo en `Marca personal/02 Estrategia/Decisiones.md` con fecha y porqué.
 3. Cambiar el token en `product.css` (y en esta guía). Nunca parchear un componente con un valor suelto.
+
+## Recursos gráficos reutilizables
+
+Los gráficos aprobados del bento de servicios fijan el estilo inicial. Guía e inventario: [Lenguaje gráfico](../design-system/graphics/README.md). Biblioteca interna: `/biblioteca-graficos`, con recursos editables, referencia asociada y comparación clara/oscura. Se usan los tokens del repo; la referencia morada aporta las formas, no la paleta.

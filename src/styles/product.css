@@ -1,3 +1,4 @@
+@font-face { font-family:'Damion'; src:url('/media/damion.ttf') format('truetype'); font-weight:400; font-style:normal; font-display:swap; }
 /* ==========================================================================
    Design system ./mich — tokens (decidido 2026-10-10, guía: docs/design-system.md · vista viva: /design)
    Regla: ningún componente usa un hex; solo var(--token) o su clase de Tailwind.
@@ -45,11 +46,11 @@
   --dur-reveal: 700ms; /* revelar al hacer scroll (tope de interacción) */
   --ease-out: cubic-bezier(.22, 1, .36, 1);
 
-  /* Tipografía: ClashDisplay = nombres y cifras · Inter Tight = frases */
+  /* Tipografía: ClashDisplay = nombres y cifras · Inter Tight = frases · Damion = etiquetas de sección */
   --font-display: ClashDisplay, 'Inter Tight Variable', sans-serif;
   --font-sans: 'Inter Tight Variable', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-accent: 'Permanent Marker', cursive;
+  --font-accent: 'Damion', cursive;
   --fs-display: clamp(48px, 10vw, 144px); /* ClashDisplay 600 */
   --fs-h1: clamp(44px, 6vw, 80px);        /* ClashDisplay 600 · ls -.03em */
   --fs-h2: clamp(30px, 3.4vw, 48px);      /* Inter Tight 650 · ls -.03em */

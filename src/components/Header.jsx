@@ -52,6 +52,7 @@ const ISLAND =
 // Píldora gris de seguimiento (única, compartida entre islas via layoutId).
 const Pill = ({ reduced }) => (
   <motion.span
+    data-nav-pill=""
     layoutId="nav-pill"
     className="absolute inset-0 rounded-full bg-black/[0.06] dark:bg-white/10"
     transition={reduced ? { duration: 0 } : SPRING}
@@ -81,7 +82,6 @@ const islandVariants = {
 export default function Header() {
   const reduced = useReducedMotionPreference();
   const [active, setActive] = useState("inicio");
-  const [hover, setHover] = useState(null);
 
   const reloadHome = (event) => {
     event.preventDefault();
@@ -115,7 +115,7 @@ export default function Header() {
 
     const syncFromScroll = () => {
       const path = window.location.pathname.replace(/\/$/, "") || "/";
-      if (path !== "/") return;
+      if (path !== "/" && path !== "/preview-completo") return;
 
       const current = SECTIONS
         .map((section) => {
@@ -144,8 +144,8 @@ export default function Header() {
     };
   }, []);
 
-  // Qué link muestra la píldora deslizante: el hovered, o el activo si no hay hover.
-  const highlighted = hover ?? active;
+  // La píldora indica únicamente la sección activa; el cursor aporta el hover.
+  const highlighted = active;
 
   return (
     <MotionConfig reducedMotion="user">
@@ -155,9 +155,8 @@ export default function Header() {
           aria-label="Navegación principal"
           className="flex items-center gap-3 pointer-events-auto"
           variants={reduced ? { hidden: {}, show: { transition: { duration: 0 } } } : groupVariants}
-          initial={reduced ? false : "hidden"}
+          initial={false}
           animate="show"
-          onMouseLeave={() => setHover(null)}
         >
           {/* Isla izquierda: logo */}
           <motion.a
@@ -165,7 +164,6 @@ export default function Header() {
             aria-label="Mich — inicio"
             custom={-1}
             variants={reduced ? { hidden: { opacity: 0 }, show: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0 } } } : islandVariants}
-            onMouseEnter={() => setHover("logo")}
             onClick={reloadHome}
             className={`${ISLAND} h-11 px-2 flex items-center`}
           >
@@ -189,13 +187,12 @@ export default function Header() {
                 <a
                   key={link.id}
                   href={link.path}
-                  onMouseEnter={() => setHover(link.id)}
                   onClick={() => setActive(link.id)}
                   aria-current={active === link.id ? "page" : undefined}
                   className={`relative flex items-center h-8 px-4 text-xs font-medium uppercase tracking-wide rounded-full transition-colors duration-base ${
                     isOn
                       ? "text-ink"
-                      : "text-muted hover:text-ink"
+                      : "text-muted"
                   }`}
                 >
                   {isOn && <Pill reduced={reduced} />}
@@ -213,7 +210,6 @@ export default function Header() {
           >
             <a
               href="/#contacto"
-              onMouseEnter={() => setHover("contacto")}
               aria-current={active === "contacto" ? "page" : undefined}
               className={`relative flex items-center gap-2 h-8 px-3 rounded-full text-xs font-medium uppercase tracking-wide transition-colors duration-base ${
                 highlighted === "contacto"
@@ -230,7 +226,6 @@ export default function Header() {
             <span className="w-px h-5 bg-line" />
             <MotionToggle />
             <div
-              onMouseEnter={() => setHover("toggle")}
               className="relative flex items-center justify-center h-11 w-11 rounded-full"
             >
               {highlighted === "toggle" && <Pill reduced={reduced} />}
@@ -245,7 +240,7 @@ export default function Header() {
       {/* ------------------------------ MOBILE (top) ------------------------- */}
       <motion.div
         className="fixed top-4 inset-x-0 z-[100] flex md:hidden items-center justify-between px-6"
-        initial={reduced ? false : { opacity: 0, y: -16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={reduced ? { duration: 0 } : { ...SPRING, delay: .1 }}
       >

@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IosPointer from '../components/IosPointer.astro';
+import Services from '../components/Services.astro';
+import DifferenceOptions from '../components/DifferenceOptions.astro';
+import Hero from '../components/Hero.astro';
+import AboutStats from '../components/AboutStats.astro';
+import ProjectsGallery from '../components/ProjectsGallery.astro';
+import Trayectoria from '../components/Trayectoria.astro';
+import SiteClosing from '../components/SiteClosing.astro';
+import { Spotlight } from '../components/ui/Spotlight';
+---
+<Layout title="Mich · Vista completa" description="Portfolio completo con proyectos, servicios, mi enfoque y motivos para trabajar conmigo." image="/author.png" url={Astro.url.href} noindex>
+ <IosPointer />
+ <main class="home-content text-ink">
+  <div class="w-full rounded-md flex md:items-center md:justify-center antialiased bg-grid-white/[0.02] relative overflow-hidden"><Spotlight className="" fill="white" /><Hero /></div>
+  <ProjectsGallery />
+  <Services />
+  <AboutStats />
+  <DifferenceOptions variant="editorial" integrated id="por-que-conmigo" />
+  <Trayectoria />
+ </main>
+ <SiteClosing />
+</Layout>
+<script>
+ // Keep the existing shared navigation inside this complete review page.
+ document.addEventListener('click',event=>{
+  const link=(event.target as Element).closest<HTMLAnchorElement>('a');
+  if(!link)return;
+  const href=link.getAttribute('href');
+  const id=href?.startsWith('/#')?href.slice(2):href==='/'&&link.getAttribute('aria-label')?.includes('Mich')?'inicio':null;
+  const target=id?document.getElementById(id):null;
+  if(!target)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  history.replaceState(null,'',`#${id}`);
+  window.dispatchEvent(new HashChangeEvent('hashchange'));
+  target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.classList.contains('motion-paused')?'auto':'smooth',block:'start'});
+ },true);
+</script>

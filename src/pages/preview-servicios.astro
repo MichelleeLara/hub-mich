@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Services from '../components/Services.astro';
+import IosPointer from '../components/IosPointer.astro';
+---
+<Layout title="Mich · Preview de servicios" description="Servicios de diseño de producto, desarrollo web, IA aplicada e IoT." image="/author.png" url={Astro.url.href} noindex>
+ <IosPointer />
+ <main>
+  <div class="preview-context"><a href="/preview-completo">← Volver a la vista completa</a><div class="type-options" aria-label="Estilo del título pequeño"><button type="button" data-service-type="original" aria-pressed="false">Letra actual</button><button type="button" data-service-type="handwritten" aria-pressed="true">Manuscrita</button></div></div>
+  <div class="graphic-options" aria-label="Opciones de diseño de servicios"><button type="button" data-service-variant="wave" aria-pressed="true">01 · Luz compartida</button><button type="button" data-service-variant="columns" aria-pressed="false">02 · Columnas</button><button type="button" data-service-variant="exterior" aria-pressed="false">04 · Cards integradas</button></div>
+  <div class="graphic-options" aria-label="Opciones de gráficos"><button type="button" data-graphic="interfaces" aria-pressed="true">A · Mini interfaces</button><button type="button" data-graphic="orbitas" aria-pressed="false">B · Órbitas</button><button type="button" data-graphic="capas" aria-pressed="false">C · Capas concéntricas</button><button type="button" data-graphic="ambient" aria-pressed="false">D · Capas integradas</button></div>
+  <Services />
+ </main>
+</Layout>
+<style>
+ .preview-context { width:min(100%,var(--container)); margin:116px auto 0; padding:0 var(--gutter); display:flex; justify-content:space-between; gap:24px; color:var(--muted); font:12px/1.5 var(--font-mono); }
+ .preview-context a { min-height:44px; display:inline-flex; align-items:center; }
+ .type-options { display:flex; align-items:center; gap:6px; }
+ .type-options button { padding:8px 12px; min-height:38px; border:1px solid var(--line); border-radius:999px; background:transparent; color:var(--muted); font:11px/1.3 var(--font-mono); }
+ .type-options button[aria-pressed=true] { background:var(--surface); color:var(--ink); }
+ .preview-context { flex-wrap:wrap; }
+ .graphic-options { width:min(100%,var(--container)); margin:12px auto 0; padding:0 var(--gutter); display:flex; flex-wrap:wrap; align-items:center; gap:8px; color:var(--muted); font:11px/1.3 var(--font-mono); }
+ .graphic-options span { margin-right:6px; }
+ .graphic-options button { padding:8px 12px; border:1px solid var(--line); border-radius:999px; min-height:38px; }
+ .graphic-options button[aria-pressed=true] { background:var(--surface); color:var(--ink); }
+ main :global(.services) { padding-top:32px; }
+ @media(max-width:767px) { .preview-context { margin-top:90px; } .type-options button { padding:8px 10px; } }
+</style>
+
+<script>
+ const variants=Array.from(document.querySelectorAll<HTMLButtonElement>('[data-service-variant]'));
+ const section=document.querySelector<HTMLElement>('.services');
+ function selectVariant(value:string){
+  if(!section)return;
+  section.classList.toggle('format-bento',value==='exterior');
+  section.classList.toggle('format-lightline',value==='wave');section.classList.toggle('format-columns',value==='columns');section.classList.toggle('format-split',value==='exterior');section.classList.toggle('format-exterior',value==='exterior');
+  section.classList.toggle('shared-wave',value==='wave');
+  variants.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.serviceVariant===value)));
+  const url=new URL(location.href);url.searchParams.set('opcion',value);history.replaceState(null,'',url);dispatchEvent(new Event('resize'));
+ }
+ variants.forEach(button=>button.addEventListener('click',()=>selectVariant(button.dataset.serviceVariant!)));
+ const initial=new URLSearchParams(location.search).get('opcion');selectVariant(initial&&['wave','columns','exterior'].includes(initial)?initial:'exterior');
+ const graphics=Array.from(document.querySelectorAll<HTMLButtonElement>('[data-graphic]'));
+ function selectGraphic(value:string){if(!section)return;section.dataset.graphic=value;section.querySelectorAll<HTMLElement>('[data-resource]').forEach(resource=>resource.dataset.graphic=value);graphics.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.graphic===value)));const url=new URL(location.href);url.searchParams.set('grafico',value);history.replaceState(null,'',url);}
+ graphics.forEach(button=>button.addEventListener('click',()=>{selectVariant('exterior');selectGraphic(button.dataset.graphic!);}));
+ const graphic=new URLSearchParams(location.search).get('grafico');selectGraphic(graphic&&['interfaces','orbitas','capas','ambient'].includes(graphic)?graphic:'ambient');
+ const choices=Array.from(document.querySelectorAll<HTMLButtonElement>('[data-service-type]'));
+ choices.forEach(button=>button.addEventListener('click',()=>{document.querySelector('.services')?.classList.toggle('handwritten',button.dataset.serviceType==='handwritten');choices.forEach(choice=>choice.setAttribute('aria-pressed',String(choice===button)));}));
+</script>

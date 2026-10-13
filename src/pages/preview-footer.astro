@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FooterOption from '../components/FooterOption.astro';
+const options = [
+ { id:'1', name:'01 · Continuo', description:'Cierre centrado y bucles amplios que recorren el conjunto.' },
+ { id:'2', name:'02 · Diagonal', description:'Mensaje a la izquierda y un listón ancho que baja hasta el pie.' },
+ { id:'3', name:'03 · Editorial', description:'Mensaje y acción en dos columnas; el listón enmarca ambas secciones.' },
+] as const;
+const selected=options.find(o=>o.id===Astro.url.searchParams.get('opcion'))??options[0];
+---
+<Layout title="Mich · Tres opciones de footer" description="Comparación de tres cierres con color continuo y un listón compartido." image="/author.png" url={Astro.url.href} noindex>
+ <main class="footer-preview">
+  <header class="preview-controls">
+   <a class="back" href="/">← Volver al sitio</a>
+   <h1>Tres formas de cerrar.</h1>
+   <p>Un solo fondo, sin línea divisoria y con el listón recorriendo el cierre completo.</p>
+   <nav aria-label="Elegir opción de footer">{options.map(o=><a href={`?opcion=${o.id}`} data-footer-choice={o.id} aria-current={selected.id===o.id?'page':undefined}>{o.name}</a>)}</nav>
+   {options.map(o=><p class="selected-description" data-footer-description={o.id} hidden={o.id!==selected.id}>{o.description}</p>)}
+  </header>
+  {options.map(o=><div data-footer-panel={o.id} hidden={o.id!==selected.id}><FooterOption option={o.id} /></div>)}
+ </main>
+</Layout>
+<script>
+ const choices=Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-footer-choice]'));
+ const panels=Array.from(document.querySelectorAll<HTMLElement>('[data-footer-panel],[data-footer-description]'));
+ function selectOption(value:string,update=false){
+  const option=choices.some(c=>c.dataset.footerChoice===value)?value:'1';
+  panels.forEach(p=>p.hidden=(p.dataset.footerPanel??p.dataset.footerDescription)!==option);
+  choices.forEach(c=>{if(c.dataset.footerChoice===option)c.setAttribute('aria-current','page');else c.removeAttribute('aria-current');});
+  if(update){const url=new URL(location.href);url.searchParams.set('opcion',option);history.pushState(null,'',url);}
+ }
+ choices.forEach(c=>c.addEventListener('click',e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();selectOption(c.dataset.footerChoice!,true);}));
+ const fromUrl=()=>selectOption(new URLSearchParams(location.search).get('opcion')??'1');
+ window.addEventListener('popstate',fromUrl);fromUrl();
+</script>
+<style>
+ .preview-controls { width:min(100%,var(--container)); margin:120px auto 0; padding:0 var(--gutter) 40px; color:var(--ink); }
+ .back { display:inline-flex; align-items:center; min-height:44px; font-size:13px; color:var(--muted); }
+ h1 { font:600 clamp(32px,4vw,48px)/1.1 var(--font-sans); letter-spacing:-.04em; margin-top:16px; }
+ p { margin-top:16px; font-size:16px; line-height:1.6; color:var(--muted); }
+ nav { display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
+ nav a { min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:10px 18px; border:1px solid var(--line); border-radius:var(--radius-full); font-size:14px; }
+ nav a[aria-current=page] { background:var(--ink); color:var(--bg); border-color:var(--ink); }
+ .selected-description { font-size:13px; }
+ @media(max-width:767px) { .preview-controls { margin-top:92px; padding-bottom:28px; } nav { gap:8px; } nav a { padding:10px 14px; } }
+</style>

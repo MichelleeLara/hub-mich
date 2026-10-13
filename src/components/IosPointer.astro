@@ -1,0 +1,143 @@
+<div class="ios-pointer" aria-hidden="true"></div>
+<style is:global>
+ html.ios-pointer-page { --ios-hover-fill:rgb(0 0 0 / .14); }
+ html.ios-pointer-page.dark { --ios-hover-fill:rgb(255 255 255 / .12); }
+ .ios-pointer { position:fixed; top:0; left:0; z-index:9999; pointer-events:none; opacity:0; background:rgb(128 128 128); mix-blend-mode:difference; will-change:transform,width,height; transition:none; }
+ [data-ios-hover]::after { content:''; position:absolute; left:var(--ios-x); top:var(--ios-y); width:var(--ios-w); height:var(--ios-h); z-index:-1; pointer-events:none; background:var(--ios-fill); border-radius:var(--ios-radius); opacity:var(--ios-opacity); transform:none; }
+ [data-ios-hover] .btn-arrow, [data-ios-hover].ribbon-button span { transform:none !important; }
+ [data-ios-hover].btn-secondary, .world-controls [data-ios-hover] { border-color:var(--line) !important; }
+ .world-controls [data-ios-hover] { color:var(--ink) !important; }
+ html.ios-pointer-page .hero-actions .btn { background:transparent; border-color:transparent; color:var(--ink); border-radius:var(--radius-full); box-shadow:none; }
+ html.ios-pointer-page .hero-actions [data-ios-hover].btn-secondary { border-color:transparent !important; }
+ html.ios-pointer-page .hero-actions .btn-primary { background:var(--accent); color:var(--bg); font-weight:600; }
+ html.ios-pointer-page .hero-actions .btn-secondary { color:var(--muted); }
+ html.ios-pointer-page .hero-actions .btn .btn-arrow { transform:none; }
+ @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  html.ios-pointer-active, html.ios-pointer-active * { cursor:none !important; }
+  html.ios-pointer-active :is(input,textarea,[contenteditable=true]), html.ios-pointer-active [contenteditable=true] * { cursor:text !important; }
+ }
+</style>
+<script>
+ const cursor=document.querySelector<HTMLElement>('.ios-pointer');
+ if(cursor){
+  const allowed=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+  const root=document.documentElement;root.classList.add('ios-pointer-page');
+  const state={x:0,y:0,w:18,h:18,r:9,blend:0};
+  const speed={x:0,y:0,w:0,h:0,r:0,blend:0};
+  const goal={...state};
+  let frame=0,last=0,seen=false,down=false,px=0,py=0,target:HTMLElement|null=null;
+  type Host={element:HTMLElement;position:string;isolation:string;fill:string};
+  let host:Host|null=null;
+  type Magnet={element:HTMLElement;original:string;x:number;y:number;vx:number;vy:number;gx:number;gy:number};
+  const magnets=new Map<HTMLElement,Magnet>();
+  const enabled=()=>allowed.matches&&!root.classList.contains('motion-paused');
+  const releaseHost=()=>{
+   if(!host)return;
+   const e=host.element;e.removeAttribute('data-ios-hover');e.style.position=host.position;e.style.isolation=host.isolation;
+   for(const key of ['x','y','w','h','fill','radius','opacity'])e.style.removeProperty(`--ios-${key}`);
+   host=null;
+  };
+  const setHost=(element:HTMLElement)=>{
+   if(host?.element===element)return;
+   releaseHost();const computed=getComputedStyle(element);
+   host={element,position:element.style.position,isolation:element.style.isolation,fill:'var(--ios-hover-fill)'};
+   if(computed.position==='static')element.style.position='relative';
+   element.style.isolation='isolate';element.style.setProperty('--ios-opacity','0');element.setAttribute('data-ios-hover','');
+  };
+  const hide=()=>{
+   seen=false;target=null;if(root.classList.contains('ios-pointer-active'))root.classList.remove('ios-pointer-active');cursor.style.opacity='0';releaseHost();
+   for(const m of magnets.values())m.element.style.translate=m.original;
+   magnets.clear();if(frame)cancelAnimationFrame(frame);frame=0;last=0;
+  };
+  // Preserve the spring for the hover morph, including entry and exit.
+  const spring=(value:number,velocity:number,destination:number,dt:number,omega:number)=>{
+   const displacement=value-destination,carry=velocity+omega*displacement,decay=Math.exp(-omega*dt);
+   return [destination+(displacement+carry*dt)*decay,(velocity-omega*carry*dt)*decay];
+  };
+  const paint=()=>{
+   const left=state.x-state.w/2,top=state.y-state.h/2;
+   cursor.style.transform=`translate3d(${left}px,${top}px,0)`;
+   cursor.style.width=`${state.w}px`;cursor.style.height=`${state.h}px`;cursor.style.borderRadius=`${state.r}px`;
+   cursor.style.opacity=String(1-state.blend);
+   if(host){
+    const box=host.element.getBoundingClientRect();
+    const values={x:`${left-box.left}px`,y:`${top-box.top}px`,w:`${state.w}px`,h:`${state.h}px`,radius:`${state.r}px`,opacity:String(state.blend),fill:host.fill};
+    for(const [key,value] of Object.entries(values))host.element.style.setProperty(`--ios-${key}`,value);
+    if(!target&&state.blend<.001)releaseHost();
+   }
+  };
+  const render=(time:number)=>{
+   frame=0;if(!seen||!enabled()){hide();return;}
+   const dt=last?Math.min((time-last)/1000,.05):1/60;last=time;
+   let moving=false;
+   for(const [element,m] of magnets){
+    [m.x,m.vx]=spring(m.x,m.vx,m.gx,dt,25);[m.y,m.vy]=spring(m.y,m.vy,m.gy,dt,25);
+    element.style.translate=`${m.x}px ${m.y}px`;
+    const settling=Math.abs(m.x-m.gx)+Math.abs(m.y-m.gy)+Math.abs(m.vx)+Math.abs(m.vy)>.02;
+    moving||=settling;
+    if(element!==target&&!settling){element.style.translate=m.original;magnets.delete(element);}
+   }
+   if(target){
+    const box=target.getBoundingClientRect();
+    const inNavigation=!!target.closest('nav[aria-label="Navegación principal"]');
+    const pill=parseFloat(getComputedStyle(target).borderTopLeftRadius)>=box.height/2;
+    const circular=Math.abs(box.width-box.height)<4&&pill;
+    const iconInset=inNavigation&&target.tagName==='BUTTON'&&circular?6:0;
+    const padX=!inNavigation&&box.height<36?10:0,padY=!inNavigation&&box.height<36?6:0;
+    Object.assign(goal,{x:box.left+box.width/2,y:box.top+box.height/2,w:(box.width+padX*2-iconInset*2)*(down?.96:1),h:(box.height+padY*2-iconInset*2)*(down?.96:1),r:inNavigation||pill?(box.height+padY*2-iconInset*2)/2:12,blend:1});
+   }else Object.assign(goal,{x:px,y:py,w:down?15:18,h:down?15:18,r:9,blend:0});
+   for(const key of ['x','y','w','h','r','blend'] as const){
+    // Only hover transitions use positional easing. Ordinary tracking is immediate.
+    if((key==='x'||key==='y')&&!target&&state.blend<.001){state[key]=goal[key];speed[key]=0;continue;}
+    [state[key],speed[key]]=spring(state[key],speed[key],goal[key],dt,key==='blend'?22:26);
+    moving||=Math.abs(state[key]-goal[key])>.02||Math.abs(speed[key])>.05;
+   }
+   paint();
+   if(moving)frame=requestAnimationFrame(render);else last=0;
+  };
+  const schedule=()=>{if(!frame&&seen)frame=requestAnimationFrame(render);};
+  // Magnetic movement must not change the hit area that selects the hover target.
+  const containsPointer=(element:HTMLElement)=>{
+   const box=element.getBoundingClientRect(),m=magnets.get(element);
+   const left=box.left-(m?.x??0),top=box.top-(m?.y??0);
+   return px>=left&&px<=left+box.width&&py>=top&&py<=top+box.height;
+  };
+  const update=()=>{
+   if(!enabled()){hide();return;}
+   const under=document.elementFromPoint(px,py);
+   if(under?.closest('input,textarea,[contenteditable=true],iframe')){hide();return;}
+   const candidate=under?.closest<HTMLElement>('a,button'),box=candidate?.getBoundingClientRect();
+   // Service buttons have a stretched ::after hit area across the card. Only
+   // morph over the button itself; setHost changes its positioning context.
+   let next=candidate&&box&&box.width<=340&&box.height<=90&&!candidate.matches(':disabled,[aria-disabled=true]')&&containsPointer(candidate)?candidate:null;
+   // Keep the existing control when its visual edge moves away from the mouse.
+   if(!next&&target&&!target.matches(':disabled,[aria-disabled=true]')&&containsPointer(target))next=target;
+   if(target!==next){
+    if(target){const m=magnets.get(target);if(m){m.gx=0;m.gy=0;}}
+    target=next;if(target)setHost(target);
+   }
+   if(target){
+    const box=target.getBoundingClientRect();
+    let m=magnets.get(target);
+    if(!m){m={element:target,original:target.style.translate,x:0,y:0,vx:0,vy:0,gx:0,gy:0};magnets.set(target,m);}
+    const magnetStrength=target.closest('nav[aria-label="Navegación principal"]')?0:.06;
+    m.gx=Math.max(-3,Math.min(3,(px-box.left+m.x-box.width/2)*magnetStrength));
+    m.gy=Math.max(-3,Math.min(3,(py-box.top+m.y-box.height/2)*magnetStrength));
+   }
+   if(!seen){Object.assign(state,{x:px,y:py,w:18,h:18,r:9,blend:0});Object.assign(speed,{x:0,y:0,w:0,h:0,r:0,blend:0});}
+   seen=true;root.classList.add('ios-pointer-active');
+   if(!target&&state.blend<.001){state.x=px;state.y=py;speed.x=0;speed.y=0;paint();}
+   schedule();
+  };
+  document.addEventListener('pointermove',event=>{if(event.pointerType!=='mouse'){hide();return;}px=event.clientX;py=event.clientY;update();},{passive:true});
+  document.addEventListener('pointerdown',event=>{if(event.pointerType==='mouse'){down=true;px=event.clientX;py=event.clientY;update();}});
+  document.addEventListener('pointerup',event=>{if(event.pointerType==='mouse'){down=false;update();}});
+  document.addEventListener('pointercancel',hide);root.addEventListener('pointerleave',hide);
+  window.addEventListener('blur',hide);document.addEventListener('visibilitychange',()=>{if(document.hidden)hide();});
+  document.addEventListener('keydown',hide);
+  window.addEventListener('scroll',()=>{if(seen)update();},{passive:true});window.addEventListener('resize',()=>{if(seen)update();},{passive:true});
+  allowed.addEventListener('change',hide);
+  let wasEnabled=enabled();
+  new MutationObserver(()=>{const nextEnabled=enabled();if(nextEnabled!==wasEnabled){wasEnabled=nextEnabled;if(!nextEnabled)hide();}}).observe(root,{attributes:true,attributeFilter:['class']});
+ }
+</script>

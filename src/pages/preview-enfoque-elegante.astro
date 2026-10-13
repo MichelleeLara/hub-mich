@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AboutStats from '../components/AboutStats.astro';
+---
+<Layout noindex title="Preview · Mi enfoque" description="Recorrido de partículas y texto que se ilumina con el scroll." image="/OpenGraphl.png" url="https://itsmich.com.mx/preview-enfoque-elegante">
+ <main>
+  <AboutStats />
+  <div class="preview-end"><a href="/#yo" class="text-link">Ver en la página principal</a></div>
+ </main>
+</Layout>
+<style>
+ .preview-end { text-align: center; padding: var(--space-8) var(--gutter); }
+</style>

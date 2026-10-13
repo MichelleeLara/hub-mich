@@ -3,14 +3,15 @@
 
 <section
   id="inicio"
-  class="pt-40 pb-16 mx-6 flex items-center justify-center text-center"
+  class="hero-section"
 >
   <div
-    class="flex flex-col items-center gap-8 relative z-30 w-full max-w-screen-xl"
+    class="hero-layout"
   >
-    <!-- Kicker: rol + estado de disponibilidad -->
+    <div class="hero-copy">
+    <!-- Rol y disponibilidad -->
     <div
-      class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest"
+      class="hero-role"
     >
       <span class="text-ink">Product Engineer</span>
       <span class="text-line" aria-hidden="true">|</span>
@@ -26,34 +27,17 @@
       </span>
     </div>
 
-    <!-- Nombre gigante con la foto integrada al centro -->
-    <div class="relative w-full flex items-center justify-center">
+    <!-- Nombre completo, separado del retrato -->
       <h1
-        class="font-ClashDisplay font-semibold uppercase tracking-tight leading-[1.08] sm:leading-[1.02] md:leading-[0.98] text-ink text-center text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] select-none origin-center [transform:scaleY(1.14)]"
+        class="hero-name"
       >
         <span class="block">Michelle</span>
         <span class="block">Rodriguez</span>
       </h1>
 
-      <!-- Avatar encimado, centrado entre las dos líneas. -->
-      <div
-        id="hero-avatar"
-        class="absolute top-[51%] left-[52%] sm:left-[53%] -translate-x-1/2 -translate-y-1/2 z-20 will-change-transform w-20 h-32 xs:w-24 xs:h-36 sm:w-32 sm:h-48 md:w-40 md:h-56 lg:w-44 lg:h-60"
-      >
-        <img
-          src="/media/hero-profile-480.webp"
-          srcset="/media/hero-profile-240.webp 240w, /media/hero-profile-480.webp 480w"
-          sizes="(min-width: 1024px) 176px, (min-width: 768px) 160px, 96px"
-          width="480" height="768" fetchpriority="high" decoding="async"
-          alt="Mich Rodriguez, Product Engineer"
-          class="hero-float w-full h-full object-cover object-[47%_28%] rounded-full bg-surface border border-line shadow-lift"
-        />
-      </div>
-    </div>
-
     <!-- Subtítulo: copy sintetizado -->
     <p
-      class="text-base leading-[1.7] text-muted text-pretty max-w-[620px]"
+      class="hero-description"
     >
       Convierto problemas de negocio en <span
         class="font-semibold text-ink">productos simples de usar</span
@@ -61,7 +45,7 @@
     </p>
 
     <!-- CTAs: primario (sólido) + secundario (borde) para marcar jerarquía -->
-    <div class="flex gap-3 items-center justify-center flex-wrap mt-2">
+    <div class="hero-actions">
       <!-- Primario: Ver proyectos -->
       <a
         href="/#proyectos"
@@ -113,10 +97,88 @@
         Leer mi CV
       </a>
     </div>
+    </div>
+    <!-- Retrato lateral; encima del texto en móvil. -->
+      <div
+        id="hero-avatar"
+        class="hero-portrait"
+      >
+        <img
+          src="/media/hero-profile-480.webp"
+          srcset="/media/hero-profile-240.webp 240w, /media/hero-profile-480.webp 480w"
+          sizes="(min-width: 768px) 240px, 112px"
+          width="480" height="768" fetchpriority="high" decoding="async"
+          alt="Mich Rodriguez, Product Engineer"
+          class="hero-float w-full h-full object-cover object-[47%_28%] rounded-full bg-surface border border-line shadow-lift"
+        />
+      </div>
   </div>
 </section>
 
 <style>
+  .hero-section {
+    width: 100%;
+    padding: 144px var(--gutter) var(--space-8);
+    color: var(--ink);
+    scroll-margin-top: 100px;
+  }
+  .hero-layout {
+    position: relative;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 240px;
+    align-items: center;
+    gap: var(--space-7);
+    width: min(100%, 920px);
+    min-height: 500px;
+    margin: auto;
+  }
+  .hero-copy { min-width: 0; }
+  .hero-role {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+    color: var(--muted);
+    font-size: var(--fs-caption);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+  }
+  .hero-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(42px, 6.6vw, 68px);
+    line-height: 1.06;
+    letter-spacing: -.045em;
+    text-transform: uppercase;
+  }
+  .hero-description {
+    max-width: 490px;
+    margin: var(--space-6) 0 var(--space-5);
+    font-size: var(--fs-body);
+    line-height: 1.7;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .hero-portrait { width: 240px; height: 344px; justify-self: end; }
+  @media (max-width: 767px) {
+    .hero-section { padding-top: var(--space-9); }
+    .hero-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); min-height: 0; }
+    .hero-portrait { grid-row: 1; width: 112px; height: 152px; }
+    .hero-role { font-size: var(--fs-micro); letter-spacing: .06em; gap: var(--space-2); margin-bottom: var(--space-4); }
+    .hero-name { font-size: clamp(38px, 10vw, 60px); }
+    .hero-description { margin-top: var(--space-5); }
+  }
+
   /* Levitación en reposo (sutil) */
   .hero-float {
     animation: hero-float 5.5s ease-in-out infinite;
@@ -152,21 +214,21 @@
       raf = 0;
       if (!canAnimate()) return;
       x += (targetX - x) * .16; y += (targetY - y) * .16;
-      avatar.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+      avatar.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
       if (Math.abs(targetX - x) + Math.abs(targetY - y) > .02) raf = requestAnimationFrame(loop);
     };
     const sync = () => {
       if (!canAnimate()) { cancelAnimationFrame(raf); raf = 0; }
       if (motionPreference.matches || !finePointer.matches) {
         targetX = targetY = x = y = 0;
-        avatar.style.transform = 'translate(-50%, -50%)';
+        avatar.style.transform = 'translate3d(0, 0, 0)';
       }
       if (canAnimate() && !raf) raf = requestAnimationFrame(loop);
     };
     window.addEventListener('mousemove', e => {
       if (!canAnimate()) return;
-      targetX = (e.clientX / innerWidth - .5) * 60;
-      targetY = (e.clientY / innerHeight - .5) * 48;
+      targetX = (e.clientX / innerWidth - .5) * 12;
+      targetY = (e.clientY / innerHeight - .5) * 12;
       if (!raf) raf = requestAnimationFrame(loop);
     }, { passive: true });
     new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }).observe(avatar);
