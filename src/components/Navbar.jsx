@@ -77,6 +77,7 @@ export default function AnimatedTabs() {
       setActive("inicio");
     };
 
+    let scrollFrame = 0;
     const syncFromScroll = () => {
       const path = window.location.pathname.replace(/\/$/, "") || "/";
       if (path !== "/") return;
@@ -96,15 +97,19 @@ export default function AnimatedTabs() {
       if (current) setActive(current.id);
     };
 
+    const queueScroll = () => {
+      if (!scrollFrame) scrollFrame = requestAnimationFrame(() => { scrollFrame = 0; syncFromScroll(); });
+    };
     syncFromLocation();
     syncFromScroll();
 
     window.addEventListener("hashchange", syncFromLocation);
-    window.addEventListener("scroll", syncFromScroll, { passive: true });
+    window.addEventListener("scroll", queueScroll, { passive: true });
 
     return () => {
       window.removeEventListener("hashchange", syncFromLocation);
-      window.removeEventListener("scroll", syncFromScroll);
+      window.removeEventListener("scroll", queueScroll);
+      cancelAnimationFrame(scrollFrame);
     };
   }, []);
 

@@ -31,10 +31,13 @@ import { PARTICLES_ENABLED } from '../config';
      se renderizó, no hace nada. -->
 <script>
   import { ideaPoints, ideaAspect, ideaFlowPoint } from '../data/ideasGeometry';
-  import { tokenColor } from '../lib/tokens';
   import { ENFOQUE_PARTICLE_EVENT, type EnfoqueParticleFrame } from '../lib/enfoqueParticles';
   const el = document.getElementById('particles-bg') as HTMLCanvasElement | null;
-  if (el) start(el);
+  if (el) {
+    const initialize = () => start(el);
+    if ('requestIdleCallback' in window) window.requestIdleCallback(initialize, { timeout: 1200 });
+    else requestAnimationFrame(() => setTimeout(initialize, 0));
+  }
 
   function start(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d')!;
@@ -43,6 +46,7 @@ import { PARTICLES_ENABLED } from '../config';
     document.addEventListener(ENFOQUE_PARTICLE_EVENT,event=>{
       const next=(event as CustomEvent<EnfoqueParticleFrame>).detail;
       enfoque=next.points.length?next:{points:enfoque.points,strength:0};
+      wake();
     });
 
     const motionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -58,6 +62,8 @@ import { PARTICLES_ENABLED } from '../config';
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
     const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
     const smallScreen = window.innerWidth < 768;
+    const staticWhenIdle = coarsePointer || smallScreen || Boolean(saveData);
+    let lastInteraction = performance.now();
 
     const tier: 'low' | 'mid' | 'high' =
       saveData || cores <= 4 || memGB <= 4 || (coarsePointer && smallScreen)
@@ -175,11 +181,27 @@ import { PARTICLES_ENABLED } from '../config';
 
     // --- Tema ----------------------------------------------------------------
     let rgb = '235, 235, 240';
+    let tintPalette: string[] = [], shapeColor = '', themeDark: boolean | null = null;
     const syncTheme = () => {
-      rgb = document.documentElement.classList.contains('dark') ? '235, 235, 240' : '25, 25, 30';
+      const dark = document.documentElement.classList.contains('dark');
+      if (themeDark === dark) return;
+      themeDark = dark;
+      rgb = dark ? '235, 235, 240' : '25, 25, 30';
+      const theme = getComputedStyle(document.documentElement);
+      const accent = theme.getPropertyValue('--accent').trim().replace('#', '');
+      const tintRGB = [0,2,4].map(offset => parseInt(accent.slice(offset,offset+2),16));
+      const baseRGB = rgb.split(',').map(Number);
+      tintPalette = Array.from({length:16},(_,step)=>`rgb(${baseRGB.map((channel,j)=>Math.round(channel+(tintRGB[j]-channel)*step/15)).join(',')})`);
+      shapeColor = theme.getPropertyValue('--accent-strong').trim();
       if (reduceMotion) draw(0);
+      else wake();
     };
-    new MutationObserver(syncTheme).observe(document.documentElement, {
+    let observedPaused = document.documentElement.classList.contains('motion-paused') || document.documentElement.classList.contains('project-preview-open');
+    new MutationObserver(() => {
+      syncTheme();
+      const nextPaused = document.documentElement.classList.contains('motion-paused') || document.documentElement.classList.contains('project-preview-open');
+      if (nextPaused !== observedPaused) { observedPaused = nextPaused; resumeMotion(); }
+    }).observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     });
@@ -304,7 +326,7 @@ import { PARTICLES_ENABLED } from '../config';
     let lastH = -1;
     const resize = () => {
       // Cap de DPR: en pantallas 3x se pintarían 9 píxeles por píxel CSS.
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, TIER.dpr);
       const nw = window.innerWidth;
       const nh = window.innerHeight;
       canvas.width = Math.round(nw * dpr);
@@ -638,14 +660,10 @@ import { PARTICLES_ENABLED } from '../config';
         return;
       }
       if(enfoqueBlend>0&&enfoque.points.length){
-        const accent=tokenColor('--accent').replace('#','');
-        const tintRGB=[0,2,4].map(offset=>parseInt(accent.slice(offset,offset+2),16));
-        const baseRGB=rgb.split(',').map(Number);
-        const palette=Array.from({length:16},(_,step)=>`rgb(${baseRGB.map((channel,j)=>Math.round(channel+(tintRGB[j]-channel)*step/15)).join(',')})`);
         for(let i=0;i<activeMain;i++){
           const point=enfoque.points[Math.floor(i*enfoque.points.length/activeMain)];
           const tint=formWeight[i];
-          ctx.fillStyle=palette[Math.round(tint*15)];
+          ctx.fillStyle=tintPalette[Math.round(tint*15)];
           ctx.globalAlpha=drawA[i];
           ctx.beginPath();ctx.arc(px[i],sy[i],size[i]/2+(point.radius-size[i]/2)*enfoqueBlend,0,Math.PI*2);ctx.fill();
         }
@@ -670,7 +688,6 @@ import { PARTICLES_ENABLED } from '../config';
         const b = leased.has(i) ? 255 : bucketOf[i];
         if (b !== 255) order[bucketStart[b] + bucketCount[b]++] = i;
       }
-      const shapeColor = tokenColor('--accent-strong');
       // Separate passes preserve batched paint while the illustration turns orange.
       for (let pass = 0; pass < 2; pass++) {
         ctx.fillStyle = pass === 0 ? `rgb(${rgb})` : shapeColor;
@@ -709,7 +726,7 @@ import { PARTICLES_ENABLED } from '../config';
     // de cuadros activo los FPS medidos mienten). Si el promedio excede el
     // presupuesto, se recorta el rango activo; si sobra holgura, se recupera.
     const frameBudget = 1000 / TIER.fps;
-    const COST_BUDGET = 6; // ms por frame que el fondo puede gastar
+    const COST_BUDGET = tier === 'low' ? 3 : 6;
     // Piso: por debajo de esto el ilustración pierde legibilidad; preferible
     // bajar FPS a tener un composición ralo.
     const MIN_PERF_SCALE = 0.5;
@@ -732,10 +749,12 @@ import { PARTICLES_ENABLED } from '../config';
     };
 
     const step = (time: number) => {
-      if (reduceMotion || document.hidden || document.documentElement.classList.contains('motion-paused')) { rafId = 0; document.documentElement.classList.remove('particles-portrait'); return; }
+      if (reduceMotion || document.hidden || document.documentElement.classList.contains('motion-paused') || document.documentElement.classList.contains('project-preview-open')) { rafId = 0; document.documentElement.classList.remove('particles-portrait'); return; }
+      const interacting = time-lastInteraction < 1200 || faceEase > 0 || Math.abs(enfoque.strength-enfoqueBlend) > .001;
+      if (!interacting && staticWhenIdle) { rafId = 0; return; }
       rafId = requestAnimationFrame(step);
       // Límite de FPS (con tolerancia para no perder cuadros por jitter)
-      if (time - lastFrame < (faceEase > 0 ? 1000/60 : frameBudget) - 2) return;
+      if (time - lastFrame < (interacting ? frameBudget : 1000/15) - 2) return;
       lastFrame = time;
 
       const dt = Math.min((time - lastTime) / 16.67, 3);
@@ -766,6 +785,7 @@ import { PARTICLES_ENABLED } from '../config';
         main: `${activeMain}/${mainCount}`,
         reserve: `${activeReserve}/${reserveCount}`,
         drawn,
+        running: Boolean(rafId),
         faceEase: +faceEase.toFixed(3),
       }),
       configurable: true,
@@ -781,16 +801,25 @@ import { PARTICLES_ENABLED } from '../config';
       resizeTimer = window.setTimeout(() => {
         resize();
         if (reduceMotion) draw(0);
+        else wake();
       }, 200);
     });
 
     const resumeMotion = () => {
       reduceMotion = motionMedia.matches;
-      const paused = reduceMotion || document.documentElement.classList.contains('motion-paused');
+      const paused = reduceMotion || document.documentElement.classList.contains('motion-paused') || document.documentElement.classList.contains('project-preview-open');
       canvas.style.display = paused ? 'none' : '';
       if (paused) { updateBuildState(1); cancelAnimationFrame(rafId); rafId = 0; document.documentElement.classList.remove('particles-portrait'); }
       else if (!document.hidden && !rafId) { if (!facePointsReady) sampleFace(); lastTime = lastFrame = performance.now(); rafId = requestAnimationFrame(step); }
     };
+    function wake() {
+      lastInteraction = performance.now();
+      if (!reduceMotion && !document.hidden && !document.documentElement.classList.contains('motion-paused') && !document.documentElement.classList.contains('project-preview-open') && !rafId) {
+        lastTime = lastFrame = lastInteraction;
+        rafId = requestAnimationFrame(step);
+      }
+    }
+    window.addEventListener('scroll', wake, { passive: true });
     document.addEventListener('motionchange', resumeMotion);
     motionMedia.addEventListener('change', resumeMotion);
     if (reduceMotion) {
@@ -805,7 +834,8 @@ import { PARTICLES_ENABLED } from '../config';
         mouse.tx = mouse.ty = mouse.x = mouse.y = -9999;
       };
       window.addEventListener('pointermove', (e) => {
-        if (reduceMotion || document.documentElement.classList.contains('motion-paused')) return;
+        if (e.pointerType !== 'mouse' || reduceMotion || document.documentElement.classList.contains('motion-paused')) return;
+        wake();
         mouse.tx = e.clientX;
         mouse.ty = e.clientY;
         if (!mouse.active) {

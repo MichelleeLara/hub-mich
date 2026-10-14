@@ -113,7 +113,9 @@ export default function Header() {
       setActive("inicio");
     };
 
+    let scrollFrame = 0;
     const syncFromScroll = () => {
+      if (window.matchMedia('(max-width:767px)').matches) return;
       const path = window.location.pathname.replace(/\/$/, "") || "/";
       if (path !== "/" && path !== "/preview-completo") return;
 
@@ -132,15 +134,19 @@ export default function Header() {
       if (current) setActive(current.id);
     };
 
+    const queueScroll = () => {
+      if (!scrollFrame) scrollFrame = requestAnimationFrame(() => { scrollFrame = 0; syncFromScroll(); });
+    };
     syncFromLocation();
     syncFromScroll();
 
     window.addEventListener("hashchange", syncFromLocation);
-    window.addEventListener("scroll", syncFromScroll, { passive: true });
+    window.addEventListener("scroll", queueScroll, { passive: true });
 
     return () => {
       window.removeEventListener("hashchange", syncFromLocation);
-      window.removeEventListener("scroll", syncFromScroll);
+      window.removeEventListener("scroll", queueScroll);
+      cancelAnimationFrame(scrollFrame);
     };
   }, []);
 
