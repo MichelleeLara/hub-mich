@@ -25,7 +25,7 @@
   const state={x:0,y:0,w:18,h:18,r:9,blend:0};
   const speed={x:0,y:0,w:0,h:0,r:0,blend:0};
   const goal={...state};
-  let frame=0,last=0,seen=false,down=false,px=0,py=0,target:HTMLElement|null=null;
+  let frame=0,inputFrame=0,last=0,seen=false,down=false,px=0,py=0,target:HTMLElement|null=null;
   type Host={element:HTMLElement;position:string;isolation:string;fill:string};
   let host:Host|null=null;
   type Magnet={element:HTMLElement;original:string;x:number;y:number;vx:number;vy:number;gx:number;gy:number};
@@ -47,20 +47,20 @@
   const hide=()=>{
    seen=false;target=null;if(root.classList.contains('ios-pointer-active'))root.classList.remove('ios-pointer-active');cursor.style.opacity='0';releaseHost();
    for(const m of magnets.values())m.element.style.translate=m.original;
-   magnets.clear();if(frame)cancelAnimationFrame(frame);frame=0;last=0;
+   magnets.clear();if(frame)cancelAnimationFrame(frame);if(inputFrame)cancelAnimationFrame(inputFrame);frame=inputFrame=0;last=0;
   };
   // Preserve the spring for the hover morph, including entry and exit.
   const spring=(value:number,velocity:number,destination:number,dt:number,omega:number)=>{
    const displacement=value-destination,carry=velocity+omega*displacement,decay=Math.exp(-omega*dt);
    return [destination+(displacement+carry*dt)*decay,(velocity-omega*carry*dt)*decay];
   };
-  const paint=()=>{
+  const paint=(hostBox=host?.element.getBoundingClientRect())=>{
    const left=state.x-state.w/2,top=state.y-state.h/2;
    cursor.style.transform=`translate3d(${left}px,${top}px,0)`;
    cursor.style.width=`${state.w}px`;cursor.style.height=`${state.h}px`;cursor.style.borderRadius=`${state.r}px`;
    cursor.style.opacity=String(1-state.blend);
-   if(host){
-    const box=host.element.getBoundingClientRect();
+   if(host&&hostBox){
+    const box=hostBox;
     const values={x:`${left-box.left}px`,y:`${top-box.top}px`,w:`${state.w}px`,h:`${state.h}px`,radius:`${state.r}px`,opacity:String(state.blend),fill:host.fill};
     for(const [key,value] of Object.entries(values))host.element.style.setProperty(`--ios-${key}`,value);
     if(!target&&state.blend<.001)releaseHost();
@@ -69,6 +69,9 @@
   const render=(time:number)=>{
    frame=0;if(!seen||!enabled()){hide();return;}
    const dt=last?Math.min((time-last)/1000,.05):1/60;last=time;
+   // Read geometry before translating magnetic controls or painting the cursor.
+   const targetBox=target?.getBoundingClientRect(),hostBox=host?.element.getBoundingClientRect();
+   const targetRadius=target?parseFloat(getComputedStyle(target).borderTopLeftRadius):0;
    let moving=false;
    for(const [element,m] of magnets){
     [m.x,m.vx]=spring(m.x,m.vx,m.gx,dt,25);[m.y,m.vy]=spring(m.y,m.vy,m.gy,dt,25);
@@ -77,10 +80,10 @@
     moving||=settling;
     if(element!==target&&!settling){element.style.translate=m.original;magnets.delete(element);}
    }
-   if(target){
-    const box=target.getBoundingClientRect();
+   if(target&&targetBox){
+    const box=targetBox;
     const inNavigation=!!target.closest('nav[aria-label="Navegación principal"]');
-    const pill=parseFloat(getComputedStyle(target).borderTopLeftRadius)>=box.height/2;
+    const pill=targetRadius>=box.height/2;
     const circular=Math.abs(box.width-box.height)<4&&pill;
     const iconInset=inNavigation&&target.tagName==='BUTTON'&&circular?6:0;
     const padX=!inNavigation&&box.height<36?10:0,padY=!inNavigation&&box.height<36?6:0;
@@ -92,7 +95,7 @@
     [state[key],speed[key]]=spring(state[key],speed[key],goal[key],dt,key==='blend'?22:26);
     moving||=Math.abs(state[key]-goal[key])>.02||Math.abs(speed[key])>.05;
    }
-   paint();
+   paint(hostBox);
    if(moving)frame=requestAnimationFrame(render);else last=0;
   };
   const schedule=()=>{if(!frame&&seen)frame=requestAnimationFrame(render);};
@@ -129,13 +132,14 @@
    if(!target&&state.blend<.001){state.x=px;state.y=py;speed.x=0;speed.y=0;paint();}
    schedule();
   };
-  document.addEventListener('pointermove',event=>{if(event.pointerType!=='mouse'){hide();return;}px=event.clientX;py=event.clientY;update();},{passive:true});
-  document.addEventListener('pointerdown',event=>{if(event.pointerType==='mouse'){down=true;px=event.clientX;py=event.clientY;update();}});
-  document.addEventListener('pointerup',event=>{if(event.pointerType==='mouse'){down=false;update();}});
+  const queueUpdate=()=>{if(!enabled()||inputFrame)return;inputFrame=requestAnimationFrame(()=>{inputFrame=0;update();});};
+  document.addEventListener('pointermove',event=>{if(event.pointerType!=='mouse'){if(seen)hide();return;}px=event.clientX;py=event.clientY;queueUpdate();},{passive:true});
+  document.addEventListener('pointerdown',event=>{if(event.pointerType==='mouse'){down=true;px=event.clientX;py=event.clientY;queueUpdate();}});
+  document.addEventListener('pointerup',event=>{if(event.pointerType==='mouse'){down=false;queueUpdate();}});
   document.addEventListener('pointercancel',hide);root.addEventListener('pointerleave',hide);
   window.addEventListener('blur',hide);document.addEventListener('visibilitychange',()=>{if(document.hidden)hide();});
   document.addEventListener('keydown',hide);
-  window.addEventListener('scroll',()=>{if(seen)update();},{passive:true});window.addEventListener('resize',()=>{if(seen)update();},{passive:true});
+  window.addEventListener('scroll',()=>{if(seen)queueUpdate();},{passive:true});window.addEventListener('resize',()=>{if(seen)queueUpdate();},{passive:true});
   allowed.addEventListener('change',hide);
   let wasEnabled=enabled();
   new MutationObserver(()=>{const nextEnabled=enabled();if(nextEnabled!==wasEnabled){wasEnabled=nextEnabled;if(!nextEnabled)hide();}}).observe(root,{attributes:true,attributeFilter:['class']});

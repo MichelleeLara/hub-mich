@@ -1,7 +1,5 @@
 ---
 import SectionHeading from './SectionHeading.astro';
-import { ideaPoints, ideaFlowPoint, ideaFlowRoute } from '../data/ideasGeometry';
-const staticPoints = ideaPoints.map(p=>({x:.5+(p.x-.5)*.78,y:.5+(p.y-.5)*.78}));
 const stages = [
   { number: '01', title: 'Entender el problema.', text: 'Antes de pensar en una solución, busco la fricción: qué necesita la persona, qué está fallando y qué cambiaría si lo resolvemos.', detail: 'La IA me ayuda a explorar alternativas. El problema marca la dirección.' },
   { number: '02', title: 'Diseñar el recorrido.', text: 'Conecto las piezas en una experiencia: qué se ve, qué se hace y qué pasa después. Prototipo, pruebo estados y cuido los detalles.', detail: 'Diseño e ingeniería trabajan juntas para que la solución se entienda antes de construirla.' },
@@ -37,7 +35,7 @@ const proof = [
      </div>
      <figure class="editorial-figure" aria-label="La dispersión se aclara en un plano, se divide en cuatro bases y se convierte en una estructura por niveles">
       <canvas id="editorial-canvas" aria-hidden="true"></canvas>
-      <svg class="editorial-fallback" viewBox="0 0 600 660" aria-hidden="true">{staticPoints.map((point, i) => <circle cx={point.x * 600} cy={point.y * 660} r={i % 11 === 0 ? 2.6 : 1.8} fill="currentColor" opacity={i % 4 === 0 ? .76 : .44} />)}</svg>
+      <svg class="editorial-fallback" viewBox="0 0 600 660" aria-hidden="true"><use href="/media/enfoque-static.svg#points" width="600" height="660" /></svg>
       <span class="editorial-cross first" aria-hidden="true">+</span><span class="editorial-cross last" aria-hidden="true">+</span>
      </figure>
     </div>
@@ -137,23 +135,36 @@ const proof = [
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const unified=Boolean(document.getElementById('particles-bg'));
   const releaseField=()=>document.dispatchEvent(new CustomEvent<EnfoqueParticleFrame>(ENFOQUE_PARTICLE_EVENT,{detail:{points:[],strength:0}}));
-  let width=0,height=0,raf=0,visible=true,progress=0,target=0,active=-1,last=0,ambientTime=0;
-  let scrollProgress=0;
+  let width=0,height=0,raf=0,visible=false,progress=0,target=0,active=-1,last=0,ambientTime=0,scrollRaf=0;
+  const mobile=matchMedia('(max-width:767px)');
+  const framesPerSecond=()=>mobile.matches?30:60;
+  let scrollProgress=0,lastInput=performance.now();
   // Each step forms over its first 64%; the remaining scroll keeps it complete.
   const formationEnd=.64;
   const formationRanges=[[0,.30],[1/3,.625],[2/3,1]];
   const offsets=ideaPoints.map(()=>({x:0,y:0,vx:0,vy:0}));
+  const pointGeometry=ideaPoints.map((p,i)=>{
+   const z=(p.baseY-p.y)/(.183*1.3225),floor=Math.min(3,Math.max(0,Math.round(z)));
+   return {z,floor,final:{x:.5+(p.x-.5)*.78,y:.5+(p.y-.5)*.78},
+    blueprint:{x:.28+(floor%2)*.44+(p.x-.5)*.34,y:.32+Math.floor(floor/2)*.36+(p.baseY-.69)*.60},
+    clearPlane:{x:.5+(p.x-.5)*.65,y:.5+(p.baseY-.87)*.75},
+    delay:Math.abs((Math.sin(i*12.9898)*43758.5453)%1)*.045,
+    bend:Math.sin(i*.7),assemblyBend:.3+Math.sin(i*1.3)*.2,brightness:.88+.12*Math.sin(i*.27)};
+  });
+  const grains:EnfoqueGrain[]=ideaPoints.map(()=>({x:0,y:0,alpha:0,radius:0,tint:0}));
+  const wordLights=words.map(list=>list.map(()=>''));
+  let stickyTop=92,runwayHeight=1,stickyHeight=1;
   const pointer={x:0,y:0,inside:false};
   figure.addEventListener('pointermove',event=>{
    if(event.pointerType!=='mouse'||disabled())return;
-   const box=figure.getBoundingClientRect();pointer.x=event.clientX-box.left;pointer.y=event.clientY-box.top;pointer.inside=true;schedule();
+   const box=figure.getBoundingClientRect();pointer.x=event.clientX-box.left;pointer.y=event.clientY-box.top;pointer.inside=true;lastInput=performance.now();schedule();
   },{passive:true});
-  figure.addEventListener('pointerleave',()=>{pointer.inside=false;schedule();},{passive:true});
+  figure.addEventListener('pointerleave',()=>{pointer.inside=false;lastInput=performance.now();schedule();},{passive:true});
   const clamp=(x:number)=>Math.max(0,Math.min(1,x));
   const ease=(x:number)=>{const t=clamp(x);return t*t*(3-2*t);};
   let color=getComputedStyle(runway).getPropertyValue('--accent').trim();
   const paused=()=>document.documentElement.classList.contains('motion-paused');
-  const disabled=()=>reduced.matches||paused()||document.documentElement.classList.contains('editorial-tall');
+  const disabled=()=>reduced.matches||paused()||document.documentElement.classList.contains('editorial-tall')||document.documentElement.classList.contains('project-preview-open');
   function measure(){
    document.documentElement.classList.remove('editorial-tall');
    if(!reduced.matches&&!paused())articles.forEach((a,i)=>a.hidden=i!==(active<0?0:active));
@@ -183,16 +194,19 @@ const proof = [
     figure!.style.setProperty('--editorial-figure-width',`${Math.max(100,Math.floor(available/1.1))}px`);
    }
    const box=figure!.getBoundingClientRect();width=box.width;height=box.height;
-   const dpr=Math.min(devicePixelRatio||1,2);canvas!.width=Math.round(width*dpr);canvas!.height=Math.round(height*dpr);ctx!.setTransform(dpr,0,0,dpr,0,0);
+   if(!unified){const dpr=Math.min(devicePixelRatio||1,mobile.matches?1.5:2);canvas!.width=Math.round(width*dpr);canvas!.height=Math.round(height*dpr);ctx!.setTransform(dpr,0,0,dpr,0,0);}
    const top=parseFloat(getComputedStyle(sticky!).top)||92;
    document.documentElement.classList.toggle('editorial-tall',!reduced.matches&&!paused()&&sticky!.getBoundingClientRect().height>innerHeight-top-20);
+   stickyTop=top;runwayHeight=runway!.getBoundingClientRect().height;stickyHeight=sticky!.getBoundingClientRect().height;
    color=getComputedStyle(runway!).getPropertyValue('--accent').trim();
    if(disabled())releaseField();
    updateTarget();schedule();
   }
   function updateTarget(){
-   const top=parseFloat(getComputedStyle(sticky!).top)||92,box=runway!.getBoundingClientRect();
-   target=clamp((top-box.top)/Math.max(1,box.height-sticky!.getBoundingClientRect().height));
+   const box=runway!.getBoundingClientRect();
+   const next=clamp((stickyTop-box.top)/Math.max(1,runwayHeight-stickyHeight));
+   if(Math.abs(next-target)>.0001)lastInput=performance.now();
+   target=next;
    schedule();
   }
   function schedule(){if(!raf&&visible&&!document.hidden&&!disabled())raf=requestAnimationFrame(frame);}
@@ -216,7 +230,9 @@ const proof = [
   }
   function frame(time:number){
    raf=0;if(disabled()||!visible||document.hidden)return;
+   if(last&&time-last<1000/framesPerSecond()-2){raf=requestAnimationFrame(frame);return;}
    const dt=Math.min(50,time-last||16);last=time;ambientTime+=dt/1000;
+   const figureBox=figure!.getBoundingClientRect();
    scrollProgress+=(target-scrollProgress)*(1-Math.exp(-dt/90));
    const stage=Math.min(2,Math.floor(scrollProgress*3));
    const local=clamp(scrollProgress*3-stage),formation=clamp(local/formationEnd);
@@ -228,12 +244,11 @@ const proof = [
    const readingProgress=clamp((progress*3-stage)/.85);
    words[stage].forEach((word,i,list)=>{
     const start=list.length<=1?0:i/(list.length-1)*.8;
-    word.style.setProperty('--word-light',String(.24+.76*ease((readingProgress-start)/.2)));
+    const light=(.24+.76*ease((readingProgress-start)/.2)).toFixed(3);
+    if(wordLights[stage][i]!==light){word.style.setProperty('--word-light',light);wordLights[stage][i]=light;}
    });
    progressLine?.style.setProperty('--editorial-progress',String(scrollProgress));
-   ctx!.clearRect(0,0,width,height);ctx!.fillStyle=color;
-   const grains:EnfoqueGrain[]=[];
-   const figureBox=figure!.getBoundingClientRect();
+   if(!unified){ctx!.clearRect(0,0,width,height);ctx!.fillStyle=color;}
    const design=ease((progress-1/3)/.29),assemble=ease((progress-2/3)/.24),connect=ease((progress-.88)/.12);
    const fit=(p:{x:number;y:number})=>({x:.5+(p.x-.5)*.78,y:.5+(p.y-.5)*.78});
    const drift=ambientTime;
@@ -242,7 +257,7 @@ const proof = [
     return {x:a.x+(b.x-a.x)*t-(b.y-a.y)*arc,y:a.y+(b.y-a.y)*t+(b.x-a.x)*arc};
    };
    for(let i=0;i<ideaPoints.length;i++){
-    const p=ideaPoints[i],z=(p.baseY-p.y)/(.183*1.3225),floor=Math.min(3,Math.max(0,Math.round(z))),final=fit(p);
+    const p=ideaPoints[i],geometry=pointGeometry[i],{z,floor,final,blueprint,clearPlane,delay}=geometry;
     // A living field: grains follow different, continuous currents even when
     // scrolling stops. The same trajectories gradually settle into the plane.
     const current=drift*(.065+(i%17)*.004);
@@ -253,18 +268,14 @@ const proof = [
      x:.5+cloudX*Math.cos(swirl)-cloudY*Math.sin(swirl)+Math.sin(drift*.32+i*.73)*.018,
      y:.5+cloudX*Math.sin(swirl)+cloudY*Math.cos(swirl)+Math.cos(drift*.27+i*.91)*.018,
     };
-    const blueprint={x:.28+(floor%2)*.44+(p.x-.5)*.34,y:.32+Math.floor(floor/2)*.36+(p.baseY-.69)*.60};
     // Individual arrival times and curved advection prevent the floors moving as rigid objects.
-    const seed=(Math.sin(i*12.9898)*43758.5453)%1;
-    const delay=Math.abs(seed)*.045;
     const localDesign=ease((progress-1/3-delay)/.23),localAssembly=ease((progress-2/3-delay)/.23);
     // Understanding resolves the cloud into one shared plane. Those same
     // particles separate into the four design bases, retaining their identity.
     const clarity=ease((progress-.06)/.23);
-    const clearPlane={x:.5+(p.x-.5)*.65,y:.5+(p.baseY-.87)*.75};
-    const understood=curve(scattered,clearPlane,clarity,Math.sin(i*.7)*.22);
-    const planned=curve(understood,blueprint,localDesign,Math.sin(i*.7)*.35);
-    const position=curve(planned,final,localAssembly,.3+Math.sin(i*1.3)*.2);
+    const understood=curve(scattered,clearPlane,clarity,geometry.bend*.22);
+    const planned=curve(understood,blueprint,localDesign,geometry.bend*.35);
+    const position=curve(planned,final,localAssembly,geometry.assemblyBend);
     const settled=clarity*(1-localDesign)+localDesign*(1-localAssembly)+localAssembly;
     const movement=(p.outer?0:.001)*settled+.008*(1-settled);
     const baseX=(position.x+Math.sin(drift*.55+i*.73)*movement)*width;
@@ -290,10 +301,10 @@ const proof = [
     const pathPhase=((p.x+p.baseY)*1.7+floor*.19-drift*.22)%1;
     const waveDistance=Math.min(Math.abs(pathPhase),1-Math.abs(pathPhase));
     const pulse=Math.exp(-waveDistance*waveDistance/.003)*settled;
-    const alpha=Math.min(1,(p.outer?.72+.28*pulse:.3+.035*pulse)*(posts?(1-localDesign+localAssembly)*.65:1)*light*(.88+.12*Math.sin(i*.27)));
+    const alpha=Math.min(1,(p.outer?.72+.28*pulse:.3+.035*pulse)*(posts?(1-localDesign+localAssembly)*.65:1)*light*geometry.brightness);
     const radius=p.outer?(i%11===0?1.6:1.1)+pulse*.9:.75;
     const tint=clamp(settled-.55*Math.sin(Math.PI*localDesign)-.55*Math.sin(Math.PI*localAssembly));
-    if(unified)grains.push({x:figureBox.left+x,y:figureBox.top+y,alpha,radius,tint});
+    if(unified){const grain=grains[i];grain.x=figureBox.left+x;grain.y=figureBox.top+y;grain.alpha=alpha;grain.radius=radius;grain.tint=tint;}
     else {ctx!.globalAlpha=alpha;ctx!.beginPath();ctx!.arc(x,y,radius,0,Math.PI*2);ctx!.fill();}
    }
    if(unified){
@@ -302,7 +313,8 @@ const proof = [
     const entry=clamp((innerHeight-figureBox.top)/Math.max(1,figureBox.height*.75));
     const exit=clamp(figureBox.bottom/Math.max(1,figureBox.height*.75));
     document.dispatchEvent(new CustomEvent<EnfoqueParticleFrame>(ENFOQUE_PARTICLE_EVENT,{detail:{points:grains,strength:ease(entry)*ease(exit)}}));
-    raf=requestAnimationFrame(frame);return;
+    if(!mobile.matches||pointer.inside||Math.abs(scrollProgress-target)>.0001||time-lastInput<1200)raf=requestAnimationFrame(frame);
+    return;
    }
    ctx!.strokeStyle=color;
    // Stable drafting molds keep the design legible while their particles remain free.
@@ -331,16 +343,22 @@ const proof = [
     for(let floor=0;floor<4;floor++){const p=fit(ideaFlowRoute[floor*5]);ctx!.globalAlpha=connect*.35;ctx!.beginPath();ctx!.arc(p.x*width,p.y*height,2.4,0,Math.PI*2);ctx!.fill();}
    }
    ctx!.globalAlpha=1;
-   raf=requestAnimationFrame(frame);
+   if(!mobile.matches||pointer.inside||Math.abs(scrollProgress-target)>.0001||time-lastInput<1200)raf=requestAnimationFrame(frame);
   }
   document.documentElement.classList.add('editorial-ready');
   new ResizeObserver(measure).observe(figure);
-  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible){last=0;schedule();}else{releaseField();cancelAnimationFrame(raf);raf=0;}},{rootMargin:'100px'}).observe(sticky);
-  addEventListener('scroll',updateTarget,{passive:true});addEventListener('resize',measure,{passive:true});
+  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible){last=0;updateTarget();}else{releaseField();cancelAnimationFrame(raf);raf=0;}},{rootMargin:'100px'}).observe(sticky);
+  addEventListener('scroll',()=>{if(visible&&!scrollRaf)scrollRaf=requestAnimationFrame(()=>{scrollRaf=0;updateTarget();});},{passive:true});addEventListener('resize',measure,{passive:true});
   const sync=()=>{last=0;releaseField();cancelAnimationFrame(raf);raf=0;measure();if(disabled())articles.forEach(a=>a.hidden=false);else {active=-1;setStage(progress<1/3?0:progress<2/3?1:2);}};
   document.addEventListener('motionchange',sync);reduced.addEventListener('change',sync);
   document.addEventListener('visibilitychange',schedule);
-  new MutationObserver(()=>{color=getComputedStyle(runway).getPropertyValue('--accent').trim();schedule();}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+  let dark=document.documentElement.classList.contains('dark');
+  new MutationObserver(()=>{
+   const nextDark=document.documentElement.classList.contains('dark');
+   if(nextDark!==dark){dark=nextDark;color=getComputedStyle(runway).getPropertyValue('--accent').trim();}
+   if(document.documentElement.classList.contains('project-preview-open')){cancelAnimationFrame(raf);raf=0;releaseField();}
+   else schedule();
+  }).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
   measure();
  }
 </script>

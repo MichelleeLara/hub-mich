@@ -3,6 +3,7 @@ import AnimatedTabs from '../components/Navbar';
 import Header from '../components/Header';
 import ParticlesBackground from '../components/ParticlesBackground.astro';
 import '@fontsource-variable/inter-tight/wght.css';
+import interLatin from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
 import '../styles/product.css';
 const { title, description, image, url, noindex = false } = Astro.props;
 // og:image debe ser absoluta; algunas páginas pasan rutas relativas (/author.png)
@@ -24,6 +25,7 @@ export interface Props {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, follow" />}
@@ -71,7 +73,7 @@ export interface Props {
       <slot />
     </div>
     <!-- Menú de Navegación Persistente (bottom bar mobile) -->
-    <AnimatedTabs client:load />
+    <AnimatedTabs client:media="(max-width: 767px)" />
     
   </body>
 </html>

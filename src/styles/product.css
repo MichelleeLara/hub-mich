@@ -1,4 +1,4 @@
-@font-face { font-family:'Damion'; src:url('/media/damion.ttf') format('truetype'); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Damion'; src:url('/media/damion.woff2') format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
 /* ==========================================================================
    Design system ./mich — tokens (decidido 2026-10-10, guía: docs/design-system.md · vista viva: /design)
    Regla: ningún componente usa un hex; solo var(--token) o su clase de Tailwind.
