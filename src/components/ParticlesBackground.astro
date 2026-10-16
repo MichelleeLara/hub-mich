@@ -737,6 +737,8 @@ import { PARTICLES_ENABLED } from '../config';
     let drawn = 0;
 
     const adapt = (time: number) => {
+      // Targets are sampled by activeMain: changing it mid-shape reshuffles every grain.
+      if (enfoqueBlend > 0 || enfoque.strength > 0 || faceEase > 0) { lastPerfCheck = time; return; }
       if (time - lastPerfCheck < 1500) return;
       lastPerfCheck = time;
       let next = perfScale;
@@ -754,7 +756,9 @@ import { PARTICLES_ENABLED } from '../config';
       if (!interacting && staticWhenIdle) { rafId = 0; return; }
       rafId = requestAnimationFrame(step);
       // Límite de FPS (con tolerancia para no perder cuadros por jitter)
-      if (time - lastFrame < (interacting ? frameBudget : 1000/15) - 2) return;
+      // Shapes follow scroll: full frame rate (60, or 90 on 90Hz panels) even on the low tier.
+      const shaping = enfoqueBlend > 0 || enfoque.strength > 0 || faceEase > 0;
+      if (time - lastFrame < (shaping ? 1000/90+1 : interacting ? frameBudget : 1000/15) - 2) return;
       lastFrame = time;
 
       const dt = Math.min((time - lastTime) / 16.67, 3);

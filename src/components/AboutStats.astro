@@ -137,7 +137,12 @@ const proof = [
   const releaseField=()=>document.dispatchEvent(new CustomEvent<EnfoqueParticleFrame>(ENFOQUE_PARTICLE_EVENT,{detail:{points:[],strength:0}}));
   let width=0,height=0,raf=0,visible=false,progress=0,target=0,active=-1,last=0,ambientTime=0,scrollRaf=0;
   const mobile=matchMedia('(max-width:767px)');
-  const framesPerSecond=()=>mobile.matches?30:60;
+  // Mobile toolbars change innerHeight while scrolling; only width or large changes resize the layout.
+  let viewportWidth=0,viewportHeight=0;
+  const stableHeight=()=>{
+   if(!mobile.matches||innerWidth!==viewportWidth||Math.abs(innerHeight-viewportHeight)>viewportHeight*.25){viewportWidth=innerWidth;viewportHeight=innerHeight;}
+   return viewportHeight;
+  };
   let scrollProgress=0,lastInput=performance.now();
   // Each step forms over its first 64%; the remaining scroll keeps it complete.
   const formationEnd=.64;
@@ -190,13 +195,13 @@ const proof = [
      +scroll.getBoundingClientRect().height+(parseFloat(getComputedStyle(scroll).marginTop)||0)
      +(parseFloat(stickyStyle.paddingTop)||0)+(parseFloat(stickyStyle.paddingBottom)||0);
     const mobile=matchMedia('(max-width:767px)').matches;
-    const available=innerHeight-top-(mobile?84:24)-overhead-(mobile?copyHeight+(parseFloat(getComputedStyle(grid).rowGap)||0):0);
+    const available=stableHeight()-top-(mobile?84:24)-overhead-(mobile?copyHeight+(parseFloat(getComputedStyle(grid).rowGap)||0):0);
     figure!.style.setProperty('--editorial-figure-width',`${Math.max(100,Math.floor(available/1.1))}px`);
    }
    const box=figure!.getBoundingClientRect();width=box.width;height=box.height;
    if(!unified){const dpr=Math.min(devicePixelRatio||1,mobile.matches?1.5:2);canvas!.width=Math.round(width*dpr);canvas!.height=Math.round(height*dpr);ctx!.setTransform(dpr,0,0,dpr,0,0);}
    const top=parseFloat(getComputedStyle(sticky!).top)||92;
-   document.documentElement.classList.toggle('editorial-tall',!reduced.matches&&!paused()&&sticky!.getBoundingClientRect().height>innerHeight-top-20);
+   document.documentElement.classList.toggle('editorial-tall',!reduced.matches&&!paused()&&sticky!.getBoundingClientRect().height>stableHeight()-top-20);
    stickyTop=top;runwayHeight=runway!.getBoundingClientRect().height;stickyHeight=sticky!.getBoundingClientRect().height;
    color=getComputedStyle(runway!).getPropertyValue('--accent').trim();
    if(disabled())releaseField();
@@ -230,7 +235,8 @@ const proof = [
   }
   function frame(time:number){
    raf=0;if(disabled()||!visible||document.hidden)return;
-   if(last&&time-last<1000/framesPerSecond()-2){raf=requestAnimationFrame(frame);return;}
+   // Cap at 60fps on 120Hz while letting 90Hz panels use every frame.
+   if(last&&time-last<1000/90-1){raf=requestAnimationFrame(frame);return;}
    const dt=Math.min(50,time-last||16);last=time;ambientTime+=dt/1000;
    const figureBox=figure!.getBoundingClientRect();
    scrollProgress+=(target-scrollProgress)*(1-Math.exp(-dt/90));
@@ -310,7 +316,7 @@ const proof = [
    if(unified){
     // One renderer owns the actual grains. This component provides destinations,
     // rather than painting a second cloud over the background.
-    const entry=clamp((innerHeight-figureBox.top)/Math.max(1,figureBox.height*.75));
+    const entry=clamp((stableHeight()-figureBox.top)/Math.max(1,figureBox.height*.75));
     const exit=clamp(figureBox.bottom/Math.max(1,figureBox.height*.75));
     document.dispatchEvent(new CustomEvent<EnfoqueParticleFrame>(ENFOQUE_PARTICLE_EVENT,{detail:{points:grains,strength:ease(entry)*ease(exit)}}));
     if(!mobile.matches||pointer.inside||Math.abs(scrollProgress-target)>.0001||time-lastInput<1200)raf=requestAnimationFrame(frame);
