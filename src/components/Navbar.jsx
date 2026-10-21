@@ -210,6 +210,7 @@ export default function AnimatedTabs() {
         try { icons = JSON.parse(section.dataset.contextIcons || '[]'); } catch {}
         return {
           type: 'steps',
+          variant: section.dataset.contextVariant || 'full',
           sectionId: section.id,
           title: section.dataset.contextTitle || 'Sección',
           steps,
@@ -406,7 +407,31 @@ export default function AnimatedTabs() {
           )}
       </div>
       <AnimatePresence mode="wait" initial={false}>
-        {context?.type === 'steps' && ActiveServiceIcon ? (
+        {context?.type === 'steps' && context.variant === 'assist' ? (
+          <motion.aside
+            key={`desktop-assist-${context.sectionId}`}
+            aria-label={`Elegir ${context.title.toLowerCase()}`}
+            className="pointer-events-auto hidden h-[60px] w-fit items-center gap-2 rounded-full border border-line-subtle bg-surface-glass p-1.5 shadow-float backdrop-blur-md dark:border-line md:flex"
+            initial={reduced ? false : POP_IN}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduced ? { opacity: 0 } : POP_OUT}
+            transition={reduced ? { duration: 0 } : POP_SPRING}
+          >
+            {/* Asistencia: solo los servicios y una acción. */}
+            <div className="flex items-center gap-1" role="group" aria-label={context.title}>
+              {context.steps.map((step, index) => {
+                const isActive = context.index === index;
+                return (
+                  <button key={step} type="button" onClick={() => selectContextStep(index)} aria-pressed={isActive} className={`relative h-12 rounded-full px-5 text-sm font-medium transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${isActive ? 'text-ink' : 'text-muted hover:text-ink'}`}>
+                    {isActive && <motion.span layoutId="assist-pill" className="absolute inset-0 rounded-full bg-black/[0.06] dark:bg-white/10" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 38, mass: .7 }} />}
+                    <span className="relative z-10">{step}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <a href={`mailto:mich.ia@hotmail.com?subject=${encodeURIComponent('Hablemos de ' + context.steps[context.index])}`} className="flex h-12 items-center gap-2 rounded-full bg-ink px-5 text-sm font-medium text-bg transition-opacity duration-150 hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Hablemos <span aria-hidden="true">↗</span></a>
+          </motion.aside>
+        ) : context?.type === 'steps' && ActiveServiceIcon ? (
           <motion.aside
             key={`desktop-steps-${context.sectionId}`}
             aria-label={`Asistente de ${context.title}`}
