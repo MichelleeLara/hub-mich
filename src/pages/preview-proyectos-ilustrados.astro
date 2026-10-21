@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectsGallery from '../components/ProjectsGallery.astro';
+import ProjectsIllustrated from '../components/ProjectsIllustrated.astro';
+import ProjectsWobble from '../components/ProjectsWobble.astro';
+---
+<Layout title="Preview · Proyectos" description="Comparación de la sección de proyectos: mosaico con capturas, tarjetas ilustradas y la versión actual." image="/author.png" url={Astro.url.href} noindex>
+  <div class="switcher" role="group" aria-label="Versión de la sección de proyectos">
+    <button type="button" data-version="wobble" aria-pressed="true">Mosaico (propuesta)</button>
+    <button type="button" data-version="ilustrada" aria-pressed="false">Ilustrada</button>
+    <button type="button" data-version="actual" aria-pressed="false">Actual (fotos)</button>
+  </div>
+  <main>
+    <div data-panel="wobble"><ProjectsWobble id="proyectos-wobble" /></div>
+    <div data-panel="ilustrada" hidden><ProjectsIllustrated /></div>
+    <div data-panel="actual" hidden><ProjectsGallery /></div>
+  </main>
+</Layout>
+
+<style>
+  .switcher { position: sticky; top: 84px; z-index: 50; width: fit-content; margin: 110px auto 0; display: flex; gap: 6px; padding: 6px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-glass); backdrop-filter: blur(12px); }
+  .switcher button { min-height: 40px; padding: 0 16px; border-radius: 999px; color: var(--muted); font: 500 13px/1 var(--font-sans); }
+  .switcher button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  main :global(.section-shell) { padding-top: 40px; }
+</style>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-version]');
+  const panels = document.querySelectorAll<HTMLElement>('[data-panel]');
+  buttons.forEach(button => button.addEventListener('click', () => {
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    panels.forEach(panel => { panel.hidden = panel.dataset.panel !== button.dataset.version; });
+  }));
+</script>

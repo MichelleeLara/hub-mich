@@ -59,3 +59,13 @@ La ventana de código en `BentoArtwork` reserva espacio interior para las capas 
 ## Material homogéneo de servicios
 
 La base visual actual es `PanelResources perspective` de Desarrollo web. Consultor IA usa `consulting` y Automatizaciones `workflow`, todos en SVG, con el mismo tinte de vidrio (acento 9%), borde gris (ink 15%), líneas (ink 13%) y opacidad externa .72. Radar adapta su sector al vidrio neutro y reserva el acento para las señales. La huella permanece en `huella-marcos` de la biblioteca; ya no representa automatizaciones.
+
+## Servicios: `ServiceMorph` (20 oct 2026)
+
+La sección de servicios usa `src/components/graphics/ServiceMorph.astro` (opción A de `/preview-servicios-graficos`): un mismo boceto que se transforma con sentido.
+
+- Diseño (base): pantalla con retícula, bloques punteados, medida y satélite «Botón primario».
+- Desarrollo: el boceto se construye. La retícula se va, los bloques punteados se vuelven contenido, el «Botón primario» vuela y se encaja como botón, y de la misma pantalla nace su versión iPhone (tarjetas «App web» y «App iOS»).
+- Automatización: la pantalla se repliega y sus tres tarjetas salen para convertirse en los nodos IA, CRM y Correo; los conectores se dibujan desde los huecos que dejaron.
+
+Coreografía: primero se mueve la forma (750 ms) y después aparece lo que la explica (botón sólido, etiquetas, conectores). Mismo material de la biblioteca. Sin ciclos permanentes: solo transiciones al cambiar de servicio (también con la pausa activa, porque las pide la persona) y un hover por pieza: cada tarjeta flotante (o nodo con su texto) se levanta 3 px sola.

@@ -11,5 +11,6 @@ export default defineConfig({
   site: 'https://itsmich.com.mx',
   // Static pages paint without waiting for a chain of small CSS requests.
   build: { inlineStylesheets: 'always' },
+  devToolbar: { enabled: false },
   integrations: [tailwind(), react()]
 });

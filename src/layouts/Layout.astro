@@ -3,11 +3,14 @@ import AnimatedTabs from '../components/Navbar';
 import Header from '../components/Header';
 import ParticlesBackground from '../components/ParticlesBackground.astro';
 import '@fontsource-variable/inter-tight/wght.css';
+import '@fontsource/rock-salt/400.css';
 import interLatin from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
 import '../styles/product.css';
 const { title, description, image, url, noindex = false } = Astro.props;
 // og:image debe ser absoluta; algunas páginas pasan rutas relativas (/author.png)
 const imageUrl = new URL(image, Astro.site ?? Astro.url).href;
+// Analítica (Umami Cloud): solo si hay ID configurado y en páginas públicas (no previews con noindex)
+const umamiId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 
 
 // Definir las propiedades que el layout aceptará
@@ -58,9 +61,14 @@ export interface Props {
       try { saved = localStorage.getItem('theme'); motion = localStorage.getItem('motion'); } catch {}
       const dark = saved ? saved === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches;
       document.documentElement.classList.toggle('dark', dark);
-      document.documentElement.classList.toggle('motion-paused', motion === 'paused');
+      // Animaciones pausadas por defecto; solo corren si la persona las activó con el botón.
+      document.documentElement.classList.toggle('motion-paused', motion !== 'on');
       document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
     </script>
+    <!-- Sin cookies; data-domains evita contar visitas de localhost y previews de Vercel -->
+    {umamiId && !noindex && (
+      <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id={umamiId} data-domains="itsmich.com.mx"></script>
+    )}
   </head>
   <body class="flex flex-col min-h-screen">
     <a class="skip-link" href="#main-content">Saltar al contenido</a>
@@ -72,8 +80,8 @@ export interface Props {
 
       <slot />
     </div>
-    <!-- Menú de Navegación Persistente (bottom bar mobile) -->
-    <AnimatedTabs client:media="(max-width: 767px)" />
+    <!-- Navegación móvil + asistente contextual de escritorio -->
+    <AnimatedTabs client:load />
     
   </body>
 </html>

@@ -1,0 +1,218 @@
+---
+// Ilustraciones a medida de cada proyecto (prueba: /preview-proyectos-ilustrados).
+// Cada una cuenta lo que hace el proyecto según su caso (src/data/projectsData.js).
+// Mismo material que la biblioteca (design-system/graphics/README.md): vidrio con
+// tinte de acento 9 %, borde ink 15 %, renglones ink 13 %, satélites girados y
+// sombra siempre oscura. Sin ciclos: solo un leve desplazamiento al hover de la tarjeta.
+interface Props { variant: 'luzia' | 'anamseals' | 'logistica' | 'white-label' | 'tracking'; id: string; }
+const { variant, id } = Astro.props;
+const paper = `url(#${id}-paper)`;
+const highlight = `url(#${id}-highlight)`;
+const shadow = `url(#${id}-shadow)`;
+const modules = [
+  { label: 'LTE', x: 92, y: 70 }, { label: 'GNSS', x: 308, y: 70 },
+  { label: 'NFC', x: 92, y: 190 }, { label: 'OLED', x: 308, y: 190 },
+];
+---
+<svg class="project-illustration" viewBox="0 0 400 260" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id={`${id}-paper`} x1="0" y1="0" x2="1" y2="1"><stop stop-color="var(--pi-tint)" /><stop offset="1" stop-color="var(--bg)" /></linearGradient>
+    <linearGradient id={`${id}-highlight`} x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--accent)" stop-opacity=".3" /><stop offset="1" stop-color="var(--accent)" stop-opacity=".04" /></linearGradient>
+    <filter id={`${id}-shadow`} x="-40%" y="-80%" width="180%" height="300%"><feDropShadow class="pi-shadow" dx="0" dy="4" stdDeviation="5" /></filter>
+  </defs>
+
+  {variant === 'luzia' && <>
+    <!-- Formulario → IA → diagnóstico personalizado -->
+    <g transform="rotate(-6 110 130)">
+      <rect class="glass" x="44" y="60" width="122" height="140" rx="12" fill={paper} filter={shadow} />
+      <text class="label" x="58" y="82">Cuestionario</text>
+      {[0, 1, 2].map(i => <g><rect class="skeleton" x="58" y={96 + i * 28} width="40" height="3" rx="1.5" /><rect class="field" x="58" y={103 + i * 28} width="94" height="12" rx="4" /></g>)}
+      <rect class="cta" x="58" y="180" width="46" height="10" rx="5" />
+    </g>
+    <path class="flow" d="M170 128C188 128 186 112 204 112" />
+    <g class="pi-float">
+      <rect class="icon-disc" x="200" y="96" width="32" height="32" rx="10" />
+      <path class="accent-stroke" d="m216 102 1.8 4.6 4.6 1.8-4.6 1.8-1.8 4.6-1.8-4.6-4.6-1.8 4.6-1.8Z" />
+      <text class="mono" x="216" y="142" text-anchor="middle">Claude</text>
+    </g>
+    <path class="flow" d="M234 112C252 112 250 128 266 128" />
+    <g transform="rotate(5 312 130)">
+      <rect class="glass" x="262" y="52" width="110" height="150" rx="12" fill={paper} filter={shadow} />
+      <text class="label" x="276" y="74">Diagnóstico</text>
+      <rect class="pill" x="276" y="84" width="54" height="8" rx="4" fill={highlight} />
+      {[0, 1, 2, 3].map(i => <rect class="skeleton" x="276" y={104 + i * 9} width={i === 3 ? 44 : 80 - i * 8} height="3" rx="1.5" />)}
+      <rect class="block" x="276" y="148" width="82" height="38" rx="7" />
+    </g>
+    <g class="pi-float" transform="rotate(-3 300 222)">
+      <rect class="glass" x="244" y="206" width="116" height="30" rx="15" fill={paper} filter={shadow} />
+      <circle class="status" cx="260" cy="221" r="3" />
+      <text class="label" x="270" y="224.5">Listo en &lt; 2 min</text>
+    </g>
+  </>}
+
+  {variant === 'anamseals' && <>
+    <!-- Un solo núcleo orquesta LTE, GNSS, NFC y pantalla (FreeRTOS + DMA) -->
+    <path class="shackle" d="M168 70V54a32 32 0 0 1 64 0v16" />
+    {modules.map(m => <path class="bus" d={`M200 130L${m.x} ${m.y}`} />)}
+    <g transform="rotate(-6 200 130)">
+      <rect class="chip-card" x="152" y="84" width="96" height="92" rx="14" filter={shadow} />
+      <rect class="chip" x="174" y="104" width="52" height="52" rx="9" />
+      {[0, 1, 2, 3, 4, 5].map(i => <><circle class="pin" cx={180 + i * 8} cy="98" r="1.3" /><circle class="pin" cx={180 + i * 8} cy="162" r="1.3" /></>)}
+      <text class="chip-label" x="200" y="128" text-anchor="middle">STM32</text>
+      <text class="chip-sub" x="200" y="140" text-anchor="middle">1 núcleo</text>
+    </g>
+    {modules.map(m => (
+      <g class="pi-float">
+        <rect class="glass" x={m.x - 30} y={m.y - 15} width="60" height="30" rx="9" fill={paper} filter={shadow} />
+        <circle class="status" cx={m.x - 16} cy={m.y} r="2.6" />
+        <text class="label" x={m.x - 8} y={m.y + 3}>{m.label}</text>
+      </g>
+    ))}
+    <g class="pi-float" transform="rotate(-3 200 230)">
+      <rect class="glass" x="146" y="216" width="108" height="26" rx="13" fill={paper} />
+      <text class="mono" x="200" y="232" text-anchor="middle">FreeRTOS + DMA</text>
+    </g>
+  </>}
+
+  {variant === 'logistica' && <>
+    <!-- Mapa con rutas (Mapbox) y datos que cargan en segundo plano -->
+    <g transform="rotate(-5 186 124)">
+      <rect class="glass" x="56" y="40" width="250" height="168" rx="12" fill={paper} filter={shadow} />
+      <text class="label" x="72" y="62">Rutas activas</text>
+      <rect class="pill" x="244" y="51" width="48" height="16" rx="8" fill={highlight} />
+      <text class="pill-text" x="268" y="62" text-anchor="middle">Mapbox</text>
+      <path class="edge" d="M56 74H306" />
+      <path class="road" d="M56 100L306 166M110 74L72 208M200 74L160 208M262 74L306 124M56 156L170 208" />
+      <path class="route" d="M92 104C100 140 108 170 134 170S206 158 232 150" />
+      <path class="route second" d="M150 92C190 100 214 118 262 108" />
+      <circle class="origin" cx="92" cy="104" r="4" /><circle class="origin-core" cx="92" cy="104" r="1.6" />
+      <circle class="unit" cx="232" cy="150" r="3.4" /><circle class="unit" cx="262" cy="108" r="3.4" />
+    </g>
+    <g class="pi-float" transform="rotate(4 300 188)">
+      <rect class="glass" x="236" y="164" width="136" height="50" rx="12" fill={paper} filter={shadow} />
+      <text class="label" x="250" y="184">Datos en segundo plano</text>
+      <rect class="progress-track" x="250" y="194" width="106" height="4" rx="2" />
+      <rect class="progress" x="250" y="194" width="74" height="4" rx="2" />
+    </g>
+    <g class="pi-float" transform="rotate(-4 92 222)">
+      <rect class="glass" x="44" y="208" width="96" height="28" rx="14" fill={paper} />
+      <text class="mono" x="92" y="226" text-anchor="middle">+65% en el mapa</text>
+    </g>
+  </>}
+
+  {variant === 'white-label' && <>
+    <!-- Una base de código (FSD) + tokens de marca → varias marcas -->
+    <g transform="rotate(-4 112 132)">
+      <rect class="glass" x="44" y="50" width="128" height="164" rx="12" fill={paper} filter={shadow} />
+      <text class="label" x="58" y="72">Base común</text>
+      {['app', 'pages', 'features', 'entities', 'shared'].map((layer, i) => <g><rect class="block" x="58" y={82 + i * 24} width="100" height="18" rx="5" /><text class="mono" x="66" y={94.5 + i * 24}>{layer}</text></g>)}
+    </g>
+    <g class="pi-float" transform="rotate(3 214 92)">
+      <rect class="glass" x="186" y="72" width="58" height="40" rx="10" fill={paper} filter={shadow} />
+      <text class="mono" x="196" y="88">tokens</text>
+      <circle class="swatch accent-swatch" cx="200" cy="99" r="4.5" /><circle class="swatch ink-swatch" cx="213" cy="99" r="4.5" /><circle class="swatch line-swatch" cx="226" cy="99" r="4.5" />
+    </g>
+    <path class="flow" d="M172 132C206 132 214 92 258 84" /><path class="flow" d="M172 150C214 150 220 186 258 184" />
+    <g class="pi-float" transform="rotate(5 314 84)">
+      <rect class="glass" x="258" y="48" width="110" height="72" rx="12" fill={paper} filter={shadow} />
+      <rect class="brand-a" x="270" y="60" width="14" height="14" rx="4" />
+      <text class="label" x="290" y="71">Marca A</text>
+      <rect class="brand-a-bar" x="270" y="84" width="86" height="10" rx="5" />
+      <rect class="skeleton" x="270" y="102" width="60" height="3" rx="1.5" />
+    </g>
+    <g class="pi-float" transform="rotate(-3 314 184)">
+      <rect class="glass" x="258" y="148" width="110" height="72" rx="12" fill={paper} filter={shadow} />
+      <rect class="brand-b" x="270" y="160" width="14" height="14" rx="4" />
+      <text class="label" x="290" y="171">Marca B</text>
+      <rect class="brand-b-bar" x="270" y="184" width="86" height="10" rx="5" />
+      <rect class="skeleton" x="270" y="202" width="60" height="3" rx="1.5" />
+    </g>
+    <text class="mono caption" x="58" y="236">6 ingenieros · un mismo lenguaje</text>
+  </>}
+
+  {variant === 'tracking' && <>
+    <!-- Transportes en vivo (WebSocket + GeoJSON) y vista según el rol -->
+    <g transform="rotate(-4 176 126)">
+      <rect class="glass" x="48" y="40" width="256" height="172" rx="12" fill={paper} filter={shadow} />
+      <text class="label" x="64" y="62">Operación aduanal</text>
+      <rect class="pill" x="238" y="51" width="52" height="16" rx="8" fill={highlight} />
+      <circle class="live" cx="249" cy="59" r="2.4" />
+      <text class="pill-text" x="270" y="62" text-anchor="middle">En vivo</text>
+      <path class="edge" d="M48 74H304" />
+      <path class="border-line" d="M48 150C110 140 150 158 210 146S280 132 304 140" />
+      <text class="mono" x="64" y="170">Aduana</text>
+      <path class="route" d="M86 98C120 110 140 132 176 146" /><path class="route second" d="M232 100C220 120 214 132 200 146" />
+      {[[110, 104], [176, 146], [228, 106], [270, 178]].map(([x, y], i) => <g class="truck"><circle cx={x} cy={y} r="4.2" /><path d={`M${x - 2} ${y}h4`} /></g>)}
+    </g>
+    <g class="pi-float" transform="rotate(5 326 92)">
+      <rect class="glass" x="270" y="64" width="112" height="58" rx="12" fill={paper} filter={shadow} />
+      <text class="mono" x="284" y="82">Vista según rol</text>
+      <rect class="toggle-track" x="284" y="92" width="86" height="20" rx="10" />
+      <rect class="toggle-on" x="286" y="94" width="44" height="16" rx="8" />
+      <text class="toggle-text on" x="308" y="105" text-anchor="middle">Supervisor</text>
+      <text class="toggle-text" x="350" y="105" text-anchor="middle">Operativo</text>
+    </g>
+    <g class="pi-float" transform="rotate(-3 300 214)">
+      <rect class="glass" x="240" y="200" width="122" height="30" rx="15" fill={paper} filter={shadow} />
+      <text class="mono" x="301" y="219" text-anchor="middle">WebSocket · GeoJSON</text>
+    </g>
+  </>}
+</svg>
+
+<style>
+  .project-illustration {
+    --pi-tint: color-mix(in srgb, var(--accent) 9%, var(--bg)); --pi-stroke: color-mix(in srgb, var(--ink) 15%, transparent);
+    width: 100%; height: 100%; overflow: visible; color: var(--ink);
+  }
+  .glass { stroke: var(--pi-stroke); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .edge { stroke: var(--pi-stroke); stroke-width: 1; }
+  .skeleton { fill: color-mix(in srgb, var(--ink) 13%, transparent); }
+  .field { fill: color-mix(in srgb, var(--ink) 4%, transparent); stroke: var(--pi-stroke); stroke-width: .6; }
+  .block { fill: color-mix(in srgb, var(--ink) 6%, transparent); stroke: var(--pi-stroke); stroke-width: .6; }
+  .cta { fill: color-mix(in srgb, var(--accent) 68%, var(--ink)); }
+  .pill { stroke: color-mix(in srgb, var(--accent) 35%, transparent); stroke-width: .6; }
+  .pill-text { fill: var(--accent); font: 500 7.5px var(--font-sans); }
+  .icon-disc { fill: color-mix(in srgb, var(--accent) 13%, transparent); stroke: var(--pi-stroke); }
+  .accent-stroke { stroke: color-mix(in srgb, var(--accent) 65%, var(--ink)); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+  .flow { stroke: var(--pi-stroke); stroke-width: 1.2; stroke-linecap: round; stroke-dasharray: 3 3; }
+  text { fill: var(--ink); }
+  .label { font: 500 8.5px var(--font-sans); }
+  .mono { fill: var(--muted); font: 500 7.5px var(--font-mono); }
+  .caption { font-size: 8px; }
+  .status { fill: var(--accent); }
+  /* AnamSeals */
+  .shackle { stroke: color-mix(in srgb, var(--ink) 18%, transparent); stroke-width: 8; stroke-linecap: round; }
+  .bus { stroke: color-mix(in srgb, var(--accent) 40%, var(--pi-stroke)); stroke-width: 1.2; stroke-dasharray: 2 3; }
+  .chip-card { fill: color-mix(in srgb, var(--accent) 14%, var(--bg)); stroke: color-mix(in srgb, var(--accent) 45%, transparent); }
+  .chip { fill: var(--bg); stroke: var(--accent); stroke-width: 1; }
+  .pin { fill: var(--accent); opacity: .7; }
+  .chip-label { fill: var(--ink); font: 600 9px var(--font-mono); }
+  .chip-sub { fill: var(--muted); font: 500 6.5px var(--font-mono); }
+  /* Logística y tracking */
+  .road { stroke: color-mix(in srgb, var(--ink) 9%, transparent); stroke-width: 1; }
+  .route { stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; }
+  .route.second { opacity: .45; stroke-width: 1.6; }
+  .origin { fill: color-mix(in srgb, var(--accent) 20%, var(--bg)); stroke: var(--accent); }
+  .origin-core,.unit { fill: var(--accent); }
+  .progress-track { fill: color-mix(in srgb, var(--ink) 9%, transparent); }
+  .progress { fill: var(--accent); }
+  .border-line { stroke: color-mix(in srgb, var(--ink) 25%, transparent); stroke-width: 1; stroke-dasharray: 5 4; }
+  .truck circle { fill: var(--bg); stroke: var(--accent); stroke-width: 1.4; }
+  .truck path { stroke: var(--accent); stroke-width: 1.2; stroke-linecap: round; }
+  .live { fill: var(--success); }
+  .toggle-track { fill: color-mix(in srgb, var(--ink) 6%, transparent); stroke: var(--pi-stroke); stroke-width: .6; }
+  .toggle-on { fill: color-mix(in srgb, var(--accent) 22%, var(--bg)); stroke: color-mix(in srgb, var(--accent) 45%, transparent); stroke-width: .6; }
+  .toggle-text { fill: var(--muted); font: 500 6.5px var(--font-sans); }
+  .toggle-text.on { fill: var(--ink); }
+  /* White-label: la marca A lleva el acento; la B, la tinta. Un solo color de marca en el sitio. */
+  .swatch { stroke: var(--pi-stroke); }
+  .accent-swatch,.brand-a,.brand-a-bar { fill: var(--accent); }
+  .ink-swatch,.brand-b,.brand-b-bar { fill: color-mix(in srgb, var(--ink) 70%, transparent); }
+  .line-swatch { fill: color-mix(in srgb, var(--ink) 15%, transparent); }
+  .brand-a-bar,.brand-b-bar { opacity: .35; }
+  .pi-shadow { flood-color: #000; flood-opacity: .07; }
+  :global(html.dark) .pi-shadow { flood-opacity: .45; }
+  .pi-float { transition: translate 450ms var(--ease-out); }
+  :global(a:is(:hover,:focus-visible)) .pi-float { translate: 3px -3px; }
+  @media (prefers-reduced-motion: reduce) { .pi-float { transition: none; } }
+</style>

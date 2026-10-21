@@ -44,14 +44,15 @@
       >. Diseño, ingeniería e IA, con atención a los detalles.
     </p>
 
-    <!-- CTAs: primario (sólido) + secundario (borde) para marcar jerarquía -->
+    <!-- Acción principal: contratar. Secundario: ver trabajo. El CV queda como enlace discreto. -->
     <div class="hero-actions">
-      <!-- Primario: Ver proyectos -->
       <a
-        href="/#proyectos"
+        href="/#contacto"
         class="btn btn-primary"
+        data-umami-event="cuentame-tu-idea"
+        data-umami-event-ubicacion="hero"
       >
-        Ver proyectos
+        Cuéntame tu idea
         <svg
           aria-hidden="true"
           class="btn-arrow"
@@ -69,34 +70,14 @@
           ></path>
         </svg>
       </a>
-      <!-- Secundario: Leer mi CV -->
       <a
-        href="/pdf/CV_michelle_lara.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
+        href="/#proyectos"
         class="btn btn-secondary"
       >
-        <svg
-          aria-hidden="true"
-          class="w-4 h-4"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
-          <path
-            d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"
-          ></path>
-          <path d="M9 13h6"></path>
-          <path d="M9 17h4"></path>
-        </svg>
-        Leer mi CV
+        Ver proyectos
       </a>
     </div>
+    <a href="/cv" class="hero-cv">¿Buscas mi CV? <span>Léelo aquí</span></a>
     </div>
     <!-- Retrato lateral; encima del texto en móvil. -->
       <div
@@ -169,13 +150,17 @@
     align-items: center;
     gap: var(--space-3);
   }
+  .hero-cv { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--space-2); color: var(--muted); font-size: var(--fs-small); }
+  .hero-cv span { margin-left: .3em; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
+  .hero-cv:hover span { text-decoration-color: currentColor; }
   .hero-portrait { width: 240px; height: 344px; justify-self: end; }
+  @media (min-width: 1025px) { .hero-name { font-size: clamp(52px, 4.4vw, 60px); } }
   @media (max-width: 767px) {
     .hero-section { padding-top: var(--space-9); }
     .hero-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); min-height: 0; }
     .hero-portrait { grid-row: 1; width: 112px; height: 152px; }
     .hero-role { font-size: var(--fs-micro); letter-spacing: .06em; gap: var(--space-2); margin-bottom: var(--space-4); }
-    .hero-name { font-size: clamp(38px, 10vw, 60px); }
+    .hero-name { font-size: clamp(34px, 9vw, 44px); }
     .hero-description { margin-top: var(--space-5); }
   }
 

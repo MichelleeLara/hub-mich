@@ -144,5 +144,73 @@
       "width": 1440,
       "height": 576
     }
+  ],
+  "logistica-app-v3": [
+    {
+      "src": "/media/project-covers/logistica-app-v3-720.webp",
+      "width": 720,
+      "height": 450
+    },
+    {
+      "src": "/media/project-covers/logistica-app-v3-1440.webp",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "src": "/media/project-covers/logistica-app-v3-2000.webp",
+      "width": 1600,
+      "height": 1000
+    }
+  ],
+  "white-label-app-v3": [
+    {
+      "src": "/media/project-covers/white-label-app-v3-720.webp",
+      "width": 720,
+      "height": 450
+    },
+    {
+      "src": "/media/project-covers/white-label-app-v3-1440.webp",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "src": "/media/project-covers/white-label-app-v3-2000.webp",
+      "width": 1600,
+      "height": 1000
+    }
+  ],
+  "tracking-app-v3": [
+    {
+      "src": "/media/project-covers/tracking-app-v3-720.webp",
+      "width": 720,
+      "height": 1561
+    },
+    {
+      "src": "/media/project-covers/tracking-app-v3-1440.webp",
+      "width": 1179,
+      "height": 2556
+    },
+    {
+      "src": "/media/project-covers/tracking-app-v3-2000.webp",
+      "width": 1179,
+      "height": 2556
+    }
+  ],
+  "luzia-app-v4": [
+    {
+      "src": "/media/project-covers/luzia-app-v4-720.webp",
+      "width": 720,
+      "height": 500
+    },
+    {
+      "src": "/media/project-covers/luzia-app-v4-1440.webp",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "src": "/media/project-covers/luzia-app-v4-2000.webp",
+      "width": 2000,
+      "height": 1389
+    }
   ]
 }

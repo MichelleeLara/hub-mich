@@ -1,0 +1,84 @@
+---
+// Propuesta: proyectos con ilustraciones a medida en lugar de portadas fotográficas.
+// Las capturas reales se quedan dentro de cada caso (/proyectos/[slug]).
+import SectionHeading from './SectionHeading.astro';
+import ProjectIllustration from './graphics/ProjectIllustration.astro';
+import { projects } from '../data/projectsData.js';
+import { projectPresentation } from '../data/projectPresentation';
+
+const order = [
+  ['luzia-agentes-ia', 'luzia'],
+  ['anamseals-firmware', 'anamseals'],
+  ['inteligencia-logistica', 'logistica'],
+  ['monitoreo-white-label', 'white-label'],
+  ['tracking-aduanal', 'tracking'],
+] as const;
+const items = order.map(([slug, variant]) => ({ project: projects.find(p => p.slug === slug)!, visual: projectPresentation[slug], variant }));
+const [featured, ...rest] = items;
+---
+<section id="proyectos-ilustrados" class="section-shell illustrated">
+  <header class="illustrated-heading">
+    <SectionHeading label="Trabajo seleccionado" title="Ideas que toman forma y generan impacto." />
+    <p>De agentes de IA a sistemas que operan en el mundo real. Explora cada proyecto y conoce lo que cambió.</p>
+  </header>
+
+  <a class="project featured" href={`/proyectos/${featured.project.slug}`}>
+    <div class="stage">
+      <div class="stage-copy">
+        <p class="meta">{featured.visual.category}</p>
+        <p class="stage-headline">{featured.visual.headline}</p>
+      </div>
+      <div class="art"><ProjectIllustration variant={featured.variant} id={`pi-${featured.variant}`} /></div>
+    </div>
+    <div class="caption">
+      <div><h3>{featured.project.title}</h3><p>{featured.visual.summary}</p></div>
+      <span class="arrow" aria-hidden="true">↗</span>
+    </div>
+  </a>
+
+  <div class="grid">
+    {rest.map(({ project, visual, variant }) => (
+      <a class="project" href={`/proyectos/${project.slug}`}>
+        <div class="stage">
+          <p class="meta stage-meta">{visual.category}</p>
+          <div class="art"><ProjectIllustration variant={variant} id={`pi-${variant}`} /></div>
+        </div>
+        <div class="caption">
+          <div><h3>{project.title}</h3><p>{visual.headline}</p></div>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .illustrated-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; margin-bottom: 40px; }
+  .illustrated-heading > p { max-width: 360px; color: var(--muted); line-height: 1.6; }
+  .project { display: grid; gap: var(--space-4); color: var(--ink); border-radius: 28px; }
+  .project:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .stage { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(150deg, color-mix(in srgb, var(--accent) 5%, var(--bg)), var(--bg) 62%); transition: border-color var(--dur-fast); }
+  .project:hover .stage { border-color: color-mix(in srgb, var(--accent) 30%, var(--line)); }
+  .featured .stage { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: center; min-height: 420px; padding: 40px 48px; }
+  .stage-copy { display: grid; gap: var(--space-4); max-width: 360px; }
+  .stage-headline { font: 600 var(--fs-h3)/1.15 var(--font-display); letter-spacing: -.015em; text-wrap: balance; }
+  .featured .art { height: 340px; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-7) var(--space-6); margin-top: var(--space-7); }
+  .grid .stage { aspect-ratio: 4 / 3; padding: 56px 28px 28px; }
+  .grid .art { height: 100%; }
+  .meta { color: var(--subtle); font: 500 12px/1.4 var(--font-mono); letter-spacing: .04em; }
+  .stage-meta { position: absolute; top: 24px; left: 28px; }
+  .caption { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); padding-inline: 4px; }
+  .caption h3 { font: 600 var(--fs-h3)/1.15 var(--font-display); letter-spacing: -.015em; }
+  .caption p { margin-top: 6px; color: var(--muted); font-size: var(--fs-body); line-height: 1.5; }
+  .arrow { flex: none; font-size: 22px; color: var(--muted); transition: transform var(--dur-fast), color var(--dur-fast); }
+  .project:hover .arrow { transform: translate(2px, -2px); color: var(--ink); }
+  @media (max-width: 960px) { .featured .stage { grid-template-columns: 1fr; padding: 32px; } .featured .art { height: 280px; } }
+  @media (max-width: 767px) {
+    .illustrated-heading { flex-direction: column; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-6); }
+    .grid { grid-template-columns: 1fr; gap: var(--space-6); margin-top: var(--space-6); }
+    .featured .stage { padding: 24px; min-height: 0; } .featured .art { height: 220px; }
+    .grid .stage { padding: 48px 16px 16px; }
+    .stage-meta { left: 20px; top: 20px; }
+  }
+</style>

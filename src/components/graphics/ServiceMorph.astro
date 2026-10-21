@@ -1,0 +1,215 @@
+---
+// Un mismo boceto que se transforma (opción A de preview-servicios-graficos), con
+// el material de la biblioteca (design-system/graphics/README.md).
+//  · Diseño: retícula, bloques punteados y un componente señalado.
+//  · Desarrollo: el boceto se construye. La retícula se va, los bloques se vuelven
+//    contenido, el componente se encaja como botón y la pantalla se adapta a iPhone.
+//  · Automatización: las tarjetas del producto salen y se convierten en los nodos
+//    IA, CRM y Correo, conectados a los huecos de donde salieron.
+// Services.astro cambia data-state (0, 1, 2); todo lo demás es CSS.
+const id = 'service-morph';
+const cards = [126, 176, 226];
+const nodes = [
+  { label: 'IA', action: 'Clasifica', icon: 'm0 -5 1.4 3.6 3.6 1.4-3.6 1.4L0 5l-1.4-3.6L-5 0l3.6-1.4Z' },
+  { label: 'CRM', action: 'Registra', icon: 'M-4 -4h8v8h-8zM-4 0h8' },
+  { label: 'Correo', action: 'Avisa', icon: 'M-5 -3.5h10v7h-10zM-5 -3l5 3.5 5-3.5' },
+];
+const nodeY = [74, 132, 190];
+---
+<div class="service-morph" data-service-morph data-state="0" aria-hidden="true">
+  <svg viewBox="0 0 400 260" fill="none">
+    <defs>
+      <linearGradient id={`${id}-paper`} x1="0" y1="0" x2="1" y2="1">
+        <stop stop-color="var(--morph-tint)" /><stop offset="1" stop-color="var(--bg)" />
+      </linearGradient>
+      <linearGradient id={`${id}-highlight`} x1="0" y1="0" x2="0" y2="1">
+        <stop stop-color="var(--accent)" stop-opacity=".3" /><stop offset="1" stop-color="var(--accent)" stop-opacity=".04" />
+      </linearGradient>
+      <!-- Sombra siempre oscura (con --ink salía un halo claro en modo oscuro) y con región amplia para que el difuminado no se corte. -->
+      <filter id={`${id}-shadow`} x="-60%" y="-60%" width="220%" height="260%">
+        <feDropShadow class="shadow-fx" dx="0" dy="6" stdDeviation="6" />
+      </filter>
+      <filter id={`${id}-shadow-sm`} x="-40%" y="-120%" width="180%" height="400%">
+        <feDropShadow class="shadow-fx" dx="0" dy="3" stdDeviation="3.5" />
+      </filter>
+    </defs>
+
+    <!-- Pantalla compartida -->
+    <g class="screen">
+      <rect class="glass" x="110" y="30" width="180" height="200" rx="13" fill={`url(#${id}-paper)`} />
+      <g class="chrome"><path class="edge" d="M110 46H290" /><circle cx="122" cy="38" r="2" /><circle cx="130" cy="38" r="2" /><circle cx="138" cy="38" r="2" /></g>
+      <g class="grid">{[0, 1, 2, 3, 4, 5].map(i => <rect x={124 + i * 26} y="52" width="18" height="168" rx="2" />)}</g>
+      <!-- Encabezado y héroe: boceto punteado → contenido real -->
+      <rect class="sketch" x="126" y="56" width="64" height="8" rx="4" />
+      <rect class="sketch" x="126" y="72" width="148" height="42" rx="6" />
+      <g class="built">
+        <rect class="pill" x="126" y="56" width="64" height="8" rx="4" fill={`url(#${id}-highlight)`} />
+        <rect class="skeleton" x="126" y="74" width="118" height="3" rx="1.5" /><rect class="skeleton" x="126" y="83" width="84" height="3" rx="1.5" />
+      </g>
+      <rect class="cta" x="126" y="96" width="42" height="12" rx="6" />
+      <!-- Huecos de las tarjetas: quedan marcados cuando las tarjetas salen al flujo -->
+      {cards.map(x => <rect class="slot" x={x} y="128" width="42" height="56" rx="8" />)}
+      <path class="edge faint" d="M113 216H287" />
+    </g>
+
+    <!-- Tarjetas: módulos del producto que en Automatización se vuelven nodos -->
+    <g class="cards">
+      {cards.map((x, i) => (
+        <g class={`card card-${i}`}>
+          <rect class="glass card-body" x={x} y="128" width="42" height="56" rx="8" fill={`url(#${id}-paper)`} />
+          <g class="card-content"><rect class="skeleton" x={x + 8} y="166" width="26" height="3" rx="1.5" /><rect class="skeleton" x={x + 8} y="173" width="16" height="3" rx="1.5" /></g>
+        </g>
+      ))}
+    </g>
+
+    <!-- Diseño: medida y componente señalado (se encaja como botón al construir) -->
+    <g class="design-only"><path class="accent-stroke" d="M176 94h8M180 94v16M176 110h8" /><text class="micro-label accent-text" x="187" y="104">12</text></g>
+    <g class="dock">
+      <g transform="rotate(16 318 92)">
+        <rect class="glass" x="280" y="60" width="84" height="66" rx="10" fill={`url(#${id}-paper)`} filter={`url(#${id}-shadow)`} />
+        <circle class="icon-disc" cx="300" cy="78" r="10" />
+        <path class="accent-stroke" d="m296 82 7-7 2 2-7 7h-2v-2Z" />
+        <text class="small-label" x="290" y="102">Botón primario</text>
+        <rect class="cta-solid" x="290" y="109" width="34" height="8" rx="4" />
+      </g>
+    </g>
+
+    <!-- Desarrollo: la misma pantalla adaptada a iPhone (nace desde la pantalla) -->
+    <g class="phone">
+      <rect class="glass" x="300" y="66" width="70" height="148" rx="14" fill={`url(#${id}-paper)`} filter={`url(#${id}-shadow)`} />
+      <rect class="skeleton" x="324" y="72" width="22" height="4" rx="2" />
+      <rect class="pill" x="310" y="86" width="40" height="7" rx="3.5" fill={`url(#${id}-highlight)`} />
+      <rect class="skeleton" x="310" y="100" width="48" height="3" rx="1.5" /><rect class="skeleton" x="310" y="108" width="34" height="3" rx="1.5" />
+      <rect class="cta-solid" x="310" y="118" width="28" height="9" rx="4.5" />
+      {[136, 164, 192].map(y => <rect class="glass" x="310" y={y} width="50" height="22" rx="6" fill={`url(#${id}-paper)`} />)}
+    </g>
+    <g class="dev-only">
+      <g class="float" transform="rotate(-8 81 214)">
+        <rect class="glass" x="48" y="200" width="66" height="28" rx="8" fill={`url(#${id}-paper)`} filter={`url(#${id}-shadow-sm)`} />
+        <circle class="icon-disc" cx="61" cy="214" r="7" />
+        <path class="accent-stroke" d="m59 211-3 3 3 3m4-6 3 3-3 3" />
+        <text class="chip-label" x="72" y="216.5">App web</text>
+      </g>
+      <g class="float" transform="rotate(8 340 222)">
+        <rect class="glass" x="306" y="208" width="66" height="28" rx="8" fill={`url(#${id}-paper)`} filter={`url(#${id}-shadow-sm)`} />
+        <circle class="icon-disc" cx="319" cy="222" r="7" />
+        <rect class="phone-glyph" x="316.5" y="217.5" width="5" height="9" rx="1.5" />
+        <text class="chip-label" x="330" y="224.5">App iOS</text>
+      </g>
+    </g>
+
+    <!-- Automatización: conexiones desde los huecos hacia los nodos -->
+    <g class="links">
+      {[98, 134, 170].map((x, i) => <path pathLength="1" d={`M${x} 159C${x + 70} 159 ${200 + i * 6} ${nodeY[i]} 262 ${nodeY[i]}`} />)}
+    </g>
+    <g class="node-content">
+      {nodes.map((n, i) => (
+        <g class={`node-label node-label-${i}`}>
+          <circle class="icon-disc" cx="281" cy={nodeY[i]} r="10" />
+          <path class="accent-stroke" transform={`translate(281 ${nodeY[i]})`} d={n.icon} />
+          <text class="small-label" x="298" y={nodeY[i] - 1}>{n.label}</text>
+          <text class="micro-label muted" x="298" y={nodeY[i] + 8}>{n.action}</text>
+        </g>
+      ))}
+    </g>
+    <g class="flow-only">
+      <g class="float" transform="rotate(-8 94 226)">
+        <rect class="glass" x="44" y="210" width="100" height="32" rx="10" fill={`url(#${id}-paper)`} filter={`url(#${id}-shadow-sm)`} />
+        <circle class="confirmation" cx="60" cy="226" r="6" /><path class="check" d="m57 226 2 2 4-4" />
+        <text class="small-label" x="72" y="229">Corre solo, 24/7</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<style>
+ /* Debajo del título "Resultado": el gráfico nunca se encima con el texto. */
+ .service-morph {
+  --morph-tint:color-mix(in srgb,var(--accent) 9%,var(--bg)); --morph-stroke:color-mix(in srgb,var(--ink) 15%,transparent);
+  --t:750ms; --e:var(--ease-out);
+  position:absolute; inset:128px 10% 8%; color:var(--ink);
+ }
+ .service-morph svg { width:100%; height:100%; overflow:visible; opacity:.88; }
+
+ /* Material de la biblioteca */
+ .glass { stroke:var(--morph-stroke); stroke-width:1; vector-effect:non-scaling-stroke; }
+ .edge { stroke:var(--morph-stroke); stroke-width:1; }
+ .faint { opacity:.55; }
+ .skeleton { fill:color-mix(in srgb,var(--ink) 13%,transparent); }
+ .pill { stroke:var(--morph-stroke); stroke-width:.6; }
+ .icon-disc { fill:color-mix(in srgb,var(--accent) 13%,transparent); stroke:var(--morph-stroke); }
+ .accent-stroke { stroke:color-mix(in srgb,var(--accent) 65%,var(--ink)); stroke-width:1.3; stroke-linecap:round; stroke-linejoin:round; }
+ .cta-solid { fill:color-mix(in srgb,var(--accent) 68%,var(--ink)); }
+ .confirmation { fill:var(--accent); }
+ .check { stroke:var(--bg); stroke-width:1.3; stroke-linecap:round; stroke-linejoin:round; }
+ .chrome circle { fill:none; stroke:var(--morph-stroke); }
+ text { fill:var(--ink); font-family:var(--font-sans); }
+ .small-label { font-size:8px; opacity:.72; }
+ .micro-label { font-size:6.5px; }
+ .accent-text { fill:var(--accent); opacity:.85; }
+ .muted { opacity:.55; }
+ .shadow-fx { flood-color:#000; flood-opacity:.07; }
+ :global(html.dark) .shadow-fx { flood-opacity:.45; }
+ .chip-label { font-size:6.8px; opacity:.78; }
+ .phone-glyph { stroke:color-mix(in srgb,var(--accent) 65%,var(--ink)); stroke-width:1.1; }
+
+ /* Boceto (Diseño) */
+ .grid rect { fill:color-mix(in srgb,var(--accent) 7%,transparent); }
+ .sketch { stroke:color-mix(in srgb,var(--ink) 35%,transparent); stroke-width:1; stroke-dasharray:3 3; vector-effect:non-scaling-stroke; }
+ .cta { fill:color-mix(in srgb,var(--accent) 68%,var(--ink)); fill-opacity:0; stroke:var(--accent); stroke-dasharray:3 3; vector-effect:non-scaling-stroke; }
+ .slot { stroke:var(--morph-stroke); stroke-dasharray:3 3; vector-effect:non-scaling-stroke; opacity:0; }
+ .card-body { stroke-dasharray:3 3; }
+ .links path { stroke:var(--morph-stroke); stroke-width:1.2; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; }
+
+ /* Estado base (Diseño) */
+ .chrome,.built,.phone,.dev-only,.node-content,.flow-only { opacity:0; }
+ .phone { transform-box:fill-box; transform-origin:center; transform:translate(-135px,-10px) scale(2.57,1.35); }
+ .dock { transform-box:fill-box; transform-origin:center; }
+ .card { transform-box:fill-box; transform-origin:center; }
+
+ /* Desarrollo: el boceto se construye y se adapta a iPhone */
+ .service-morph[data-state="1"] :is(.screen,.cards,.design-only) { transform:translateX(-40px); }
+ .service-morph:not([data-state="0"]) :is(.grid,.sketch,.design-only) { opacity:0; }
+ .service-morph:not([data-state="0"]) :is(.chrome,.built) { opacity:1; }
+ .service-morph:not([data-state="0"]) .cta { fill-opacity:1; stroke-opacity:0; }
+ .service-morph:not([data-state="0"]) .card-body { stroke-dasharray:none; }
+ .service-morph:not([data-state="0"]) .dock { opacity:0; transform:translate(-215px,9px) scale(.25); }
+ .service-morph[data-state="2"] .dock { transform:translate(-160px,9px) scale(.25); }
+ .service-morph[data-state="1"] :is(.phone,.dev-only) { opacity:1; transform:none; }
+
+ /* Automatización: la pantalla se repliega y sus tarjetas se vuelven nodos */
+ .service-morph[data-state="2"] .screen { transform:translate(-8px,46.4px) scale(.72); }
+ .service-morph[data-state="2"] .slot { opacity:1; }
+ .service-morph[data-state="2"] .card-content { opacity:0; }
+ .service-morph[data-state="2"] .card-0 { transform:translate(163px,-82px) scale(2.29,.71); }
+ .service-morph[data-state="2"] .card-1 { transform:translate(113px,-24px) scale(2.29,.71); }
+ .service-morph[data-state="2"] .card-2 { transform:translate(63px,34px) scale(2.29,.71); }
+ .service-morph[data-state="2"] .links path { stroke-dashoffset:0; }
+ .service-morph[data-state="2"] :is(.node-content,.flow-only) { opacity:1; }
+
+ /* Coreografía: primero se mueve la forma, después aparece lo que la explica */
+ .screen,.cards,.card,.phone,.dock,.design-only { transition:transform var(--t) var(--e),opacity 450ms var(--e),translate 400ms var(--e); }
+ .float,.node-label { transition:translate 400ms var(--e); }
+ .grid,.sketch,.built,.chrome,.slot,.card-content,.dev-only,.node-content,.flow-only { transition:opacity 450ms var(--e); }
+ .cta { transition:fill-opacity 450ms var(--e) 250ms,stroke-opacity 300ms var(--e) 250ms; }
+ .links path { transition:stroke-dashoffset 700ms var(--e); }
+ .service-morph[data-state="1"] :is(.built,.dev-only) { transition-delay:250ms; }
+ .service-morph[data-state="1"] .phone { transition-delay:120ms; }
+ .service-morph[data-state="2"] .links path { transition-delay:420ms; }
+ .service-morph[data-state="2"] :is(.node-content,.flow-only) { transition-delay:520ms; }
+
+ /* Interacción reversible (sin ciclos): cada pieza flotante se levanta sola al pasarle el cursor. */
+ .service-morph[data-state="0"] .dock:hover,
+ .service-morph[data-state="1"] .float:hover,
+ .service-morph[data-state="2"] .flow-only .float:hover { translate:0 -3px; }
+ .service-morph[data-state="2"] .card-0:hover,.service-morph[data-state="2"]:has(.card-0:hover) .node-label-0,
+ .service-morph[data-state="2"] .card-1:hover,.service-morph[data-state="2"]:has(.card-1:hover) .node-label-1,
+ .service-morph[data-state="2"] .card-2:hover,.service-morph[data-state="2"]:has(.card-2:hover) .node-label-2 { translate:0 -3px; }
+ /* Las piezas ocultas no reciben el cursor (no roban el hover a lo visible). */
+ .service-morph :is(.dock,.phone,.dev-only,.flow-only,.node-content) { pointer-events:none; }
+ .service-morph[data-state="0"] .dock,.service-morph[data-state="1"] .dev-only,.service-morph[data-state="2"] .flow-only { pointer-events:auto; }
+
+ @media(max-width:767px) { .service-morph { inset:104px 4% 5%; } }
+ @media(prefers-reduced-motion:reduce) { .service-morph * { transition:none!important; } }
+ /* La pausa no afecta: el cambio entre servicios lo pide la persona y no hay movimiento continuo. */
+</style>

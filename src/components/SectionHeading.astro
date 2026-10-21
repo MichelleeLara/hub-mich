@@ -8,13 +8,18 @@ interface Props {
 const { title, label, id, compact = false } = Astro.props;
 ---
 <div class:list={['section-heading', { 'section-heading-compact': compact }]}>
-  <p class="section-label">{label}</p>
+  <p class="section-label note-label">{label}</p>
   <h2 class="section-title" id={id}>{title}</h2>
 </div>
 <style>
-  .section-heading { display: grid; gap: var(--space-3); max-width: 780px; }
-  .section-title { margin: 0; font-family: var(--font-sans); font-size: var(--fs-h2); font-weight: 650; line-height: 1.12; letter-spacing: -.03em; color: var(--ink); text-wrap: balance; }
-  .section-label { margin: 0; font-family: var(--font-accent); font-size: clamp(26px, 2.4vw, 32px); font-weight: 400; line-height: 1.4; letter-spacing: 0; color: var(--accent); text-wrap: balance; }
+  .section-heading { display: grid; gap: 14px; max-width: 980px; }
+  .section-title { margin: 0; font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 600; line-height: 1.06; letter-spacing: -.012em; color: var(--ink); text-wrap: balance; }
+  .section-label { justify-self: start; width: fit-content; margin: 0; color: var(--muted); font-family: var(--font-note); font-size: clamp(11px, .9vw, 13px); font-weight: 400; line-height: 1.55; letter-spacing: 0; text-wrap: balance; }
   .section-heading-compact .section-title { font-size: var(--fs-h2-compact); line-height: 1.2; }
-  @media (max-width: 767px) { .section-heading { gap: var(--space-3); } }
+  .section-heading-compact .section-label { font-size: 11px; }
+  @media (max-width: 767px) {
+    .section-heading { gap: var(--space-3); }
+    .section-title { font-size: clamp(26px, 7vw, 30px); }
+    .section-label { font-size: 11px; }
+  }
 </style>
