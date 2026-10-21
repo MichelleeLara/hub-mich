@@ -1,0 +1,273 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const experience = [
+  {
+    period: 'Sep — Dic 2024',
+    role: 'Tech Lead · Proyecto',
+    company: 'Rand Abogados',
+    location: 'Ciudad de México',
+    summary: 'Lideré la entrega de soluciones digitales y la coordinación entre diseño, desarrollo y necesidades del cliente.',
+    highlights: [
+      'Definí el stack con React, Next.js, TypeScript y Tailwind, e introduje Scrum para mejorar en 30% la eficiencia del equipo.',
+      'Reduje 25% los tiempos de desarrollo al optimizar procesos internos y la asignación de trabajo.',
+      'Alcancé 90% de consistencia entre diseño y funcionalidad mediante documentación y seguimiento de requerimientos.',
+      'Entregué el proyecto dentro del presupuesto y el plazo, reduciendo 15% el tiempo de ejecución.',
+    ],
+  },
+  {
+    period: 'Ago 2022 — Sep 2024',
+    role: 'DevOps Full Stack Engineer',
+    company: 'Nomad Technologies',
+    location: 'Ciudad de México',
+    summary: 'Desarrollé y operé una aplicación para 500 usuarios con React, Node.js, TypeScript, Next.js, Stripe y AWS.',
+    highlights: [
+      'Mejoré 20% la respuesta del backend mediante ajustes de arquitectura y consultas a base de datos.',
+      'Diseñé APIs RESTful y webhooks, aumentando 30% la escalabilidad del sistema.',
+      'Mejoré 25% la velocidad de carga con hooks personalizados y técnicas de renderizado.',
+      'Implementé ELB y Auto Scaling en AWS, aumentando 40% la capacidad de usuarios simultáneos.',
+      'Reforcé seguridad con JWT, CORS y Cloudflare, y establecí un flujo de Git que redujo 25% los errores en producción.',
+    ],
+  },
+  {
+    period: 'Dic 2022 — Mar 2023',
+    role: 'Desarrolladora Full Stack',
+    company: 'Hospital MediBiologica',
+    location: 'Ciudad de México · Tijuana',
+    summary: 'Construí y optimicé una experiencia web con React, Astro, Tailwind y TypeScript.',
+    highlights: [
+      'Mejoré 85% el rendimiento mediante componentización y técnicas avanzadas de renderizado.',
+      'Implementé i18n para dos idiomas, mejorando 45% la experiencia y 20% la conversión.',
+      'Logré 90% de fidelidad entre diseño y desarrollo trabajando de cerca con el equipo de diseño.',
+      'Llevé el sitio a las primeras diez posiciones en Google con SEO técnico y optimización on-page.',
+    ],
+  },
+];
+
+const skillGroups = [
+  { title: 'Frontend', items: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3'] },
+  { title: 'Backend & nube', items: ['Node.js', 'REST APIs', 'MongoDB', 'MySQL', 'AWS'] },
+  { title: 'Producto & diseño', items: ['Figma', 'Responsive design', 'UX/UI', 'Framer Motion'] },
+  { title: 'Herramientas', items: ['Git', 'GitHub', 'Tailwind CSS', 'Jest', 'React Testing Library'] },
+];
+---
+
+<Layout
+  title="CV — Mich Rodriguez · Product Engineer"
+  description="Experiencia, habilidades y formación de Mich Rodriguez, Product Engineer especializada en producto digital, frontend e IA."
+  image="/author.png"
+  url={new URL('/cv', Astro.site ?? Astro.url).href}
+>
+  <main class="cv-page">
+    <div class="cv-framebar" aria-label="Acciones del currículum">
+      <p><span aria-hidden="true"></span> CV · ACTUALIZADO 2026</p>
+      <div class="cv-actions">
+        <button type="button" class="btn btn-secondary" data-print-cv>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z" /></svg>
+          Imprimir
+        </button>
+        <a class="btn btn-secondary" href="/pdf/CV_michelle_lara.pdf" target="_blank" rel="noopener">
+          Abrir PDF
+          <svg aria-hidden="true" class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+        </a>
+        <a class="btn btn-primary" href="/pdf/CV_michelle_lara.pdf" download="CV_Michelle_Rodriguez_Lara.pdf">
+          Descargar PDF
+          <svg aria-hidden="true" class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>
+        </a>
+      </div>
+    </div>
+
+    <article class="cv-sheet" aria-labelledby="cv-title">
+      <header class="cv-header">
+        <div class="cv-identity">
+          <p class="cv-eyebrow">Product Engineer</p>
+          <h1 id="cv-title">Michelle<br />Rodriguez Lara</h1>
+          <p class="cv-specialty">Diseño, ingeniería e IA para productos digitales simples de usar.</p>
+        </div>
+        <address class="cv-contact">
+          <span class="cv-status"><i aria-hidden="true"></i> Disponible para proyectos</span>
+          <a href="mailto:mich.ia@hotmail.com">mich.ia@hotmail.com</a>
+          <a href="tel:+525578934420">+52 55 7893 4420</a>
+          <span>Ciudad de México, México</span>
+          <a href="https://www.linkedin.com/in/michelle-rodriguez-lara/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a href="https://github.com/MichelleeLara" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        </address>
+      </header>
+
+      <section class="cv-profile" aria-labelledby="perfil-title">
+        <h2 id="perfil-title"><span aria-hidden="true"></span> Perfil</h2>
+        <p>Frontend Engineer especializada en React, Next.js y TypeScript. Conecto estrategia, UX e ingeniería para llevar una idea desde sus requerimientos hasta una experiencia accesible, rápida y lista para producción.</p>
+      </section>
+
+      <div class="cv-columns">
+        <section class="cv-main" aria-labelledby="experiencia-title">
+          <h2 id="experiencia-title"><span aria-hidden="true"></span> Experiencia</h2>
+          <div class="experience-list">
+            {experience.map((job) => (
+              <article class="experience-item">
+                <div class="experience-meta">
+                  <time>{job.period}</time>
+                  <span>{job.location}</span>
+                </div>
+                <div class="experience-copy">
+                  <h3>{job.role}</h3>
+                  <p class="company">{job.company}</p>
+                  <p class="summary">{job.summary}</p>
+                  <p class="highlights-label">Resultados</p>
+                  <ul>{job.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <aside class="cv-sidebar">
+          <section aria-labelledby="habilidades-title">
+            <h2 id="habilidades-title"><span aria-hidden="true"></span> Habilidades</h2>
+            <div class="skills-list">
+              {skillGroups.map((group) => (
+                <div class="skill-group">
+                  <h3>{group.title}</h3>
+                  <ul>{group.items.map((item) => <li>{item}</li>)}</ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section aria-labelledby="educacion-title">
+            <h2 id="educacion-title"><span aria-hidden="true"></span> Educación</h2>
+            <div class="education-item">
+              <time>2022</time>
+              <h3>Ingeniería en Sistemas Computacionales</h3>
+              <p>Universidad del Desarrollo Empresarial y Pedagógico</p>
+              <small>Titulación por excelencia académica</small>
+            </div>
+            <div class="education-item">
+              <time>2022</time>
+              <h3>Desarrollo Full Stack</h3>
+              <p>Microsoft</p>
+              <small>Curso completado al 100%</small>
+            </div>
+          </section>
+
+          <section aria-labelledby="idiomas-title">
+            <h2 id="idiomas-title"><span aria-hidden="true"></span> Idiomas</h2>
+            <dl class="languages">
+              <div><dt>Español</dt><dd>Nativo</dd></div>
+              <div><dt>Inglés</dt><dd>Intermedio · B1</dd></div>
+            </dl>
+          </section>
+
+          <section aria-labelledby="fortalezas-title">
+            <h2 id="fortalezas-title"><span aria-hidden="true"></span> Fortalezas</h2>
+            <p class="strengths">Liderazgo · Comunicación · Pensamiento analítico · Resolución de problemas · Organización · Autonomía</p>
+          </section>
+        </aside>
+      </div>
+    </article>
+
+    <nav class="cv-close" aria-label="Navegación al terminar el currículum">
+      <p>¿Quieres ver estos resultados en contexto?</p>
+      <a class="text-link" href="/#proyectos">Explorar proyectos <span aria-hidden="true">↗</span></a>
+    </nav>
+  </main>
+
+  <script>
+    document.querySelector('[data-print-cv]')?.addEventListener('click', () => window.print());
+  </script>
+</Layout>
+
+<style>
+  .cv-page { width:min(100%,1280px); margin:auto; padding:140px var(--gutter) 80px; color:var(--ink); }
+  .cv-framebar { display:flex; align-items:center; justify-content:space-between; gap:var(--space-5); width:min(100%,1080px); margin:0 auto var(--space-5); }
+  .cv-framebar>p { display:flex; align-items:center; gap:10px; margin:0; color:var(--muted); font-family:var(--font-mono); font-size:var(--fs-micro); font-weight:600; letter-spacing:.12em; }
+  .cv-framebar>p span,.cv-sheet h2 span { display:inline-block; width:7px; height:7px; background:var(--accent); }
+  .cv-actions { display:flex; gap:var(--space-3); }
+  .cv-sheet { width:min(100%,1080px); margin:auto; padding:64px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--bg); box-shadow:var(--shadow-lift); }
+  .cv-header { display:grid; grid-template-columns:minmax(0,1fr) 260px; gap:var(--space-8); align-items:end; padding-bottom:var(--space-7); border-bottom:2px solid var(--ink); }
+  .cv-eyebrow { margin:0 0 var(--space-4); color:var(--accent); font-family:var(--font-note); font-size:13px; line-height:1.5; }
+  .cv-identity h1 { margin:0; font-family:var(--font-display); font-size:clamp(50px,7vw,80px); font-weight:600; letter-spacing:-.055em; line-height:.92; }
+  .cv-specialty { max-width:550px; margin:var(--space-5) 0 0; color:var(--muted); font-size:var(--fs-lead); line-height:1.45; }
+  .cv-contact { display:flex; flex-direction:column; align-items:flex-end; gap:8px; font-style:normal; font-family:var(--font-mono); font-size:11px; line-height:1.45; text-align:right; }
+  .cv-contact a { text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px; }
+  .cv-status { display:inline-flex; align-items:center; gap:8px; margin-bottom:4px; padding:6px 10px; border-radius:var(--radius-full); background:var(--surface); }
+  .cv-status i { width:7px; height:7px; border-radius:50%; background:var(--success); }
+  .cv-profile { display:grid; grid-template-columns:180px 1fr; gap:var(--space-7); padding:var(--space-7) 0; border-bottom:1px solid var(--line); }
+  .cv-sheet h2 { display:flex; align-items:center; gap:10px; margin:0 0 var(--space-5); font-family:var(--font-mono); font-size:11px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
+  .cv-profile h2 { margin:4px 0 0; }
+  .cv-profile p { max-width:730px; margin:0; font-size:clamp(21px,2.5vw,30px); font-weight:600; letter-spacing:-.025em; line-height:1.25; }
+  .cv-columns { display:grid; grid-template-columns:minmax(0,2.15fr) minmax(230px,.85fr); gap:64px; padding-top:var(--space-7); }
+  .experience-list { display:flex; flex-direction:column; }
+  .experience-item { display:grid; grid-template-columns:130px 1fr; gap:var(--space-5); padding:0 0 var(--space-7); margin-bottom:var(--space-7); border-bottom:1px solid var(--line); break-inside:avoid; }
+  .experience-item:last-child { margin-bottom:0; border-bottom:0; }
+  .experience-meta { display:flex; flex-direction:column; gap:6px; color:var(--muted); font-family:var(--font-mono); font-size:10px; line-height:1.45; text-transform:uppercase; }
+  .experience-copy h3,.skill-group h3,.education-item h3 { margin:0; font-family:var(--font-display); font-weight:600; letter-spacing:-.025em; }
+  .experience-copy h3 { font-size:25px; line-height:1.05; }
+  .company { margin:8px 0 0; color:var(--accent); font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+  .summary { margin:var(--space-4) 0; font-size:15px; line-height:1.55; }
+  .highlights-label { margin:0 0 8px; color:var(--muted); font-family:var(--font-mono); font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+  .experience-copy ul { display:flex; flex-direction:column; gap:8px; margin:0; padding:0; list-style:none; }
+  .experience-copy li { position:relative; padding-left:15px; color:var(--muted); font-size:13px; line-height:1.5; }
+  .experience-copy li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
+  .cv-sidebar { display:flex; flex-direction:column; gap:var(--space-7); padding-left:var(--space-6); border-left:1px solid var(--line); }
+  .skill-group+.skill-group { margin-top:var(--space-5); }
+  .skill-group h3,.education-item h3 { font-size:16px; line-height:1.2; }
+  .skill-group ul { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0 0; padding:0; list-style:none; }
+  .skill-group li { padding:6px 9px; border:1px solid var(--line); border-radius:var(--radius-full); color:var(--muted); font-size:11px; line-height:1; }
+  .education-item+.education-item { margin-top:var(--space-5); padding-top:var(--space-5); border-top:1px solid var(--line); }
+  .education-item time { display:block; margin-bottom:8px; color:var(--accent); font-family:var(--font-mono); font-size:10px; }
+  .education-item p { margin:8px 0 4px; color:var(--muted); font-size:12px; line-height:1.45; }
+  .education-item small { color:var(--muted); font-size:10px; }
+  .languages { display:flex; flex-direction:column; gap:10px; margin:0; }
+  .languages div { display:flex; justify-content:space-between; gap:12px; padding-bottom:8px; border-bottom:1px solid var(--line); font-size:12px; }
+  .languages dd { margin:0; color:var(--muted); }
+  .strengths { margin:0; color:var(--muted); font-size:12px; line-height:1.65; }
+  .cv-close { display:flex; align-items:center; justify-content:space-between; width:min(100%,1080px); margin:var(--space-7) auto 0; padding:var(--space-6) 0; border-top:1px solid var(--line); }
+  .cv-close p { margin:0; color:var(--muted); }
+
+  @media(max-width:850px) {
+    .cv-page { padding-top:100px; }
+    .cv-sheet { padding:40px; }
+    .cv-header { grid-template-columns:1fr; gap:var(--space-6); }
+    .cv-contact { align-items:flex-start; text-align:left; }
+    .cv-columns { grid-template-columns:1fr; gap:var(--space-7); }
+    .cv-sidebar { display:grid; grid-template-columns:1fr 1fr; padding:var(--space-7) 0 0; border-left:0; border-top:1px solid var(--line); }
+  }
+  @media(max-width:600px) {
+    .cv-page { padding:88px 16px 110px; }
+    .cv-framebar { flex-direction:column; align-items:stretch; gap:var(--space-3); }
+    .cv-actions { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-2); }
+    .cv-actions [data-print-cv] { display:none; }
+    .cv-actions .btn { height:44px; padding:0 12px; justify-content:center; }
+    .cv-sheet { padding:28px 22px; }
+    .cv-identity h1 { font-size:clamp(42px,14vw,62px); }
+    .cv-profile { grid-template-columns:1fr; gap:var(--space-4); }
+    .cv-profile p { font-size:22px; }
+    .experience-item { grid-template-columns:1fr; gap:var(--space-4); }
+    .experience-meta { flex-direction:row; justify-content:space-between; }
+    .cv-sidebar { grid-template-columns:1fr; }
+    .cv-close { align-items:flex-start; flex-direction:column; gap:var(--space-3); }
+  }
+  @media print {
+    @page { size:A4; margin:12mm; }
+    :global(html),:global(body) { background:white !important; color:black !important; }
+    :global(body > :not(#main-content)),:global(canvas),.cv-framebar,.cv-close { display:none !important; }
+    .cv-page { width:100%; max-width:none; padding:0; }
+    .cv-sheet { width:100%; max-width:none; padding:0; border:0; border-radius:0; background:white; color:black; box-shadow:none; }
+    .cv-identity h1 { font-size:48px; }
+    .cv-specialty,.summary,.experience-copy li,.education-item p,.education-item small,.strengths,.languages dd,.experience-meta { color:#444 !important; }
+    .cv-header { grid-template-columns:1fr 220px; gap:24px; padding-bottom:22px; }
+    .cv-profile { grid-template-columns:125px 1fr; gap:22px; padding:22px 0; }
+    .cv-profile p { font-size:19px; }
+    .cv-columns { grid-template-columns:minmax(0,2fr) minmax(170px,.8fr); gap:30px; padding-top:22px; }
+    .cv-sidebar { display:flex; padding-left:20px; gap:24px; }
+    .experience-item { grid-template-columns:95px 1fr; gap:16px; padding-bottom:22px; margin-bottom:22px; }
+    .experience-copy h3 { font-size:18px; }
+    .summary { margin:10px 0; font-size:11px; }
+    .experience-copy li { font-size:9.5px; line-height:1.35; }
+    .cv-sheet h2 { margin-bottom:14px; font-size:9px; }
+    .skill-group+.skill-group { margin-top:14px; }
+    .skill-group h3,.education-item h3 { font-size:12px; }
+    .skill-group li { padding:4px 6px; font-size:8px; }
+  }
+</style>

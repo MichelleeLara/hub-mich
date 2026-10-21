@@ -29,3 +29,7 @@ Marca personal/
 
 # Proyecto Angular aparte (repo git propio), no forma parte del sitio
 anamAA/
+
+# Material pesado / capturas locales (no van al repo)
+videos/
+/preview-*.png

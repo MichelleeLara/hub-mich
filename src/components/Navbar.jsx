@@ -98,7 +98,7 @@ const TABS = [
 ];
 
 const CONTACT_ACTIONS = [
-  { label: 'Meet', href: 'mailto:mich.ia@hotmail.com?subject=Agendemos%20una%20videollamada', Icon: VideoIcon },
+  { label: 'Agendar', href: 'mailto:mich.ia@hotmail.com?subject=Agendemos%20una%20videollamada', Icon: VideoIcon },
   { label: 'WhatsApp', href: 'https://wa.me/525578934420', Icon: WhatsAppIcon, external: true },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/michelle-rodriguez-lara/', Icon: LinkedInIcon, external: true },
 ];
@@ -213,15 +213,21 @@ export default function AnimatedTabs() {
         });
       };
 
+      // Un cálculo por frame como máximo, solo cuando hay scroll o resize.
+      let frame = 0;
+      const scheduleSync = () => {
+        if (frame) return;
+        frame = window.requestAnimationFrame(() => { frame = 0; syncContext(); });
+      };
+
       syncContext();
-      const contextTimer = window.setInterval(syncContext, 180);
-      window.addEventListener('scroll', syncContext, { passive: true });
-      window.addEventListener('resize', syncContext);
+      window.addEventListener('scroll', scheduleSync, { passive: true });
+      window.addEventListener('resize', scheduleSync);
       window.addEventListener('context-stepper:update', update);
       cleanupContext = () => {
-        window.clearInterval(contextTimer);
-        window.removeEventListener('scroll', syncContext);
-        window.removeEventListener('resize', syncContext);
+        window.cancelAnimationFrame(frame);
+        window.removeEventListener('scroll', scheduleSync);
+        window.removeEventListener('resize', scheduleSync);
         window.removeEventListener('context-stepper:update', update);
       };
     };
@@ -300,14 +306,14 @@ export default function AnimatedTabs() {
               transition={{ duration: reduced ? 0 : DUR.fast, ease: [0.16, 1, 0.3, 1] }}
             >
               <li className="min-w-0">
-                <a href="/#inicio" aria-label="Volver al inicio" className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07]">
+                <a href="/#inicio" aria-label="Volver al inicio" className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
                   <HomeIcon className="h-[18px] w-[18px]" />
                   <span className="text-[10px] font-medium">Inicio</span>
                 </a>
               </li>
               {CONTACT_ACTIONS.map(({ label, href, Icon, external }) => (
                 <li key={label} className="min-w-0">
-                  <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07]" aria-label={`Contactar por ${label}`}>
+                  <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent" aria-label={`Contactar por ${label}`}>
                     <Icon className="h-[18px] w-[18px]" />
                     <span className="block max-w-full truncate text-[10px] font-medium">{label}</span>
                   </a>
@@ -398,7 +404,7 @@ export default function AnimatedTabs() {
             </div>
             <div className="flex items-center gap-2">
               {CONTACT_ACTIONS.map(({ label, href, Icon, external }) => (
-                <a key={label} href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} aria-label={`Contactar por ${label}`} className="flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.055] hover:text-ink active:scale-[.97] dark:hover:bg-white/10"><Icon className="h-[18px] w-[18px]" /><span>{label}</span></a>
+                <a key={label} href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} aria-label={`Contactar por ${label}`} className="flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.055] hover:text-ink active:scale-[.97] dark:hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"><Icon className="h-[18px] w-[18px]" /><span>{label}</span></a>
               ))}
             </div>
           </motion.aside>
