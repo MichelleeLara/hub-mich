@@ -114,6 +114,8 @@ html.dark .theme-inverse {
 :root { --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 1'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='3' intercept='-1'/%3E%3CfeFuncG type='linear' slope='3' intercept='-1'/%3E%3CfeFuncB type='linear' slope='3' intercept='-1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); --grain-opacity: .13; --grain-page-opacity: .13; }
 /* En oscuro: grano muy bajo en la página (más se ve gris) y tarjetas sin grano */
 html.dark { --grain-opacity: 0; --grain-page-opacity: .03; }
+/* El footer invertido es claro en modo oscuro: conserva su grano */
+html.dark .theme-inverse { --grain-opacity: .13; }
 .grain { position: relative; isolation: isolate; }
 .grain::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; background: var(--grain); opacity: var(--grain-opacity); pointer-events: none; }
 /* Titulares más ligeros en escritorio; iPad (768–1024px) conserva la escala base. */
