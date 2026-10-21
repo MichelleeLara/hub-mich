@@ -1,0 +1,92 @@
+---
+import RelaxKeyboard from './RelaxKeyboard.jsx';
+// Sección "Un respiro": pausa interactiva antes del footer. Solo el teclado: modo libre y reto de escritura.
+---
+<section id="respiro" class="section-shell relax-section" aria-label="Un respiro: teclado interactivo con reto de escritura">
+  <RelaxKeyboard client:visible />
+</section>
+
+<style is:global>
+  /* Mientras la sección está activa, nada de selección, menú contextual ni zoom por doble toque */
+  .relax-kb { display: flex; flex-direction: column; align-items: center; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: manipulation; }
+
+  /* Pantalla: una sola línea que se desliza */
+  .relax-line { position: relative; width: 100%; max-width: 880px; height: 1.5em; overflow: hidden; font-family: var(--font-display); font-size: clamp(26px, 4vw, 52px); font-weight: 600; letter-spacing: -.02em; line-height: 1.5; color: var(--ink);
+    -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .relax-line[data-mode="game"] { font-size: clamp(24px, 3.2vw, 40px); font-weight: 500; letter-spacing: 0; }
+  .relax-track { position: absolute; left: 0; top: 0; display: flex; align-items: center; height: 100%; white-space: pre; will-change: transform; }
+  .relax-char { display: inline-block; white-space: pre; will-change: transform, filter; }
+  .relax-placeholder { white-space: nowrap; color: var(--subtle); font-weight: 500; margin-left: .08em; }
+  .relax-caret { display: inline-block; flex: none; width: 3px; height: .9em; margin-left: 3px; border-radius: 2px; background: var(--accent); }
+  .relax-slot { position: relative; display: inline-flex; align-items: center; }
+  .relax-caret-game { position: absolute; left: -2px; width: 2.5px; margin: 0; }
+  .relax-slot:last-child .relax-caret-game:last-child { left: auto; right: -3px; }
+  .relax-gchar { display: inline-block; color: var(--subtle); opacity: .55; transition: color var(--dur-fast), opacity var(--dur-fast); }
+  .relax-gchar.is-ok { color: var(--ink); opacity: 1; }
+  .relax-gchar.is-miss { color: var(--kb-error); opacity: 1; text-decoration: underline 2px; text-underline-offset: .18em; }
+  @media (prefers-reduced-motion: no-preference) {
+    .relax-caret { animation: relax-blink 1.1s steps(1) infinite; }
+    .relax-gchar.is-ok, .relax-gchar.is-miss { animation: relax-pop 220ms var(--ease-out); }
+  }
+  @keyframes relax-blink { 50% { opacity: 0; } }
+  @keyframes relax-pop { from { transform: translateY(-.12em) scale(1.18); filter: blur(1.5px); } }
+
+  .relax-status { height: 24px; margin-top: var(--space-3); display: flex; align-items: center; justify-content: center; color: var(--subtle); font-size: var(--fs-caption); }
+  .relax-status p { margin: 0; white-space: nowrap; }
+  .relax-result { color: var(--muted); }
+  .relax-result strong { color: var(--ink); font-family: var(--font-display); font-size: var(--fs-small); font-weight: 600; }
+  .relax-dot { margin: 0 4px; color: var(--subtle); }
+  .relax-status kbd { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--line); }
+
+  /* Barra pegada al teclado: anotación a la izquierda, controles a la derecha */
+  .relax-toolbar { width: var(--kb-width); max-width: 100%; margin: var(--space-6) 0 var(--space-3); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .relax-label { margin: 0; color: var(--muted); font-family: var(--font-note); font-size: clamp(11px, .9vw, 13px); line-height: 1.55; }
+  .relax-controls { display: flex; align-items: center; gap: var(--space-2); }
+  .relax-modes { display: flex; padding: 3px; border-radius: var(--radius-full); border: 1px solid var(--line); }
+  .relax-modes button { position: relative; height: 26px; padding: 0 12px; border-radius: var(--radius-full); color: var(--muted); font-size: var(--fs-caption); font-weight: 500; }
+  .relax-modes button[aria-pressed="true"] { color: var(--bg); }
+  .relax-modes button span:last-child { position: relative; }
+  .relax-mode-pill { position: absolute; inset: 0; border-radius: inherit; background: var(--ink); }
+  .relax-sound { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: var(--radius-full); border: 1px solid var(--line); color: var(--muted); }
+  .relax-sound[aria-pressed="true"] { color: var(--ink); }
+  @media (hover: hover) { .relax-sound:hover, .relax-modes:hover { border-color: var(--muted); } }
+
+  /* Teclado (medidas base del original; se escala con zoom) */
+  .relax-kb { --kb-zoom: .86; --kb-width: calc(387px * var(--kb-zoom)); }
+  @media (min-width: 640px) { .relax-kb { --kb-zoom: 1.25; } }
+  @media (min-width: 768px) { .relax-kb { --kb-zoom: 1.45; } }
+  @media (min-width: 1024px) { .relax-kb { --kb-zoom: 1.65; } }
+  @media (min-width: 1280px) { .relax-kb { --kb-zoom: 1.75; } }
+  .relax-stage { zoom: var(--kb-zoom); }
+  .kb-deck { width: fit-content; padding: 4px; border-radius: 12px; background: var(--kb-deck); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 0 0 1px var(--line-subtle); }
+  .kb-row { display: flex; gap: 2px; margin-bottom: 2px; }
+  .kb-row:last-child { margin-bottom: 0; }
+  .kb-row:first-child > .kb-key:first-child { border-top-left-radius: 8px; }
+  .kb-row:first-child > .kb-key:last-child { border-top-right-radius: 8px; }
+  .kb-row:last-child > .kb-key:first-child { border-bottom-left-radius: 8px; }
+  .kb-key {
+    flex: none; width: 24px; height: 24px; padding: 2px 4px; border-radius: 3.5px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--kb-key); color: var(--kb-key-ink); font-family: var(--font-sans); font-size: 5px; line-height: 1.15;
+    box-shadow: 0 0 1px 0 var(--kb-key-edge), 0 1px 1px 0 rgba(0,0,0,.1), inset 0 1px 0 0 var(--kb-key-shine);
+    transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out), transform 120ms var(--ease-out), box-shadow 180ms var(--ease-out);
+  }
+  .kb-key.is-down {
+    background: var(--kb-key-down); color: var(--kb-key-down-ink); transform: translateY(.6px) scale(.97);
+    box-shadow: 0 0 1px 0 var(--kb-key-edge), inset 0 1px 2px 0 rgba(0,0,0,.45);
+    transition-duration: 40ms;
+  }
+  .kb-letter { font-size: 6.5px; font-weight: 500; }
+  .kb-fn { font-size: 4.5px; }
+  .kb-align-start { align-items: flex-start; justify-content: flex-end; }
+  .kb-align-end { align-items: flex-end; justify-content: flex-end; }
+  .kb-align-mod { align-items: flex-start; justify-content: space-between; padding: 3px; }
+  .kb-touchid { width: 14px; height: 14px; border-radius: 999px; border: 1px solid var(--kb-key-edge); opacity: .35; }
+  .kb-arrows { display: flex; align-items: flex-end; margin-left: auto; }
+  .kb-arrows-col { display: flex; flex-direction: column; gap: 1px; margin: 0 1px; }
+  .kb-arrow { font-size: 4px; }
+  .kb-half { height: 11.5px; }
+  .kb-arrows > .kb-key:last-child { border-bottom-right-radius: 8px; }
+  @media (prefers-reduced-motion: reduce) { .kb-key, .kb-key.is-down { transform: none; } }
+
+</style>

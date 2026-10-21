@@ -80,6 +80,15 @@ html.dark {
   --shadow-float: 0 8px 24px -8px rgba(0,0,0,.5);
   --shadow-lift: 0 24px 48px -12px rgba(0,0,0,.6);
 }
+/* Teclado de la sección "Un respiro": tecla en reposo clara, presionada oscura (en ambos modos) */
+:root {
+  --kb-deck: #e2e2df; --kb-key: #f8f8f7; --kb-key-ink: #4a4b50; --kb-key-down: #2b2c30; --kb-key-down-ink: #f6f6f6;
+  --kb-key-edge: rgba(0,0,0,.28); --kb-key-shine: rgba(255,255,255,1); --kb-error: #c43d32;
+}
+html.dark {
+  --kb-deck: #0e0e0e; --kb-key: #2c2c2e; --kb-key-ink: #b4b4ba; --kb-key-down: #000000; --kb-key-down-ink: #ffffff;
+  --kb-key-edge: rgba(0,0,0,.9); --kb-key-shine: rgba(255,255,255,.07); --kb-error: #f2776c;
+}
 ::selection { background: var(--accent-soft); color: var(--ink); }
 .font-note { font-family: var(--font-note); font-weight: 400; letter-spacing: 0; }
 
