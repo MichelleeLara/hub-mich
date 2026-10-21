@@ -31,7 +31,7 @@ body { font-family: var(--font-sans); color: var(--ink); background: var(--bg); 
 
 /* Encabezado de sección */
 .section-heading { display: grid; gap: 12px; max-width: 780px; }
-.section-label { margin: 0; font-family: var(--font-accent); font-size: clamp(16px, 1.5vw, 20px); font-weight: 400; line-height: 1.4; color: var(--accent); }
+.section-label { margin: 0; font-family: var(--font-note); font-size: clamp(11px, .9vw, 13px); font-weight: 400; line-height: 1.55; color: var(--muted); }
 .section-title { margin: 0; font-family: var(--font-sans); font-size: clamp(30px, 3.4vw, 48px); font-weight: 650; line-height: 1.12; letter-spacing: -.03em; color: var(--ink); text-wrap: balance; }
 .section-heading-compact .section-title { font-size: clamp(26px, 2.3vw, 32px); line-height: 1.2; }
 

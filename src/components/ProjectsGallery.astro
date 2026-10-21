@@ -69,7 +69,9 @@ const tags: Record<string,string[]> = {
  .project-tags { position:absolute; top:24px; right:24px; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; max-width:calc(100% - 48px); }
  .project-tags>span { padding:8px 13px; border:1px solid rgb(255 255 255 / .18); border-radius:999px; background:rgb(24 24 24 / .65); backdrop-filter:blur(12px); font-size:12px; font-weight:500; }
  .cover-title { position:absolute; bottom:32px; left:32px; right:52px; }
- .cover-title h3 { font-family:var(--font-display); font-weight:600; font-size:clamp(28px,3vw,42px); line-height:1.1; letter-spacing:-.035em; }
+ .cover-title h3 { font-family:var(--font-display); font-weight:600; font-size:clamp(24px,2.4vw,34px); line-height:1.1; letter-spacing:-.015em; }
+ @media(min-width:1025px) { .cover-title h3 { font-size:clamp(20px,1.6vw,24px); } }
+ @media(max-width:767px) { .cover-title h3 { font-size:20px; } }
  .cover-title p { margin-top:10px; font-size:var(--fs-small); color:rgb(255 255 255 / .8); }
  .cover-open { position:absolute; bottom:34px; right:28px; font-size:24px; }
  .project-preview { position:fixed; inset:0; margin:auto; padding:0; width:min(860px,calc(100% - 48px)); max-width:none; max-height:calc(100svh - 64px); border:0; outline:0; border-radius:28px; background:var(--bg); color:var(--ink); overflow:auto; overscroll-behavior:contain; box-shadow:0 24px 100px rgb(0 0 0 / .3); }

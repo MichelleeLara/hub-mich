@@ -56,14 +56,16 @@ const proof = [
  .editorial-figure { position: relative; width: min(100%, 460px); aspect-ratio: 10/11; margin: auto; color: var(--accent); }
  #editorial-canvas, .editorial-fallback { width: 100%; height: 100%; display: block; }
  #editorial-canvas { display: none; }
- .editorial-cross { position: absolute; color: var(--muted); font: var(--fs-small) var(--font-mono); }
+ .editorial-cross { position: absolute; color: var(--subtle); font: var(--fs-small) var(--font-mono); }
  .first { left: 0; top: 20px; } .last { right: 0; bottom: 20px; }
  .editorial-content { min-width: 0; position: relative; padding-top: var(--space-5); }
- .editorial-title { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-5); }
- .editorial-number { color: var(--accent); font: 500 64px/1 var(--font-display); letter-spacing: -.04em; flex-shrink: 0; }
- .editorial-title h3 { font-family: var(--font-sans); font-weight: 650; font-size: clamp(28px, 3vw, 36px); letter-spacing: -.03em; line-height: 1.12; max-width: 400px; text-wrap: balance; }
- .editorial-copy { max-width: 470px; font-size: var(--fs-body); line-height: 1.7; }
- .editorial-copy p+p { margin-top: var(--space-4); color: var(--muted); }
+ /* Jerarquía en 4 niveles: título de sección > título de etapa > texto > metadato (número mono). */
+ .editorial-title { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); margin-bottom: var(--space-4); }
+ .editorial-number { color: var(--subtle); font: 500 12px/1.4 var(--font-mono); letter-spacing: .08em; flex-shrink: 0; }
+ .editorial-title h3 { font-family: var(--font-display); font-weight: 600; font-size: clamp(20px, 2.2vw, 24px); letter-spacing: -.01em; line-height: 1.15; max-width: 400px; text-wrap: balance; }
+ @media (min-width: 1025px) { .editorial-title h3 { font-size: clamp(22px, 1.6vw, 24px); } }
+ .editorial-copy { max-width: 470px; color: var(--muted); font-size: var(--fs-body); line-height: 1.7; }
+ .editorial-copy p+p { margin-top: var(--space-3); color: var(--subtle); font-size: var(--fs-small); line-height: 1.6; }
  .editorial-scroll { display: flex; gap: var(--space-4); align-items: center; max-width: 1000px; margin: var(--space-6) auto 0; color: var(--muted); font: var(--fs-micro) var(--font-mono); }
  .editorial-scroll>span { white-space: nowrap; }
  .editorial-track { flex: 1; height: 1px; background: var(--line); }
@@ -81,9 +83,8 @@ const proof = [
   .editorial-grid { grid-template-columns: minmax(0,1fr); gap: var(--space-5); }
   .editorial-content { padding-top: 0; }
   .editorial-figure { width: min(100%,260px); }
-  .editorial-number { font-size: 48px; }
-  .editorial-title { gap: var(--space-4); margin-bottom: var(--space-4); }
-  .editorial-title h3 { font-size: 28px; }
+  .editorial-title { gap: var(--space-2); margin-bottom: var(--space-3); }
+  .editorial-title h3 { font-size: 20px; }
   .editorial-proof { grid-template-columns: 1fr; }
   .editorial-proof a { padding: var(--space-5) 0; }
   .editorial-proof a+a { border-left: 0; border-top: 1px solid var(--line); }
@@ -107,7 +108,7 @@ const proof = [
  html.editorial-ready.editorial-tall:not(.motion-paused) #editorial-canvas { display: none; }
  html.editorial-ready.editorial-tall:not(.motion-paused) .editorial-fallback { display: block; }
  html.editorial-tall [data-editorial-stage], html.motion-paused [data-editorial-stage] { display: block; }
- html.editorial-tall [data-editorial-stage]+[data-editorial-stage], html.motion-paused [data-editorial-stage]+[data-editorial-stage] { margin-top: var(--space-7); }
+ html.editorial-tall [data-editorial-stage]+[data-editorial-stage], html.motion-paused [data-editorial-stage]+[data-editorial-stage] { margin-top: var(--space-8); }
  @media (prefers-reduced-motion: reduce) {
   [data-reveal-word] { opacity: 1 !important; }
   html.editorial-ready .editorial-runway { height: auto !important; }
@@ -115,7 +116,7 @@ const proof = [
   html.editorial-ready #editorial-canvas { display: none !important; }
   html.editorial-ready .editorial-fallback { display: block !important; }
   [data-editorial-stage] { display: block; }
-  [data-editorial-stage]+[data-editorial-stage] { margin-top: var(--space-7); }
+  [data-editorial-stage]+[data-editorial-stage] { margin-top: var(--space-8); }
  }
 </style>
 <script>
@@ -133,7 +134,9 @@ const proof = [
   const announcement=document.getElementById('editorial-announcement');
   const progressLine=runway.querySelector<HTMLElement>('[data-editorial-progress]');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-  const unified=Boolean(document.getElementById('particles-bg'));
+  // El fondo WebGL (ParticlesBackground) pinta los granos cuando está activo; si no, esta sección dibuja su propia figura.
+  const unified=()=>document.documentElement.classList.contains('particles-gl');
+  let wasUnified=unified();
   const releaseField=()=>document.dispatchEvent(new CustomEvent<EnfoqueParticleFrame>(ENFOQUE_PARTICLE_EVENT,{detail:{points:[],strength:0}}));
   let width=0,height=0,raf=0,visible=false,progress=0,target=0,active=-1,last=0,ambientTime=0,scrollRaf=0;
   const mobile=matchMedia('(max-width:767px)');
@@ -199,7 +202,7 @@ const proof = [
     figure!.style.setProperty('--editorial-figure-width',`${Math.max(100,Math.floor(available/1.1))}px`);
    }
    const box=figure!.getBoundingClientRect();width=box.width;height=box.height;
-   if(!unified){const dpr=Math.min(devicePixelRatio||1,mobile.matches?1.5:2);canvas!.width=Math.round(width*dpr);canvas!.height=Math.round(height*dpr);ctx!.setTransform(dpr,0,0,dpr,0,0);}
+   if(!unified()){const dpr=Math.min(devicePixelRatio||1,mobile.matches?1.5:2);canvas!.width=Math.round(width*dpr);canvas!.height=Math.round(height*dpr);ctx!.setTransform(dpr,0,0,dpr,0,0);}
    const top=parseFloat(getComputedStyle(sticky!).top)||92;
    document.documentElement.classList.toggle('editorial-tall',!reduced.matches&&!paused()&&sticky!.getBoundingClientRect().height>stableHeight()-top-20);
    stickyTop=top;runwayHeight=runway!.getBoundingClientRect().height;stickyHeight=sticky!.getBoundingClientRect().height;
@@ -254,7 +257,7 @@ const proof = [
     if(wordLights[stage][i]!==light){word.style.setProperty('--word-light',light);wordLights[stage][i]=light;}
    });
    progressLine?.style.setProperty('--editorial-progress',String(scrollProgress));
-   if(!unified){ctx!.clearRect(0,0,width,height);ctx!.fillStyle=color;}
+   if(!unified()){ctx!.clearRect(0,0,width,height);ctx!.fillStyle=color;}
    const design=ease((progress-1/3)/.29),assemble=ease((progress-2/3)/.24),connect=ease((progress-.88)/.12);
    const fit=(p:{x:number;y:number})=>({x:.5+(p.x-.5)*.78,y:.5+(p.y-.5)*.78});
    const drift=ambientTime;
@@ -310,10 +313,10 @@ const proof = [
     const alpha=Math.min(1,(p.outer?.72+.28*pulse:.3+.035*pulse)*(posts?(1-localDesign+localAssembly)*.65:1)*light*geometry.brightness);
     const radius=p.outer?(i%11===0?1.6:1.1)+pulse*.9:.75;
     const tint=clamp(settled-.55*Math.sin(Math.PI*localDesign)-.55*Math.sin(Math.PI*localAssembly));
-    if(unified){const grain=grains[i];grain.x=figureBox.left+x;grain.y=figureBox.top+y;grain.alpha=alpha;grain.radius=radius;grain.tint=tint;}
+    if(unified()){const grain=grains[i];grain.x=figureBox.left+x;grain.y=figureBox.top+y;grain.alpha=alpha;grain.radius=radius;grain.tint=tint;}
     else {ctx!.globalAlpha=alpha;ctx!.beginPath();ctx!.arc(x,y,radius,0,Math.PI*2);ctx!.fill();}
    }
-   if(unified){
+   if(unified()){
     // One renderer owns the actual grains. This component provides destinations,
     // rather than painting a second cloud over the background.
     const entry=clamp((stableHeight()-figureBox.top)/Math.max(1,figureBox.height*.75));
@@ -361,6 +364,7 @@ const proof = [
   let dark=document.documentElement.classList.contains('dark');
   new MutationObserver(()=>{
    const nextDark=document.documentElement.classList.contains('dark');
+   if(unified()!==wasUnified){wasUnified=unified();ctx!.clearRect(0,0,canvas!.width,canvas!.height);measure();}
    if(nextDark!==dark){dark=nextDark;color=getComputedStyle(runway).getPropertyValue('--accent').trim();}
    if(document.documentElement.classList.contains('project-preview-open')){cancelAnimationFrame(raf);raf=0;releaseField();}
    else schedule();

@@ -77,10 +77,10 @@ const skillGroups = [
       </div>
     </div>
 
-    <article class="cv-sheet" aria-labelledby="cv-title">
+    <article class="cv-sheet grain" aria-labelledby="cv-title">
       <header class="cv-header">
         <div class="cv-identity">
-          <p class="cv-eyebrow">Product Engineer</p>
+          <p class="cv-eyebrow note-label">Product Engineer</p>
           <h1 id="cv-title">Michelle<br />Rodriguez Lara</h1>
           <p class="cv-specialty">Diseño, ingeniería e IA para productos digitales simples de usar.</p>
         </div>
@@ -185,7 +185,7 @@ const skillGroups = [
   .cv-actions { display:flex; gap:var(--space-3); }
   .cv-sheet { width:min(100%,1080px); margin:auto; padding:64px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--bg); box-shadow:var(--shadow-lift); }
   .cv-header { display:grid; grid-template-columns:minmax(0,1fr) 260px; gap:var(--space-8); align-items:end; padding-bottom:var(--space-7); border-bottom:2px solid var(--ink); }
-  .cv-eyebrow { margin:0 0 var(--space-4); color:var(--accent); font-family:var(--font-note); font-size:13px; line-height:1.5; }
+  .cv-eyebrow { margin:0 0 var(--space-4); color:var(--muted); font-family:var(--font-note); font-size:12px; line-height:1.5; }
   .cv-identity h1 { margin:0; font-family:var(--font-display); font-size:clamp(50px,7vw,80px); font-weight:600; letter-spacing:-.055em; line-height:.92; }
   .cv-specialty { max-width:550px; margin:var(--space-5) 0 0; color:var(--muted); font-size:var(--fs-lead); line-height:1.45; }
   .cv-contact { display:flex; flex-direction:column; align-items:flex-end; gap:8px; font-style:normal; font-family:var(--font-mono); font-size:11px; line-height:1.45; text-align:right; }

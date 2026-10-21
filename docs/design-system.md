@@ -26,6 +26,7 @@ Vista viva: [`/design`](../src/pages/design.astro) (oculta, `noindex`).
 | `--surface-particle-card` | `#f9f9f8` | `#202020` | Laboratorio de partículas | — |
 | `--ink` | `#202124` | `#f6f6f6` | Texto principal, botón sólido | `text-ink` |
 | `--muted` | `#62646b` | `#aaaab0` | Texto secundario | `text-muted` |
+| `--subtle` | `#6d6e73` | `#86868c` | 3er nivel: numeración, ejes, rótulos decorativos | `text-subtle` |
 | `--line` | negro .12 | blanco .13 | Bordes y divisores | `border-line` |
 | `--line-subtle` | negro .055 | blanco .07 | Divisores suaves | `border-line-subtle` |
 | `--accent` | `#1d5fc4` | `#4f8ff7` | Etiquetas, foco, estado activo, diagramas | `text-accent` |
@@ -47,17 +48,17 @@ Vista viva: [`/design`](../src/pages/design.astro) (oculta, `noindex`).
 |---|---|---|---|---|
 | display | `--fs-display` | ClashDisplay 600 | 48–144px | uppercase, lh .98, scaleY 1.14 (hero) |
 | h1 | `--fs-h1` | ClashDisplay 600 | 44–80px | lh 1.05, ls -.03em (caso, destacado) |
-| h2 | `--fs-h2` | Inter Tight **650** | 30–48px | lh 1.12, ls -.03em (`SectionHeading`) |
-| h2 compacto | `--fs-h2-compact` | Inter Tight 650 | 26–32px | footer |
-| h3 | `--fs-h3` | ClashDisplay 600 | 28–40px | lh 1.1, ls -.02em (tarjetas, cifras) |
-| lead | `--fs-lead` | Inter Tight 400 | 20px | lh 1.5 |
+| h2 | `--fs-h2` | ClashDisplay **600** | 30–48px (móvil 30–38px) | lh 1.1, ls -.012em (`SectionHeading`); fuente ancla de todos los titulares |
+| h2 compacto | `--fs-h2-compact` | ClashDisplay 600 | 26–32px | footer |
+| h3 | `--fs-h3` | ClashDisplay 600 | 22–26px | lh 1.1, ls -.02em (tarjetas, cifras, números de etapa). Siempre por debajo del h2: solo la etiqueta y el título de sección dominan |
+| lead | `--fs-lead` | Inter Tight 400 | 18px | lh 1.5 |
 | body | `--fs-body` | Inter Tight 400 | 16px | lh 1.7 |
 | small | `--fs-small` | Inter Tight 400/500 | 14px | botones, labels |
 | caption | `--fs-caption` | Inter Tight 500/600 | 12px | kicker, menú (uppercase) |
 | micro | `--fs-micro` | Inter Tight 500 o mono | 11px | tags, metadatos. **Mínimo del sistema** |
-| label | `--font-accent` | Damion | 26–32px | solo etiquetas de sección, en `--accent` |
+| label | `--font-note` | Rock Salt | 11–13px | solo anotaciones de sección, en `--muted`, con `.note-label` (trazo a mano en acento) |
 
-Pesos de Inter Tight: 400 texto · 500 UI · 600 énfasis · 650 h2 · 900 solo el "MICH." del footer.
+Pesos de Inter Tight: 400 texto · 500 UI · 600 énfasis · 900 solo el "MICH." del footer. Los titulares ya no usan Inter Tight.
 En Tailwind: `text-[length:var(--fs-h3)]`, `font-ClashDisplay`, `font-mono`.
 
 ## Espaciado y layout
@@ -93,6 +94,7 @@ Redondo = etiquetar o navegar; esquina 8 = actuar.
 | Token | Uso | Tailwind |
 |---|---|---|
 | `--shadow-float` | lo que flota: islas del menú, barra móvil | `shadow-float` |
+| `--grain` · `.grain` | ruido 13% en claro (página y tarjetas grandes); en oscuro 3% en la página y tarjetas sin grano | — |
 | `--shadow-lift` | lo que se separa del fondo: avatar, tarjetas del caso | `shadow-lift` |
 
 En oscuro la separación la hace el borde, no la sombra.
@@ -118,7 +120,7 @@ framer-motion: `SPRING` (.3s), `SPRING_SLOW` (.5s), `STAGGER` en `src/lib/motion
 |---|---|---|
 | Botón | `.btn` + `.btn-primary` / `.btn-secondary` | 48px, padding 0×24, `--radius-sm`, small 500, ícono 16. Flecha `.btn-arrow` +4px en hover |
 | Enlace con flecha | `.text-link` | small 600, min 44px, gap 12 |
-| Encabezado de sección | `SectionHeading.astro` | label (Damion) → 12 → h2; prop `compact` |
+| Encabezado de sección | `SectionHeading.astro` | label (Rock Salt) → 12 → h2; prop `compact` |
 | Kicker | `.section-kicker` | caption 600 uppercase, punto de 6px en `--accent` |
 | Tag | `.tag` / `.tag-photo` | `--radius-full`, micro 500. `.tag` con borde; `.tag-photo` sobre foto |
 | Tarjeta de proyecto | `ProjectsBento.astro` | `--radius-lg`, foto + degradado, tags arriba, padding `--space-6` |
@@ -137,7 +139,7 @@ Decorativos con `aria-hidden="true"`; botones de solo ícono con `aria-label`.
 
 ## Accesibilidad verificada
 
-Todos los textos ≥ 4.5:1. Clay sobre fondo 6.1 (claro) / 9.3 (oscuro); `--muted` sobre surface 5.3 / 7.1; selección 13.5 / 14.1.
+Todos los textos ≥ 4.5:1. Clay sobre fondo 6.1 (claro) / 9.3 (oscuro); `--muted` sobre surface 5.3 / 7.1; `--subtle` sobre surface 4.6 / 4.5; selección 13.5 / 14.1.
 Se mantienen: foco visible, "Saltar al contenido", objetivos ≥ 44px, `prefers-reduced-motion` y botón de pausa.
 
 ## Cómo cambiar algo

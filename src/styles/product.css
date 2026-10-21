@@ -1,4 +1,3 @@
-@font-face { font-family:'Damion'; src:url('/media/damion.woff2') format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
 /* ==========================================================================
    Design system ./mich — tokens (decidido 2026-10-10, guía: docs/design-system.md · vista viva: /design)
    Regla: ningún componente usa un hex; solo var(--token) o su clase de Tailwind.
@@ -11,6 +10,7 @@
   --surface-particle-card: #f9f9f8;
   --ink: #202124;
   --muted: #62646b;
+  --subtle: #6d6e73; /* 3er nivel: numeración, ejes, rótulos decorativos (AA sobre bg y surface) */
   --line: rgba(0,0,0,.12);
   --line-subtle: rgba(0,0,0,.055);
   --accent: #1d5fc4;
@@ -46,18 +46,17 @@
   --dur-reveal: 700ms; /* revelar al hacer scroll (tope de interacción) */
   --ease-out: cubic-bezier(.22, 1, .36, 1);
 
-  /* Tipografía: ClashDisplay = nombres y cifras · Inter Tight = frases · Rock Salt = anotaciones de sección */
+  /* Tipografía: ClashDisplay = ancla de titulares, nombres y cifras · Inter Tight = texto y UI · Rock Salt = anotaciones de sección */
   --font-display: ClashDisplay, 'Inter Tight Variable', sans-serif;
   --font-sans: 'Inter Tight Variable', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-accent: 'Damion', cursive;
   --font-note: 'Rock Salt', cursive;
   --fs-display: clamp(48px, 10vw, 144px); /* ClashDisplay 600 */
   --fs-h1: clamp(44px, 6vw, 80px);        /* ClashDisplay 600 · ls -.03em */
-  --fs-h2: clamp(30px, 3.4vw, 48px);      /* Inter Tight 650 · ls -.03em */
+  --fs-h2: clamp(30px, 3.4vw, 48px);      /* ClashDisplay 600 · ls -.012em · lh 1.1 */
   --fs-h2-compact: clamp(26px, 2.3vw, 32px);
-  --fs-h3: clamp(28px, 3.2vw, 40px);      /* ClashDisplay 600 · ls -.02em */
-  --fs-lead: 20px;
+  --fs-h3: clamp(22px, 1.8vw, 26px);      /* ClashDisplay 600 · ls -.02em · siempre por debajo del h2 */
+  --fs-lead: 18px;
   --fs-body: 16px;
   --fs-small: 14px;
   --fs-caption: 12px;
@@ -70,6 +69,7 @@ html.dark {
   --surface-particle-card: #202020;
   --ink: #f6f6f6;
   --muted: #aaaab0;
+  --subtle: #86868c;
   --line: rgba(255,255,255,.13);
   --line-subtle: rgba(255,255,255,.07);
   --accent: #4f8ff7;
@@ -81,25 +81,42 @@ html.dark {
   --shadow-lift: 0 24px 48px -12px rgba(0,0,0,.6);
 }
 ::selection { background: var(--accent-soft); color: var(--ink); }
-.font-accent { font-family: var(--font-accent); font-weight: 400; letter-spacing: 0; }
+.font-note { font-family: var(--font-note); font-weight: 400; letter-spacing: 0; }
 
 /* Panel siempre oscuro (p. ej. métrica destacada del caso) */
 .theme-dark {
-  --bg: #161616; --surface: #202020; --ink: #f6f6f6; --muted: #aaaab0;
+  --bg: #161616; --surface: #202020; --ink: #f6f6f6; --muted: #aaaab0; --subtle: #86868c;
   --line: rgba(255,255,255,.13); --line-subtle: rgba(255,255,255,.07); --accent: #4f8ff7; --accent-soft: #1a2638;
   color-scheme: dark;
 }
 /* Panel invertido (footer): mismos tokens, modo contrario */
 .theme-inverse {
-  --bg: #161616; --surface: #202020; --surface-glass: rgba(28,28,28,.7); --ink: #f6f6f6; --muted: #aaaab0;
+  --bg: #161616; --surface: #202020; --surface-glass: rgba(28,28,28,.7); --ink: #f6f6f6; --muted: #aaaab0; --subtle: #86868c;
   --line: rgba(255,255,255,.13); --line-subtle: rgba(255,255,255,.07); --accent: #4f8ff7; --accent-soft: #1a2638; --success: #22c55e;
   color-scheme: dark;
 }
 html.dark .theme-inverse {
-  --bg: #ffffff; --surface: #f3f3f1; --surface-glass: rgba(255,255,255,.7); --ink: #202124; --muted: #62646b;
+  --bg: #ffffff; --surface: #f3f3f1; --surface-glass: rgba(255,255,255,.7); --ink: #202124; --muted: #62646b; --subtle: #6d6e73;
   --line: rgba(0,0,0,.12); --line-subtle: rgba(0,0,0,.055); --accent: #1d5fc4; --accent-soft: #e6eefb; --success: #15803d;
   color-scheme: light;
 }
+
+/* Grano sutil: profundidad en footer y tarjetas, nunca en el Hero (no compite con las partículas) */
+:root { --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 1'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='3' intercept='-1'/%3E%3CfeFuncG type='linear' slope='3' intercept='-1'/%3E%3CfeFuncB type='linear' slope='3' intercept='-1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); --grain-opacity: .13; --grain-page-opacity: .13; }
+/* En oscuro: grano muy bajo en la página (más se ve gris) y tarjetas sin grano */
+html.dark { --grain-opacity: 0; --grain-page-opacity: .03; }
+.grain { position: relative; isolation: isolate; }
+.grain::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; background: var(--grain); opacity: var(--grain-opacity); pointer-events: none; }
+/* Titulares más ligeros en escritorio; iPad (768–1024px) conserva la escala base. */
+@media (min-width: 1025px) { :root { --fs-h2: clamp(32px, 2.6vw, 40px); } }
+
+/* Prueba: grano en toda la página, fijo detrás del contenido (entre el fondo de html y las partículas) */
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; background: var(--grain); opacity: var(--grain-page-opacity); pointer-events: none; }
+@media print { .grain::after, body::before { display: none; } }
+
+/* Motivo repetido: trazo a mano en acento antes de cada anotación de sección (rima con el listón del footer) */
+.note-label { display: inline-flex; align-items: center; gap: 8px; }
+.note-label::before { content: ''; flex: none; width: 18px; height: 8px; background: var(--accent); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 10'%3E%3Cpath d='M1.5 7.5C4 2 6.5 2 8.5 5.5s4.5 3.5 7 0S20.5 1.5 22.5 4' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 10'%3E%3Cpath d='M1.5 7.5C4 2 6.5 2 8.5 5.5s4.5 3.5 7 0S20.5 1.5 22.5 4' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat; }
 
 /* Tag: .tag sobre superficies del tema · .tag-photo sobre foto (constante, ambos modos) */
 .tag { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: var(--radius-full); border: 1px solid var(--line); color: var(--muted); font-size: var(--fs-micro); font-weight: 500; letter-spacing: .025em; line-height: 1.2; }

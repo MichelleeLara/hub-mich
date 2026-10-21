@@ -26,6 +26,7 @@ export default {
 				'surface-glass': 'var(--surface-glass)',
 				ink: 'var(--ink)',
 				muted: 'var(--muted)',
+				subtle: 'var(--subtle)',
 				line: 'var(--line)',
 				'line-subtle': 'var(--line-subtle)',
 				accent: {

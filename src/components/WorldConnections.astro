@@ -33,7 +33,7 @@ import { worldCases as cases } from '../data/worldCases';
 <style>
  .world-section { position:relative; display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); align-items:start; column-gap:var(--space-6); row-gap:var(--space-5); padding-block:var(--space-8) var(--space-9); border-top:1px solid var(--line); scroll-margin-top:var(--space-9); }
  .world-copy { position:relative; z-index:1; padding-top:var(--space-4); }
- .world-label { font-family:var(--font-accent); font-size:30px; color:var(--accent); margin-bottom:var(--space-6); }
+ .world-label { width:fit-content; font:400 clamp(11px,.9vw,13px)/1.55 var(--font-note); color:var(--muted); margin-bottom:14px; }
  h2 { font:450 var(--fs-h2)/1.15 var(--font-sans); letter-spacing:-.04em; max-width:520px; text-wrap:balance; }
  h2 span { font-weight:650; }
  .world-description { font-size:var(--fs-body); line-height:1.7; color:var(--muted); max-width:360px; margin-top:var(--space-5); }
@@ -89,7 +89,7 @@ import { worldCases as cases } from '../data/worldCases';
  @media(max-width:767px) {
   .world-section { grid-template-columns:minmax(0,1fr); row-gap:var(--space-6); padding-block:var(--space-7) var(--space-8); }
   .world-copy { padding-top:0; }
-  .world-label { margin-bottom:var(--space-5); }
+  .world-label { margin-bottom:var(--space-3); }
   .world-description { max-width:440px; }
   .world-visual { padding:0; }
   .pin-label { padding:6px 8px; font-size:var(--fs-micro); }
