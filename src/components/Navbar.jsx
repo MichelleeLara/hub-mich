@@ -97,6 +97,17 @@ const TABS = [
   { id: "contacto", label: "Contacto", path: "/#contacto", sectionId: "contacto", Icon: MailIcon },
 ];
 
+// Modo personal ("¿Por qué trabajar conmigo?"): miniatura + un solo acceso, agendar videollamada.
+const PERSON_ACTIONS = [
+  { label: 'Videollamada', long: 'Agendar videollamada', href: 'mailto:mich.ia@hotmail.com?subject=Agendemos%20una%20videollamada', Icon: VideoIcon },
+];
+
+// Aparición de la barra contextual estilo Apple: entra pequeña y con un muelle que rebota apenas;
+// sale rápido y sin rebote.
+const POP_IN = { opacity: 0, y: 26, scale: .86 };
+const POP_SPRING = { type: 'spring', stiffness: 460, damping: 24, mass: .9 };
+const POP_OUT = { opacity: 0, y: 12, scale: .94, transition: { duration: .16, ease: [0.4, 0, 1, 1] } };
+
 const CONTACT_ACTIONS = [
   { label: 'Agendar', href: 'mailto:mich.ia@hotmail.com?subject=Agendemos%20una%20videollamada', Icon: VideoIcon },
   { label: 'WhatsApp', href: 'https://wa.me/525578934420', Icon: WhatsAppIcon, external: true },
@@ -167,9 +178,22 @@ export default function AnimatedTabs() {
   useEffect(() => {
     let cleanupContext = () => {};
     const setupContext = () => {
-      const getSections = () => [...document.querySelectorAll('[data-context-stepper], [data-contact-assistant]')];
+      const getSections = () => [...document.querySelectorAll('[data-context-stepper], [data-contact-assistant], [data-context-person]')];
 
       const readContext = (section) => {
+        if (section.hasAttribute('data-context-person')) {
+          return {
+            type: 'person',
+            sectionId: section.id,
+            title: section.dataset.contextTitle || 'Sobre mí',
+            name: section.dataset.contextName || '',
+            role: section.dataset.contextRole || '',
+            avatar: section.dataset.contextAvatar || '',
+            steps: [],
+            icons: [],
+            index: 0,
+          };
+        }
         if (section.hasAttribute('data-contact-assistant')) {
           return {
             type: 'contact',
@@ -296,6 +320,37 @@ export default function AnimatedTabs() {
                 );
               })}
             </motion.ul>
+          ) : context?.type === 'person' ? (
+            <motion.ul
+              key="person-actions"
+              aria-label={`Contacto directo con ${context.name}`}
+              className="absolute inset-1.5 grid grid-cols-3 gap-1"
+              initial={reduced ? false : { opacity: 0, scale: .9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={reduced ? { duration: 0 } : POP_SPRING}
+            >
+              <li className="min-w-0">
+                <a href="/#inicio" aria-label="Volver al inicio" className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
+                  <HomeIcon className="h-[18px] w-[18px]" />
+                  <span className="text-[10px] font-medium">Inicio</span>
+                </a>
+              </li>
+              <li className="flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-[16px] bg-black/[0.045] text-ink dark:bg-white/[0.07]">
+                <span className="relative">
+                  <img src={context.avatar} alt="" width="24" height="24" className="h-6 w-6 rounded-full object-cover object-[47%_28%]" />
+                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-bg bg-success" aria-hidden="true" />
+                </span>
+                <span className="text-[10px] font-medium">Disponible</span>
+              </li>
+              {PERSON_ACTIONS.map(({ label, href, Icon, external }) => (
+                <li key={label} className="min-w-0">
+                  <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent" aria-label={`${label} con ${context.name}`}>
+                    <Icon className="h-[18px] w-[18px]" />
+                    <span className="block max-w-full truncate text-[10px] font-medium">{label}</span>
+                  </a>
+                </li>
+              ))}
+            </motion.ul>
           ) : context?.type === 'contact' ? (
             <motion.ul
               key="contact-actions"
@@ -356,10 +411,10 @@ export default function AnimatedTabs() {
             key={`desktop-steps-${context.sectionId}`}
             aria-label={`Asistente de ${context.title}`}
             className="pointer-events-auto hidden h-[68px] w-full max-w-[720px] grid-cols-[230px_minmax(0,1fr)_104px] items-center gap-5 rounded-full border border-line-subtle bg-surface-glass px-3 py-2 shadow-float backdrop-blur-md dark:border-line md:grid"
-            initial={reduced ? false : { opacity: 0, y: 18, scale: .985 }}
+            initial={reduced ? false : POP_IN}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={reduced ? { opacity: 0 } : { opacity: 0, y: 10, scale: .99, transition: { duration: .18, ease: [0.4, 0, 1, 1] } }}
-            transition={reduced ? { duration: 0 } : { duration: .3, ease: [0.16, 1, 0.3, 1] }}
+            exit={reduced ? { opacity: 0 } : POP_OUT}
+            transition={reduced ? { duration: 0 } : POP_SPRING}
           >
             <div className="flex min-w-0 items-center gap-3 border-r border-line px-2 pr-4">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black/[0.055] text-accent dark:bg-white/10"><ActiveServiceIcon className="h-5 w-5" /></span>
@@ -388,15 +443,38 @@ export default function AnimatedTabs() {
               <button type="button" onClick={() => moveContextStep(1)} aria-label="Paso siguiente" className="flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-ink text-bg transition-[opacity,transform] duration-150 hover:opacity-85 active:scale-[.94] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"><ChevronIcon /></button>
             </div>
           </motion.aside>
+        ) : context?.type === 'person' ? (
+          <motion.aside
+            key="desktop-person-actions"
+            aria-label={`Contacto directo con ${context.name}`}
+            className="pointer-events-auto hidden h-[68px] w-full max-w-[560px] grid-cols-[1fr_auto] items-center gap-10 rounded-full border border-line-subtle bg-surface-glass px-3 py-2 shadow-float backdrop-blur-md dark:border-line md:grid"
+            initial={reduced ? false : POP_IN}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduced ? { opacity: 0 } : POP_OUT}
+            transition={reduced ? { duration: 0 } : POP_SPRING}
+          >
+            <div className="flex min-w-0 items-center gap-3 px-1">
+              <span className="relative shrink-0">
+                <img src={context.avatar} alt="" width="44" height="44" className="h-11 w-11 rounded-full object-cover object-[47%_28%]" />
+                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-bg bg-success" aria-hidden="true" />
+              </span>
+              <div className="min-w-0"><p className="m-0 truncate text-sm font-semibold text-ink">{context.name}</p><p className="mt-1 mb-0 whitespace-nowrap text-xs text-muted">{context.role}</p></div>
+            </div>
+            <div className="flex items-center gap-2">
+              {PERSON_ACTIONS.map(({ label, long, href, Icon, external }, index) => (
+                <a key={label} href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} aria-label={`${long} con ${context.name}`} className={`flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium transition-[color,background-color,opacity,transform] duration-150 active:scale-[.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${index === 0 ? 'bg-ink text-bg hover:opacity-85' : 'text-muted hover:bg-black/[0.055] hover:text-ink dark:hover:bg-white/10'}`}><Icon className="h-[18px] w-[18px]" /><span>{long}</span></a>
+              ))}
+            </div>
+          </motion.aside>
         ) : context?.type === 'contact' ? (
           <motion.aside
             key="desktop-contact-actions"
             aria-label="Asistente de Contacto"
             className="pointer-events-auto hidden h-[68px] w-full max-w-[660px] grid-cols-[1fr_auto] items-center gap-5 rounded-full border border-line-subtle bg-surface-glass px-3 py-2 shadow-float backdrop-blur-md dark:border-line md:grid"
-            initial={reduced ? false : { opacity: 0, y: 18, scale: .985 }}
+            initial={reduced ? false : POP_IN}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={reduced ? { opacity: 0 } : { opacity: 0, y: 10, scale: .99, transition: { duration: .18, ease: [0.4, 0, 1, 1] } }}
-            transition={reduced ? { duration: 0 } : { duration: .3, ease: [0.16, 1, 0.3, 1] }}
+            exit={reduced ? { opacity: 0 } : POP_OUT}
+            transition={reduced ? { duration: 0 } : POP_SPRING}
           >
             <div className="flex min-w-0 items-center gap-3 px-2">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black/[0.055] text-accent dark:bg-white/10"><MailIcon className="h-5 w-5" /></span>
