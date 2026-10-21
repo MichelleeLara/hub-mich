@@ -1,0 +1,128 @@
+---
+// Propuesta (ref. Aceternity "Wobble Card"): mosaico de tarjetas con texto dentro,
+// captura real saliendo por la esquina y un leve desplazamiento con el cursor.
+// Un solo acento: Luz.ia en azul profundo; el resto, paneles oscuros con brillo azul.
+// El movimiento es contenido (máx. 10 px, 2 %), solo con mouse y nunca con pausa o
+// movimiento reducido.
+import SectionHeading from './SectionHeading.astro';
+import ProjectImage from './ProjectImage.astro';
+import { projects } from '../data/projectsData.js';
+import { projectPresentation } from '../data/projectPresentation';
+
+const cards = [
+  { slug: 'luzia-agentes-ia', image: 'luzia-app-v4', alt: 'Agenda de Ommia con las citas del equipo de la semana', size: 'wide', tone: 'accent', headline: 'La complejidad de la IA, en una experiencia simple.', text: 'Agentes de IA, conversaciones y atención en un solo panel.' },
+  { slug: 'anamseals-firmware', image: null, size: 'narrow', tone: 'dark', headline: '$1M USD de ahorro anual proyectado.', text: 'Firmware que hace más con un solo núcleo.' },
+  { slug: 'inteligencia-logistica', image: 'logistica-app-v3', size: 'narrow', tone: 'dark', headline: '+65% de rendimiento en el mapa.', text: 'Rutas y datos que cargan sin bloquear a nadie.' },
+  { slug: 'tracking-aduanal', image: 'tracking-app-v3', size: 'wide', tone: 'dark', portrait: true, headline: 'Una operación en movimiento. Una vista clara.', text: 'Transportes, aduanas y permisos en vivo, sin recargar.' },
+  { slug: 'monitoreo-white-label', image: 'white-label-app-v3', size: 'full', tone: 'dark', headline: 'Un sistema pensado para crecer con cada cliente.', text: 'Una base, múltiples marcas y un equipo de 6 ingenieros con el mismo lenguaje.' },
+] as const;
+interface Props { id?: string; }
+const { id = 'proyectos' } = Astro.props;
+const items = cards.map(card => ({ ...card, project: projects.find(p => p.slug === card.slug)!, visual: projectPresentation[card.slug] }));
+---
+<section id={id} class="section-shell wobble-section">
+  <header class="wobble-heading">
+    <SectionHeading label="Trabajo seleccionado" title="Ideas que toman forma y generan impacto." />
+    <p>De agentes de IA a sistemas que operan en el mundo real. Explora cada proyecto y conoce lo que cambió.</p>
+  </header>
+  <div class="wobble-grid">
+    {items.map(item => (
+      <a class:list={['wobble-card', 'theme-dark', 'grain', `size-${item.size}`, `tone-${item.tone}`]} href={`/proyectos/${item.slug}`} data-wobble>
+        <div class="wobble-inner" data-wobble-inner>
+          <div class="wobble-copy">
+            <p class="wobble-meta">{item.project.title} · {item.visual.category}</p>
+            <h3>{item.headline}</h3>
+            <p class="wobble-text">{item.text}</p>
+          </div>
+          {item.image && (
+            <div class:list={['wobble-shot', { portrait: 'portrait' in item && item.portrait }]}>
+              <ProjectImage name={item.image} alt={'alt' in item && item.alt ? item.alt : item.visual.alt} sizes="(min-width: 768px) 1000px, 100vw" />
+            </div>
+          )}
+          <span class="wobble-arrow" aria-hidden="true">↗</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .wobble-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; margin-bottom: 40px; }
+  .wobble-heading > p { max-width: 360px; color: var(--muted); line-height: 1.6; }
+  .wobble-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-4); }
+  .wobble-card {
+    position: relative; overflow: hidden; display: block; min-height: 420px; border-radius: 28px; color: var(--ink);
+    background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 55%), #171717;
+    border: 1px solid rgba(255, 255, 255, .08);
+    transition: transform 160ms var(--ease-out);
+    /* Textura de ruido como la referencia, también en modo oscuro (la página va sin grano ahí). */
+    --grain-opacity: .12;
+  }
+  .wobble-card.tone-accent { background: radial-gradient(90% 90% at 10% 0%, rgba(255, 255, 255, .16), transparent 60%), linear-gradient(140deg, #1d5fc4, #0f3c82 75%); border-color: rgba(255, 255, 255, .14); }
+  .wobble-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .size-wide { grid-column: span 8; }
+  .size-narrow { grid-column: span 4; }
+  .size-full { grid-column: span 12; min-height: 360px; }
+  /* El contenido va encima del grano: la textura queda solo en el fondo y las capturas se ven limpias. */
+  .wobble-inner { position: relative; z-index: 2; height: 100%; min-height: inherit; padding: 36px; transition: transform 160ms var(--ease-out); }
+  .wobble-copy { position: relative; z-index: 2; display: grid; gap: var(--space-3); max-width: 310px; }
+  .size-narrow .wobble-copy { max-width: none; }
+  .wobble-meta { color: rgba(255, 255, 255, .6); font: 500 12px/1.4 var(--font-mono); letter-spacing: .04em; }
+  .wobble-card h3 { color: #fff; font: 600 clamp(22px, 2vw, 28px)/1.12 var(--font-display); letter-spacing: -.015em; text-wrap: balance; }
+  .wobble-text { color: rgba(255, 255, 255, .72); font-size: var(--fs-body); line-height: 1.55; }
+  /* Captura de la app saliendo por la esquina: derecha (sin girar) para que el texto se lea nítido. */
+  .wobble-shot { position: absolute; z-index: 1; right: -3%; bottom: -8%; width: 58%; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, .14); box-shadow: 0 30px 60px rgba(0, 0, 0, .45); }
+  .wobble-shot :global(img) { display: block; width: 100%; height: auto; }
+  /* Capturas tenues para que acompañen al texto; al pasar el cursor recuperan su presencia. */
+  .wobble-shot { opacity: .75; transition: opacity 300ms var(--ease-out); }
+  .wobble-card:is(:hover, :focus-visible) .wobble-shot { opacity: 1; }
+  /* Luz.ia: un poco más angosta para no tocar la frase. */
+  .wobble-card.tone-accent .wobble-shot { width: 52%; right: -3%; bottom: -6%; }
+  .size-narrow .wobble-shot { width: 108%; right: -30%; bottom: -6%; }
+  .size-full .wobble-shot { width: 50%; right: 4%; bottom: -18%; }
+  /* Pantalla de iPhone: más angosta y con esquinas de teléfono. */
+  .wobble-card .wobble-shot.portrait { width: 30%; right: 8%; bottom: -44%; border-radius: 28px; }
+  .wobble-arrow { position: absolute; z-index: 2; left: 36px; bottom: 30px; color: rgba(255, 255, 255, .7); font-size: 22px; transition: transform var(--dur-fast), color var(--dur-fast); }
+  .wobble-card:hover .wobble-arrow { transform: translate(2px, -2px); color: #fff; }
+  @media (max-width: 960px) {
+    .size-wide, .size-narrow { grid-column: span 6; }
+  }
+  @media (max-width: 767px) {
+    .wobble-heading { flex-direction: column; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-6); }
+    .wobble-grid { grid-template-columns: 1fr; }
+    .size-wide, .size-narrow, .size-full { grid-column: auto; min-height: 420px; }
+    .wobble-inner { padding: 24px; }
+    .wobble-shot, .size-narrow .wobble-shot, .size-full .wobble-shot { width: 104%; right: -16%; bottom: -4%; }
+    .wobble-card.tone-accent .wobble-shot { width: 104%; right: -16%; bottom: -4%; }
+    .wobble-card .wobble-shot.portrait { width: 46%; right: 10%; bottom: -44%; }
+    .wobble-arrow { left: 24px; bottom: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .wobble-card, .wobble-inner { transition: none; } }
+</style>
+
+<script>
+  // Desplazamiento contenido con el cursor (máx. 10 px, escala 2 %), revertible al salir.
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const blocked = () => !fine.matches || reduced.matches || document.documentElement.classList.contains('motion-paused');
+  document.querySelectorAll<HTMLElement>('[data-wobble]').forEach(card => {
+    const inner = card.querySelector<HTMLElement>('[data-wobble-inner]');
+    let frame = 0;
+    card.addEventListener('pointermove', event => {
+      if (blocked() || frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const box = card.getBoundingClientRect();
+        const dx = Math.max(-1, Math.min(1, (event.clientX - box.left - box.width / 2) / (box.width / 2)));
+        const dy = Math.max(-1, Math.min(1, (event.clientY - box.top - box.height / 2) / (box.height / 2)));
+        card.style.transform = `translate3d(${dx * 10}px, ${dy * 10}px, 0) scale(1.02)`;
+        if (inner) inner.style.transform = `translate3d(${dx * -8}px, ${dy * -8}px, 0) scale(1.02)`;
+      });
+    });
+    card.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(frame); frame = 0;
+      card.style.transform = '';
+      if (inner) inner.style.transform = '';
+    });
+  });
+</script>
