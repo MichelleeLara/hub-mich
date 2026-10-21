@@ -17,7 +17,7 @@ Design system de itsmich.com.mx, el sitio personal de Michelle Rodriguez (Mich),
 
 ## Principios
 
-1. **Un acento, no un arcoíris.** El clay (`accent`) es el único color de marca, en ambos modos; todo lo demás es escala de grises. Se probó un azul para modo oscuro y se descartó.
+1. **Un acento, no un arcoíris.** El azul (`accent`) es el único color de marca, en ambos modos; todo lo demás es escala de grises.
 2. **La tipografía hace el trabajo.** Jerarquía por tamaño y peso, nunca por color.
 3. **El detalle es funcional.** Cada animación orienta o da feedback. Si es adorno, fuera.
 4. **Dark y light, misma alma.** Los dos modos usan los mismos tokens; nada de colores sueltos por modo.

@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const headings = [
+  ['Trabajo seleccionado', 'Ideas que toman forma y generan impacto.'],
+  ['Lo que hago', 'Diseño y construyo productos digitales.'],
+  ['Mi enfoque', 'Productos simples para problemas complejos.'],
+  ['Trayectoria', 'Experiencia que conecta producto e ingeniería.'],
+];
+---
+
+<Layout
+  title="Preview · Encabezados unificados"
+  description="Comparación tipográfica del título naranja y el título principal."
+  image="/OpenGraphl.png"
+  url={Astro.url.href}
+  noindex
+>
+  <main class="preview-shell">
+    <header class="preview-intro">
+      <p class="preview-kicker">Preview tipográfico</p>
+      <h1>Un mismo lenguaje para todos los encabezados.</h1>
+      <p>La línea naranja adopta la misma familia tipográfica del título negro, con menor escala y peso para conservar la jerarquía.</p>
+    </header>
+
+    <section class="comparison" aria-label="Comparación del encabezado actual y la propuesta">
+      <article class="comparison-card current">
+        <p class="card-label">Actual</p>
+        <div class="section-heading">
+          <p class="section-label">Trabajo seleccionado</p>
+          <h2>Ideas que toman forma y generan impacto.</h2>
+        </div>
+      </article>
+
+      <article class="comparison-card proposed">
+        <p class="card-label">Propuesta</p>
+        <div class="section-heading">
+          <p class="section-label">Trabajo seleccionado</p>
+          <h2>Ideas que toman forma y generan impacto.</h2>
+        </div>
+      </article>
+    </section>
+
+    <section class="heading-system" aria-labelledby="system-title">
+      <div class="system-intro">
+        <p>Aplicación en el sitio</p>
+        <h2 id="system-title">Así se verían juntos.</h2>
+      </div>
+      <div class="heading-list">
+        {headings.map(([label, title]) => (
+          <article class="heading-row">
+            <p>{label}</p>
+            <h3>{title}</h3>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .preview-shell { width:min(1180px,calc(100% - 40px)); margin:0 auto; padding:150px 0 100px; }
+  .preview-intro { max-width:760px; margin-bottom:64px; }
+  .preview-kicker { margin:0 0 14px; color:var(--accent); font:600 14px/1.2 var(--font-sans); letter-spacing:.08em; text-transform:uppercase; }
+  .preview-intro h1 { margin:0; color:var(--ink); font:650 clamp(42px,6vw,72px)/1.02 var(--font-sans); letter-spacing:-.045em; text-wrap:balance; }
+  .preview-intro>p:last-child { max-width:620px; margin:24px 0 0; color:var(--muted); font-size:18px; line-height:1.6; }
+  .comparison { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .comparison-card { min-height:330px; padding:28px; border:1px solid var(--line); border-radius:24px; background:color-mix(in srgb,var(--surface) 86%,transparent); }
+  .card-label { display:inline-flex; margin:0 0 70px; padding:7px 11px; border:1px solid var(--line); border-radius:999px; color:var(--muted); font:500 12px/1 var(--font-sans); }
+  .section-heading { display:grid; gap:12px; }
+  .section-heading p,.section-heading h2 { margin:0; }
+  .section-heading h2 { color:var(--ink); font:650 clamp(34px,4vw,48px)/1.1 var(--font-sans); letter-spacing:-.035em; text-wrap:balance; }
+  .current .section-label { color:var(--accent); font:400 30px/1.35 var(--font-accent); }
+  .proposed { border-color:color-mix(in srgb,var(--accent) 40%,var(--line)); box-shadow:0 20px 70px color-mix(in srgb,var(--accent) 10%,transparent); }
+  .proposed .card-label { color:var(--accent); border-color:color-mix(in srgb,var(--accent) 40%,var(--line)); }
+  .proposed .section-label { color:var(--accent); font:600 clamp(18px,2vw,22px)/1.2 var(--font-sans); letter-spacing:-.015em; }
+  .heading-system { margin-top:80px; padding:56px; border-radius:28px; background:#f2f0eb; color:#151515; }
+  .system-intro { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; padding-bottom:28px; border-bottom:1px solid rgb(21 21 21/.16); }
+  .system-intro p { margin:0; color:var(--accent); font:600 20px/1.2 var(--font-sans); letter-spacing:-.015em; }
+  .system-intro h2 { max-width:480px; margin:0; font:650 clamp(34px,4vw,48px)/1.08 var(--font-sans); letter-spacing:-.035em; }
+  .heading-list { display:grid; }
+  .heading-row { display:grid; grid-template-columns:minmax(180px,.7fr) 1.5fr; gap:40px; padding:34px 0; border-bottom:1px solid rgb(21 21 21/.12); }
+  .heading-row:last-child { border-bottom:0; padding-bottom:0; }
+  .heading-row p { margin:3px 0 0; color:var(--accent); font:600 clamp(17px,1.7vw,21px)/1.2 var(--font-sans); letter-spacing:-.015em; }
+  .heading-row h3 { margin:0; font:650 clamp(27px,3.2vw,42px)/1.1 var(--font-sans); letter-spacing:-.035em; text-wrap:balance; }
+  @media(max-width:767px) {
+    .preview-shell { width:min(100% - 28px,1180px); padding:116px 0 70px; }
+    .comparison { grid-template-columns:1fr; }
+    .comparison-card { min-height:280px; padding:22px; }
+    .card-label { margin-bottom:48px; }
+    .heading-system { margin-top:56px; padding:28px 22px; }
+    .system-intro,.heading-row { display:block; }
+    .system-intro h2 { margin-top:12px; }
+    .heading-row p { margin-bottom:12px; }
+  }
+</style>

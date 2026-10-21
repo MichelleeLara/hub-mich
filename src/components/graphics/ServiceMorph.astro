@@ -1,0 +1,77 @@
+<div class="service-morph" data-service-morph data-state="0" aria-hidden="true">
+  <svg class="morph-connections" viewBox="0 0 800 520" fill="none">
+    <path class="connection connection-a" d="M145 305C230 305 230 205 330 205S430 315 515 315 590 235 670 235" />
+    <path class="connection connection-b" d="M138 250H662" />
+    <circle cx="145" cy="305" r="5"/><circle cx="330" cy="205" r="5"/><circle cx="515" cy="315" r="5"/><circle cx="670" cy="235" r="5"/>
+  </svg>
+
+  <div class="morph-orbits">
+    <i></i><i></i><i></i>
+  </div>
+
+  <div class="morph-browser">
+    <div class="browser-bar"><span class="browser-dots"><i></i><i></i><i></i></span><b></b><span class="browser-actions"><i></i><i></i></span></div>
+    <div class="browser-body">
+      <aside class="morph-nav"><span class="avatar"></span><i></i><i></i><i></i><i></i></aside>
+      <div class="morph-workspace">
+        <div class="morph-code-lines"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="morph-card card-a"><span class="card-tag"></span><i class="card-visual"></i><b></b><b></b><b></b></div>
+        <div class="morph-card card-b"><span class="card-tag"></span><i class="card-visual"></i><b></b><b></b><b></b></div>
+        <div class="morph-card card-c"><span class="card-tag"></span><i class="card-visual"></i><b></b><b></b><b></b></div>
+        <div class="morph-node node-a"><span>01</span></div>
+        <div class="morph-node node-b"><span>02</span></div>
+        <div class="morph-node node-c"><span>03</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="morph-core">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path class="core-spark" d="m12 3 1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3Z"/><path class="core-window" d="M4 6h16v13H4zM4 10h16M7 8h.01M10 8h.01"/><path class="core-flow" d="M5 7h5l3 5h6M5 17h5l3-5"/></svg>
+    <span class="core-label label-ai">DISEÑO</span><span class="core-label label-web">PRODUCTO</span><span class="core-label label-flow">FLUJO</span>
+  </div>
+
+  <div class="morph-cursor"><svg viewBox="0 0 32 38"><path d="M3 2 28 20l-11 2-5 12L3 2Z" fill="currentColor" stroke="var(--bg)" stroke-width="2"/></svg></div>
+  <div class="morph-caption"><span></span><i></i><i></i></div>
+</div>
+
+<style>
+ .service-morph { position:absolute; inset:0; overflow:hidden; color:var(--ink); perspective:1100px; }
+ .morph-browser { position:absolute; inset:11% 8% 8%; overflow:hidden; border:1px solid var(--line); border-radius:20px; background:color-mix(in srgb,var(--bg) 94%,transparent); box-shadow:0 24px 55px rgb(0 0 0 / .06); transform-origin:center; }
+ .browser-bar { display:flex; align-items:center; height:48px; padding:0 16px; border-bottom:1px solid var(--line); }
+ .browser-dots,.browser-actions { display:flex; gap:5px; }.browser-dots i { width:6px; height:6px; border-radius:50%; border:1px solid var(--line); }.browser-bar>b { width:34%; height:7px; margin:auto; border-radius:9px; background:var(--line-subtle); }.browser-actions i { width:18px; height:5px; border-radius:5px; background:var(--line-subtle); }
+ .browser-body { display:grid; grid-template-columns:120px 1fr; height:calc(100% - 48px); }
+ .morph-nav { display:flex; flex-direction:column; gap:18px; padding:22px 18px; border-right:1px solid var(--line); }.morph-nav .avatar { width:28px; height:28px; margin-bottom:20px; border-radius:9px; background:color-mix(in srgb,var(--accent) 18%,var(--surface)); box-shadow:inset 0 0 0 1px var(--line); }.morph-nav i { width:100%; height:7px; border-radius:8px; background:var(--line-subtle); }.morph-nav i:last-child { width:68%; }
+ .morph-workspace { position:relative; min-width:0; overflow:hidden; }
+ .morph-card { position:absolute; display:flex; flex-direction:column; gap:8px; padding:14px; border:1px solid var(--line); border-radius:15px; background:var(--bg); box-shadow:0 12px 24px rgb(0 0 0 / .045); }
+ .morph-card .card-tag { width:42%; height:6px; border-radius:8px; background:color-mix(in srgb,var(--accent) 25%,var(--line)); }.morph-card .card-visual { display:block; flex:1; min-height:48px; border-radius:10px; background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 9%,var(--surface)),var(--surface)); }.morph-card b { width:80%; height:5px; border-radius:5px; background:var(--line-subtle); }.morph-card b:last-child { width:52%; }
+ .card-a { left:10%; top:25%; width:27%; height:47%; transform:rotate(-7deg); }.card-b { left:38%; top:15%; width:31%; height:58%; transform:rotate(3deg); }.card-c { left:68%; top:31%; width:24%; height:42%; transform:rotate(8deg); }
+ .morph-node { position:absolute; display:grid; place-items:center; width:36px; height:36px; border:1px solid var(--line); border-radius:11px; background:var(--bg); box-shadow:var(--shadow-float); color:var(--accent); font:9px/1 var(--font-mono); opacity:0; }.node-a { left:13%; top:45%; }.node-b { left:46%; top:45%; }.node-c { left:80%; top:45%; }
+ .morph-code-lines { position:absolute; left:8%; top:9%; display:grid; gap:7px; width:35%; opacity:0; }.morph-code-lines i { height:5px; border-radius:5px; background:var(--line-subtle); }.morph-code-lines i:nth-child(2) { width:80%; }.morph-code-lines i:nth-child(3) { width:58%; background:color-mix(in srgb,var(--accent) 28%,var(--line)); }.morph-code-lines i:nth-child(4) { width:90%; }.morph-code-lines i:nth-child(5) { width:65%; }
+ .morph-core { position:absolute; left:50%; top:43%; z-index:5; display:grid; place-items:center; width:88px; height:88px; margin:-44px; border:1px solid color-mix(in srgb,var(--accent) 34%,var(--line)); border-radius:24px; background:var(--bg); box-shadow:0 18px 45px color-mix(in srgb,var(--accent) 13%,transparent); color:var(--accent); }
+ .morph-core svg { position:absolute; top:15px; width:25px; height:25px; }.core-window,.core-flow { opacity:0; }.core-label { position:absolute; bottom:16px; font:600 10px/1 var(--font-mono); letter-spacing:.08em; }.label-web,.label-flow { opacity:0; }
+ .morph-orbits { position:absolute; left:50%; top:43%; z-index:2; width:340px; height:260px; transform:translate(-50%,-50%); }.morph-orbits i { position:absolute; inset:0; border:1px solid color-mix(in srgb,var(--accent) 18%,transparent); border-radius:50%; }.morph-orbits i:nth-child(2) { inset:38px; }.morph-orbits i:nth-child(3) { inset:76px; }
+ .morph-connections { position:absolute; inset:0; z-index:3; width:100%; height:100%; pointer-events:none; }.morph-connections path { stroke:color-mix(in srgb,var(--accent) 45%,var(--line)); stroke-width:1.4; stroke-dasharray:7 8; opacity:0; }.morph-connections circle { fill:var(--bg); stroke:var(--accent); opacity:0; }
+ .morph-cursor { position:absolute; z-index:8; left:70%; top:64%; width:28px; height:34px; color:var(--ink); }.morph-cursor svg { width:100%; height:100%; }
+ .morph-caption { position:absolute; left:4%; bottom:4%; z-index:7; display:grid; gap:6px; width:110px; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--bg); box-shadow:var(--shadow-float); }.morph-caption>* { display:block; width:100%; height:4px; border-radius:5px; background:var(--line); }.morph-caption i:nth-child(2) { width:78%; }.morph-caption i:last-child { width:50%; background:color-mix(in srgb,var(--accent) 34%,var(--line)); }
+ .morph-browser,.morph-card,.morph-core,.morph-orbits,.morph-cursor,.morph-caption,.morph-node,.morph-code-lines,.core-spark,.core-window,.core-flow,.core-label,.morph-connections path,.morph-connections circle { transition:all 700ms cubic-bezier(.22,1,.36,1); }
+
+ /* Estado 1: los mismos paneles se ordenan como una interfaz web. */
+ .service-morph[data-state="1"] .morph-browser { inset:7% 5% 6%; border-radius:16px; transform:rotateX(2deg); }
+ .service-morph[data-state="1"] .browser-body { grid-template-columns:90px 1fr; }.service-morph[data-state="1"] .morph-nav { padding-inline:14px; }
+ .service-morph[data-state="1"] .card-a { left:8%; top:34%; width:24%; height:50%; transform:none; }.service-morph[data-state="1"] .card-b { left:36%; top:24%; width:29%; height:60%; transform:none; }.service-morph[data-state="1"] .card-c { left:69%; top:34%; width:23%; height:50%; transform:none; }
+ .service-morph[data-state="1"] .morph-code-lines { opacity:1; }.service-morph[data-state="1"] .morph-orbits { width:150px; height:150px; top:23%; opacity:.15; transform:translate(-50%,-50%) rotate(45deg); }
+ .service-morph[data-state="1"] .morph-core { top:22%; width:82px; height:58px; margin:-29px -41px; border-radius:14px; }.service-morph[data-state="1"] .core-spark { opacity:0; }.service-morph[data-state="1"] .core-window { opacity:1; }.service-morph[data-state="1"] .label-ai { opacity:0; }.service-morph[data-state="1"] .label-web { opacity:1; bottom:8px; }.service-morph[data-state="1"] .morph-core svg { top:7px; width:20px; }
+ .service-morph[data-state="1"] .morph-cursor { left:61%; top:57%; transform:rotate(-12deg); }.service-morph[data-state="1"] .morph-caption { left:72%; bottom:7%; }
+
+ /* Estado 2: esos paneles se convierten en pasos conectados de un flujo. */
+ .service-morph[data-state="2"] .morph-browser { inset:12% 4% 10%; border-radius:28px; transform:scale(.96); }.service-morph[data-state="2"] .browser-body { grid-template-columns:80px 1fr; }
+ .service-morph[data-state="2"] .morph-card { top:38%; width:23%; height:39%; transform:none; border-radius:20px; }.service-morph[data-state="2"] .card-a { left:7%; }.service-morph[data-state="2"] .card-b { left:38.5%; }.service-morph[data-state="2"] .card-c { left:70%; }
+ .service-morph[data-state="2"] .morph-card .card-visual { min-height:35px; border-radius:50%; transform:scale(.55); }.service-morph[data-state="2"] .morph-node { opacity:1; }.service-morph[data-state="2"] .morph-connections .connection-a,.service-morph[data-state="2"] .morph-connections circle { opacity:1; }
+ .service-morph[data-state="2"] .morph-orbits { width:460px; height:95px; top:49%; opacity:.22; }.service-morph[data-state="2"] .morph-orbits i { border-radius:999px; }
+ .service-morph[data-state="2"] .morph-core { top:24%; width:104px; height:64px; margin:-32px -52px; border-radius:999px; }.service-morph[data-state="2"] .core-spark { opacity:0; }.service-morph[data-state="2"] .core-flow { opacity:1; }.service-morph[data-state="2"] .label-ai { opacity:0; }.service-morph[data-state="2"] .label-flow { opacity:1; bottom:8px; }.service-morph[data-state="2"] .morph-core svg { top:7px; width:20px; }
+ .service-morph[data-state="2"] .morph-cursor { left:82%; top:69%; transform:rotate(12deg); }.service-morph[data-state="2"] .morph-caption { left:5%; bottom:7%; }
+
+ @media(max-width:767px) { .morph-browser { inset:12% 3% 8%; }.browser-body { grid-template-columns:64px 1fr; }.morph-nav { padding:16px 10px; }.morph-core { transform:scale(.78); }.morph-orbits { transform:translate(-50%,-50%) scale(.75); }.morph-caption { transform:scale(.78); transform-origin:left bottom; }.service-morph[data-state="1"] .browser-body,.service-morph[data-state="2"] .browser-body { grid-template-columns:58px 1fr; } }
+ @media(prefers-reduced-motion:reduce) { .service-morph * { transition:none!important; } }
+ :global(html.motion-paused) .service-morph * { transition:none!important; }
+</style>

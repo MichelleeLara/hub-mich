@@ -3,6 +3,7 @@ import AnimatedTabs from '../components/Navbar';
 import Header from '../components/Header';
 import ParticlesBackground from '../components/ParticlesBackground.astro';
 import '@fontsource-variable/inter-tight/wght.css';
+import '@fontsource/rock-salt/400.css';
 import interLatin from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
 import '../styles/product.css';
 const { title, description, image, url, noindex = false } = Astro.props;
@@ -72,8 +73,8 @@ export interface Props {
 
       <slot />
     </div>
-    <!-- Menú de Navegación Persistente (bottom bar mobile) -->
-    <AnimatedTabs client:media="(max-width: 767px)" />
+    <!-- Navegación móvil + asistente contextual de escritorio -->
+    <AnimatedTabs client:load />
     
   </body>
 </html>

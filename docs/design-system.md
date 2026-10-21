@@ -28,10 +28,10 @@ Vista viva: [`/design`](../src/pages/design.astro) (oculta, `noindex`).
 | `--muted` | `#62646b` | `#aaaab0` | Texto secundario | `text-muted` |
 | `--line` | negro .12 | blanco .13 | Bordes y divisores | `border-line` |
 | `--line-subtle` | negro .055 | blanco .07 | Divisores suaves | `border-line-subtle` |
-| `--accent` | `#a74316` | `#efaa85` | Etiquetas, foco, estado activo, diagramas | `text-accent` |
-| `--accent-strong` | `#95421d` | `#edb191` | Partículas | `text-accent-strong` |
-| `--accent-deep` | `#6e2f15` | `#ffe0ca` | Partículas · detalle | `text-accent-deep` |
-| `--accent-soft` | `#f5e9e1` | `#30251f` | Selección de texto, fondo de íconos | `bg-accent-soft` |
+| `--accent` | `#1d5fc4` | `#4f8ff7` | Etiquetas, foco, estado activo, diagramas | `text-accent` |
+| `--accent-strong` | `#174fa8` | `#7aa9f9` | Partículas | `text-accent-strong` |
+| `--accent-deep` | `#0f3c82` | `#d8e6ff` | Partículas · detalle | `text-accent-deep` |
+| `--accent-soft` | `#e6eefb` | `#1a2638` | Selección de texto, fondo de íconos | `bg-accent-soft` |
 | `--success` | `#15803d` | `#22c55e` | Estado "Disponible" | `text-success` |
 
 - Sin clases `dark:` para color: los tokens ya cambian solos con `html.dark`.
