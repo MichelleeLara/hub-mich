@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Services from '../components/Services.astro';
+import ServicesCompact from '../components/ServicesCompact.astro';
+---
+<Layout title="Preview · Servicios compacta" description="Comparación de la sección de servicios actual con una versión compacta y su barra de asistencia." image="/author.png" url={Astro.url.href} noindex>
+  <div class="switcher" role="group" aria-label="Versión de la sección de servicios">
+    <button type="button" data-version="compacta" aria-pressed="true">Compacta (propuesta)</button>
+    <button type="button" data-version="actual" aria-pressed="false">Actual</button>
+  </div>
+  <main>
+    <div data-panel="compacta"><ServicesCompact id="servicios-compacta" /></div>
+    <div data-panel="actual" hidden><Services /></div>
+    <div class="spacer" aria-hidden="true"></div>
+  </main>
+</Layout>
+
+<style>
+  .switcher { position: sticky; top: 84px; z-index: 50; width: fit-content; margin: 110px auto 0; display: flex; gap: 6px; padding: 6px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-glass); backdrop-filter: blur(12px); }
+  .switcher button { min-height: 40px; padding: 0 16px; border-radius: 999px; color: var(--muted); font: 500 13px/1 var(--font-sans); }
+  .switcher button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  main :global(.section-shell) { padding-top: 40px; }
+  /* Aire abajo para que la barra flotante no tape el final de la tarjeta. */
+  .spacer { height: 40vh; }
+</style>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-version]');
+  const panels = document.querySelectorAll<HTMLElement>('[data-panel]');
+  buttons.forEach(button => button.addEventListener('click', () => {
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    panels.forEach(panel => { panel.hidden = panel.dataset.panel !== button.dataset.version; });
+    window.dispatchEvent(new Event('scroll'));
+  }));
+</script>
