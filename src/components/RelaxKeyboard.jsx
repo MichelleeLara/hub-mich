@@ -79,12 +79,58 @@ const WORDS = 'casa luz mar cielo nube tiempo idea mano camino ciudad noche dia 
 const GAME_WORDS = 12;
 const newTarget = () => Array.from({ length: GAME_WORDS }, () => WORDS[Math.floor(Math.random() * WORDS.length)]).join(' ');
 const freshGame = () => ({ target: newTarget(), typed: [], startedAt: null, endedAt: null, strokes: 0, misses: 0 });
-const FREE_CAP = 160;
-
-// Modo "Escríbeme": mensaje → a dónde responder → se envía a /api/contact (WhatsApp/Telegram de Mich)
-const MSG_CAP = { message: 500, contact: 120 };
-const freshMsg = () => ({ step: 'message', message: '', contact: '', startedAt: null, error: null });
+// Modo "Escríbeme": mensaje → a dónde responder (WhatsApp o correo) → se envía a /api/contact
+const MSG_CAP = { message: 500 };
+const CONTACT_CAP = { whatsapp: 16, email: 80 };
+const freshMsg = () => ({ step: 'message', message: '', contact: '', channel: null, rawContact: '', startedAt: null, error: null, hint: null });
 const lineText = chars => chars.map(c => c.ch).join('').trim();
+const canType = msg => msg.step === 'message' || msg.step === 'contact';
+
+// WhatsApp: solo dígitos (y un + al inicio). Correo: sin espacios y en minúsculas.
+const filterContact = (channel, current, text) => {
+  if (channel === 'whatsapp') return [...text].filter((ch, i) => /\d/.test(ch) || (ch === '+' && current.length === 0 && i === 0)).join('');
+  return text.replace(/\s/g, '').toLowerCase();
+};
+// El primer carácter decide el canal si aún no se eligió: número → WhatsApp, letra → correo
+const detectChannel = ch => (/[\d+]/.test(ch) ? 'whatsapp' : 'email');
+
+// Grupos para leer el número: 55 1234 5678 · +52 55 1234 5678 · +1 555 123 4567
+function phoneGroups(raw) {
+  const plus = raw.startsWith('+');
+  const digits = raw.replace(/\D/g, '');
+  const cc = plus ? (digits.startsWith('1') ? 1 : 2) : 0;
+  const sizes = cc === 1 ? [3, 3, 4] : [2, 4, 4];
+  const starts = new Set(); // índices del texto (con +) donde empieza un grupo nuevo
+  let i = (plus ? 1 : 0) + cc;
+  if (cc) starts.add(i);
+  for (const size of [...sizes, 4]) { i += size; starts.add(i); }
+  return starts;
+}
+const formatPhone = raw => {
+  const starts = phoneGroups(raw);
+  return [...raw].map((ch, i) => (starts.has(i) ? ` ${ch}` : ch)).join('');
+};
+// Autocompletar del correo: sugiere el dominio más común que encaja con lo escrito (se acepta con Tab o →)
+const EMAIL_DOMAINS = ['gmail.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'yahoo.com'];
+const emailSuggestion = text => {
+  if (!text) return '';
+  const at = text.indexOf('@');
+  if (at < 0) return `@${EMAIL_DOMAINS[0]}`;
+  const typed = text.slice(at + 1);
+  if (text.indexOf('@', at + 1) >= 0) return '';
+  const match = EMAIL_DOMAINS.find(d => d.startsWith(typed) && d !== typed);
+  return match ? match.slice(typed.length) : '';
+};
+const validContact = (channel, raw) => channel === 'whatsapp'
+  ? raw.replace(/\D/g, '').length >= 10 && raw.replace(/\D/g, '').length <= 15
+  : /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(raw);
+// Lo que le llega a Mich: listo para responder con un toque
+const contactLabel = (channel, raw) => {
+  if (channel === 'email') return `Correo ${raw}`;
+  const digits = raw.replace(/\D/g, '');
+  const intl = raw.startsWith('+') ? digits : digits.length === 10 ? `52${digits}` : digits;
+  return `WhatsApp ${formatPhone(raw.startsWith('+') ? raw : `+${intl}`)} · https://wa.me/${intl}`;
+};
 
 // Atajos que se respetan aunque la sección bloquee el teclado nativo: recargar y devtools
 const isEscapeHatch = e => e.key === 'F5' || e.key === 'F12' || ((e.metaKey || e.ctrlKey) && (e.key === 'r' || e.key === 'R' || (e.altKey && /^[ij]$/i.test(e.key))));
@@ -101,21 +147,23 @@ function eraseTo(list, scope = 'char') {
 const eraseScope = e => e.metaKey ? 'all' : (e.altKey || e.ctrlKey) ? 'word' : 'char';
 
 function reducer(state, action) {
-  const { mode, game } = state;
+  const { mode, game, msg } = state;
   switch (action.type) {
     case 'mode':
       return action.mode === mode ? state : { ...state, mode: action.mode, chars: [], game: freshGame(), msg: freshMsg() };
+    case 'channel':
+      // Cambiar de canal limpia el campo: un número no sirve como correo ni al revés
+      return mode === 'msg' && msg.step === 'contact' && action.channel !== msg.channel ? { ...state, chars: [], msg: { ...msg, channel: action.channel, hint: null } } : state;
     case 'type': {
       if (mode === 'msg') {
-        const { msg } = state;
-        const cap = MSG_CAP[msg.step];
-        if (!cap) return state;
-        const chars = [...state.chars, ...toChars(action.ch)].slice(0, cap);
-        return { ...state, chars, msg: { ...msg, startedAt: msg.startedAt ?? Date.now() } };
-      }
-      if (mode === 'free') {
-        const chars = [...state.chars, ...toChars(action.ch)];
-        return { ...state, chars: chars.length > FREE_CAP ? chars.slice(-FREE_CAP) : chars };
+        if (!canType(msg)) return state;
+        const startedAt = msg.startedAt ?? Date.now();
+        if (msg.step === 'message') return { ...state, chars: [...state.chars, ...toChars(action.ch)].slice(0, MSG_CAP.message), msg: { ...msg, startedAt } };
+        const channel = msg.channel ?? detectChannel(action.ch[0]);
+        const current = lineText(state.chars);
+        const add = filterContact(channel, current, action.ch);
+        if (!add) return state.chars.length || msg.channel ? state : { ...state, msg: { ...msg, channel } };
+        return { ...state, chars: [...state.chars, ...toChars(add)].slice(0, CONTACT_CAP[channel]), msg: { ...msg, channel, startedAt, hint: null } };
       }
       if (game.endedAt || game.typed.length >= game.target.length) return state;
       const now = performance.now();
@@ -124,36 +172,39 @@ function reducer(state, action) {
       return { ...state, game: { ...game, typed, startedAt: game.startedAt ?? now, endedAt: typed.length === game.target.length ? now : null, strokes: game.strokes + 1, misses: game.misses + (ok ? 0 : 1) } };
     }
     case 'erase':
-      if (mode === 'msg' && !MSG_CAP[state.msg.step]) return state;
-      if (mode !== 'game') return { ...state, chars: state.chars.slice(0, eraseTo(state.chars, action.scope)) };
+      if (mode === 'msg') {
+        if (!canType(msg)) return state;
+        return { ...state, chars: state.chars.slice(0, eraseTo(state.chars, action.scope)), msg: { ...msg, hint: null } };
+      }
       if (game.endedAt) return state;
       return { ...state, game: { ...game, typed: game.typed.slice(0, eraseTo(game.typed, action.scope)) } };
     case 'enter':
       if (mode === 'msg') {
-        const { msg } = state;
         const text = lineText(state.chars);
         if (msg.step === 'message') return text.length >= 2 ? { ...state, chars: [], msg: { ...msg, step: 'contact', message: text } } : state;
-        if (msg.step === 'contact') return text ? { ...state, chars: [], msg: { ...msg, step: 'sending', contact: text, error: null } } : state;
+        if (msg.step === 'contact') {
+          if (!text || !msg.channel) return state;
+          if (!validContact(msg.channel, text)) return { ...state, msg: { ...msg, hint: msg.channel } };
+          return { ...state, chars: [], msg: { ...msg, step: 'sending', rawContact: text, contact: contactLabel(msg.channel, text), error: null, hint: null } };
+        }
         if (msg.step === 'error') return { ...state, msg: { ...msg, step: 'sending', error: null } };
         if (msg.step === 'sent') return { ...state, chars: [], msg: freshMsg() };
         return state;
       }
-      if (mode === 'free') return { ...state, chars: [] };
       return game.endedAt || game.typed.length === 0 ? { ...state, game: freshGame() } : state;
     case 'restart':
       if (mode === 'msg') {
-        const { msg } = state;
         // esc: regresa un paso con lo que ya había escrito
-        if (msg.step === 'contact') return { ...state, chars: toChars(msg.message), msg: { ...msg, step: 'message' } };
-        if (msg.step === 'error') return { ...state, chars: toChars(msg.contact), msg: { ...msg, step: 'contact', error: null } };
+        if (msg.step === 'contact') return { ...state, chars: toChars(msg.message), msg: { ...msg, step: 'message', hint: null } };
+        if (msg.step === 'error') return { ...state, chars: toChars(msg.rawContact), msg: { ...msg, step: 'contact', error: null } };
         if (msg.step === 'sending') return state;
         return { ...state, chars: [], msg: msg.step === 'sent' ? freshMsg() : msg };
       }
-      return mode === 'game' ? { ...state, game: freshGame() } : { ...state, chars: [] };
+      return { ...state, game: freshGame() };
     case 'sent':
-      return state.msg.step === 'sending' ? { ...state, msg: { ...state.msg, step: 'sent' } } : state;
+      return msg.step === 'sending' ? { ...state, msg: { ...msg, step: 'sent' } } : state;
     case 'failed':
-      return state.msg.step === 'sending' ? { ...state, msg: { ...state.msg, step: 'error', error: action.error } } : state;
+      return msg.step === 'sending' ? { ...state, msg: { ...msg, step: 'error', error: action.error } } : state;
     default:
       return state;
   }
@@ -172,6 +223,12 @@ function gameStats(game, now) {
   };
 }
 
+const channelIcon = paths => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths}</svg>;
+const CHANNELS = [
+  { id: 'whatsapp', label: 'WhatsApp', icon: channelIcon(<><path d="m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" /><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" /></>) },
+  { id: 'email', label: 'Correo', icon: channelIcon(<><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></>) },
+];
+
 export default function RelaxKeyboard() {
   const rootRef = useRef(null);
   const lineRef = useRef(null);
@@ -179,7 +236,7 @@ export default function RelaxKeyboard() {
   const caretRef = useRef(null);
   const reduced = useReducedMotionPreference();
   const [pressed, setPressedKeys] = useState(() => new Set());
-  const [state, dispatch] = useReducer(reducer, null, () => ({ mode: 'free', chars: [], game: freshGame(), msg: freshMsg() }));
+  const [state, dispatch] = useReducer(reducer, null, () => ({ mode: 'msg', chars: [], game: freshGame(), msg: freshMsg() }));
   const [shift, setShift] = useState(false);
   // Modificador de borrado al tocar: ⌘ = línea completa, ⌥ / ⌃ = palabra (se suelta al usarlo)
   const [eraseMod, setEraseMod] = useState(null);
@@ -191,6 +248,11 @@ export default function RelaxKeyboard() {
   const { mode, chars, game, msg } = state;
   const modeRef = useRef(mode);
   modeRef.current = mode;
+  const msgRef = useRef(msg);
+  msgRef.current = msg;
+  const suggestion = mode === 'msg' && msg.step === 'contact' && msg.channel === 'email' ? emailSuggestion(lineText(chars)) : '';
+  const suggestionRef = useRef(suggestion);
+  suggestionRef.current = suggestion;
 
   // Envío del modo "Escríbeme"
   useEffect(() => {
@@ -256,8 +318,10 @@ export default function RelaxKeyboard() {
       // En "Escríbeme" se deja pegar (⌘V / Ctrl V); el texto llega por el evento paste
       const isPaste = modeRef.current === 'msg' && (e.metaKey || e.ctrlKey) && (e.key === 'v' || e.key === 'V');
       // Bloquea lo nativo (scroll, buscar, atajos, atrás) salvo Tab, recargar y devtools
-      if (e.key !== 'Tab' && !isEscapeHatch(e) && !isPaste) e.preventDefault();
-      if (e.key === 'Tab') return;
+      // Con una sugerencia de correo a la vista, Tab la completa en vez de mover el foco
+      const completes = (e.key === 'Tab' || e.code === 'ArrowRight') && !e.shiftKey && Boolean(suggestionRef.current);
+      if ((e.key !== 'Tab' || completes) && !isEscapeHatch(e) && !isPaste) e.preventDefault();
+      if (e.key === 'Tab' && !completes) return;
       const code = e.code;
       if (e.repeat) { if (code === 'Backspace') dispatch({ type: 'erase', scope: eraseScope(e) }); return; }
       prime();
@@ -266,6 +330,10 @@ export default function RelaxKeyboard() {
       // Con ⌘ presionado macOS no manda keyup de la otra tecla: se suelta sola
       if (e.metaKey && e.key !== 'Meta') setTimeout(() => release(code), 220);
       if (e.key === 'Backspace') return dispatch({ type: 'erase', scope: eraseScope(e) });
+      if (completes) return dispatch({ type: 'type', ch: suggestionRef.current });
+      if ((code === 'ArrowLeft' || code === 'ArrowRight') && modeRef.current === 'msg' && msgRef.current.step === 'contact') {
+        return dispatch({ type: 'channel', channel: msgRef.current.channel === 'whatsapp' ? 'email' : 'whatsapp' });
+      }
       if (e.metaKey || e.ctrlKey) return;
       else if (e.key === 'Enter') dispatch({ type: 'enter' });
       else if (e.key === 'Escape') dispatch({ type: 'restart' });
@@ -308,6 +376,7 @@ export default function RelaxKeyboard() {
     if (code === 'MetaLeft' || code === 'MetaRight') return setEraseMod(m => m === 'all' ? null : 'all');
     if (code === 'AltLeft' || code === 'AltRight' || code === 'ControlLeft') return setEraseMod(m => m === 'word' ? null : 'word');
     setEraseMod(null);
+    if ((code === 'Tab' || code === 'ArrowRight') && suggestion) return dispatch({ type: 'type', ch: suggestion });
     if (code === 'Enter') return dispatch({ type: 'enter' });
     if (code === 'Escape') return dispatch({ type: 'restart' });
     if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'CapsLock') return setShift(s => !s);
@@ -323,20 +392,24 @@ export default function RelaxKeyboard() {
   const letterOut = reduced ? { opacity: 0 } : { opacity: 0, y: -10, scale: .8, filter: 'blur(6px)' };
   const stats = gameStats(game, now);
   const MSG_ERRORS = { rate: 'Muchos mensajes seguidos; intenta en unos minutos', 'too-fast': 'Escribe con calma y vuelve a intentarlo' };
+  const CONTACT_HINTS = { whatsapp: 'Revisa el número: van 10 dígitos o más', email: 'Revisa el correo: falta la @ o el dominio' };
   const msgStatus = {
     message: `return para seguir · ${chars.length}/${MSG_CAP.message}`,
-    contact: 'correo, WhatsApp o @usuario · return envía · esc vuelve',
+    contact: msg.hint ? CONTACT_HINTS[msg.hint] : suggestion ? 'tab o → completa · return envía' : 'return envía · esc vuelve',
     sending: 'Enviando…',
     sent: 'return para escribir otro',
     error: `${MSG_ERRORS[msg.error] || 'No se pudo enviar'} · return reintenta · esc corrige`,
   };
   const placeholder = mode === 'msg'
-    ? { message: 'Escríbeme algo…', contact: '¿A dónde te respondo?', sending: 'Enviando…', sent: 'Enviado. Te respondo pronto ✓', error: 'No se pudo enviar' }[msg.step]
+    ? { message: 'Escríbeme algo…', contact: { whatsapp: '55 1234 5678', email: 'tu@correo.com' }[msg.channel] ?? '¿A dónde te respondo?', sending: 'Enviando…', sent: 'Enviado. Te respondo pronto ✓', error: 'No se pudo enviar' }[msg.step]
     : 'Escribe algo…';
-  const showCaret = mode !== 'msg' || Boolean(MSG_CAP[msg.step]);
-  const status = mode === 'msg' ? msgStatus[msg.step] : mode === 'free'
-    ? 'return borra la línea'
-    : game.endedAt
+  const showCaret = mode !== 'msg' || canType(msg);
+  // Ayudas de lectura en el paso 2: el número se agrupa (55 1234 5678) y el dominio del correo va más tenue
+  const contactText = mode === 'msg' && msg.step === 'contact' ? chars.map(c => c.ch).join('') : '';
+  const groupStarts = msg.channel === 'whatsapp' && contactText ? phoneGroups(contactText) : null;
+  const atIndex = msg.channel === 'email' ? contactText.indexOf('@') : -1;
+  const charClass = i => `relax-char${groupStarts?.has(i) ? ' is-group' : ''}${atIndex >= 0 && i >= atIndex ? ' is-domain' : ''}`;
+  const status = mode === 'msg' ? msgStatus[msg.step] : game.endedAt
       ? null
       : game.startedAt ? `${stats.words}/${GAME_WORDS} · ${stats.seconds.toFixed(1)} s · esc reinicia` : `${GAME_WORDS} palabras · empieza a escribir`;
 
@@ -349,14 +422,15 @@ export default function RelaxKeyboard() {
           {mode !== 'game' ? (
             <>
               <AnimatePresence initial={false} mode="popLayout">
-                {chars.map(c => (
-                  <motion.span key={c.id} className="relax-char" initial={letterIn} animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }} exit={letterOut}
+                {chars.map((c, i) => (
+                  <motion.span key={c.id} className={charClass(i)} initial={letterIn} animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }} exit={letterOut}
                     transition={reduced ? { duration: .15 } : { type: 'spring', stiffness: 520, damping: 26, mass: .55 }}>
                     {c.ch === ' ' ? ' ' : c.ch}
                   </motion.span>
                 ))}
               </AnimatePresence>
               <span ref={caretRef} className="relax-caret" aria-hidden="true" hidden={!showCaret} />
+              {suggestion && <span className="relax-suggestion" aria-hidden="true">{suggestion}</span>}
               {chars.length === 0 && <span key={placeholder} className={`relax-placeholder ${mode === 'msg' && msg.step === 'sent' ? 'is-sent' : ''}`}>{placeholder}</span>}
             </>
           ) : (
@@ -385,6 +459,17 @@ export default function RelaxKeyboard() {
             <motion.p key="result" className="relax-result" initial={reduced ? { opacity: 0 } : { opacity: 0, y: 8, filter: 'blur(4px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} exit={{ opacity: 0 }} transition={SPRING}>
               <strong>{stats.wpm}</strong> ppm <span className="relax-dot">·</span> <strong>{stats.accuracy}%</strong> precisión <span className="relax-dot">·</span> <strong>{stats.seconds.toFixed(1)}</strong> s <span className="relax-dot">·</span> <kbd>return</kbd> otra
             </motion.p>
+          ) : mode === 'msg' && msg.step === 'contact' ? (
+            <motion.div key="msg-contact" className="relax-contact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={SPRING}>
+              <div className="relax-channels" role="radiogroup" aria-label="¿Por dónde te respondo?">
+                {CHANNELS.map(c => (
+                  <button key={c.id} type="button" role="radio" aria-checked={msg.channel === c.id} onMouseDown={e => e.preventDefault()} onClick={() => dispatch({ type: 'channel', channel: c.id })}>
+                    {c.icon}<span>{c.label}</span>
+                  </button>
+                ))}
+              </div>
+              <p className={msg.hint ? 'is-hint' : ''}>{status}</p>
+            </motion.div>
           ) : (
             <motion.p key={mode === 'msg' ? `msg-${msg.step}` : mode} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={SPRING}>{status}</motion.p>
           )}
@@ -396,7 +481,7 @@ export default function RelaxKeyboard() {
         <p className="note-label relax-label">Un respiro</p>
         <div className="relax-controls">
           <div className="relax-modes" role="group" aria-label="Modo del teclado">
-            {[['free', 'Libre'], ['game', 'Reto'], ['msg', 'Escríbeme']].map(([id, label]) => (
+            {[['msg', 'Escríbeme'], ['game', 'Reto']].map(([id, label]) => (
               <button key={id} type="button" aria-pressed={mode === id} onMouseDown={e => e.preventDefault()} onClick={() => dispatch({ type: 'mode', mode: id })}>
                 {mode === id && <motion.span layoutId="relax-mode-pill" className="relax-mode-pill" transition={SPRING} />}
                 <span>{label}</span>
