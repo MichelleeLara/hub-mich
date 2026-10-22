@@ -212,5 +212,22 @@
       "width": 2000,
       "height": 1389
     }
+  ],
+  "luzia-app-v5": [
+    {
+      "src": "/media/project-covers/luzia-app-v5-720.webp",
+      "width": 720,
+      "height": 499
+    },
+    {
+      "src": "/media/project-covers/luzia-app-v5-1440.webp",
+      "width": 1440,
+      "height": 999
+    },
+    {
+      "src": "/media/project-covers/luzia-app-v5-2000.webp",
+      "width": 2000,
+      "height": 1387
+    }
   ]
 }
