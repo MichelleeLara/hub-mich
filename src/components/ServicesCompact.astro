@@ -9,9 +9,9 @@ interface Props { id?: string; }
 const { id = 'servicios' } = Astro.props;
 
 const services = [
-  { title:'Diseño UX/UI', step:'Diseño', short:'Experiencias claras para web y móvil.', description:'Recorridos, interfaces y sistemas visuales que convierten una idea en una experiencia coherente, accesible y lista para construir.', deliverables:['Diseño web','Diseño móvil','UX/UI'], outcome:'Una experiencia clara antes de escribir código.', project:'Tracking Aduanal', slug:'tracking-aduanal', icon:'spark' },
-  { title:'Desarrollo de producto', step:'Desarrollo', short:'Productos web y móviles hechos a la medida.', description:'Soluciones listas para operar: desde una microapp enfocada hasta una plataforma web o una app para iOS.', deliverables:['Desarrollo web','Microapps a medida','App iOS'], outcome:'Un producto funcional, escalable y listo para crecer.', project:'Monitoreo White-Label', slug:'monitoreo-white-label', icon:'browser' },
-  { title:'Automatización', step:'Automatización', short:'Procesos que eliminan trabajo repetitivo.', description:'Herramientas, datos y reglas de negocio conectados en automatizaciones confiables, medibles y adaptadas a tu operación.', deliverables:['Automatizaciones a medida','Integración de APIs','Seguimiento del flujo'], outcome:'Una operación más simple, rápida y consistente.', project:'Luz.ia', slug:'luzia-agentes-ia', icon:'flow' },
+  { title:'Diseño UX/UI', step:'Diseño', short:'Experiencias claras para web y móvil.', description:'Recorridos, interfaces y sistemas visuales que convierten una idea en una experiencia coherente, accesible y lista para construir.', deliverables:['Diseño web','Diseño móvil','UX/UI'], outcome:'Una experiencia clara antes de escribir código.', icon:'spark' },
+  { title:'Desarrollo de producto', step:'Desarrollo', short:'Productos web y móviles hechos a la medida.', description:'Soluciones listas para operar: desde una microapp enfocada hasta una plataforma web o una app para iOS.', deliverables:['Desarrollo web','Microapps a medida','App iOS'], outcome:'Un producto funcional, escalable y listo para crecer.', icon:'browser' },
+  { title:'Automatización', step:'Automatización', short:'Procesos que eliminan trabajo repetitivo.', description:'Herramientas, datos y reglas de negocio conectados en automatizaciones confiables, medibles y adaptadas a tu operación.', deliverables:['Automatizaciones a medida','Integración de APIs','Seguimiento del flujo'], outcome:'Una operación más simple, rápida y consistente.', icon:'flow' },
 ];
 ---
 <section class="section-shell compact-services" id={id} aria-labelledby={`${id}-title`} data-compact-services data-context-stepper data-context-variant="assist" data-context-title="Servicios" data-context-steps={JSON.stringify(services.map(s => s.step))} data-context-icons={JSON.stringify(services.map(s => s.icon))} data-context-index="0">
@@ -21,27 +21,18 @@ const services = [
   </header>
 
   <div class="compact-card grain">
-    <div class="compact-tabs" role="tablist" aria-label="Servicios">
-      {services.map((service, i) => (
-        <button type="button" role="tab" id={`${id}-tab-${i}`} aria-controls={`${id}-panel-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-compact-tab={i}>
-          <span class="tab-number">0{i + 1}</span>{service.step}
-        </button>
-      ))}
-    </div>
-
     <div class="compact-body">
       <div class="compact-info">
         {services.map((service, i) => (
-          <article class="compact-panel" id={`${id}-panel-${i}`} role="tabpanel" aria-labelledby={`${id}-tab-${i}`} hidden={i !== 0} data-compact-panel={i}>
-            <h3>{service.title}</h3>
+          <article class="compact-panel" id={`${id}-panel-${i}`} aria-label={service.title} hidden={i !== 0} data-compact-panel={i}>
+            <div class="compact-title">
+              <span class="service-count" aria-label={`Servicio ${i + 1} de ${services.length}`}><span class="service-ball">{i + 1}</span><span class="service-of" aria-hidden="true">/{services.length}</span></span>
+              <h3>{service.title}</h3>
+            </div>
             <p class="compact-short">{service.short}</p>
             <p class="compact-description">{service.description}</p>
             <ul class="compact-deliverables" aria-label="Incluye">{service.deliverables.map(item => <li>{item}</li>)}</ul>
             <p class="compact-outcome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7" /></svg>{service.outcome}</p>
-            <div class="compact-actions">
-              <a class="btn btn-primary" href={`mailto:mich.ia@hotmail.com?subject=${encodeURIComponent('Hablemos de ' + service.title)}`}>Hablemos de tu idea <span aria-hidden="true">↗</span></a>
-              <a class="compact-case" href={`/proyectos/${service.slug}`}>Ver en práctica · {service.project}</a>
-            </div>
           </article>
         ))}
       </div>
@@ -55,26 +46,22 @@ const services = [
   .compact-heading > p { max-width: 340px; margin: 0 0 4px; color: var(--muted); line-height: 1.6; }
   .compact-card { overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: color-mix(in srgb, var(--surface) 54%, var(--bg)); }
   /* Selector arriba: los tres servicios siempre visibles. */
-  .compact-tabs { display: flex; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
-  .compact-tabs button { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 18px; border-radius: 999px; color: var(--muted); font-size: 14px; font-weight: 500; transition: color var(--dur-fast), background-color var(--dur-fast); }
-  .compact-tabs button:hover { color: var(--ink); }
-  .compact-tabs button[aria-selected="true"] { background: var(--bg); color: var(--ink); box-shadow: 0 1px 0 var(--line), 0 6px 16px rgb(0 0 0 / .05); }
-  .compact-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .tab-number { color: var(--subtle); font: 500 11px/1 var(--font-mono); }
   .compact-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: stretch; }
   /* Información del servicio: lo que domina. */
   .compact-info { padding: 36px 40px; }
   .compact-panel[hidden] { display: none; }
   .compact-panel h3 { font: 600 var(--fs-h3)/1.1 var(--font-display); letter-spacing: -.015em; }
+  /* Contador: la misma bola azul que marca el paso activo en la bottom bar */
+  .compact-title { display: flex; align-items: center; gap: var(--space-3); }
+  .service-count { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+  .service-ball { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: var(--radius-full); background: var(--accent); color: var(--bg); font: 600 12px/1 var(--font-sans); }
+  .service-of { color: var(--subtle); font: 500 12px/1 var(--font-mono); }
   .compact-short { margin-top: var(--space-3); color: var(--ink); font-size: var(--fs-lead); font-weight: 500; line-height: 1.4; }
   .compact-description { margin-top: var(--space-3); color: var(--muted); font-size: 15px; line-height: 1.6; max-width: 440px; }
   .compact-deliverables { display: flex; flex-wrap: wrap; gap: 8px; margin: var(--space-5) 0 0; padding: 0; list-style: none; }
   .compact-deliverables li { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 12px; }
   .compact-outcome { display: flex; align-items: center; gap: 8px; margin-top: var(--space-5); color: var(--ink); font-size: 14px; font-weight: 500; }
   .compact-outcome svg { flex: none; width: 18px; height: 18px; color: var(--success); }
-  .compact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); margin-top: var(--space-6); }
-  .compact-case { color: var(--muted); font-size: 13px; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; }
-  .compact-case:hover { color: var(--ink); }
   /* Gráfico: ocupa su panel completo, sin franja de título encima. */
   .compact-canvas { position: relative; min-height: 380px; border-left: 1px solid var(--line); background: linear-gradient(150deg, color-mix(in srgb, var(--accent) 4%, var(--bg)), var(--bg) 60%); }
   .compact-canvas::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, var(--line) 1px, transparent 1px); background-size: 28px 28px; opacity: .5; }
@@ -82,9 +69,6 @@ const services = [
   @media (prefers-reduced-motion: no-preference) { .compact-panel:not([hidden]) { animation: compact-in 360ms var(--ease-out) both; } @keyframes compact-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } } }
   @media (max-width: 960px) { .compact-heading { flex-direction: column; align-items: flex-start; gap: var(--space-4); } .compact-info { padding: 28px; } }
   @media (max-width: 767px) {
-    .compact-tabs { overflow-x: auto; scrollbar-width: none; }
-    .compact-tabs button { flex: 1 1 auto; justify-content: center; padding: 0 10px; font-size: 13px; }
-    .tab-number { display: none; }
     .compact-body { grid-template-columns: 1fr; }
     .compact-info { padding: 24px; }
     .compact-canvas { min-height: 260px; border-left: 0; border-top: 1px solid var(--line); }
@@ -94,24 +78,41 @@ const services = [
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-compact-services]').forEach(section => {
-    const tabs = [...section.querySelectorAll<HTMLButtonElement>('[data-compact-tab]')];
     const panels = [...section.querySelectorAll<HTMLElement>('[data-compact-panel]')];
     const morph = section.querySelector<HTMLElement>('[data-service-morph]');
-    const select = (next: number, focus = false) => {
+    // Temporizador: cambia de servicio solo; la bottom bar dibuja su avance leyendo section.contextTimer
+    const DURATION = 7000;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const userPaused = () => { try { return localStorage.getItem('motion') === 'paused'; } catch { return false; } };
+    let current = 0, elapsed = 0, startedAt = 0, running = false, timer = 0, inView = false, hovering = false;
+    const shouldRun = () => !reduced && !userPaused() && inView && !hovering && !document.hidden;
+    const sync = () => {
+      const want = shouldRun();
+      if (want && !running) { running = true; startedAt = performance.now(); timer = window.setTimeout(() => select(current + 1), Math.max(0, DURATION - elapsed)); }
+      else if (!want && running) { running = false; elapsed += performance.now() - startedAt; window.clearTimeout(timer); }
+    };
+    const restart = () => { window.clearTimeout(timer); running = false; elapsed = 0; sync(); };
+    (section as HTMLElement & { contextTimer?: { progress: () => number | null } }).contextTimer = {
+      progress: () => reduced || userPaused() ? null : Math.min(1, (elapsed + (running ? performance.now() - startedAt : 0)) / DURATION),
+    };
+
+    // La bottom bar (context-stepper) es el único control de los paneles
+    const select = (next: number) => {
       const safe = (next + panels.length) % panels.length;
-      tabs.forEach((tab, i) => { const on = i === safe; tab.setAttribute('aria-selected', String(on)); tab.tabIndex = on ? 0 : -1; if (on && focus) tab.focus(); });
+      current = safe;
       panels.forEach((panel, i) => { panel.hidden = i !== safe; });
       if (morph) morph.dataset.state = String(safe);
       section.dataset.contextIndex = String(safe);
       window.dispatchEvent(new CustomEvent('context-stepper:update', { detail: { sectionId: section.id, index: safe } }));
+      restart();
     };
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => select(i));
-      tab.addEventListener('keydown', event => {
-        if (event.key === 'ArrowRight') { event.preventDefault(); select(i + 1, true); }
-        if (event.key === 'ArrowLeft') { event.preventDefault(); select(i - 1, true); }
-      });
-    });
+    // Corre solo mientras la sección ocupa la franja que también usa la bottom bar
+    new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; sync(); }, { rootMargin: '-18% 0px -42% 0px' }).observe(section);
+    const card = section.querySelector('.compact-card');
+    card?.addEventListener('pointerenter', event => { if ((event as PointerEvent).pointerType === 'mouse') { hovering = true; sync(); } });
+    card?.addEventListener('pointerleave', () => { hovering = false; sync(); });
+    document.addEventListener('visibilitychange', sync);
+    document.addEventListener('motionchange', sync);
     section.addEventListener('context-stepper:select', event => select((event as CustomEvent<{ index: number }>).detail.index));
   });
 </script>
