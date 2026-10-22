@@ -10,7 +10,7 @@ import { projects } from '../data/projectsData.js';
 import { projectPresentation } from '../data/projectPresentation';
 
 const cards = [
-  { slug: 'luzia-agentes-ia', image: 'luzia-app-v4', alt: 'Agenda de Ommia con las citas del equipo de la semana', size: 'wide', tone: 'accent', headline: 'La complejidad de la IA, en una experiencia simple.', text: 'Agentes de IA, conversaciones y atención en un solo panel.' },
+  { slug: 'luzia-agentes-ia', image: 'luzia-app-v5', alt: 'Panel de inicio de Ommia con lo que resolvió la IA en la semana y las próximas citas', size: 'wide', tone: 'accent', headline: 'La complejidad de la IA, en una experiencia simple.', text: 'Agentes de IA, conversaciones y atención en un solo panel.' },
   { slug: 'anamseals-firmware', image: null, size: 'narrow', tone: 'dark', headline: '$1M USD de ahorro anual proyectado.', text: 'Firmware que hace más con un solo núcleo.' },
   { slug: 'inteligencia-logistica', image: 'logistica-app-v3', size: 'narrow', tone: 'dark', headline: '+65% de rendimiento en el mapa.', text: 'Rutas y datos que cargan sin bloquear a nadie.' },
   { slug: 'tracking-aduanal', image: 'tracking-app-v3', size: 'wide', tone: 'dark', portrait: true, headline: 'Una operación en movimiento. Una vista clara.', text: 'Transportes, aduanas y permisos en vivo, sin recargar.' },
@@ -54,7 +54,6 @@ const items = cards.map(card => ({ ...card, project: projects.find(p => p.slug =
     position: relative; overflow: hidden; display: block; min-height: 420px; border-radius: 28px; color: var(--ink);
     background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 55%), #171717;
     border: 1px solid rgba(255, 255, 255, .08);
-    transition: transform 160ms var(--ease-out);
     /* Textura de ruido como la referencia, también en modo oscuro (la página va sin grano ahí). */
     --grain-opacity: .12;
   }
@@ -73,9 +72,6 @@ const items = cards.map(card => ({ ...card, project: projects.find(p => p.slug =
   /* Captura de la app saliendo por la esquina: derecha (sin girar) para que el texto se lea nítido. */
   .wobble-shot { position: absolute; z-index: 1; right: -3%; bottom: -8%; width: 58%; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, .14); box-shadow: 0 30px 60px rgba(0, 0, 0, .45); }
   .wobble-shot :global(img) { display: block; width: 100%; height: auto; }
-  /* Capturas tenues para que acompañen al texto; al pasar el cursor recuperan su presencia. */
-  .wobble-shot { opacity: .75; transition: opacity 300ms var(--ease-out); }
-  .wobble-card:is(:hover, :focus-visible) .wobble-shot { opacity: 1; }
   /* Luz.ia: un poco más angosta para no tocar la frase. */
   .wobble-card.tone-accent .wobble-shot { width: 52%; right: -3%; bottom: -6%; }
   .size-narrow .wobble-shot { width: 108%; right: -30%; bottom: -6%; }
@@ -84,24 +80,31 @@ const items = cards.map(card => ({ ...card, project: projects.find(p => p.slug =
   .wobble-card .wobble-shot.portrait { width: 30%; right: 8%; bottom: -44%; border-radius: 28px; }
   .wobble-arrow { position: absolute; z-index: 2; left: 36px; bottom: 30px; color: rgba(255, 255, 255, .7); font-size: 22px; transition: transform var(--dur-fast), color var(--dur-fast); }
   .wobble-card:hover .wobble-arrow { transform: translate(2px, -2px); color: #fff; }
+  /* Hasta tablet: la captura va debajo del texto (en flujo, sangrando a la derecha y abajo)
+     para que nunca lo tape; la flecha sube a la esquina. */
   @media (max-width: 960px) {
     .size-wide, .size-narrow { grid-column: span 6; }
+    .wobble-card, .size-full { min-height: 300px; }
+    .wobble-inner { --pad: 32px; display: flex; flex-direction: column; gap: 28px; padding: var(--pad); }
+    .wobble-copy { max-width: none; padding-right: 36px; }
+    .wobble-grid .wobble-card .wobble-shot { position: relative; inset: auto; width: auto; margin: auto calc(var(--pad) * -1) calc(var(--pad) * -1) var(--pad); border-radius: 16px 0 0 0; border-width: 1px 0 0 1px; }
+    .wobble-grid .wobble-card .wobble-shot.portrait { width: 58%; max-height: 300px; margin: auto auto calc(var(--pad) * -1); border-radius: 28px 28px 0 0; border-width: 1px 1px 0; }
+    .wobble-arrow { left: auto; right: var(--pad); top: calc(var(--pad) - 4px); bottom: auto; }
   }
   @media (max-width: 767px) {
     .wobble-heading { flex-direction: column; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-6); }
     .wobble-grid { grid-template-columns: 1fr; }
-    .size-wide, .size-narrow, .size-full { grid-column: auto; min-height: 420px; }
-    .wobble-inner { padding: 24px; }
-    .wobble-shot, .size-narrow .wobble-shot, .size-full .wobble-shot { width: 104%; right: -16%; bottom: -4%; }
-    .wobble-card.tone-accent .wobble-shot { width: 104%; right: -16%; bottom: -4%; }
-    .wobble-card .wobble-shot.portrait { width: 46%; right: 10%; bottom: -44%; }
-    .wobble-arrow { left: 24px; bottom: 22px; }
+    .size-wide, .size-narrow, .size-full { grid-column: auto; }
+    .wobble-inner { --pad: 24px; }
+    .wobble-grid .wobble-card .wobble-shot.portrait { width: 62%; max-height: 280px; }
   }
-  @media (prefers-reduced-motion: reduce) { .wobble-card, .wobble-inner { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .wobble-inner { transition: none; } }
 </style>
 
 <script>
   // Desplazamiento contenido con el cursor (máx. 10 px, escala 2 %), revertible al salir.
+  // Solo se mueve el contenido: transformar la tarjeta (fondo, grano y recorte redondeado)
+  // dejaba una franja de otro tono en el borde.
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const blocked = () => !fine.matches || reduced.matches || document.documentElement.classList.contains('motion-paused');
@@ -115,13 +118,11 @@ const items = cards.map(card => ({ ...card, project: projects.find(p => p.slug =
         const box = card.getBoundingClientRect();
         const dx = Math.max(-1, Math.min(1, (event.clientX - box.left - box.width / 2) / (box.width / 2)));
         const dy = Math.max(-1, Math.min(1, (event.clientY - box.top - box.height / 2) / (box.height / 2)));
-        card.style.transform = `translate3d(${dx * 10}px, ${dy * 10}px, 0) scale(1.02)`;
-        if (inner) inner.style.transform = `translate3d(${dx * -8}px, ${dy * -8}px, 0) scale(1.02)`;
+        if (inner) inner.style.transform = `translate3d(${dx * 10}px, ${dy * 10}px, 0) scale(1.02)`;
       });
     });
     card.addEventListener('pointerleave', () => {
       cancelAnimationFrame(frame); frame = 0;
-      card.style.transform = '';
       if (inner) inner.style.transform = '';
     });
   });

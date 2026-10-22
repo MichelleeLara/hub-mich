@@ -5,8 +5,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 const manifestPath = 'src/data/imageManifest.json';
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 await mkdir('public/media/project-covers', { recursive: true });
-// v3: solo la app (sin dispositivo ni fondo) para el mosaico de proyectos. v4: captura real de Ommia (Luz.ia).
-for (const key of ['luzia-studio-v2', 'luzia-studio-wide-v2', 'logistica-studio-v2', 'white-label-studio-v2', 'tracking-studio-v2', 'logistica-app-v3', 'white-label-app-v3', 'tracking-app-v3', 'luzia-app-v4']) {
+// v3: solo la app (sin dispositivo ni fondo) para el mosaico de proyectos. v4/v5: capturas reales de Ommia (Luz.ia; v5 = panel de inicio).
+for (const key of ['luzia-studio-v2', 'luzia-studio-wide-v2', 'logistica-studio-v2', 'white-label-studio-v2', 'tracking-studio-v2', 'logistica-app-v3', 'white-label-app-v3', 'tracking-app-v3', 'luzia-app-v4', 'luzia-app-v5']) {
   const source = `assets/source-images/project-covers/${key}.png`;
   manifest[key] = [];
   // Las capturas de app (v3/v4) llevan una versión grande para que el texto se vea nítido en pantallas 2x.
