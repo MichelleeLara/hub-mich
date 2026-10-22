@@ -81,6 +81,11 @@ const newTarget = () => Array.from({ length: GAME_WORDS }, () => WORDS[Math.floo
 const freshGame = () => ({ target: newTarget(), typed: [], startedAt: null, endedAt: null, strokes: 0, misses: 0 });
 const FREE_CAP = 160;
 
+// Modo "Escríbeme": mensaje → a dónde responder → se envía a /api/contact (WhatsApp/Telegram de Mich)
+const MSG_CAP = { message: 500, contact: 120 };
+const freshMsg = () => ({ step: 'message', message: '', contact: '', startedAt: null, error: null });
+const lineText = chars => chars.map(c => c.ch).join('').trim();
+
 // Atajos que se respetan aunque la sección bloquee el teclado nativo: recargar y devtools
 const isEscapeHatch = e => e.key === 'F5' || e.key === 'F12' || ((e.metaKey || e.ctrlKey) && (e.key === 'r' || e.key === 'R' || (e.altKey && /^[ij]$/i.test(e.key))));
 
@@ -99,8 +104,15 @@ function reducer(state, action) {
   const { mode, game } = state;
   switch (action.type) {
     case 'mode':
-      return action.mode === mode ? state : { ...state, mode: action.mode, chars: [], game: freshGame() };
+      return action.mode === mode ? state : { ...state, mode: action.mode, chars: [], game: freshGame(), msg: freshMsg() };
     case 'type': {
+      if (mode === 'msg') {
+        const { msg } = state;
+        const cap = MSG_CAP[msg.step];
+        if (!cap) return state;
+        const chars = [...state.chars, ...toChars(action.ch)].slice(0, cap);
+        return { ...state, chars, msg: { ...msg, startedAt: msg.startedAt ?? Date.now() } };
+      }
       if (mode === 'free') {
         const chars = [...state.chars, ...toChars(action.ch)];
         return { ...state, chars: chars.length > FREE_CAP ? chars.slice(-FREE_CAP) : chars };
@@ -112,14 +124,36 @@ function reducer(state, action) {
       return { ...state, game: { ...game, typed, startedAt: game.startedAt ?? now, endedAt: typed.length === game.target.length ? now : null, strokes: game.strokes + 1, misses: game.misses + (ok ? 0 : 1) } };
     }
     case 'erase':
-      if (mode === 'free') return { ...state, chars: state.chars.slice(0, eraseTo(state.chars, action.scope)) };
+      if (mode === 'msg' && !MSG_CAP[state.msg.step]) return state;
+      if (mode !== 'game') return { ...state, chars: state.chars.slice(0, eraseTo(state.chars, action.scope)) };
       if (game.endedAt) return state;
       return { ...state, game: { ...game, typed: game.typed.slice(0, eraseTo(game.typed, action.scope)) } };
     case 'enter':
+      if (mode === 'msg') {
+        const { msg } = state;
+        const text = lineText(state.chars);
+        if (msg.step === 'message') return text.length >= 2 ? { ...state, chars: [], msg: { ...msg, step: 'contact', message: text } } : state;
+        if (msg.step === 'contact') return text ? { ...state, chars: [], msg: { ...msg, step: 'sending', contact: text, error: null } } : state;
+        if (msg.step === 'error') return { ...state, msg: { ...msg, step: 'sending', error: null } };
+        if (msg.step === 'sent') return { ...state, chars: [], msg: freshMsg() };
+        return state;
+      }
       if (mode === 'free') return { ...state, chars: [] };
       return game.endedAt || game.typed.length === 0 ? { ...state, game: freshGame() } : state;
     case 'restart':
+      if (mode === 'msg') {
+        const { msg } = state;
+        // esc: regresa un paso con lo que ya había escrito
+        if (msg.step === 'contact') return { ...state, chars: toChars(msg.message), msg: { ...msg, step: 'message' } };
+        if (msg.step === 'error') return { ...state, chars: toChars(msg.contact), msg: { ...msg, step: 'contact', error: null } };
+        if (msg.step === 'sending') return state;
+        return { ...state, chars: [], msg: msg.step === 'sent' ? freshMsg() : msg };
+      }
       return mode === 'game' ? { ...state, game: freshGame() } : { ...state, chars: [] };
+    case 'sent':
+      return state.msg.step === 'sending' ? { ...state, msg: { ...state.msg, step: 'sent' } } : state;
+    case 'failed':
+      return state.msg.step === 'sending' ? { ...state, msg: { ...state.msg, step: 'error', error: action.error } } : state;
     default:
       return state;
   }
@@ -145,7 +179,7 @@ export default function RelaxKeyboard() {
   const caretRef = useRef(null);
   const reduced = useReducedMotionPreference();
   const [pressed, setPressedKeys] = useState(() => new Set());
-  const [state, dispatch] = useReducer(reducer, null, () => ({ mode: 'free', chars: [], game: freshGame() }));
+  const [state, dispatch] = useReducer(reducer, null, () => ({ mode: 'free', chars: [], game: freshGame(), msg: freshMsg() }));
   const [shift, setShift] = useState(false);
   // Modificador de borrado al tocar: ⌘ = línea completa, ⌥ / ⌃ = palabra (se suelta al usarlo)
   const [eraseMod, setEraseMod] = useState(null);
@@ -154,7 +188,24 @@ export default function RelaxKeyboard() {
   const [offset, setOffset] = useState(0);
   const [now, setNow] = useState(0);
   const { prime, play } = useKeySound(sound);
-  const { mode, chars, game } = state;
+  const { mode, chars, game, msg } = state;
+  const modeRef = useRef(mode);
+  modeRef.current = mode;
+
+  // Envío del modo "Escríbeme"
+  useEffect(() => {
+    if (msg.step !== 'sending') return;
+    const controller = new AbortController();
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg.message, contact: msg.contact, website: '', elapsed: Date.now() - (msg.startedAt ?? Date.now()) }),
+      signal: controller.signal,
+    })
+      .then(r => r.json().catch(() => ({})).then(data => (r.ok && data.ok ? dispatch({ type: 'sent' }) : dispatch({ type: 'failed', error: data.error || 'delivery' }))))
+      .catch(err => { if (err.name !== 'AbortError') dispatch({ type: 'failed', error: 'network' }); });
+    return () => controller.abort();
+  }, [msg.step, msg.message, msg.contact, msg.startedAt]);
 
   useEffect(() => {
     try { if (localStorage.getItem('kb-sound') === 'off') setSound(false); } catch {}
@@ -173,14 +224,14 @@ export default function RelaxKeyboard() {
     const line = lineRef.current, track = trackRef.current, caret = caretRef.current;
     if (!line || !track || !caret) return;
     const cw = line.clientWidth;
-    if (mode === 'free') {
+    if (mode !== 'game') {
       const tw = chars.length ? caret.offsetLeft + caret.offsetWidth : track.scrollWidth;
       setOffset(Math.min((cw - tw) / 2, cw * .9 - tw));
     } else {
       const slot = caret.closest('.relax-slot');
       setOffset(Math.min(cw * .04, cw * .42 - ((slot?.offsetLeft ?? 0) + caret.offsetLeft)));
     }
-  }, [mode, chars, game.typed.length, game.target]);
+  }, [mode, chars, game.typed.length, game.target, msg.step]);
 
   // Cronómetro del reto
   useEffect(() => {
@@ -202,8 +253,10 @@ export default function RelaxKeyboard() {
     if (!visible) return;
     const onDown = e => {
       if (isTypingTarget(e.target)) return;
+      // En "Escríbeme" se deja pegar (⌘V / Ctrl V); el texto llega por el evento paste
+      const isPaste = modeRef.current === 'msg' && (e.metaKey || e.ctrlKey) && (e.key === 'v' || e.key === 'V');
       // Bloquea lo nativo (scroll, buscar, atajos, atrás) salvo Tab, recargar y devtools
-      if (e.key !== 'Tab' && !isEscapeHatch(e)) e.preventDefault();
+      if (e.key !== 'Tab' && !isEscapeHatch(e) && !isPaste) e.preventDefault();
       if (e.key === 'Tab') return;
       const code = e.code;
       if (e.repeat) { if (code === 'Backspace') dispatch({ type: 'erase', scope: eraseScope(e) }); return; }
@@ -226,10 +279,18 @@ export default function RelaxKeyboard() {
       if (e.key === 'Meta') setPressedKeys(new Set());
     };
     const onBlur = () => setPressedKeys(new Set());
+    const onPaste = e => {
+      if (modeRef.current !== 'msg' || isTypingTarget(e.target)) return;
+      e.preventDefault();
+      const text = (e.clipboardData?.getData('text') || '').replace(/\s+/g, ' ');
+      if (text) dispatch({ type: 'type', ch: text });
+    };
+    document.addEventListener('paste', onPaste);
     document.addEventListener('keydown', onDown);
     document.addEventListener('keyup', onUp);
     window.addEventListener('blur', onBlur);
     return () => {
+      document.removeEventListener('paste', onPaste);
       document.removeEventListener('keydown', onDown);
       document.removeEventListener('keyup', onUp);
       window.removeEventListener('blur', onBlur);
@@ -261,7 +322,19 @@ export default function RelaxKeyboard() {
   const letterIn = reduced ? { opacity: 0 } : { opacity: 0, y: 22, scale: .5, filter: 'blur(8px)' };
   const letterOut = reduced ? { opacity: 0 } : { opacity: 0, y: -10, scale: .8, filter: 'blur(6px)' };
   const stats = gameStats(game, now);
-  const status = mode === 'free'
+  const MSG_ERRORS = { rate: 'Muchos mensajes seguidos; intenta en unos minutos', 'too-fast': 'Escribe con calma y vuelve a intentarlo' };
+  const msgStatus = {
+    message: `return para seguir · ${chars.length}/${MSG_CAP.message}`,
+    contact: 'correo, WhatsApp o @usuario · return envía · esc vuelve',
+    sending: 'Enviando…',
+    sent: 'return para escribir otro',
+    error: `${MSG_ERRORS[msg.error] || 'No se pudo enviar'} · return reintenta · esc corrige`,
+  };
+  const placeholder = mode === 'msg'
+    ? { message: 'Escríbeme algo…', contact: '¿A dónde te respondo?', sending: 'Enviando…', sent: 'Enviado. Te respondo pronto ✓', error: 'No se pudo enviar' }[msg.step]
+    : 'Escribe algo…';
+  const showCaret = mode !== 'msg' || Boolean(MSG_CAP[msg.step]);
+  const status = mode === 'msg' ? msgStatus[msg.step] : mode === 'free'
     ? 'return borra la línea'
     : game.endedAt
       ? null
@@ -273,7 +346,7 @@ export default function RelaxKeyboard() {
       <div ref={lineRef} className="relax-line" data-mode={mode}>
         <motion.div ref={trackRef} className="relax-track" animate={{ x: offset }} initial={false}
           transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 38, mass: .7 }}>
-          {mode === 'free' ? (
+          {mode !== 'game' ? (
             <>
               <AnimatePresence initial={false} mode="popLayout">
                 {chars.map(c => (
@@ -283,8 +356,8 @@ export default function RelaxKeyboard() {
                   </motion.span>
                 ))}
               </AnimatePresence>
-              <span ref={caretRef} className="relax-caret" aria-hidden="true" />
-              {chars.length === 0 && <span className="relax-placeholder">Escribe algo…</span>}
+              <span ref={caretRef} className="relax-caret" aria-hidden="true" hidden={!showCaret} />
+              {chars.length === 0 && <span key={placeholder} className={`relax-placeholder ${mode === 'msg' && msg.step === 'sent' ? 'is-sent' : ''}`}>{placeholder}</span>}
             </>
           ) : (
             [...game.target].map((ch, i) => {
@@ -302,7 +375,7 @@ export default function RelaxKeyboard() {
         </motion.div>
       </div>
       <span className="sr-only" aria-live="polite">
-        {mode === 'game' && game.endedAt ? `${stats.wpm} palabras por minuto, ${stats.accuracy}% de precisión` : ''}
+        {mode === 'game' && game.endedAt ? `${stats.wpm} palabras por minuto, ${stats.accuracy}% de precisión` : mode === 'msg' && (msg.step === 'sent' || msg.step === 'error') ? placeholder : ''}
       </span>
 
       {/* Estado del reto / pista */}
@@ -313,7 +386,7 @@ export default function RelaxKeyboard() {
               <strong>{stats.wpm}</strong> ppm <span className="relax-dot">·</span> <strong>{stats.accuracy}%</strong> precisión <span className="relax-dot">·</span> <strong>{stats.seconds.toFixed(1)}</strong> s <span className="relax-dot">·</span> <kbd>return</kbd> otra
             </motion.p>
           ) : (
-            <motion.p key={mode} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={SPRING}>{status}</motion.p>
+            <motion.p key={mode === 'msg' ? `msg-${msg.step}` : mode} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={SPRING}>{status}</motion.p>
           )}
         </AnimatePresence>
       </div>
@@ -323,7 +396,7 @@ export default function RelaxKeyboard() {
         <p className="note-label relax-label">Un respiro</p>
         <div className="relax-controls">
           <div className="relax-modes" role="group" aria-label="Modo del teclado">
-            {[['free', 'Libre'], ['game', 'Reto']].map(([id, label]) => (
+            {[['free', 'Libre'], ['game', 'Reto'], ['msg', 'Escríbeme']].map(([id, label]) => (
               <button key={id} type="button" aria-pressed={mode === id} onMouseDown={e => e.preventDefault()} onClick={() => dispatch({ type: 'mode', mode: id })}>
                 {mode === id && <motion.span layoutId="relax-mode-pill" className="relax-mode-pill" transition={SPRING} />}
                 <span>{label}</span>
