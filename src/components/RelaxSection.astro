@@ -18,6 +18,10 @@ import RelaxKeyboard from './RelaxKeyboard.jsx';
   .relax-char { display: inline-block; white-space: pre; will-change: transform, filter; }
   .relax-placeholder { white-space: nowrap; color: var(--subtle); font-weight: 500; margin-left: .08em; }
   .relax-placeholder.is-sent { color: var(--ink); }
+  /* Paso 2: el número se lee por grupos y el dominio del correo baja de tono */
+  .relax-char.is-group { margin-left: .32em; }
+  .relax-char.is-domain { color: var(--muted); }
+  .relax-suggestion { white-space: pre; margin-left: -3px; color: var(--subtle); opacity: .45; }
   .relax-caret[hidden] { display: none; }
   .relax-caret { display: inline-block; flex: none; width: 3px; height: .9em; margin-left: 3px; border-radius: 2px; background: var(--accent); }
   .relax-slot { position: relative; display: inline-flex; align-items: center; }
@@ -33,13 +37,19 @@ import RelaxKeyboard from './RelaxKeyboard.jsx';
   @keyframes relax-blink { 50% { opacity: 0; } }
   @keyframes relax-pop { from { transform: translateY(-.12em) scale(1.18); filter: blur(1.5px); } }
 
-  .relax-status { height: 24px; margin-top: var(--space-3); display: flex; align-items: center; justify-content: center; color: var(--subtle); font-size: var(--fs-caption); }
+  .relax-status { min-height: 34px; margin-top: var(--space-3); display: flex; align-items: center; justify-content: center; color: var(--subtle); font-size: var(--fs-caption); }
   .relax-status p { margin: 0; white-space: nowrap; }
   @media (max-width: 639px) {
     .relax-status { height: auto; min-height: 24px; }
     .relax-status p { white-space: normal; text-align: center; text-wrap: balance; }
   }
   .relax-result { color: var(--muted); }
+  .relax-contact { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-3); }
+  .relax-contact p.is-hint { color: var(--kb-error); }
+  .relax-channels { display: flex; gap: 4px; padding: 3px; border-radius: var(--radius-full); border: 1px solid var(--line); }
+  .relax-channels button { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 11px; border-radius: var(--radius-full); color: var(--muted); font-size: var(--fs-caption); font-weight: 500; transition: color var(--dur-fast), background-color var(--dur-fast); }
+  .relax-channels button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+  @media (hover: hover) { .relax-channels button[aria-checked="false"]:hover { color: var(--ink); } }
   .relax-result strong { color: var(--ink); font-family: var(--font-display); font-size: var(--fs-small); font-weight: 600; }
   .relax-dot { margin: 0 4px; color: var(--subtle); }
   .relax-status kbd { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--line); }
