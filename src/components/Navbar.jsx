@@ -1,5 +1,5 @@
 import { useReducedMotionPreference } from '../hooks/useReducedMotionPreference';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { DUR, SPRING } from "../lib/motion";
 
@@ -16,6 +16,32 @@ const base = {
   strokeLinecap: "round",
   strokeLinejoin: "round",
   "aria-hidden": "true",
+};
+
+// Número de paso en una bola: azul el activo, gris los demás (rima con el contador de cada servicio)
+const StepBall = ({ index, active, className = '' }) => (
+  <span aria-hidden="true" className={`relative z-10 inline-flex shrink-0 items-center justify-center rounded-full font-semibold leading-none transition-colors duration-150 ${active ? 'bg-accent text-bg' : 'bg-black/[0.07] text-muted dark:bg-white/10'} ${className}`}>{index + 1}</span>
+);
+
+// Avance del temporizador de la sección: se llena de izquierda a derecha hasta que cambia de paso
+const StepProgress = ({ sectionId }) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    const section = document.getElementById(sectionId);
+    let frame = 0;
+    const tick = () => {
+      const progress = section?.contextTimer?.progress();
+      if (ref.current) {
+        ref.current.style.opacity = progress == null ? '0' : '1';
+        ref.current.style.transform = `scaleX(${progress ?? 0})`;
+      }
+      frame = window.requestAnimationFrame(tick);
+    };
+    tick();
+    return () => window.cancelAnimationFrame(frame);
+  }, [sectionId]);
+  // Tinte gris tenue que crece dentro de la píldora y se desvanece hacia el frente: sin borde visible
+  return <span ref={ref} aria-hidden="true" className="pointer-events-none absolute inset-0 origin-left" style={{ transform: 'scaleX(0)', background: 'linear-gradient(90deg, color-mix(in srgb, var(--ink) 4%, transparent) 0%, color-mix(in srgb, var(--ink) 9%, transparent) 72%, transparent 100%)' }} />;
 };
 
 const HomeIcon = (p) => (
@@ -313,8 +339,8 @@ export default function AnimatedTabs() {
                       aria-current={isActive ? 'step' : undefined}
                       className={`group relative flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] px-1.5 transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent ${isActive ? 'text-ink' : 'text-muted'}`}
                     >
-                      {isActive && <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-[16px] bg-black/[0.065] dark:bg-white/10" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 38, mass: .7 }} />}
-                      <span className="relative z-10 font-mono text-[9px] leading-none">0{index + 1}</span>
+                      {isActive && <motion.span layoutId="nav-pill" className="absolute inset-0 overflow-hidden rounded-[16px] bg-black/[0.065] dark:bg-white/10" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 38, mass: .7 }}><StepProgress key={index} sectionId={context.sectionId} /></motion.span>}
+                      <StepBall index={index} active={isActive} className="h-4 w-4 text-[9px]" />
                       <span className="relative z-10 block max-w-full truncate text-[10px] font-medium leading-tight">{step}</span>
                     </button>
                   </li>
@@ -423,8 +449,8 @@ export default function AnimatedTabs() {
                 const isActive = context.index === index;
                 return (
                   <button key={step} type="button" onClick={() => selectContextStep(index)} aria-pressed={isActive} className={`relative h-12 rounded-full px-5 text-sm font-medium transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${isActive ? 'text-ink' : 'text-muted hover:text-ink'}`}>
-                    {isActive && <motion.span layoutId="assist-pill" className="absolute inset-0 rounded-full bg-black/[0.06] dark:bg-white/10" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 38, mass: .7 }} />}
-                    <span className="relative z-10">{step}</span>
+                    {isActive && <motion.span layoutId="assist-pill" className="absolute inset-0 overflow-hidden rounded-full bg-black/[0.06] dark:bg-white/10" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 38, mass: .7 }}><StepProgress key={index} sectionId={context.sectionId} /></motion.span>}
+                    <span className="relative z-10 flex items-center gap-2"><StepBall index={index} active={isActive} className="h-5 w-5 text-[10px]" />{step}</span>
                   </button>
                 );
               })}
