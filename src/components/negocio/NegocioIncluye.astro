@@ -1,0 +1,63 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+const items = [
+  { t: 'Sitio de una página, pensado para celular', s: 'Servicios, horarios, ubicación con mapa, fotos, reseñas destacadas y preguntas frecuentes', i: 'phone' },
+  { t: 'WhatsApp y llamada en cada sección', s: 'Quien te encuentra te escribe o te llama con un toque', i: 'chat' },
+  { t: 'Textos de una entrevista de 30 min', s: 'Los escribo a partir de lo que me cuentas de tu negocio', i: 'pen' },
+  { t: 'Revisión de tu Perfil de Google', s: 'Enlace al sitio, categorías, horarios y descripción, si me das acceso', i: 'pin' },
+  { t: 'Dominio y hosting a tu nombre', s: 'Los dejo configurados a tu nombre; el dominio lo pagas tú al registrador', i: 'globe' },
+  { t: '1 ronda de cambios + 30 días de ajustes menores', s: 'Después de publicar', i: 'loop' },
+  { t: 'Medición de clics a WhatsApp y llamada', s: 'Para que veas qué botones se usan', i: 'chart' },
+];
+const paths = {
+  phone: 'M8 3h8a1.5 1.5 0 0 1 1.5 1.5v15A1.5 1.5 0 0 1 16 21H8a1.5 1.5 0 0 1-1.5-1.5v-15A1.5 1.5 0 0 1 8 3zM10.5 18h3',
+  chat: 'M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-4 3.5V17H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z',
+  pen: 'M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19zM14.5 6.5l3 3',
+  pin: 'M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11zM12 12.2a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8z',
+  globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9z',
+  loop: 'M20 11a8 8 0 0 0-14.5-4M4 4v3.5h3.5M4 13a8 8 0 0 0 14.5 4M20 20v-3.5h-3.5',
+  chart: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+};
+---
+<section class="mn-section mn-incluye" aria-labelledby="mn-incluye-title">
+  <div class="mn-wrap mn-incluye-grid">
+    <div class="mn-incluye-copy">
+      <SectionHeading label="Qué incluye tu sitio" title="Tu sitio, listo para usarse." id="mn-incluye-title" />
+      <p class="mn-text">Esto es lo que recibes con el Paquete Presencia. Nada más, nada menos.</p>
+      <p class="mn-fine">No incluye tienda en línea, pagos, reservas con calendario, manejo de redes sociales ni anuncios pagados.</p>
+    </div>
+
+    <div class="mn-stack">
+      <ul class="mn-cards">
+        {items.map((it, n) => (
+          <li class="mn-card" style={`--n:${items.length - 1 - n}`}>
+            <span class="mn-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={paths[it.i]} /></svg></span>
+            <span class="mn-card-body"><b>{it.t}</b><small>{it.s}</small></span>
+          </li>
+        ))}
+      </ul>
+      <div class="mn-box" aria-hidden="true">
+        <svg class="mn-box-back" viewBox="0 -30 360 230" fill="none">
+          <polygon class="b-flap-l" points="30,70 12,22 150,-18 180,20" />
+          <polygon class="b-flap-r" points="180,20 210,-18 348,22 330,70" />
+          <polygon class="b-in" points="30,70 180,20 330,70 180,120" />
+        </svg>
+        <svg class="mn-box-front" viewBox="0 -30 360 230" fill="none">
+          <polygon class="b-left" points="30,70 180,120 180,190 30,140" />
+          <polygon class="b-right" points="180,120 330,70 330,140 180,190" />
+          <polygon class="b-lip-l" points="30,70 180,120 150,140 4,92" />
+          <polygon class="b-lip-r" points="180,120 330,70 356,92 210,140" />
+          <path class="b-seam" d="M180 120v70" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const el = document.querySelector<HTMLElement>('.mn-stack');
+  if (el) {
+    if (!('IntersectionObserver' in window)) el.classList.add('is-in');
+    else new IntersectionObserver((es, o) => es.forEach((e) => { if (e.isIntersecting) { el.classList.add('is-in'); o.disconnect(); } }), { threshold: 0.2 }).observe(el);
+  }
+</script>

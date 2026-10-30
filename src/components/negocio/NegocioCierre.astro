@@ -1,0 +1,17 @@
+---
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import { WA_URL, DEMO_URL } from './data.js';
+---
+<section class="mn-cierre theme-inverse grain" aria-labelledby="mn-cierre-title">
+  <div class="mn-wrap mn-cierre-in">
+    <p class="mn-label note-label">Escríbeme</p>
+    <h2 id="mn-cierre-title" class="mn-h2 mn-h2-center">Cuéntame de tu negocio y vemos si tiene sentido.</h2>
+    <div class="mn-actions mn-actions-center">
+      <a class="mn-btn mn-btn-primary mn-btn-lg" href={WA_URL} target="_blank" rel="noopener noreferrer" data-umami-event="whatsapp" data-umami-event-ubicacion="cierre-negocio">
+        <WhatsAppIcon />Escríbeme por WhatsApp
+      </a>
+    </div>
+    <a class="mn-link" href={DEMO_URL}>Mira un ejemplo: veterinaria <span aria-hidden="true">↗</span></a>
+    <p class="mn-foot">./mich · Ingeniero en sistemas · CDMX · <a href="/privacidad">Privacidad</a></p>
+  </div>
+</section>

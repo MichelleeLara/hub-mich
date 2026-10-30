@@ -1,0 +1,39 @@
+---
+import ThemeToggle from '../Themetoggle';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import { WA_URL } from './data.js';
+---
+<div class="mn-bar">
+  <a class="mn-brand solo-negocio" href="/" aria-label="./mich, inicio">./mich</a>
+  <div class="mn-bar-actions">
+    <a class="mn-wa-mini solo-negocio" href={WA_URL} target="_blank" rel="noopener noreferrer" data-umami-event="whatsapp" data-umami-event-ubicacion="header" aria-label="Escríbeme por WhatsApp">
+      <WhatsAppIcon /><span class="mn-wa-mini-text">WhatsApp</span>
+    </a>
+    <button type="button" class="mn-switch" id="mn-switch" aria-pressed="false">
+      <span class="mn-switch-text">¿Eres reclutador?</span>
+      <span class="mn-switch-track" aria-hidden="true"><span class="mn-switch-thumb"></span></span>
+    </button>
+    <div class="mn-theme solo-negocio"><ThemeToggle client:load /></div>
+  </div>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById('mn-switch');
+  const sync = () => btn?.setAttribute('aria-pressed', String(root.dataset.modo === 'reclutador'));
+  sync();
+  btn?.addEventListener('click', () => {
+    const next = root.dataset.modo === 'reclutador' ? 'negocio' : 'reclutador';
+    root.dataset.modo = next;
+    try { localStorage.setItem('mich-modo', next); } catch {}
+    try {
+      const url = new URL(location.href);
+      url.searchParams.set('modo', next);
+      history.replaceState(null, '', url);
+    } catch {}
+    sync();
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    // Los componentes del modo reclutador midieron su tamaño estando ocultos.
+    requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+  });
+</script>

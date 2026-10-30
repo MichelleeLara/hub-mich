@@ -10,6 +10,14 @@ import SiteClosing from "../components/SiteClosing.astro";
 import RelaxSection from "../components/RelaxSection.astro";
 import IosPointer from "../components/IosPointer.astro";
 import { Spotlight } from "../components/ui/Spotlight";
+import ModoHeader from "../components/negocio/ModoHeader.astro";
+import NegocioHero from "../components/negocio/NegocioHero.astro";
+import NegocioProblema from "../components/negocio/NegocioProblema.astro";
+import NegocioIncluye from "../components/negocio/NegocioIncluye.astro";
+import NegocioPasos from "../components/negocio/NegocioPasos.astro";
+import NegocioOferta from "../components/negocio/NegocioOferta.astro";
+import NegocioCierre from "../components/negocio/NegocioCierre.astro";
+import "../styles/modo-negocio.css";
 
 const meta = {
   title: 'Mich · Product Engineer — Diseño, ingeniería e IA para productos de impacto',
@@ -21,6 +29,30 @@ const meta = {
 ---
 
 <Layout {...meta}>
+  <!-- Modo: ?modo= en la URL > localStorage('mich-modo') > negocio. Corre antes de pintar el contenido. -->
+  <script is:inline>
+    (function () {
+      var m = null, q = null;
+      try { q = new URLSearchParams(location.search).get('modo'); } catch (e) {}
+      if (q === 'reclutador' || q === 'negocio') {
+        m = q;
+        try { localStorage.setItem('mich-modo', q); } catch (e) {}
+      } else {
+        try { m = localStorage.getItem('mich-modo'); } catch (e) {}
+      }
+      document.documentElement.dataset.modo = (m === 'reclutador') ? 'reclutador' : 'negocio';
+    })();
+  </script>
+  <ModoHeader />
+  <main class="home-content text-ink solo-negocio">
+    <NegocioHero />
+    <NegocioProblema />
+    <NegocioIncluye />
+    <NegocioPasos />
+    <NegocioOferta />
+    <NegocioCierre />
+  </main>
+  <div class="solo-reclutador">
   <IosPointer />
   <main class="home-content text-ink">
 
@@ -49,5 +81,6 @@ const meta = {
   </main>
 
   <SiteClosing />
+  </div>
 </Layout>
 

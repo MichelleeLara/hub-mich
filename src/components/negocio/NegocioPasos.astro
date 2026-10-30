@@ -1,0 +1,23 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+const steps = [
+  { n: '01', t: 'Platicamos', d: 'Platicamos entre 15 y 30 minutos y me pasas tus datos y fotos.' },
+  { n: '02', t: 'Te enseño la página', d: 'En unos días te la enseño en tu celular y eliges el estilo.' },
+  { n: '03', t: 'Se publica', d: 'Hacemos una ronda de cambios y se publica en tu dominio.' },
+];
+---
+<section class="mn-section mn-pasos" aria-labelledby="mn-pasos-title">
+  <div class="mn-wrap">
+    <SectionHeading label="Cómo trabajo" title="En 3 pasos, sin complicarte." id="mn-pasos-title" />
+    <ol class="mn-steps">
+      {steps.map((s) => (
+        <li class="mn-step">
+          <span class="mn-step-n">{s.n}</span>
+          <h3 class="mn-h3">{s.t}</h3>
+          <p class="mn-text">{s.d}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mn-plazo"><b>Plazo real: 2 semanas</b> desde que tengo tus materiales y el anticipo.</p>
+  </div>
+</section>

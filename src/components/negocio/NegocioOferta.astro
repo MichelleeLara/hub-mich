@@ -1,0 +1,58 @@
+---
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import { WA_URL, DEMO_URL } from './data.js';
+---
+<section class="mn-section mn-oferta" aria-labelledby="mn-oferta-title">
+  <div class="mn-wrap">
+    <div class="mn-oferta-head">
+      <div>
+        <p class="mn-pill">La oferta</p>
+        <h2 id="mn-oferta-title" class="mn-h2 mn-h2-2tone"><span>Un solo paquete,</span><span>con precio y plazo claros.</span></h2>
+      </div>
+      <p class="mn-text mn-oferta-side">Incluye lo que ya viste arriba, con tiempos y pagos por escrito antes de empezar.</p>
+    </div>
+
+    <div class="mn-bento">
+      <article class="mn-b mn-b-1">
+        <p class="mn-b-top">Paquete Presencia</p>
+        <p class="mn-num"><span>8,500</span><small>MXN</small></p>
+        <p class="mn-b-cap">pago único</p>
+      </article>
+      <article class="mn-b mn-b-2">
+        <p class="mn-b-top">Tiempo de entrega</p>
+        <p class="mn-num"><span>2</span><small>semanas</small></p>
+        <p class="mn-b-cap">desde que tengo tus materiales y el anticipo</p>
+      </article>
+      <article class="mn-b mn-b-3">
+        <p class="mn-b-top">Mantenimiento opcional</p>
+        <p class="mn-num"><span>1,200</span><small>MXN / trimestre</small></p>
+        <p class="mn-b-cap">solo si lo quieres</p>
+      </article>
+      <article class="mn-b mn-b-4">
+        <p class="mn-b-top">Forma de pago</p>
+        <p class="mn-num"><span>50 / 50</span></p>
+        <p class="mn-b-cap">anticipo y antes de publicar</p>
+      </article>
+      <article class="mn-b mn-b-5 mn-b-avail">
+        <span class="mn-dot" aria-hidden="true"></span><p>3 lugares disponibles · noviembre</p>
+      </article>
+      <a class="mn-b mn-b-6 mn-b-link" href={DEMO_URL} data-umami-event="ver-ejemplo" data-umami-event-ubicacion="oferta">
+        <span>Mira un ejemplo: veterinaria</span><span aria-hidden="true" class="mn-b-arrow">↗</span>
+      </a>
+
+      <article class="mn-b mn-dark">
+        <svg class="mn-trend" viewBox="0 0 200 160" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 140l52-52 34 30L172 34"/><path d="M110 28h62v62"/></svg>
+        <div class="mn-dark-in">
+          <p class="mn-b-top">Pioneros · 40% de descuento</p>
+          <p class="mn-num mn-num-light"><span>5,100</span><small>MXN en lugar de 8,500</small></p>
+          <p class="mn-dark-text">Para 3 negocios, hasta el 30 de noviembre, a cambio de poder mostrar tu sitio como ejemplo de mi trabajo.</p>
+          <a class="mn-btn mn-btn-onDark" href={WA_URL} target="_blank" rel="noopener noreferrer" data-umami-event="whatsapp" data-umami-event-ubicacion="oferta">
+            <WhatsAppIcon />Quiero un lugar de pionero
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <p class="mn-fine mn-oferta-fine">No prometo más ventas ni el primer lugar en Google. Lo que sí te entrego: un sitio que carga rápido en el celular, con WhatsApp en cada sección y con la información correcta.</p>
+  </div>
+</section>
