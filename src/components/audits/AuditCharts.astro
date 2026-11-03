@@ -1,0 +1,136 @@
+---
+// Resumen visual de la auditoría: calificaciones de Google (como en PageSpeed) y
+// barras de "hoy vs. lo recomendado". Pensado para entenderse sin leer el resto.
+// Los colores de estado siguen los de Google (rojo < 50, naranja < 90, verde ≥ 90)
+// y siempre van con su palabra, nunca solos.
+interface Puntaje { nombre: string; valor: number; texto: string }
+interface Barra { etiqueta: string; valor: number; nota: string; meta?: boolean }
+interface Comparativa { titulo: string; unidad: string; barras: Barra[]; lectura: string }
+interface Props {
+	google: { reporte: string; puntajes: Puntaje[]; comparativas: Comparativa[] };
+}
+const { google } = Astro.props;
+
+const estado = (v: number) => (v >= 90 ? 'bien' : v >= 50 ? 'regular' : 'mal');
+const palabra = { bien: 'Bien', regular: 'Mejorable', mal: 'Urgente' };
+const R = 42;
+const C = 2 * Math.PI * R;
+---
+
+<div class="ac">
+	<div class="ac-card ac-scores">
+		<div class="ac-card-head">
+			<h3>Calificación de Google en celular</h3>
+			<p>De 0 a 100. Arriba de 90 es lo que Google considera bueno.</p>
+		</div>
+		<ul>
+			{google.puntajes.map((p) => {
+				const e = estado(p.valor);
+				return (
+					<li class={`is-${e}`} title={`${p.nombre}: ${p.valor} de 100 (${palabra[e]})`}>
+						<svg viewBox="0 0 100 100" role="img" aria-label={`${p.nombre}: ${p.valor} de 100, ${palabra[e].toLowerCase()}`}>
+							<circle class="ac-track" cx="50" cy="50" r={R} />
+							<circle class="ac-arc" cx="50" cy="50" r={R} style={`--len:${(C * p.valor) / 100}; --c:${C}`} />
+							<text x="50" y="50">{p.valor}</text>
+						</svg>
+						<strong>{p.nombre}</strong>
+						<span class="ac-state">{palabra[e]}</span>
+						<p>{p.texto}</p>
+					</li>
+				);
+			})}
+		</ul>
+		<a class="ac-link" href={google.reporte} target="_blank" rel="noopener">
+			Ver el reporte en vivo en Google PageSpeed <span aria-hidden="true">↗</span>
+		</a>
+	</div>
+
+	{google.comparativas.map((c) => {
+		const max = Math.max(...c.barras.map((b) => b.valor));
+		return (
+			<div class="ac-card ac-bars">
+				<div class="ac-card-head"><h3>{c.titulo}</h3></div>
+				<dl>
+					{c.barras.map((b) => (
+						<div class:list={['ac-row', { 'is-meta': b.meta }]} title={`${b.etiqueta}: ${b.nota}`}>
+							<dt>{b.etiqueta}</dt>
+							<dd>
+								<span class="ac-bar" style={`--w:${(b.valor / max) * 100}%`}></span>
+								<span class="ac-val">{b.nota}</span>
+							</dd>
+						</div>
+					))}
+				</dl>
+				<p class="ac-read">{c.lectura}</p>
+			</div>
+		);
+	})}
+</div>
+
+<script>
+	// Las gráficas se llenan al entrar en pantalla; sin JS o con movimiento reducido ya están llenas.
+	const ac = document.querySelector<HTMLElement>('.ac');
+	if (ac && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+		ac.classList.add('is-waiting');
+		new IntersectionObserver((entries, io) => {
+			if (entries.some((e) => e.isIntersecting)) {
+				ac.classList.remove('is-waiting');
+				io.disconnect();
+			}
+		}, { threshold: 0.25 }).observe(ac);
+	}
+</script>
+
+<style>
+	.ac {
+		--ok: #15803d; --mid: #c2410c; --bad: #b91c1c;
+		display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin: var(--space-7) 0 0;
+	}
+	:global(html.dark) .ac { --ok: #22c55e; --mid: #fb923c; --bad: #f87171; }
+	.ac-card { padding: var(--space-6); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--bg); }
+	.ac-scores { grid-column: 1 / -1; }
+	.ac-card-head h3 { margin: 0; font: 600 20px/1.25 var(--font-display); letter-spacing: -.02em; }
+	.ac-card-head p { margin: var(--space-2) 0 0; color: var(--muted); font-size: var(--fs-small); }
+
+	.ac-scores ul { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
+	.ac-scores li { display: grid; align-content: start; justify-items: center; text-align: center; }
+	.ac-scores svg { width: 104px; height: 104px; }
+	.ac-track { fill: none; stroke: var(--surface); stroke-width: 8; }
+	.ac-arc {
+		fill: none; stroke: var(--tone); stroke-width: 8; stroke-linecap: round;
+		stroke-dasharray: calc(var(--len) * 1px) calc(var(--c) * 1px);
+		transform: rotate(-90deg); transform-origin: 50% 50%;
+		transition: stroke-dasharray 1.1s cubic-bezier(.2, .7, .2, 1);
+	}
+	.ac-scores text { fill: var(--ink); font: 600 28px var(--font-display); text-anchor: middle; dominant-baseline: central; }
+	.is-bien { --tone: var(--ok); }
+	.is-regular { --tone: var(--mid); }
+	.is-mal { --tone: var(--bad); }
+	.ac-scores strong { margin-top: var(--space-3); font-size: 16px; font-weight: 600; }
+	.ac-state { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; color: var(--muted); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+	.ac-state::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--tone); }
+	.ac-scores li p { max-width: 22ch; margin: var(--space-2) 0 0; color: var(--muted); font-size: var(--fs-small); line-height: 1.5; }
+	.ac-link { display: inline-flex; gap: 6px; margin-top: var(--space-6); color: var(--accent); font-size: var(--fs-small); font-weight: 600; text-decoration: none; }
+	.ac-link:hover { text-decoration: underline; }
+
+	.ac-bars dl { display: grid; gap: var(--space-4); margin: var(--space-5) 0 0; }
+	.ac-row dt { color: var(--muted); font-size: var(--fs-small); }
+	.ac-row dd { display: flex; align-items: center; gap: var(--space-3); margin: 6px 0 0; }
+	.ac-bar { flex: 0 0 auto; width: max(6px, calc(var(--w) * .62)); height: 28px; border-radius: 0 4px 4px 0; background: var(--bad); transition: width 1s cubic-bezier(.2, .7, .2, 1); }
+	.is-meta .ac-bar { background: var(--ok); }
+	.ac-val { color: var(--ink); font-size: var(--fs-small); font-weight: 600; white-space: nowrap; }
+	.ac-read { margin: var(--space-5) 0 0; padding-top: var(--space-4); border-top: 1px solid var(--line-subtle); color: var(--ink); line-height: 1.55; }
+
+	.ac.is-waiting .ac-arc { stroke-dasharray: 0 calc(var(--c) * 1px); }
+	.ac.is-waiting .ac-bar { width: 6px; }
+
+	@media (max-width: 900px) {
+		.ac { grid-template-columns: 1fr; }
+		.ac-scores ul { grid-template-columns: repeat(2, 1fr); }
+	}
+	@media (max-width: 767px) {
+		.ac-card { padding: var(--space-5); }
+		.ac-scores svg { width: 88px; height: 88px; }
+		.ac-bar { width: max(6px, calc(var(--w) * .48)); }
+	}
+</style>
