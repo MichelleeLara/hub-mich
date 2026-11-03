@@ -1,0 +1,118 @@
+---
+// Propuesta de portada para AR Gym Clothes. Excepción al design system de ./mich:
+// esto es la marca del cliente, así que sus colores y fuentes (Playfair Display +
+// DM Sans, crema #faf8f5, café #8b7355) viven aquí como variables locales.
+// El café del botón se oscureció a #7a6449 para pasar AA con texto blanco.
+const base = '/auditorias/argym-clothes';
+const marcas = ['YoungLA', "Gold's Gym", 'Controlled Insanity', 'YoungLA', "Gold's Gym", 'Controlled Insanity'];
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" />
+
+<div class="ar-frame" role="img" aria-label="Propuesta de portada para AR Gym Clothes: titular “Entrena con estilo. Revísala antes de pagar.”, botones de compra y fotos de la colección.">
+	<div class="ar-bar" aria-hidden="true"><span></span><span></span><span></span><p>argymclothes.com</p></div>
+
+	<div class="ar" aria-hidden="true">
+		<nav class="ar-nav">
+			<p class="ar-logo">AR <em>Gym Clothes</em></p>
+			<ul><li>Hombre</li><li>Mujer</li><li>Novedades</li><li>Marcas</li></ul>
+			<div class="ar-icons">
+				<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+				<svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+			</div>
+		</nav>
+
+		<div class="ar-hero">
+			<div class="ar-copy">
+				<p class="ar-eyebrow">Tienda en Portales, CDMX · Envíos a todo México</p>
+				<h2>Entrena con estilo.<br /><em>Revísala antes de pagar.</em></h2>
+				<p class="ar-sub">Las marcas que ves en el gym, a una visita o un WhatsApp de distancia. Recoge en tienda o recíbela en casa por $199.</p>
+				<div class="ar-ctas">
+					<span class="ar-btn">Ver novedades <b>→</b></span>
+					<span class="ar-btn ar-btn-ghost">
+						<svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7L4 20Z"/></svg>
+						Pedir por WhatsApp
+					</span>
+				</div>
+				<ul class="ar-trust">
+					<li><b>★ 5.0</b> en Google</li>
+					<li><b>Revisa</b> al recibir</li>
+					<li><b>Pago</b> 100% protegido</li>
+				</ul>
+			</div>
+
+			<div class="ar-collage">
+				<figure class="ar-tile ar-tile-main">
+					<img src={`${base}/ella-900.webp`} srcset={`${base}/ella-560.webp 560w, ${base}/ella-900.webp 900w`} sizes="(max-width: 760px) 60vw, 30vw" alt="" loading="lazy" decoding="async" />
+					<figcaption><span>Dreamers Joggers</span>Para ella <b>→</b></figcaption>
+				</figure>
+				<figure class="ar-tile">
+					<img src={`${base}/el-560.webp`} alt="" loading="lazy" decoding="async" />
+					<figcaption>Para él <b>→</b></figcaption>
+				</figure>
+				<figure class="ar-tile">
+					<img src={`${base}/pumpcover-560.webp`} alt="" loading="lazy" decoding="async" />
+					<figcaption>Novedades <b>→</b></figcaption>
+				</figure>
+			</div>
+		</div>
+
+		<div class="ar-brands"><div>{marcas.map((m) => <span>{m}</span>)}</div></div>
+	</div>
+</div>
+
+<style>
+	.ar-frame {
+		--ar-bg: #faf8f5; --ar-ink: #2b2b2b; --ar-muted: #5f5a52; --ar-brown: #7a6449; --ar-line: rgba(43, 43, 43, .12);
+		--ar-serif: 'Playfair Display', Georgia, serif; --ar-sans: 'DM Sans', system-ui, sans-serif;
+		overflow: hidden; border-radius: var(--radius-lg); background: var(--ar-bg); box-shadow: var(--shadow-lift); outline: 1px solid var(--line); outline-offset: -1px;
+	}
+	.ar-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #ece8e1; }
+	.ar-bar span { width: 10px; height: 10px; border-radius: 50%; background: rgba(43, 43, 43, .18); }
+	.ar-bar p { flex: 1; margin: 0 40px 0 12px; padding: 4px 12px; border-radius: 999px; background: var(--ar-bg); color: var(--ar-muted); font: 12px/1.4 var(--ar-sans); text-align: center; }
+
+	.ar { color: var(--ar-ink); font-family: var(--ar-sans); }
+	.ar-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px clamp(20px, 4vw, 48px); border-bottom: 1px solid var(--ar-line); }
+	.ar-logo { margin: 0; font: 600 20px/1 var(--ar-serif); letter-spacing: .02em; }
+	.ar-logo em { color: var(--ar-brown); font-size: 15px; }
+	.ar-nav ul { display: flex; gap: 28px; margin: 0; padding: 0; list-style: none; font-size: 14px; font-weight: 500; }
+	.ar-icons { display: flex; gap: 14px; }
+	.ar svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+	.ar-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(24px, 4vw, 56px); align-items: center; padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px); }
+	.ar-eyebrow { margin: 0; color: var(--ar-brown); font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+	.ar-copy h2 { margin: 18px 0 0; font: 600 clamp(36px, 4.6vw, 64px)/1.02 var(--ar-serif); letter-spacing: -.02em; }
+	.ar-copy h2 em { color: var(--ar-brown); }
+	.ar-sub { max-width: 40ch; margin: 20px 0 0; color: var(--ar-muted); font-size: 16px; line-height: 1.6; }
+	.ar-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+	.ar-btn { display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 999px; background: var(--ar-brown); color: #fff; font-size: 15px; font-weight: 600; }
+	.ar-btn-ghost { border: 1px solid var(--ar-ink); background: transparent; color: var(--ar-ink); }
+	.ar-btn-ghost svg { width: 18px; height: 18px; }
+	.ar-trust { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 28px 0 0; padding: 22px 0 0; border-top: 1px solid var(--ar-line); color: var(--ar-muted); font-size: 13px; list-style: none; }
+	.ar-trust b { color: var(--ar-ink); font-weight: 600; }
+
+	.ar-collage { display: grid; grid-template-columns: 1.25fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: clamp(380px, 42vw, 540px); }
+	.ar-tile { position: relative; overflow: hidden; margin: 0; border-radius: 20px; background: #ddd6cb; }
+	.ar-tile-main { grid-row: span 2; }
+	.ar-tile img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+	.ar-tile figcaption { position: absolute; inset: auto 0 0; padding: 40px 16px 14px; background: linear-gradient(to top, rgba(0, 0, 0, .72), transparent); color: #fff; font: 600 18px/1.2 var(--ar-serif); }
+	.ar-tile figcaption span { display: block; margin-bottom: 6px; font: 600 11px/1 var(--ar-sans); letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+	.ar-tile figcaption b { font-family: var(--ar-sans); }
+
+	.ar-brands { overflow: hidden; padding: 16px 0; background: var(--ar-ink); color: var(--ar-bg); }
+	.ar-brands div { display: flex; gap: 48px; width: max-content; padding-left: 48px; font: 600 14px/1 var(--ar-sans); letter-spacing: .16em; text-transform: uppercase; }
+	@media (prefers-reduced-motion: no-preference) {
+		.ar-brands div { animation: ar-marquee 28s linear infinite; }
+		:global(html.motion-paused) .ar-brands div { animation-play-state: paused; }
+	}
+	@keyframes ar-marquee { to { transform: translateX(-50%); } }
+
+	@media (max-width: 760px) {
+		.ar-nav ul { display: none; }
+		.ar-hero { grid-template-columns: 1fr; }
+		.ar-copy h2 { font-size: clamp(32px, 9vw, 40px); }
+		.ar-collage { height: 360px; }
+	}
+</style>
