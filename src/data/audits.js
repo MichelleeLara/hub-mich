@@ -89,7 +89,8 @@ export const audits = [
 			{ paso: 'Mes 1', titulo: 'Google y reseñas', texto: 'Ficha de Google Maps completa, sistema para pedir reseñas y primer reporte de visitas.' },
 		],
 		heroMock: 'argym',
-		antes: { src: '/auditorias/argym-clothes/antes-escritorio.webp', width: 800, height: 605 },
+		antes: { escritorio: '/auditorias/argym-clothes/antes-escritorio.webp', movil: '/auditorias/argym-clothes/antes-movil.webp' },
+		antesAlt: 'Hoy, en una laptop, la primera pantalla es solo una foto: el titular y el botón quedan abajo.',
 	},
 ];
 

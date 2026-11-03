@@ -11,10 +11,8 @@ const marcas = ['YoungLA', "Gold's Gym", 'Controlled Insanity', 'YoungLA', "Gold
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" />
 
-<div class="ar-frame" role="img" aria-label="Propuesta de portada para AR Gym Clothes: titular “Entrena con estilo. Revísala antes de pagar.”, botones de compra y fotos de la colección.">
-	<div class="ar-bar" aria-hidden="true"><span></span><span></span><span></span><p>argymclothes.com</p></div>
-
-	<div class="ar" aria-hidden="true">
+<div class="ar-frame">
+	<div class="ar">
 		<nav class="ar-nav">
 			<p class="ar-logo">AR <em>Gym Clothes</em></p>
 			<ul><li>Hombre</li><li>Mujer</li><li>Novedades</li><li>Marcas</li></ul>
@@ -64,26 +62,24 @@ const marcas = ['YoungLA', "Gold's Gym", 'Controlled Insanity', 'YoungLA', "Gold
 </div>
 
 <style>
+	/* Se mide contra su propia caja (cqw / @container), no contra la ventana: así se ve
+	   igual dentro del comparador, a tamaño laptop o celular. */
 	.ar-frame {
 		--ar-bg: #faf8f5; --ar-ink: #2b2b2b; --ar-muted: #5f5a52; --ar-brown: #7a6449; --ar-line: rgba(43, 43, 43, .12);
 		--ar-serif: 'Playfair Display', Georgia, serif; --ar-sans: 'DM Sans', system-ui, sans-serif;
-		overflow: hidden; border-radius: var(--radius-lg); background: var(--ar-bg); box-shadow: var(--shadow-lift); outline: 1px solid var(--line); outline-offset: -1px;
+		container-type: inline-size; height: 100%; background: var(--ar-bg);
 	}
-	.ar-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #ece8e1; }
-	.ar-bar span { width: 10px; height: 10px; border-radius: 50%; background: rgba(43, 43, 43, .18); }
-	.ar-bar p { flex: 1; margin: 0 40px 0 12px; padding: 4px 12px; border-radius: 999px; background: var(--ar-bg); color: var(--ar-muted); font: 12px/1.4 var(--ar-sans); text-align: center; }
-
-	.ar { color: var(--ar-ink); font-family: var(--ar-sans); }
-	.ar-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px clamp(20px, 4vw, 48px); border-bottom: 1px solid var(--ar-line); }
+	.ar { display: grid; grid-template-rows: auto 1fr auto; height: 100%; color: var(--ar-ink); font-family: var(--ar-sans); }
+	.ar-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px clamp(20px, 4cqw, 48px); border-bottom: 1px solid var(--ar-line); }
 	.ar-logo { margin: 0; font: 600 20px/1 var(--ar-serif); letter-spacing: .02em; }
 	.ar-logo em { color: var(--ar-brown); font-size: 15px; }
 	.ar-nav ul { display: flex; gap: 28px; margin: 0; padding: 0; list-style: none; font-size: 14px; font-weight: 500; }
 	.ar-icons { display: flex; gap: 14px; }
 	.ar svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
-	.ar-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(24px, 4vw, 56px); align-items: center; padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px); }
+	.ar-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(24px, 4cqw, 56px); align-items: center; min-height: 0; padding: clamp(28px, 4cqw, 56px) clamp(20px, 4cqw, 48px); }
 	.ar-eyebrow { margin: 0; color: var(--ar-brown); font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-	.ar-copy h2 { margin: 18px 0 0; font: 600 clamp(36px, 4.6vw, 64px)/1.02 var(--ar-serif); letter-spacing: -.02em; }
+	.ar-copy h2 { margin: 18px 0 0; font: 600 clamp(32px, 5.4cqw, 64px)/1.02 var(--ar-serif); letter-spacing: -.02em; }
 	.ar-copy h2 em { color: var(--ar-brown); }
 	.ar-sub { max-width: 40ch; margin: 20px 0 0; color: var(--ar-muted); font-size: 16px; line-height: 1.6; }
 	.ar-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
@@ -93,7 +89,7 @@ const marcas = ['YoungLA', "Gold's Gym", 'Controlled Insanity', 'YoungLA', "Gold
 	.ar-trust { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 28px 0 0; padding: 22px 0 0; border-top: 1px solid var(--ar-line); color: var(--ar-muted); font-size: 13px; list-style: none; }
 	.ar-trust b { color: var(--ar-ink); font-weight: 600; }
 
-	.ar-collage { display: grid; grid-template-columns: 1.25fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: clamp(380px, 42vw, 540px); }
+	.ar-collage { display: grid; grid-template-columns: 1.25fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: 100%; min-height: 380px; max-height: 560px; }
 	.ar-tile { position: relative; overflow: hidden; margin: 0; border-radius: 20px; background: #ddd6cb; }
 	.ar-tile-main { grid-row: span 2; }
 	.ar-tile img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
@@ -109,10 +105,9 @@ const marcas = ['YoungLA', "Gold's Gym", 'Controlled Insanity', 'YoungLA', "Gold
 	}
 	@keyframes ar-marquee { to { transform: translateX(-50%); } }
 
-	@media (max-width: 760px) {
+	@container (max-width: 760px) {
 		.ar-nav ul { display: none; }
-		.ar-hero { grid-template-columns: 1fr; }
-		.ar-copy h2 { font-size: clamp(32px, 9vw, 40px); }
-		.ar-collage { height: 360px; }
+		.ar-hero { grid-template-columns: 1fr; align-content: start; }
+		.ar-collage { height: 320px; min-height: 0; }
 	}
 </style>

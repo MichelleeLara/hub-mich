@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import MegaFooter from '../../components/MegaFooter.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import ArgymHeroMock from '../../components/audits/ArgymHeroMock.astro';
+import BeforeAfter from '../../components/audits/BeforeAfter.astro';
 import { audits } from '../../data/audits.js';
 
 export function getStaticPaths() {
@@ -84,16 +85,10 @@ const waText = encodeURIComponent(`Hola Mich, vi la auditoría de ${a.negocio} y
 				<SectionHeading label="Una idea para su portada" title="Misma marca, mejor primera impresión." />
 				<p class="audit-section-lead">Sus colores, su tipografía y sus fotos. Solo cambia el orden: lo primero que se ve es qué venden, por qué comprarles y dónde hacer clic.</p>
 
-				{a.antes && (
-					<figure class="audit-before">
-						<img src={a.antes.src} width={a.antes.width} height={a.antes.height} alt={`Portada actual de ${a.sitio} en una laptop: una foto grande sin titular ni botón visibles.`} loading="lazy" decoding="async" />
-						<figcaption><strong>Hoy.</strong> En una laptop, la primera pantalla es solo una foto.</figcaption>
-					</figure>
-				)}
-
-				<div class="audit-after">
-					<p class="audit-after-label"><strong>Propuesta.</strong> Funciona igual en laptop y en celular.</p>
-					<Mock />
+				<div class="audit-compare">
+					<BeforeAfter url={a.sitio} antes={a.antes} alt={a.antesAlt} label={`Comparar la portada actual de ${a.sitio} con la propuesta`}>
+						<Mock />
+					</BeforeAfter>
 				</div>
 			</section>
 		)}
@@ -154,12 +149,7 @@ const waText = encodeURIComponent(`Hola Mich, vi la auditoría de ${a.negocio} y
 	.audit-finding dt { color: var(--subtle); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 	.audit-finding dd { margin: var(--space-2) 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
 
-	.audit-before { margin: var(--space-7) 0 0; }
-	.audit-before img { display: block; width: min(100%, 560px); height: auto; border-radius: var(--radius-md); outline: 1px solid var(--line); outline-offset: -1px; }
-	.audit-before figcaption, .audit-after-label { margin: var(--space-3) 0 0; color: var(--muted); font-size: var(--fs-small); }
-	.audit-before strong, .audit-after-label strong { color: var(--ink); }
-	.audit-after { margin: var(--space-7) 0 0; }
-	.audit-after-label { margin: 0 0 var(--space-3); }
+	.audit-compare { max-width: 960px; margin: var(--space-7) 0 0; }
 
 	.audit-plan { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: var(--space-7) 0 0; padding: 0; list-style: none; }
 	.audit-plan li { padding: var(--space-6); border-radius: var(--radius-lg); background: var(--surface); }
