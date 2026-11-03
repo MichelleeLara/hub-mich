@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import MegaFooter from '../../components/MegaFooter.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import ArgymHeroMock from '../../components/audits/ArgymHeroMock.astro';
+import AuditCharts from '../../components/audits/AuditCharts.astro';
 import BeforeAfter from '../../components/audits/BeforeAfter.astro';
 import { audits } from '../../data/audits.js';
 
@@ -14,12 +15,14 @@ const { audit: a } = Astro.props;
 // Cada auditoría puede traer su propuesta visual; la clave vive en audits.js.
 const mocks = { argym: ArgymHeroMock };
 const Mock = mocks[a.heroMock];
+// El dueño no piensa en "prioridad alta": piensa en qué atender primero.
+const urgencia = { Alta: 'Atender ya', Media: 'Importante', Baja: 'Puede esperar' };
 const waText = encodeURIComponent(`Hola Mich, vi la auditoría de ${a.negocio} y me gustaría platicarla.`);
 ---
 
 <Layout
 	title={`Auditoría de ${a.sitio} · Mich`}
-	description={`Revisión de ${a.sitio}: qué funciona, qué frena las ventas y cómo resolverlo.`}
+	description={`Revisión de ${a.sitio}: qué funciona, qué les cuesta ventas y cómo resolverlo.`}
 	image="/OpenGraphl.png"
 	url={`https://itsmich.com.mx/auditorias/${a.slug}/`}
 	noindex
@@ -42,6 +45,15 @@ const waText = encodeURIComponent(`Hola Mich, vi la auditoría de ${a.negocio} y
 			</dl>
 		</header>
 
+		<!-- Resumen visual -->
+		{a.google && (
+			<section class="section-shell">
+				<SectionHeading label="En una mirada" title="Cómo ve Google su página hoy." />
+				<p class="audit-section-lead">Google califica cada página y usa esa calificación para decidir a quién muestra primero. Esto es lo que ve en la de ustedes.</p>
+				<AuditCharts google={a.google} />
+			</section>
+		)}
+
 		<!-- Lo que ya funciona -->
 		<section class="section-shell">
 			<SectionHeading label="Lo que ya hacen bien" title="La base es sólida." />
@@ -60,18 +72,18 @@ const waText = encodeURIComponent(`Hola Mich, vi la auditoría de ${a.negocio} y
 
 		<!-- Hallazgos -->
 		<section class="section-shell">
-			<SectionHeading label="Lo que encontré" title="Ocho detalles, ordenados por lo que más pesa en una venta." />
+			<SectionHeading label="Lo que encontré" title="Ocho cosas que hoy les cuestan ventas, de la más urgente a la que puede esperar." />
 			<ol class="audit-findings">
 				{a.hallazgos.map((h, i) => (
 					<li class="audit-finding">
 						<div class="audit-finding-head">
 							<span class="audit-num">{String(i + 1).padStart(2, '0')}</span>
-							<span class:list={['audit-priority', `is-${h.prioridad.toLowerCase()}`]}>Prioridad {h.prioridad.toLowerCase()}</span>
+							<span class:list={['audit-priority', `is-${h.prioridad.toLowerCase()}`]}>{urgencia[h.prioridad]}</span>
 						</div>
 						<h3>{h.titulo}</h3>
 						<dl>
-							<div><dt>Lo que se ve</dt><dd>{h.ve}</dd></div>
-							<div><dt>Por qué importa</dt><dd>{h.importa}</dd></div>
+							<div><dt>Lo que pasa hoy</dt><dd>{h.ve}</dd></div>
+							<div><dt>Lo que le cuesta</dt><dd>{h.importa}</dd></div>
 							<div><dt>Cómo se arregla</dt><dd>{h.arreglo}</dd></div>
 						</dl>
 					</li>
@@ -124,7 +136,7 @@ const waText = encodeURIComponent(`Hola Mich, vi la auditoría de ${a.negocio} y
 	.audit-meta { margin: var(--space-4) 0 0; color: var(--subtle); font: 12px/1.4 var(--font-mono); letter-spacing: .04em; }
 	.section-label { color: var(--muted); font-size: clamp(11px, .9vw, 13px); }
 
-	.audit-figures { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin: var(--space-7) 0 0; }
+	.audit-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); margin: var(--space-7) 0 0; }
 	.audit-figures > div { padding: var(--space-5); border-radius: var(--radius-md); background: var(--surface); }
 	.audit-figures dt { font: 600 clamp(32px, 3.4vw, 44px)/1 var(--font-display); letter-spacing: -.02em; }
 	.audit-figures dd { margin: var(--space-3) 0 0; color: var(--muted); font-size: var(--fs-small); line-height: 1.5; }
@@ -159,7 +171,6 @@ const waText = encodeURIComponent(`Hola Mich, vi la auditoría de ${a.negocio} y
 	.audit-method { max-width: 60ch; margin: var(--space-5) 0 0; color: var(--subtle); font-size: var(--fs-small); line-height: 1.6; }
 
 	@media (max-width: 900px) {
-		.audit-figures { grid-template-columns: repeat(2, 1fr); }
 		.audit-finding dl, .audit-plan, .audit-good { grid-template-columns: 1fr; }
 	}
 	@media (max-width: 767px) {
