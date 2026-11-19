@@ -248,6 +248,11 @@ const skillGroups = [
     .cv-sidebar { grid-template-columns:1fr; }
     .cv-close { align-items:flex-start; flex-direction:column; gap:var(--space-3); }
   }
+  /* En pantalla, nada por debajo del mínimo del sistema (11px). La hoja impresa conserva su escala. */
+  @media screen {
+    .experience-meta,.highlights-label,.education-item time,.education-item small { font-size:11px; }
+    .cv-contact a { display:inline-flex; align-items:center; min-block-size:24px; }
+  }
   @media print {
     @page { size:A4; margin:12mm; }
     :global(html),:global(body) { background:white !important; color:black !important; }

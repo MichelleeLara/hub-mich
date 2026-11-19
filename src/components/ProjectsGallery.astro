@@ -34,7 +34,7 @@ const tags: Record<string,string[]> = {
  </div>
  {selected.map(project=>{
   const visual=projectPresentation[project.slug];
-  return <dialog class="project-preview" id={`preview-${project.slug}`} aria-labelledby={`preview-title-${project.slug}`}>
+  return <dialog class="project-preview" closedby="any" id={`preview-${project.slug}`} aria-labelledby={`preview-title-${project.slug}`}>
    <article>
     <div class="project-cover preview-cover">
      <ProjectImage name={projectGalleryCovers[project.slug]} desktopName={project.slug === 'luzia-agentes-ia' ? 'luzia-studio-wide-v2' : undefined} alt={visual.alt} sizes="(min-width:768px) 900px, 100vw" />
@@ -75,7 +75,8 @@ const tags: Record<string,string[]> = {
  .cover-title p { margin-top:10px; font-size:var(--fs-small); color:rgb(255 255 255 / .8); }
  .cover-open { position:absolute; bottom:34px; right:28px; font-size:24px; }
  .project-preview { position:fixed; inset:0; margin:auto; padding:0; width:min(860px,calc(100% - 48px)); max-width:none; max-height:calc(100svh - 64px); border:0; outline:0; border-radius:28px; background:var(--bg); color:var(--ink); overflow:auto; overscroll-behavior:contain; box-shadow:0 24px 100px rgb(0 0 0 / .3); }
- .project-preview::backdrop { background:transparent; }
+ /* overflow + overscroll-behavior en ::backdrop: el scroll sobre el fondo no se encadena a la página. */
+ .project-preview::backdrop { background:transparent; overflow:hidden; overscroll-behavior:contain; }
  .project-gallery-backdrop { position:fixed; inset:0; z-index:10000; pointer-events:none; background:rgb(0 0 0 / .55); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); opacity:0; visibility:hidden; will-change:opacity; }
  .project-preview article { position:relative; }
  .preview-cover { height:clamp(240px,44svh,370px); border-radius:0; }
@@ -110,7 +111,6 @@ const tags: Record<string,string[]> = {
 </style>
 <style is:global>
  html.project-gallery-ready { scrollbar-gutter:stable; }
- html.project-preview-open { overflow:hidden; }
 </style>
 <script>
  const gallery=document.querySelector<HTMLElement>('.project-gallery');
@@ -210,12 +210,22 @@ const tags: Record<string,string[]> = {
   });
   gallery.querySelectorAll<HTMLDialogElement>('.project-preview').forEach(dialog=>{
    dialog.querySelector('.preview-close')!.addEventListener('click',close);
+   // Esc y el clic fuera (closedby="any") disparan cancel: se intercepta para cerrar con la animación.
    dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
-   dialog.addEventListener('click',event=>{
-    if(event.target!==dialog)return;
-    const box=dialog.getBoundingClientRect();
-    if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)close();
-   });
   });
+  // Fallback de closedby (Safari): presionar y soltar fuera de la caja, para que un arrastre de selección no cierre.
+  if(!('closedBy' in HTMLDialogElement.prototype)){
+   const outside=(event:PointerEvent,dialog:HTMLDialogElement)=>{
+    const box=dialog.getBoundingClientRect();
+    return event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom;
+   };
+   gallery.querySelectorAll<HTMLDialogElement>('dialog[closedby="any"]').forEach(dialog=>{
+    // Se sigue un solo puntero (pointerId) para que el multitáctil no mezcle estados.
+    let pressedOutside:number|null=null;
+    dialog.addEventListener('pointerdown',event=>{if(pressedOutside===null&&outside(event,dialog))pressedOutside=event.pointerId;});
+    dialog.addEventListener('pointerup',event=>{if(event.pointerId!==pressedOutside)return;pressedOutside=null;if(outside(event,dialog))close();});
+    dialog.addEventListener('pointercancel',event=>{if(event.pointerId===pressedOutside)pressedOutside=null;});
+   });
+  }
  }
 </script>

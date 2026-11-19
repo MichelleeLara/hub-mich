@@ -229,5 +229,17 @@
       "width": 2000,
       "height": 1387
     }
+  ],
+  "ommia-mock-cropped": [
+    {
+      "src": "/media/ommia-mock-cropped-480.webp",
+      "width": 480,
+      "height": 357
+    },
+    {
+      "src": "/media/ommia-mock-cropped-888.webp",
+      "width": 888,
+      "height": 660
+    }
   ]
 }

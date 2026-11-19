@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none">
+ <defs>
+  <linearGradient id="shell" x1="80" y1="90" x2="350" y2="250" gradientUnits="userSpaceOnUse"><stop stop-color="#f1e8e0"/><stop offset="1" stop-color="#faf9f6"/></linearGradient>
+  <linearGradient id="core" x1="180" y1="75" x2="320" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#d67b47"/><stop offset=".5" stop-color="#a74316"/><stop offset="1" stop-color="#6e2f15"/></linearGradient>
+  <linearGradient id="glass" x1="125" y1="100" x2="360" y2="250" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#f1e8e0" stop-opacity=".14"/><stop offset="1" stop-color="#a74316" stop-opacity=".08"/></linearGradient>
+  <radialGradient id="orb" cx=".3" cy=".2" r=".8"><stop stop-color="#fff9ee"/><stop offset=".55" stop-color="#d88250"/><stop offset="1" stop-color="#813819"/></radialGradient>
+  <filter id="shadow" x="-40%" y="-60%" width="180%" height="240%"><feGaussianBlur stdDeviation="15"/></filter>
+ </defs>
+ <ellipse cx="266" cy="286" rx="124" ry="20" fill="#a74316" opacity=".12" filter="url(#shadow)"/>
+ <path d="M132 191 258 132Q269 127 281 133L396 188Q411 195 397 203L270 264Q259 269 247 263L132 208Q116 200 132 191Z" fill="url(#shell)" stroke="#c7b7a9" stroke-opacity=".6"/>
+ <path d="M132 207 247 262Q259 268 270 263L398 201" stroke="#a74316" stroke-opacity=".23"/>
+ <path d="M110 143 244 81Q256 75 268 81L390 139Q405 146 391 154L257 218Q245 224 233 218L110 159Q96 152 110 143Z" fill="url(#glass)" stroke="#c7b7a9" stroke-opacity=".65"/>
+ <path d="M110 144 244 82Q256 77 268 82L390 140" stroke="#fff" stroke-opacity=".6"/>
+ <path d="M199 127 250 103Q259 99 268 104L314 126Q326 132 315 138L263 163Q254 167 245 162L198 140Q187 134 199 127Z" fill="url(#core)"/>
+ <path d="M194 135v11Q194 151 201 155L245 176Q254 180 263 176L315 151Q321 148 321 143v-10L263 162Q254 166 245 162Z" fill="#803615" opacity=".85"/>
+ <path d="M151 94 273 37Q285 31 297 37L363 69Q377 76 364 83L240 142Q228 148 216 142L150 111Q135 102 151 94Z" fill="url(#glass)" stroke="#c7b7a9" stroke-opacity=".65"/>
+ <path d="M151 94 273 37Q285 32 297 38L363 70" stroke="#fff" stroke-opacity=".8"/>
+ <circle cx="287" cy="69" r="22" fill="url(#orb)"/>
+ <ellipse cx="280" cy="62" rx="8" ry="4" transform="rotate(-25 280 62)" fill="#fff" opacity=".26"/>
+ <path d="M94 192h-28m14-14v28" stroke="#a74316" stroke-opacity=".45" stroke-width="1.4"/>
+ <circle cx="394" cy="112" r="4" fill="#a74316" opacity=".65"/>
+ <circle cx="330" cy="263" r="2.5" fill="#a74316" opacity=".35"/>
+ </svg>

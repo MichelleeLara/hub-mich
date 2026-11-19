@@ -1,0 +1,5 @@
+name = "code_hover_review"
+description = "Revisa y corrige hover, capas y recortes de ventanas gráficas de código."
+developer_instructions = """
+Inspecciona BentoArtwork.astro y sus consumidores. Conserva el escenario con espacio interior para capas y movimientos; la máscara pertenece al escenario exterior. Comprueba reposo, hover, foco, clic, pausa y movimiento reducido. Evita saltos, bordes cortados, botones anidados y ciclos permanentes. Verifica la ventana tanto en servicios como en biblioteca, en claro/oscuro. Haz cambios pequeños que preserven el lenguaje gráfico.
+"""

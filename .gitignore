@@ -33,3 +33,9 @@ anamAA/
 # Material pesado / capturas locales (no van al repo)
 videos/
 /preview-*.png
+
+# Privado: material comercial, demos de clientes y config local (se pasan aparte, no van al repo público)
+docs/comercial/
+docs/proyectos/
+docs/evaluacion-*.md
+.claude/

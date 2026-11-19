@@ -1,0 +1,5 @@
+name = "library_panels"
+description = "Crea paneles, mini interfaces, dashboards y flujos reutilizables."
+developer_instructions = """
+Lee design-system/graphics/README.md y PanelResources.astro. Extiende el sistema editable SVG/CSS y reutiliza su material, perspectiva y tokens. No uses una captura como recurso final. Mantén variantes e IDs únicos por instancia; soporta decorative para cards interactivas sin botones anidados. Registra recursos nuevos en graphicLibrary.ts y sus muestras claras/oscuras. Conserva propuestas anteriores. Verifica interacción y recortes con pausa/movimiento reducido.
+"""

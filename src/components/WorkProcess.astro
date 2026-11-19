@@ -1,0 +1,28 @@
+---
+interface Props { integrated?: boolean; }
+const { integrated = false } = Astro.props;
+const steps = [
+ { title: 'Aterrizamos tu idea.', text: 'Me cuentas qué quieres resolver. Definimos prioridades, alcance y una propuesta de trabajo.', result: 'Un plan claro para empezar.', short: 'Conversamos', artifact: 'Objetivo + alcance', variant: 'context' },
+ { title: 'Le damos forma juntos.', text: 'Diseño y construyo por etapas. Revisamos avances para ajustar con tu feedback y tomar decisiones a tiempo.', result: 'Avances que puedes ver y probar.', short: 'Construimos', artifact: 'Diseño + desarrollo', variant: 'build' },
+ { title: 'Lo ponemos en marcha.', text: 'Probamos los detalles y preparamos la entrega. Te acompaño en la puesta en marcha y definimos los siguientes pasos.', result: 'Tu producto listo para usarse.', short: 'Lanzamos', artifact: 'Pruebas + entrega', variant: 'build' },
+] as const;
+---
+  <section id={integrated ? "por-que-conmigo" : undefined} class:list={["connected", {"section-shell":integrated}]} aria-labelledby="connected-title">
+   <header><p class="note-label">Cómo trabajaríamos</p><h2 id="connected-title">Una idea es el inicio.<br/>El camino lo hacemos juntos.</h2><p>De la primera conversación a la puesta en marcha, con claridad en cada paso.</p></header>
+   <div class="journey">
+    <svg class="journey-path" viewBox="0 0 1100 230" preserveAspectRatio="none" fill="none" aria-hidden="true"><path d="M 164 64 C 260 64 275 8 355 8 S 445 64 550 64 S 665 8 745 8 S 850 64 936 64" /></svg>
+    <ol class="journey-steps">{steps.map((step,i)=><li><div class="journey-node"><span>0{i+1}</span></div><span class="journey-label">{step.short}</span><h3>{step.title}</h3><p>{step.text}</p><div class="journey-result"><span aria-hidden="true">↳</span> {step.result}</div></li>)}</ol>
+   </div>
+   <footer><p>Tu idea, con dirección y compañía en cada etapa.</p><a class="cta" href="mailto:mich.ia@hotmail.com?subject=Una%20idea%20de%20producto">Cuéntame tu idea <b aria-hidden="true">↗</b></a></footer>
+  </section>
+<style>
+
+ header>p:not(.note-label){color:var(--muted);font-size:17px;line-height:1.6}.note-label{color:var(--muted);font:400 clamp(11px,.9vw,13px)/1.55 var(--font-note);letter-spacing:0;margin-bottom:12px}h2{font:600 var(--fs-h2)/1.06 var(--font-display);letter-spacing:-.012em;text-wrap:balance}h3{font:600 var(--fs-h3)/1.1 var(--font-display);letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}ol{list-style:none;padding:0;margin:0}.journey-steps p{font-size:16px;line-height:1.65;color:var(--muted)}
+ footer{display:flex;justify-content:space-between;align-items:center;gap:24px;border-top:1px solid var(--line);padding-top:24px}footer p{font-size:14px;color:var(--muted)}.cta{display:inline-flex;justify-content:center;align-items:center;gap:24px;background:var(--ink);color:var(--bg);padding:0 24px;border-radius:var(--radius-full);font-size:var(--fs-small);font-weight:600;min-height:48px}.cta b{font-size:18px;font-weight:400}.cta:focus-visible{outline:2px solid var(--accent);outline-offset:4px}.cta:hover{opacity:.85}
+ @media(max-width:767px){footer{align-items:flex-start;flex-direction:column;gap:18px}.cta{width:100%}}
+ .connected header{text-align:center}.connected header>p:not(.note-label){margin:20px auto 0;max-width:470px}
+ .journey{position:relative;margin-top:52px;padding-top:0}.journey-path{position:absolute;top:0;left:0;width:100%;height:230px;pointer-events:none;color:var(--accent)}.journey-path path{stroke:currentColor;stroke-width:1.8;stroke-dasharray:2 8;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.65}
+ .journey-steps{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:60px}.journey-steps li{text-align:center;padding:28px 4px 0;min-width:0}.journey-node{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 32px;background:var(--bg);box-shadow:0 0 0 12px var(--bg);border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));color:var(--accent)}.journey-node span{font:500 20px var(--font-mono)}.journey-steps li:nth-child(2) .journey-node{background:var(--accent);color:var(--bg);border-color:var(--accent)}.journey-label{position:relative;display:inline-block;background:var(--bg);padding:5px 12px;color:var(--accent);font:12px var(--font-mono);margin-bottom:28px;border-radius:99px}.journey-steps h3{position:relative;margin-top:4px}.journey-steps p{margin-top:16px}.journey-result{margin-top:24px;color:var(--accent);font-size:14px;font-weight:500;line-height:1.6}.connected footer{margin-top:48px}
+ @media(max-width:767px){.connected header{text-align:left}.connected header>p:not(.note-label){margin-left:0}.journey{margin-top:36px}.journey-path{display:none}.journey-steps{display:block}.journey-steps li{position:relative;text-align:left;padding:0 0 44px 76px}.journey-steps li:last-child{padding-bottom:0}.journey-steps li:not(:last-child)::before{content:'';position:absolute;left:25px;top:60px;bottom:8px;border-left:2px dotted var(--accent);opacity:.6}.journey-node{position:absolute;left:0;top:0;width:52px;height:52px;margin:0;box-shadow:none}.journey-node span{font-size:15px}.journey-label{padding:0;margin-bottom:12px;line-height:24px}.journey-result{margin-top:16px}}
+
+</style>

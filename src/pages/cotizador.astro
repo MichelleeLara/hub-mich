@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ServiceQuote from '../components/ServiceQuote';
+---
+<Layout navigation={false} title="Cotiza tu proyecto · Mich" description="Arma una estimación de diseño, desarrollo o automatización para tu próximo proyecto con Mich." image="https://itsmich.com.mx/OpenGraphl.png" url="https://itsmich.com.mx/cotizador/">
+  <main class="quote-page">
+    <header class="quote-intro"><a href="/#servicios">← Volver a servicios</a><h1>Cotiza tu <span>próxima idea.</span></h1><p>De la idea al alcance: combina servicios y dale forma a tu proyecto.</p></header>
+    <noscript>Activa JavaScript para calcular tu estimación o <a href="mailto:mich.ia@hotmail.com">escríbeme para cotizar tu proyecto</a>.</noscript>
+    <ServiceQuote client:load />
+  </main>
+</Layout>
+<style>
+.quote-page{max-width:1280px;margin:auto;padding:24px 32px;color:var(--ink);height:100dvh;overflow:hidden;display:flex;flex-direction:column}
+.quote-intro{width:calc((100% - 48px)*.4624);flex:none;margin-bottom:16px}.quote-intro>a{display:inline-flex;align-items:center;min-height:32px;font-size:12px;color:var(--muted);margin-bottom:12px}.quote-intro h1{font:600 30px/1.07 var(--font-display);letter-spacing:-.03em;margin:0 0 12px}.quote-intro h1 span{color:var(--accent);margin-left:.15em}.quote-intro>p{color:var(--muted);font-size:13px;line-height:1.5;max-width:360px}.quote-page :global(astro-island){display:contents}
+@media(max-width:760px){.quote-page{height:auto;overflow:visible;display:block;padding:calc(32dvh + 36px) 20px 32px}.quote-intro{width:auto;margin-bottom:20px}.quote-intro>a{margin-bottom:8px}.quote-intro h1{font-size:26px}.quote-intro>p{font-size:13px}}
+@media print{.quote-page{height:auto;overflow:visible;display:block;padding:0}.quote-intro{display:none}}
+</style>

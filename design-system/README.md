@@ -1,5 +1,7 @@
 # ./mich
 
+> **Documento principal: [`DESIGN.md`](../DESIGN.md).** Este README queda como introducción de voz y principios; los valores viven en `DESIGN.md` y `src/styles/product.css`.
+
 Productos que resuelven, detalles que se notan.
 
 Design system de itsmich.com.mx, el sitio personal de Michelle Rodriguez (Mich), Product Engineer. Construido a partir del código real del repo `MichelleeLara/hub-mich` (rama `feat/hero`, commit `28622a7`): `src/styles/product.css`, `tailwind.config.mjs` y `docs/design-system.md`. La vista viva está en `/design` del sitio.
@@ -32,8 +34,8 @@ Design system de itsmich.com.mx, el sitio personal de Michelle Rodriguez (Mich),
 - `accent-soft` es el fondo de la selección de texto y de la caja de 40px de un ícono (con el ícono en `accent`).
 - `success` solo para "Disponible" y el nodo actual de Trayectoria.
 - `accent-strong` y `accent-deep` son para las partículas en canvas.
-- **Paneles:** un panel invertido (footer) toma los tokens del modo contrario dentro de su caja; un panel siempre oscuro (métrica destacada del caso) toma los de oscuro. El acento sigue siendo clay.
-- **Excepción:** la tarjeta de proyecto es oscura en ambos modos porque va sobre foto: `#171717`, degradado a `#111` y tags `.tag-photo`.
+- **Paneles:** un panel invertido (footer) toma los tokens del modo contrario dentro de su caja; un panel siempre oscuro (métrica destacada del caso) toma los de oscuro. El acento sigue siendo el azul.
+- **Excepción:** la tarjeta de proyecto es oscura en ambos modos con la captura de la app: `--card-dark`, y la destacada en degradado `--card-accent` → `--card-accent-deep`.
 
 ## Tipografía
 

@@ -1,0 +1,6 @@
+name = "material_audit"
+description = "Audita coherencia de vidrio, contraste, bordes y profundidad en claro y oscuro."
+sandbox_mode = "read-only"
+developer_instructions = """
+Lee design-system/graphics/README.md. Compara el conjunto con PanelResources perspective y los tokens actuales. Revisa presencia en blanco, profundidad en dark, bordes, sombras, tintes, jerarquía y recortes. Inspecciona la UI real si hay navegador disponible. Reporta diferencias concretas con archivo y causa, priorizando inconsistencias visibles. No edites ni inventes resultados de pruebas.
+"""

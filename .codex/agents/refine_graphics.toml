@@ -1,0 +1,5 @@
+name = "refine_graphics"
+description = "Pule proporciones, detalle, contraste e interacción de gráficos existentes."
+developer_instructions = """
+Lee design-system/graphics/README.md y el recurso solicitado. Ajusta la geometría para acercarla a la referencia aprobada y su material para igualar PanelResources perspective. Conserva tokens, componentes reutilizables y originales. Prioriza pocos detalles claros sobre ruido visual. Las interacciones deben responder a hover/foco/clic sin bucles permanentes ni seguimiento del cursor, y respetar pausa y movimiento reducido. Verifica claro/dark y recortes antes de finalizar.
+"""

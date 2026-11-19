@@ -3,6 +3,20 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SPRING } from '../lib/motion';
 
+// Dos estados visibles: "sistema" (sin valor guardado) y el contrario del sistema.
+const systemDark = () => !matchMedia('(prefers-color-scheme: light)').matches;
+// Copia en memoria: si localStorage está bloqueado, el override se respeta igual durante la sesión.
+let memoryOverride;
+const readStored = () => {
+  try { const v = localStorage.getItem('theme'); return v === 'light' || v === 'dark' ? v : null; } catch { return memoryOverride ?? null; }
+};
+// Aplica el override (o "light dark" = sistema) al <meta> y a la clase .dark de Tailwind.
+const applyScheme = (stored) => {
+  const meta = document.querySelector('meta[name="color-scheme"]');
+  if (meta) meta.content = stored ?? 'light dark';
+  document.documentElement.classList.toggle('dark', stored ? stored === 'dark' : systemDark());
+};
+
 export default function ThemeToggle() {
   const [theme, setTheme] = useState('dark');
   const reduced = useReducedMotionPreference();
@@ -11,16 +25,30 @@ export default function ThemeToggle() {
     sync();
     const observer = new MutationObserver(sync);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
+    // Sin override, la página sigue los cambios del sistema en vivo.
+    const media = matchMedia('(prefers-color-scheme: light)');
+    const onSystem = () => { if (!readStored()) applyScheme(null); };
+    // El override puede cambiar desde otra pestaña.
+    const onStorage = (event) => { if (event.key === 'theme' || event.key === null) applyScheme(readStored()); };
+    media.addEventListener('change', onSystem);
+    window.addEventListener('storage', onStorage);
+    return () => {
+      observer.disconnect();
+      media.removeEventListener('change', onSystem);
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
   const toggle = () => {
+    // Objetivo = lo contrario de lo que se ve ahora, no del sistema.
     const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+    // Si coincide con el sistema, la persona deshace su ajuste: se borra el override.
+    const stored = (next === 'dark') === systemDark() ? null : next;
     const style = document.createElement('style');
     style.textContent = '*:not(.theme-glyph):not(.theme-glyph *), *::before, *::after { transition: none !important; }';
     document.head.append(style);
-    document.documentElement.classList.toggle('dark', next === 'dark');
-    document.documentElement.style.colorScheme = next;
-    try { localStorage.setItem('theme', next); } catch {}
+    applyScheme(stored);
+    memoryOverride = stored;
+    try { stored ? localStorage.setItem('theme', stored) : localStorage.removeItem('theme'); } catch {}
     setTheme(next);
     void document.documentElement.offsetHeight;
     requestAnimationFrame(() => requestAnimationFrame(() => style.remove()));

@@ -1,0 +1,5 @@
+name = "unify_service_graphics"
+description = "Unifica gráficos de servicios y otros conjuntos con el material aprobado del proyecto."
+developer_instructions = """
+Lee design-system/graphics/README.md y los componentes actuales antes de editar. Usa PanelResources perspective como referencia de material: mismo vidrio, bordes, líneas, sombras y presencia en claro/oscuro. Mantén la forma específica y el significado de cada recurso; no homogeneices convirtiéndolos en el mismo dibujo. Usa tokens del repo, no la paleta morada de las capturas. Conserva originales en la biblioteca. Revisa la integración con texto, recorte y hover de la card. Respeta movimiento reducido y pausa. Limita los cambios al alcance pedido; verifica visualmente antes de informar.
+"""

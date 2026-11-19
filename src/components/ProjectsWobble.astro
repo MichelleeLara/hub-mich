@@ -10,7 +10,7 @@ import { projects } from '../data/projectsData.js';
 import { projectPresentation } from '../data/projectPresentation';
 
 const cards = [
-  { slug: 'luzia-agentes-ia', image: 'luzia-app-v5', alt: 'Panel de inicio de Ommia con lo que resolvió la IA en la semana y las próximas citas', size: 'wide', tone: 'accent', headline: 'La complejidad de la IA, en una experiencia simple.', text: 'Agentes de IA, conversaciones y atención en un solo panel.' },
+  { slug: 'luzia-agentes-ia', image: 'ommia-mock-cropped', alt: 'Panel de inicio de Ommia con lo que resolvió la IA en la semana y las próximas citas', size: 'wide', tone: 'accent', headline: 'La complejidad de la IA, en una experiencia simple.', text: 'Agentes de IA, conversaciones y atención en un solo panel.' },
   { slug: 'anamseals-firmware', image: null, size: 'narrow', tone: 'dark', headline: '$1M USD de ahorro anual proyectado.', text: 'Firmware que hace más con un solo núcleo.' },
   { slug: 'inteligencia-logistica', image: 'logistica-app-v3', size: 'narrow', tone: 'dark', headline: '+65% de rendimiento en el mapa.', text: 'Rutas y datos que cargan sin bloquear a nadie.' },
   { slug: 'tracking-aduanal', image: 'tracking-app-v3', size: 'wide', tone: 'dark', portrait: true, headline: 'Una operación en movimiento. Una vista clara.', text: 'Transportes, aduanas y permisos en vivo, sin recargar.' },
@@ -51,13 +51,13 @@ const items = cards.map(card => ({ ...card, project: projects.find(p => p.slug =
   .wobble-heading > p { max-width: 360px; color: var(--muted); line-height: 1.6; }
   .wobble-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-4); }
   .wobble-card {
-    position: relative; overflow: hidden; display: block; min-height: 420px; border-radius: 28px; color: var(--ink);
-    background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 55%), #171717;
+    position: relative; overflow: hidden; display: block; min-height: 420px; border-radius: var(--radius-xl); color: var(--ink);
+    background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 55%), var(--card-dark);
     border: 1px solid rgba(255, 255, 255, .08);
     /* Textura de ruido como la referencia, también en modo oscuro (la página va sin grano ahí). */
     --grain-opacity: .12;
   }
-  .wobble-card.tone-accent { background: radial-gradient(90% 90% at 10% 0%, rgba(255, 255, 255, .16), transparent 60%), linear-gradient(140deg, #1d5fc4, #0f3c82 75%); border-color: rgba(255, 255, 255, .14); }
+  .wobble-card.tone-accent { background: radial-gradient(90% 90% at 10% 0%, rgba(255, 255, 255, .16), transparent 60%), linear-gradient(140deg, var(--card-accent), var(--card-accent-deep) 75%); border-color: rgba(255, 255, 255, .14); }
   .wobble-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
   .size-wide { grid-column: span 8; }
   .size-narrow { grid-column: span 4; }
@@ -67,7 +67,7 @@ const items = cards.map(card => ({ ...card, project: projects.find(p => p.slug =
   .wobble-copy { position: relative; z-index: 2; display: grid; gap: var(--space-3); max-width: 310px; }
   .size-narrow .wobble-copy { max-width: none; }
   .wobble-meta { color: rgba(255, 255, 255, .6); font: 500 12px/1.4 var(--font-mono); letter-spacing: .04em; }
-  .wobble-card h3 { color: #fff; font: 600 clamp(22px, 2vw, 28px)/1.12 var(--font-display); letter-spacing: -.015em; text-wrap: balance; }
+  .wobble-card h3 { color: var(--ink); font: 600 clamp(22px, 2vw, 28px)/1.12 var(--font-display); letter-spacing: -.015em; text-wrap: balance; }
   .wobble-text { color: rgba(255, 255, 255, .72); font-size: var(--fs-body); line-height: 1.55; }
   /* Captura de la app saliendo por la esquina: derecha (sin girar) para que el texto se lea nítido. */
   .wobble-shot { position: absolute; z-index: 1; right: -3%; bottom: -8%; width: 58%; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, .14); box-shadow: 0 30px 60px rgba(0, 0, 0, .45); }
@@ -79,7 +79,7 @@ const items = cards.map(card => ({ ...card, project: projects.find(p => p.slug =
   /* Pantalla de iPhone: más angosta y con esquinas de teléfono. */
   .wobble-card .wobble-shot.portrait { width: 30%; right: 8%; bottom: -44%; border-radius: 28px; }
   .wobble-arrow { position: absolute; z-index: 2; left: 36px; bottom: 30px; color: rgba(255, 255, 255, .7); font-size: 22px; transition: transform var(--dur-fast), color var(--dur-fast); }
-  .wobble-card:hover .wobble-arrow { transform: translate(2px, -2px); color: #fff; }
+  .wobble-card:hover .wobble-arrow { transform: translate(2px, -2px); color: var(--ink); }
   /* Hasta tablet: la captura va debajo del texto (en flujo, sangrando a la derecha y abajo)
      para que nunca lo tape; la flecha sube a la esquina. */
   @media (max-width: 960px) {

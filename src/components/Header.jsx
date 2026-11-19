@@ -156,7 +156,7 @@ export default function Header() {
   return (
     <MotionConfig reducedMotion="user">
       {/* ------------------------------ DESKTOP ------------------------------ */}
-      <div className="fixed top-8 inset-x-0 z-[100] hidden md:flex justify-center pointer-events-none px-6">
+      <div className="site-header fixed top-8 inset-x-0 z-[100] hidden md:flex justify-center pointer-events-none px-6">
         <motion.nav
           aria-label="Navegación principal"
           className="flex items-center gap-3 pointer-events-auto"
@@ -245,7 +245,7 @@ export default function Header() {
 
       {/* ------------------------------ MOBILE (top) ------------------------- */}
       <motion.div
-        className="fixed top-4 inset-x-0 z-[100] flex md:hidden items-center justify-between px-6"
+        className="site-header-mobile fixed top-4 inset-x-0 z-[100] flex md:hidden items-center justify-between px-6"
         initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={reduced ? { duration: 0 } : { ...SPRING, delay: .1 }}

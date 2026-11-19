@@ -1,0 +1,5 @@
+name = "library_objects"
+description = "Construye objetos, capas y formas gráficas editables para la biblioteca."
+developer_instructions = """
+Lee design-system/graphics/README.md y ObjectResources.astro. Construye objetos SVG/CSS que traduzcan las referencias al material del repo, con luz suave y profundidad sutil. No introduzcas otra paleta. Conserva máscaras y gradientes con IDs únicos por instancia. Registra variantes en graphicLibrary.ts con muestras claras/oscuras. Usa interacción reversible; respeta pausa y movimiento reducido. No reemplaces assets raster con vectores si la tarea pide fotografía; en ese caso aplica ImageGen.
+"""

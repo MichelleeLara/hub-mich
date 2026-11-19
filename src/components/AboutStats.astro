@@ -68,6 +68,9 @@ const proof = [
  .editorial-copy p+p { margin-top: var(--space-3); color: var(--subtle); font-size: var(--fs-small); line-height: 1.6; }
  .editorial-scroll { display: flex; gap: var(--space-4); align-items: center; max-width: 1000px; margin: var(--space-6) auto 0; color: var(--muted); font: var(--fs-micro) var(--font-mono); }
  .editorial-scroll>span { white-space: nowrap; }
+ /* Con movimiento pausado o reducido se ven los tres pasos a la vez: "Sigue el scroll · 01 / 03" no avanzaría. */
+ :global(html.motion-paused) .editorial-scroll { display: none; }
+ @media (prefers-reduced-motion: reduce) { .editorial-scroll { display: none; } }
  .editorial-track { flex: 1; height: 1px; background: var(--line); }
  .editorial-track span { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--editorial-progress, 0)); transform-origin: left; }
  .editorial-proof { width: min(100%,1000px); margin: var(--space-8) auto 0; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border-block: 1px solid var(--line); }

@@ -307,7 +307,7 @@ export default function AnimatedTabs() {
   return (
     <MotionConfig reducedMotion="user"><motion.nav
       aria-label="Navegación flotante"
-      className="fixed bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] md:bottom-5 inset-x-0 z-[100] flex justify-center px-3 md:px-6 pointer-events-none"
+      className="site-dock fixed bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] md:bottom-5 inset-x-0 z-[100] flex justify-center px-3 md:px-6 pointer-events-none"
       initial={reduced ? false : { opacity: 0, y: 44, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={reduced ? { duration: 0 } : { ...SPRING, delay: .15 }}
@@ -325,7 +325,7 @@ export default function AnimatedTabs() {
               <li className="min-w-0">
                 <a href="/#inicio" aria-label="Volver al inicio" className="group relative flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
                   <HomeIcon className="h-[18px] w-[18px]" />
-                  <span className="text-[10px] font-medium">Inicio</span>
+                  <span className="text-[11px] font-medium">Inicio</span>
                 </a>
               </li>
               {context.steps.map((step, index) => {
@@ -337,11 +337,11 @@ export default function AnimatedTabs() {
                       onClick={() => selectContextStep(index)}
                       aria-label={`Paso ${index + 1}: ${step}`}
                       aria-current={isActive ? 'step' : undefined}
-                      className={`group relative flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] px-1.5 transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent ${isActive ? 'text-ink' : 'text-muted'}`}
+                      className={`group relative flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] px-0.5 transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent ${isActive ? 'text-ink' : 'text-muted'}`}
                     >
                       {isActive && <motion.span layoutId="nav-pill" className="absolute inset-0 overflow-hidden rounded-[16px] bg-black/[0.065] dark:bg-white/10" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 38, mass: .7 }}><StepProgress key={index} sectionId={context.sectionId} /></motion.span>}
-                      <StepBall index={index} active={isActive} className="h-4 w-4 text-[9px]" />
-                      <span className="relative z-10 block max-w-full truncate text-[10px] font-medium leading-tight">{step}</span>
+                      <StepBall index={index} active={isActive} className="h-4 w-4 text-[11px]" />
+                      <span className="relative z-10 block max-w-full truncate text-[11px] font-medium leading-tight">{step}</span>
                     </button>
                   </li>
                 );
@@ -359,7 +359,7 @@ export default function AnimatedTabs() {
               <li className="min-w-0">
                 <a href="/#inicio" aria-label="Volver al inicio" className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
                   <HomeIcon className="h-[18px] w-[18px]" />
-                  <span className="text-[10px] font-medium">Inicio</span>
+                  <span className="text-[11px] font-medium">Inicio</span>
                 </a>
               </li>
               <li className="flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-[16px] bg-black/[0.045] text-ink dark:bg-white/[0.07]">
@@ -367,13 +367,13 @@ export default function AnimatedTabs() {
                   <img src={context.avatar} alt="" width="24" height="24" className="h-6 w-6 rounded-full object-cover object-[47%_28%]" />
                   <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-bg bg-success" aria-hidden="true" />
                 </span>
-                <span className="text-[10px] font-medium">Disponible</span>
+                <span className="text-[11px] font-medium">Disponible</span>
               </li>
               {PERSON_ACTIONS.map(({ label, href, Icon, external }) => (
                 <li key={label} className="min-w-0">
                   <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent" aria-label={`${label} con ${context.name}`}>
                     <Icon className="h-[18px] w-[18px]" />
-                    <span className="block max-w-full truncate text-[10px] font-medium">{label}</span>
+                    <span className="block max-w-full truncate text-[11px] font-medium">{label}</span>
                   </a>
                 </li>
               ))}
@@ -390,14 +390,14 @@ export default function AnimatedTabs() {
               <li className="min-w-0">
                 <a href="/#inicio" aria-label="Volver al inicio" className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
                   <HomeIcon className="h-[18px] w-[18px]" />
-                  <span className="text-[10px] font-medium">Inicio</span>
+                  <span className="text-[11px] font-medium">Inicio</span>
                 </a>
               </li>
               {CONTACT_ACTIONS.map(({ label, href, Icon, external }) => (
                 <li key={label} className="min-w-0">
                   <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className="flex h-full w-full touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[16px] text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.035] hover:text-ink active:scale-[.97] dark:hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent" aria-label={`Contactar por ${label}`}>
                     <Icon className="h-[18px] w-[18px]" />
-                    <span className="block max-w-full truncate text-[10px] font-medium">{label}</span>
+                    <span className="block max-w-full truncate text-[11px] font-medium">{label}</span>
                   </a>
                 </li>
               ))}
@@ -424,7 +424,7 @@ export default function AnimatedTabs() {
                     >
                       {isActive && <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-[16px] bg-black/[0.065] dark:bg-white/10" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 38, mass: .7 }} />}
                       <Icon className="relative z-10 h-[18px] w-[18px]" />
-                      <span className="relative z-10 block max-w-full truncate text-[10px] font-medium leading-tight">{tab.label}</span>
+                      <span className="relative z-10 block max-w-full truncate text-[11px] font-medium leading-tight">{tab.label}</span>
                     </a>
                   </li>
                 );
@@ -450,7 +450,7 @@ export default function AnimatedTabs() {
                 return (
                   <button key={step} type="button" onClick={() => selectContextStep(index)} aria-pressed={isActive} className={`relative h-12 rounded-full px-5 text-sm font-medium transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${isActive ? 'text-ink' : 'text-muted hover:text-ink'}`}>
                     {isActive && <motion.span layoutId="assist-pill" className="absolute inset-0 overflow-hidden rounded-full bg-black/[0.06] dark:bg-white/10" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 38, mass: .7 }}><StepProgress key={index} sectionId={context.sectionId} /></motion.span>}
-                    <span className="relative z-10 flex items-center gap-2"><StepBall index={index} active={isActive} className="h-5 w-5 text-[10px]" />{step}</span>
+                    <span className="relative z-10 flex items-center gap-2"><StepBall index={index} active={isActive} className="h-5 w-5 text-[11px]" />{step}</span>
                   </button>
                 );
               })}
@@ -470,7 +470,7 @@ export default function AnimatedTabs() {
             <div className="flex min-w-0 items-center gap-3 border-r border-line px-2 pr-4">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black/[0.055] text-accent dark:bg-white/10"><ActiveServiceIcon className="h-5 w-5" /></span>
               <div className="min-w-0">
-                <p className="m-0 font-mono text-[9px] uppercase tracking-[.14em] text-muted">Servicio 0{context.index + 1}</p>
+                <p className="m-0 font-mono text-[11px] uppercase tracking-[.14em] text-muted">Servicio 0{context.index + 1}</p>
                 <p className="mt-1 mb-0 truncate text-sm font-semibold text-ink">{context.steps[context.index]}</p>
               </div>
             </div>
@@ -478,11 +478,11 @@ export default function AnimatedTabs() {
             <div className="min-w-0" aria-live="polite">
               <div className="mb-2 flex items-center justify-between gap-4">
                 <p className="m-0 truncate text-xs text-muted">Selecciona una etapa o usa las flechas</p>
-                <span className="shrink-0 font-mono text-[10px] text-muted">0{context.index + 1} / 0{context.steps.length}</span>
+                <span className="shrink-0 font-mono text-[11px] text-muted">0{context.index + 1} / 0{context.steps.length}</span>
               </div>
               <div className="grid grid-cols-3 gap-2" aria-label="Progreso del recorrido">
                 {context.steps.map((step, index) => (
-                  <button key={step} type="button" onClick={() => selectContextStep(index)} aria-label={`Ir al paso ${index + 1}: ${step}`} aria-current={context.index === index ? 'step' : undefined} className="group relative h-3 touch-manipulation rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                  <button key={step} type="button" onClick={() => selectContextStep(index)} aria-label={`Ir al paso ${index + 1}: ${step}`} aria-current={context.index === index ? 'step' : undefined} className="group relative h-3 touch-manipulation rounded-full after:absolute after:inset-x-0 after:-inset-y-4 after:content-[''] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                     <span className={`absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded-full transition-[height,background-color] duration-150 group-hover:h-1.5 ${index <= context.index ? 'bg-ink' : 'bg-line'}`} />
                   </button>
                 ))}
@@ -490,8 +490,8 @@ export default function AnimatedTabs() {
             </div>
 
             <div className="flex items-center justify-end gap-2 border-l border-line pl-3">
-              <button type="button" onClick={() => moveContextStep(-1)} aria-label="Paso anterior" className="flex h-10 w-10 touch-manipulation items-center justify-center rounded-full text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.05] hover:text-ink active:scale-[.94] dark:hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"><ChevronIcon direction="left" /></button>
-              <button type="button" onClick={() => moveContextStep(1)} aria-label="Paso siguiente" className="flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-ink text-bg transition-[opacity,transform] duration-150 hover:opacity-85 active:scale-[.94] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"><ChevronIcon /></button>
+              <button type="button" onClick={() => moveContextStep(-1)} aria-label="Paso anterior" className="relative flex h-10 w-10 after:absolute after:-inset-0.5 after:content-[''] touch-manipulation items-center justify-center rounded-full text-muted transition-[color,background-color,transform] duration-150 hover:bg-black/[0.05] hover:text-ink active:scale-[.94] dark:hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"><ChevronIcon direction="left" /></button>
+              <button type="button" onClick={() => moveContextStep(1)} aria-label="Paso siguiente" className="relative flex h-10 w-10 after:absolute after:-inset-0.5 after:content-[''] touch-manipulation items-center justify-center rounded-full bg-ink text-bg transition-[opacity,transform] duration-150 hover:opacity-85 active:scale-[.94] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"><ChevronIcon /></button>
             </div>
           </motion.aside>
         ) : context?.type === 'person' ? (
@@ -529,7 +529,7 @@ export default function AnimatedTabs() {
           >
             <div className="flex min-w-0 items-center gap-3 px-2">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black/[0.055] text-accent dark:bg-white/10"><MailIcon className="h-5 w-5" /></span>
-              <div className="min-w-0"><p className="m-0 font-mono text-[9px] uppercase tracking-[.14em] text-muted">Siguiente paso</p><p className="mt-1 mb-0 truncate text-sm font-semibold text-ink">Conversemos sobre tu idea</p></div>
+              <div className="min-w-0"><p className="m-0 font-mono text-[11px] uppercase tracking-[.14em] text-muted">Siguiente paso</p><p className="mt-1 mb-0 truncate text-sm font-semibold text-ink">Conversemos sobre tu idea</p></div>
             </div>
             <div className="flex items-center gap-2">
               {CONTACT_ACTIONS.map(({ label, href, Icon, external }) => (

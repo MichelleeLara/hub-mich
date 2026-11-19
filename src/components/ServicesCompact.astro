@@ -39,12 +39,15 @@ const services = [
       <div class="compact-canvas"><ServiceMorph /></div>
     </div>
   </div>
+  <a class="compact-quote-link" href="/cotizador/">Arma la cotización de tu proyecto <span aria-hidden="true">↗</span></a>
 </section>
 
 <style>
+  .compact-quote-link { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:56px; margin-top:16px; padding:12px 20px; border:1px solid var(--line); border-radius:12px; color:var(--accent); font-size:14px; font-weight:600; }
+  .compact-quote-link:hover { background:var(--accent-soft); }
   .compact-heading { display: flex; justify-content: space-between; align-items: end; gap: var(--space-7); margin-bottom: var(--space-6); }
   .compact-heading > p { max-width: 340px; margin: 0 0 4px; color: var(--muted); line-height: 1.6; }
-  .compact-card { overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: color-mix(in srgb, var(--surface) 54%, var(--bg)); }
+  .compact-card { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-xl); background: color-mix(in srgb, var(--surface) 54%, var(--bg)); }
   /* Selector arriba: los tres servicios siempre visibles. */
   .compact-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: stretch; }
   /* Información del servicio: lo que domina. */

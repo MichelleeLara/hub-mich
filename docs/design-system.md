@@ -1,5 +1,7 @@
 # Design system ./mich
 
+> **Documento principal: [`DESIGN.md`](../DESIGN.md)** (formato Refero, legible por IA). Esta guía conserva el detalle de proceso; si algo no coincide, mandan `DESIGN.md` y `src/styles/product.css`.
+
 Fuente de verdad del diseño de itsmich.com.mx. Los valores viven en
 `src/styles/product.css`; Tailwind solo los nombra (`tailwind.config.mjs`).
 Vista viva: [`/design`](../src/pages/design.astro) (oculta, `noindex`).
@@ -10,7 +12,7 @@ Vista viva: [`/design`](../src/pages/design.astro) (oculta, `noindex`).
 
 ## Principios
 
-1. **Un acento, no un arcoíris.** El clay es el único color de marca; todo lo demás es escala de grises.
+1. **Un acento, no un arcoíris.** El azul (`accent`) es el único color de marca; todo lo demás es escala de grises.
 2. **La tipografía hace el trabajo.** Jerarquía por tamaño y peso, nunca por color.
 3. **El detalle es funcional.** Cada animación orienta o da feedback. Si es adorno, fuera.
 4. **Dark y light, misma alma.** Los dos modos usan los mismos tokens semánticos.
@@ -37,7 +39,7 @@ Vista viva: [`/design`](../src/pages/design.astro) (oculta, `noindex`).
 
 - Sin clases `dark:` para color: los tokens ya cambian solos con `html.dark`.
 - **Paneles:** `.theme-inverse` (footer: modo contrario) y `.theme-dark` (siempre oscuro, métrica destacada del caso) redefinen los tokens dentro de su caja.
-- **Excepción:** la tarjeta de proyecto es oscura en ambos modos porque va sobre foto (`#171717`, `.tag-photo`). Son constantes del componente.
+- **Excepción:** la tarjeta de proyecto es oscura en ambos modos con captura de la app (`--card-dark`, y `--card-accent`/`--card-accent-deep` para la destacada). Son constantes en ambos modos.
 - En `<canvas>`, leer colores con `tokenColor('--accent-strong')` (`src/lib/tokens.ts`): se cachea y se actualiza al cambiar el tema.
 
 ## Tipografía
@@ -48,7 +50,7 @@ Vista viva: [`/design`](../src/pages/design.astro) (oculta, `noindex`).
 |---|---|---|---|---|
 | display | `--fs-display` | ClashDisplay 600 | 48–144px | uppercase, lh .98, scaleY 1.14 (hero) |
 | h1 | `--fs-h1` | ClashDisplay 600 | 44–80px | lh 1.05, ls -.03em (caso, destacado) |
-| h2 | `--fs-h2` | ClashDisplay **600** | 30–48px (móvil 30–38px) | lh 1.1, ls -.012em (`SectionHeading`); fuente ancla de todos los titulares |
+| h2 | `--fs-h2` | ClashDisplay **600** | 26–30px móvil · 30–48px iPad · 32–40px escritorio | lh 1.06, ls -.012em (`SectionHeading`); fuente ancla de todos los titulares |
 | h2 compacto | `--fs-h2-compact` | ClashDisplay 600 | 26–32px | footer |
 | h3 | `--fs-h3` | ClashDisplay 600 | 22–26px | lh 1.1, ls -.02em (tarjetas, cifras, números de etapa). Siempre por debajo del h2: solo la etiqueta y el título de sección dominan |
 | lead | `--fs-lead` | Inter Tight 400 | 18px | lh 1.5 |
@@ -86,7 +88,8 @@ Breakpoints: `xs` 345 · `sm` 640 · `md` 768 · `lg` 1024 · `xl` 1280 · `2xl`
 |---|---|---|---|
 | `--radius-sm` | 8px | `rounded-control` | botones, inputs |
 | `--radius-md` | 16px | `rounded-card` | tarjetas chicas, resultado del brief |
-| `--radius-lg` | 24px | `rounded-panel` | tarjetas de proyecto, paneles |
+| `--radius-lg` | 24px | `rounded-panel` | paneles |
+| `--radius-xl` | 28px | — | tarjetas grandes: mosaico de proyectos, panel de Servicios |
 | `--radius-full` | 999px | `rounded-full` | menú, pills, **tags**, avatar |
 
 Redondo = etiquetar o navegar; esquina 8 = actuar.
@@ -123,11 +126,11 @@ framer-motion: `SPRING` (.3s), `SPRING_SLOW` (.5s), `STAGGER` en `src/lib/motion
 | Encabezado de sección | `SectionHeading.astro` | label (Rock Salt) → 12 → h2; prop `compact` |
 | Kicker | `.section-kicker` | caption 600 uppercase, punto de 6px en `--accent` |
 | Tag | `.tag` / `.tag-photo` | `--radius-full`, micro 500. `.tag` con borde; `.tag-photo` sobre foto |
-| Tarjeta de proyecto | `ProjectsBento.astro` | `--radius-lg`, foto + degradado, tags arriba, padding `--space-6` |
+| Tarjeta de proyecto | `ProjectsWobble.astro` | `--radius-xl`, `--card-dark`, captura de la app saliendo por la esquina, padding 36 (32/24 hasta tablet/móvil) |
 | Tarjeta de superficie | caso, brief | `--surface`, padding `--space-6`, `--radius-md`; con `shadow-lift` si se separa del fondo |
 | Formulario | `ProjectBrief.astro` | input 14×16, `--radius-sm`, borde `--muted`, foco 2px `--accent` offset 3 |
 | Navegación | `Header.jsx`, `Navbar.jsx` | islas 44px, `--surface-glass`, `shadow-float`; pill 32px que se desliza |
-| Hero lateral | `Hero.astro` | nombre ClashDisplay 600 de 42–68px (38–60px móvil), retrato lateral de 240×344px (112×152px arriba en móvil); ficha en `design-system/components/Hero/README.md` |
+| Hero lateral | `Hero.astro` | nombre ClashDisplay 600 de 52–60px escritorio · 42–68px iPad · 34–44px móvil, retrato lateral de 240×344px (112×152px arriba en móvil); ficha en `design-system/components/Hero/README.md` |
 | Parada de Trayectoria | `Trayectoria.astro` | nodo 14px (actual en `--success`), fechas caption, rol h3, empresa lead, `.tag` |
 | Datos | `AboutStats.astro`, `CaseHero.astro` | cifra h3 + etiqueta small; `dl` con dt micro uppercase |
 
@@ -139,7 +142,7 @@ Decorativos con `aria-hidden="true"`; botones de solo ícono con `aria-label`.
 
 ## Accesibilidad verificada
 
-Todos los textos ≥ 4.5:1. Clay sobre fondo 6.1 (claro) / 9.3 (oscuro); `--muted` sobre surface 5.3 / 7.1; `--subtle` sobre surface 4.6 / 4.5; selección 13.5 / 14.1.
+Todos los textos ≥ 4.5:1. Azul sobre fondo 6.0 (claro) / 5.7 (oscuro); `--muted` sobre surface 5.3 / 7.1; `--subtle` sobre surface 4.6 / 4.5; selección 13.5 / 14.1.
 Se mantienen: foco visible, "Saltar al contenido", objetivos ≥ 44px, `prefers-reduced-motion` y botón de pausa.
 
 ## Cómo cambiar algo

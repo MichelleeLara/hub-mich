@@ -6,7 +6,7 @@ import '@fontsource-variable/inter-tight/wght.css';
 import '@fontsource/rock-salt/400.css';
 import interLatin from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
 import '../styles/product.css';
-const { title, description, image, url, noindex = false } = Astro.props;
+const { title, description, image, url, noindex = false, navigation = true } = Astro.props;
 // og:image debe ser absoluta; algunas páginas pasan rutas relativas (/author.png)
 const imageUrl = new URL(image, Astro.site ?? Astro.url).href;
 // Analítica (Umami Cloud): solo si hay ID configurado y en páginas públicas (no previews con noindex)
@@ -20,6 +20,7 @@ export interface Props {
   image: string;
   url: string;
   noindex?: boolean;
+  navigation?: boolean;
 }
 
 ---
@@ -55,15 +56,32 @@ export interface Props {
     <!-- Tema antes de pintar: sin esto el <html class="dark"> del markup
          gana hasta que React hidrata y quien eligió claro ve un flash oscuro
          en cada carga. Preferencia guardada > preferencia del sistema. -->
+    <!-- "light dark" = sigue al sistema; "light"/"dark" = override guardado.
+         product.css mapea este <meta> a la propiedad color-scheme de :root. -->
+    <meta name="color-scheme" content="light dark" />
     <script is:inline>
       document.documentElement.classList.add('has-js');
       let saved = null, motion = null;
       try { saved = localStorage.getItem('theme'); motion = localStorage.getItem('motion'); } catch {}
-      const dark = saved ? saved === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches;
-      document.documentElement.classList.toggle('dark', dark);
+      if (saved !== 'light' && saved !== 'dark') saved = null;
+      document.querySelector('meta[name="color-scheme"]').content = saved ?? 'light dark';
+      // Tailwind sigue usando la clase .dark (darkMode: 'class').
+      document.documentElement.classList.toggle('dark', saved ? saved === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches);
       // Animaciones pausadas por defecto; solo corren si la persona las activó con el botón.
       document.documentElement.classList.toggle('motion-paused', motion !== 'on');
-      document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+    </script>
+    <!-- Transición entre páginas: no animar hacia una página a medio parsear. -->
+    <link rel="expect" href="#main-content" blocking="render" />
+    <script is:inline>
+      // Llegada desde otra página del sitio (no recarga): la barra flotante ya estaba
+      // en pantalla, así que no repite su animación de entrada (ver .site-dock abajo).
+      (() => {
+        const a = window.navigation?.activation;
+        const type = performance.getEntriesByType('navigation')[0]?.type;
+        const arrived = a ? !!a.from && a.navigationType !== 'reload'
+          : type !== 'reload' && document.referrer.startsWith(location.origin + '/');
+        if (arrived) document.documentElement.classList.add('vt-arrival');
+      })();
     </script>
     <!-- Sin cookies; data-domains evita contar visitas de localhost y previews de Vercel -->
     {umamiId && !noindex && (
@@ -75,13 +93,15 @@ export interface Props {
     <!-- Fondo de partículas (detrás de todo el contenido) -->
     <ParticlesBackground />
     <!-- Navegación superior (islas desktop + barra mínima mobile) -->
-    <Header client:load />
+    <!-- Desenfoque progresivo bajo la navegación fija: el contenido se aleja en lugar de chocar con las islas. -->
+    {navigation && <div class="top-scrim" aria-hidden="true"></div>}
+    {navigation && <Header client:load />}
     <div id="main-content" class="flex-grow" tabindex="-1">
 
       <slot />
     </div>
     <!-- Navegación móvil + asistente contextual de escritorio -->
-    <AnimatedTabs client:load />
+    {navigation && <AnimatedTabs client:load />}
     
   </body>
 </html>
@@ -117,7 +137,33 @@ export interface Props {
 
 
 
-  @view-transition{
-  navigation: auto;
+  /* Bajo el header fijo: solo desenfoque (sin tinte), así funciona igual sobre papel,
+     tarjetas carbón y el footer invertido. La máscara lo desvanece hacia abajo. */
+  .top-scrim {
+    position: fixed; inset: 0 0 auto; height: 112px; z-index: 99; pointer-events: none;
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent);
+    mask-image: linear-gradient(to bottom, #000 35%, transparent);
   }
+  @media (max-width: 767px) { .top-scrim { height: 84px; } }
+
+  /* Transiciones entre páginas (mejora progresiva: Firefox navega normal). */
+  @view-transition { navigation: auto; }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  /* Header y barra flotante no se desvanecen con la página: se quedan quietos encima. */
+  .site-header { view-transition-name: site-header; }
+  .site-header-mobile { view-transition-name: site-header-mobile; }
+  .site-dock { view-transition-name: site-dock; }
+  /* Al llegar desde otra página, la barra aparece ya en su lugar (gana a los estilos en línea de framer). */
+  html.vt-arrival .site-dock { opacity: 1 !important; transform: none !important; }
+
+  /* Fade-through: la página anterior sale primero y la nueva entra después.
+     Sin superposición no hay "doble exposición" de dos páginas a la vez. */
+  ::view-transition-old(root) { animation: 140ms ease-in both vt-out; }
+  ::view-transition-new(root) { animation: 280ms var(--ease-out) 140ms both vt-in; }
+  @keyframes vt-out { to { opacity: 0; } }
+  @keyframes vt-in { from { opacity: 0; translate: 0 12px; } }
 </style>

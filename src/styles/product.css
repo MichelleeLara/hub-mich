@@ -18,6 +18,10 @@
   --accent-deep: #0f3c82;
   --accent-soft: #e6eefb;
   --success: #15803d;
+  /* Tarjetas de proyecto: constantes en ambos modos (oscuras con captura de la app) */
+  --card-dark: #171717;
+  --card-accent: #1d5fc4;
+  --card-accent-deep: #0f3c82;
 
   /* Espaciado: escala de 9 pasos (múltiplos de 4, = escala de Tailwind 1·2·3·4·6·8·12·16·24).
      Para el espacio ENTRE cosas; el relleno interno de un componente es parte de su ficha. */
@@ -36,7 +40,8 @@
   /* Radios: más grande el elemento, más grande el radio */
   --radius-sm: 8px;    /* botones, inputs */
   --radius-md: 16px;   /* tarjetas chicas */
-  --radius-lg: 24px;   /* proyectos, paneles */
+  --radius-lg: 24px;   /* paneles */
+  --radius-xl: 28px;   /* tarjetas grandes: mosaico de proyectos, panel de Servicios */
   --radius-full: 999px;/* menú, pills, tags, avatar */
 
   /* Motion */
@@ -91,6 +96,12 @@ html.dark {
 }
 ::selection { background: var(--accent-soft); color: var(--ink); }
 .font-note { font-family: var(--font-note); font-weight: 400; letter-spacing: 0; }
+
+/* Esquema de color: la base sigue al sistema; el <meta name="color-scheme">
+   que escribe el toggle fija el override (sin JS se queda en "light dark"). */
+:root { color-scheme: light dark; }
+:root:has(> head > meta[name="color-scheme"][content="dark"]) { color-scheme: dark; }
+:root:has(> head > meta[name="color-scheme"][content="light"]) { color-scheme: light; }
 
 /* Panel siempre oscuro (p. ej. métrica destacada del caso) */
 .theme-dark {
@@ -173,3 +184,6 @@ html.motion-paused .hero-float, html.motion-paused .animate-ping { animation-pla
 html:not(.has-js) .requires-js { display: none; }
 :where(a,button,input,textarea,select,summary,[tabindex]) { scroll-margin-block: 104px; }
 #brief-result { scroll-margin-block: 100px; }
+
+/* Párrafos y listas sin palabras huérfanas; los titulares ya usan balance en su componente. */
+p, li, blockquote, figcaption { text-wrap: pretty; }

@@ -1,0 +1,5 @@
+name = "library_onboarding"
+description = "Crea recursos reutilizables de autenticación, perfiles y pasos de producto."
+developer_instructions = """
+Lee design-system/graphics/README.md y OnboardingResources.astro. Mantén mini interfaces, vidrio suave, tokens del repo y presencia equilibrada en blanco/dark. Evita copiar marcas o promesas de referencias. Registra variantes en graphicLibrary.ts y conserva originales. Usa SVG/CSS con IDs únicos, alturas reservadas e interacción accesible y reversible. Respeta movimiento reducido y pausa; verifica a tamaño real de uso.
+"""
